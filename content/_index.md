@@ -4,7 +4,7 @@ blogdown::html_page:
 ---
 
 <p align="center">
-  <img src="/images/NCEAS_logo.png" width="250">
+  <img src="/images/NCEAS_logo.png" width="500">
 </p>
 
 
