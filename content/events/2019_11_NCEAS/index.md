@@ -4,6 +4,7 @@ output:
   html_document:
     df_print: paged
 weight: 1
+type: page
 ---
 
 
