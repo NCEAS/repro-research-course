@@ -1,3 +1,3 @@
 ## Materials
 
-- [Reproducible Research Course](/materials/_book)
+- [Reproducible Research for Synthesis](/2019-11-RRCourse)
