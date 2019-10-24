@@ -8,10 +8,6 @@ BRANCH='2019-11-RRCourse'
 export TOP
 TOP=$(pwd)
 
-if [ ! -d public/materials ]; then
-    mkdir -p public/materials
-fi
-
 # Clone the lesson materials from the lessons repo
 rm -rf materials
 git clone https://github.com/NCEAS/nceas-training.git --branch ${BRANCH} --single-branch materials
@@ -25,5 +21,5 @@ Rscript -e "devtools::install_deps('.')" # Installs book-specific R deps
                                          # defined in DESCRIPTION file
 Rscript -e "bookdown::render_book('index.Rmd', c('bookdown::gitbook'))"
 cp -r files _book
-cp -r _book "$TOP/public/materials"
+cp -r _book "$TOP/public/$BRANCH"
 cd "$TOP"
