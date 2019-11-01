@@ -44,7 +44,7 @@ For more detailed information on how to prepare for the workshop, see preparing 
 |Name         | Email              |
 |-------------|--------------------|
 |Matthew Jones| jones@nceas.ucsb.edu |
-|Amber Budden | budden@nceas.ucsb.edu|
+|Amber Budden | aebudden@nceas.ucsb.edu|
 |Jeanette Clark| jclark@nceas.ucsb.edu |
 
 ## Acknowledgements
