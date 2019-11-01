@@ -47,11 +47,6 @@ For more detailed information on how to prepare for the workshop, see preparing 
 |Amber Budden | aebudden@nceas.ucsb.edu|
 |Jeanette Clark| jclark@nceas.ucsb.edu |
 
-## Acknowledgements
-
-Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
-
-
 ## Preparing for the Workshop
 
 ### Required software
