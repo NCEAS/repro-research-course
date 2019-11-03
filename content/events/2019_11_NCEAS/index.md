@@ -65,7 +65,7 @@ We will primarily be using a web browser, `R`, RStudio, and `git`. Please be sur
 You can install these packages quickly by running the following two code snippets:
 
 ```r
-    packages <- c("dataone", "datapack", "devtools", "dplyr", "EML", "ggplot2", "readxl", "tidyr", "EML", "dataone", "datapack", "sf", "rmarkdown", "roxygen2", "usethis", "broom", "captioner")
+    packages <- c("DT", "dataone", "datapack", "devtools", "dplyr", "EML", "ggmap", "ggplot2", "leaflet", "readxl", "tidyr", "scales", "sf", "rmarkdown", "roxygen2", "usethis", "broom", "captioner")
 ```
 
 ```r
