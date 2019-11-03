@@ -17,4 +17,4 @@ Additional support was provided for working group collaboration by the National 
 ## About this repository
 
 This repository is an integration of [Blogdown](https://github.com/rstudio/blogdown) and [Bookdown](https://bookdown.org).
-Some amount of wrangling was required to get all of this set up and not everything may be obvious to all viewers (yet!).
+Some amount of wrangling was required to get all of this set up and not everything may be obvious to all viewers (yet!). 
