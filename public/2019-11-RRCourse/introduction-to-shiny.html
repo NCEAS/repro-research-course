@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>17 Introduction to Shiny | Reproducible Research Techniques for Synthesis</title>
+  <meta name="description" content="17 Introduction to Shiny | Reproducible Research Techniques for Synthesis" />
+  <meta name="generator" content="bookdown 0.16.2 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="17 Introduction to Shiny | Reproducible Research Techniques for Synthesis" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="17 Introduction to Shiny | Reproducible Research Techniques for Synthesis" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="writing-good-data-management-plans.html"/>
+<link rel="next" href="hands-on-clean-and-integrate-datasets.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.10/datatables.js"></script>
+<link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Reproducible Research Techniques for Synthesis</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#schedule"><i class="fa fa-check"></i><b>1.1</b> Schedule</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#code-of-conduct"><i class="fa fa-check"></i><b>1.1.1</b> Code of Conduct</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="thinking-preferences.html"><a href="thinking-preferences.html"><i class="fa fa-check"></i><b>2</b> Thinking preferences</a><ul>
+<li class="chapter" data-level="2.1" data-path="thinking-preferences.html"><a href="thinking-preferences.html#learning-objectives"><i class="fa fa-check"></i><b>2.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="2.2" data-path="thinking-preferences.html"><a href="thinking-preferences.html#about-the-whole-brain-thinking-system"><i class="fa fa-check"></i><b>2.2</b> About the Whole Brain Thinking System</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="best-practices-data-and-metadata.html"><a href="best-practices-data-and-metadata.html"><i class="fa fa-check"></i><b>3</b> Best Practices: Data and Metadata</a><ul>
+<li class="chapter" data-level="3.1" data-path="best-practices-data-and-metadata.html"><a href="best-practices-data-and-metadata.html#learning-objectives-1"><i class="fa fa-check"></i><b>3.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="3.2" data-path="best-practices-data-and-metadata.html"><a href="best-practices-data-and-metadata.html#preserving-computational-workflows"><i class="fa fa-check"></i><b>3.2</b> Preserving computational workflows</a></li>
+<li class="chapter" data-level="3.3" data-path="best-practices-data-and-metadata.html"><a href="best-practices-data-and-metadata.html#best-practices-overview"><i class="fa fa-check"></i><b>3.3</b> Best Practices: Overview</a></li>
+<li class="chapter" data-level="3.4" data-path="best-practices-data-and-metadata.html"><a href="best-practices-data-and-metadata.html#organizing-data-best-practices"><i class="fa fa-check"></i><b>3.4</b> Organizing Data: Best Practices</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html"><i class="fa fa-check"></i><b>4</b> RStudio and Git/GitHub Setup and Motivation</a><ul>
+<li class="chapter" data-level="4.1" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#learning-objectives-2"><i class="fa fa-check"></i><b>4.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="4.2" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#reproducible-research"><i class="fa fa-check"></i><b>4.2</b> Reproducible Research</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#what-is-needed-for-computational-reproducibility"><i class="fa fa-check"></i><b>4.2.1</b> What is needed for computational reproducibility?</a></li>
+<li class="chapter" data-level="4.2.2" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#conceptualizing-workflows"><i class="fa fa-check"></i><b>4.2.2</b> Conceptualizing workflows</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#why-use-git"><i class="fa fa-check"></i><b>4.3</b> Why use git?</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#the-problem-with-filenames"><i class="fa fa-check"></i><b>4.3.1</b> The problem with filenames</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#checking-the-rstudio-environment"><i class="fa fa-check"></i><b>4.4</b> Checking the RStudio environment</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#r-version"><i class="fa fa-check"></i><b>4.4.1</b> R Version</a></li>
+<li class="chapter" data-level="4.4.2" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#rstudio-version"><i class="fa fa-check"></i><b>4.4.2</b> RStudio Version</a></li>
+<li class="chapter" data-level="4.4.3" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#package-installation"><i class="fa fa-check"></i><b>4.4.3</b> Package installation</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#setting-up-git"><i class="fa fa-check"></i><b>4.5</b> Setting up git</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#note-for-windows-users"><i class="fa fa-check"></i><b>4.5.1</b> Note for Windows Users</a></li>
+<li class="chapter" data-level="4.5.2" data-path="rstudio-and-gitgithub-setup-and-motivation.html"><a href="rstudio-and-gitgithub-setup-and-motivation.html#updating-a-previous-r-installation"><i class="fa fa-check"></i><b>4.5.2</b> Updating a previous R installation</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html"><i class="fa fa-check"></i><b>5</b> Introduction to R and RMarkdown</a><ul>
+<li class="chapter" data-level="5.1" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#learning-objectives-3"><i class="fa fa-check"></i><b>5.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="5.2" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#introduction-and-motivation"><i class="fa fa-check"></i><b>5.2</b> Introduction and Motivation</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#resources"><i class="fa fa-check"></i><b>5.2.1</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#r-at-the-console"><i class="fa fa-check"></i><b>5.3</b> R at the console</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#error-messages-are-your-friends"><i class="fa fa-check"></i><b>5.3.1</b> Error messages are your friends</a></li>
+<li class="chapter" data-level="5.3.2" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#logical-operators-and-expressions"><i class="fa fa-check"></i><b>5.3.2</b> Logical operators and expressions</a></li>
+<li class="chapter" data-level="5.3.3" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#clearing-the-environment"><i class="fa fa-check"></i><b>5.3.3</b> Clearing the environment</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#rmarkdown"><i class="fa fa-check"></i><b>5.4</b> RMarkdown</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#your-turn"><i class="fa fa-check"></i><b>5.4.1</b> Your Turn</a></li>
+<li class="chapter" data-level="5.4.2" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#code-chunks"><i class="fa fa-check"></i><b>5.4.2</b> Code chunks</a></li>
+<li class="chapter" data-level="5.4.3" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#your-turn-1"><i class="fa fa-check"></i><b>5.4.3</b> Your turn</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#r-functions-help-pages"><i class="fa fa-check"></i><b>5.5</b> R functions, help pages</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#a-simple-example"><i class="fa fa-check"></i><b>5.5.1</b> A simple example</a></li>
+<li class="chapter" data-level="5.5.2" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#getting-help"><i class="fa fa-check"></i><b>5.5.2</b> Getting help</a></li>
+<li class="chapter" data-level="5.5.3" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#your-turn-2"><i class="fa fa-check"></i><b>5.5.3</b> Your turn</a></li>
+<li class="chapter" data-level="5.5.4" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#use-a-function-to-read-a-file-into-r"><i class="fa fa-check"></i><b>5.5.4</b> Use a function to read a file into R</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#using-data.frames"><i class="fa fa-check"></i><b>5.6</b> Using <code>data.frames</code></a><ul>
+<li class="chapter" data-level="5.6.1" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#your-turn-3"><i class="fa fa-check"></i><b>5.6.1</b> Your Turn</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#troubleshooting"><i class="fa fa-check"></i><b>5.7</b> Troubleshooting</a><ul>
+<li class="chapter" data-level="5.7.1" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#my-rmarkdown-wont-knit-to-pdf"><i class="fa fa-check"></i><b>5.7.1</b> My RMarkdown won’t knit to PDF</a></li>
+<li class="chapter" data-level="5.7.2" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#i-just-entered-a-command-and-nothing-is-happening"><i class="fa fa-check"></i><b>5.7.2</b> I just entered a command and nothing is happening</a></li>
+<li class="chapter" data-level="5.7.3" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#r-says-my-object-is-not-found"><i class="fa fa-check"></i><b>5.7.3</b> R says my object is not found</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#literate-analysis"><i class="fa fa-check"></i><b>5.8</b> Literate Analysis</a></li>
+<li class="chapter" data-level="5.9" data-path="introduction-to-r-and-rmarkdown.html"><a href="introduction-to-r-and-rmarkdown.html#exercise"><i class="fa fa-check"></i><b>5.9</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html"><i class="fa fa-check"></i><b>6</b> Data Documentation and Publishing</a><ul>
+<li class="chapter" data-level="6.1" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#learning-objectives-4"><i class="fa fa-check"></i><b>6.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="6.2" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#data-sharing-and-preservation"><i class="fa fa-check"></i><b>6.2</b> Data sharing and preservation</a></li>
+<li class="chapter" data-level="6.3" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#data-repositories-built-for-data-and-code"><i class="fa fa-check"></i><b>6.3</b> Data repositories: built for data (and code)</a></li>
+<li class="chapter" data-level="6.4" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#metadata"><i class="fa fa-check"></i><b>6.4</b> Metadata</a></li>
+<li class="chapter" data-level="6.5" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#structure-of-a-data-package"><i class="fa fa-check"></i><b>6.5</b> Structure of a data package</a></li>
+<li class="chapter" data-level="6.6" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#dataone-federation"><i class="fa fa-check"></i><b>6.6</b> DataONE Federation</a></li>
+<li class="chapter" data-level="6.7" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#publishing-data-from-the-web"><i class="fa fa-check"></i><b>6.7</b> Publishing data from the web</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#download-the-data-to-be-used-for-the-tutorial"><i class="fa fa-check"></i><b>6.7.1</b> Download the data to be used for the tutorial</a></li>
+<li class="chapter" data-level="6.7.2" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#login-via-orcid"><i class="fa fa-check"></i><b>6.7.2</b> Login via ORCID</a></li>
+<li class="chapter" data-level="6.7.3" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#create-and-submit-the-data-set"><i class="fa fa-check"></i><b>6.7.3</b> Create and submit the data set</a></li>
+<li class="chapter" data-level="6.7.4" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#file-and-variable-level-metadata"><i class="fa fa-check"></i><b>6.7.4</b> File and variable level metadata</a></li>
+<li class="chapter" data-level="6.7.5" data-path="data-documentation-and-publishing.html"><a href="data-documentation-and-publishing.html#add-workflow-provenance"><i class="fa fa-check"></i><b>6.7.5</b> Add workflow provenance</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html"><i class="fa fa-check"></i><b>7</b> Version Control With git and GitHub</a><ul>
+<li class="chapter" data-level="7.1" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#learning-objectives-5"><i class="fa fa-check"></i><b>7.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="7.2" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#the-problem-with-filenames-1"><i class="fa fa-check"></i><b>7.2</b> The problem with filenames</a></li>
+<li class="chapter" data-level="7.3" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#version-control-and-collaboration-using-git-and-github"><i class="fa fa-check"></i><b>7.3</b> Version control and Collaboration using Git and GitHub</a></li>
+<li class="chapter" data-level="7.4" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#lets-look-at-a-github-repository"><i class="fa fa-check"></i><b>7.4</b> Let’s look at a GitHub repository</a></li>
+<li class="chapter" data-level="7.5" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#the-git-lifecycle"><i class="fa fa-check"></i><b>7.5</b> The Git lifecycle</a></li>
+<li class="chapter" data-level="7.6" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#create-a-remote-repository-on-github"><i class="fa fa-check"></i><b>7.6</b> Create a remote repository on GitHub</a></li>
+<li class="chapter" data-level="7.7" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#working-locally-with-git-via-rstudio"><i class="fa fa-check"></i><b>7.7</b> Working locally with Git via RStudio</a></li>
+<li class="chapter" data-level="7.8" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#on-good-commit-messages"><i class="fa fa-check"></i><b>7.8</b> On good commit messages</a></li>
+<li class="chapter" data-level="7.9" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#collaboration-and-conflict-free-workflows"><i class="fa fa-check"></i><b>7.9</b> Collaboration and conflict free workflows</a></li>
+<li class="chapter" data-level="7.10" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#exercise-1"><i class="fa fa-check"></i><b>7.10</b> Exercise</a></li>
+<li class="chapter" data-level="7.11" data-path="version-control-with-git-and-github.html"><a href="version-control-with-git-and-github.html#advanced-topics"><i class="fa fa-check"></i><b>7.11</b> Advanced topics</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html"><i class="fa fa-check"></i><b>8</b> Git: Collaboration and Conflict Management</a><ul>
+<li class="chapter" data-level="8.1" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#learning-objectives-6"><i class="fa fa-check"></i><b>8.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="8.2" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#collaborating-with-git"><i class="fa fa-check"></i><b>8.2</b> Collaborating with Git</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#activity-collaborating-with-a-trusted-colleague"><i class="fa fa-check"></i><b>8.2.1</b> Activity: Collaborating with a trusted colleague</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#merge-conflicts"><i class="fa fa-check"></i><b>8.3</b> Merge conflicts</a></li>
+<li class="chapter" data-level="8.4" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#how-to-resolve-a-conflict"><i class="fa fa-check"></i><b>8.4</b> How to resolve a conflict</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#abort-abort-abort"><i class="fa fa-check"></i><b>8.4.1</b> Abort, abort, abort…</a></li>
+<li class="chapter" data-level="8.4.2" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#checkout"><i class="fa fa-check"></i><b>8.4.2</b> Checkout</a></li>
+<li class="chapter" data-level="8.4.3" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#pull-and-edit-the-file"><i class="fa fa-check"></i><b>8.4.3</b> Pull and edit the file</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="git-collaboration-and-conflict-management.html"><a href="git-collaboration-and-conflict-management.html#workflows-to-avoid-merge-conflicts"><i class="fa fa-check"></i><b>8.5</b> Workflows to avoid merge conflicts</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="publishing-analyses-to-the-web.html"><a href="publishing-analyses-to-the-web.html"><i class="fa fa-check"></i><b>9</b> Publishing Analyses to the Web</a><ul>
+<li class="chapter" data-level="9.1" data-path="publishing-analyses-to-the-web.html"><a href="publishing-analyses-to-the-web.html#learning-objectives-7"><i class="fa fa-check"></i><b>9.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="9.2" data-path="publishing-analyses-to-the-web.html"><a href="publishing-analyses-to-the-web.html#introduction"><i class="fa fa-check"></i><b>9.2</b> Introduction</a></li>
+<li class="chapter" data-level="9.3" data-path="publishing-analyses-to-the-web.html"><a href="publishing-analyses-to-the-web.html#a-minimal-example"><i class="fa fa-check"></i><b>9.3</b> A Minimal Example</a></li>
+<li class="chapter" data-level="9.4" data-path="publishing-analyses-to-the-web.html"><a href="publishing-analyses-to-the-web.html#exercise-sharing-your-work"><i class="fa fa-check"></i><b>9.4</b> Exercise: Sharing your work</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="collaborating-using-git.html"><a href="collaborating-using-git.html"><i class="fa fa-check"></i><b>10</b> Collaborating using Git</a><ul>
+<li class="chapter" data-level="10.1" data-path="collaborating-using-git.html"><a href="collaborating-using-git.html#learning-objectives-8"><i class="fa fa-check"></i><b>10.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="10.2" data-path="collaborating-using-git.html"><a href="collaborating-using-git.html#pull-requests"><i class="fa fa-check"></i><b>10.2</b> Pull requests</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="collaborating-using-git.html"><a href="collaborating-using-git.html#exercise-create-and-merge-pull-requests"><i class="fa fa-check"></i><b>10.2.1</b> Exercise: Create and merge pull requests</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="collaborating-using-git.html"><a href="collaborating-using-git.html#branches-and-tags"><i class="fa fa-check"></i><b>10.3</b> Branches and tags</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="collaborating-using-git.html"><a href="collaborating-using-git.html#exercise-2"><i class="fa fa-check"></i><b>10.3.1</b> Exercise:</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html"><i class="fa fa-check"></i><b>11</b> Data Modeling &amp; Tidy Data</a><ul>
+<li class="chapter" data-level="11.1" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#learning-objectives-9"><i class="fa fa-check"></i><b>11.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="11.2" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#benefits-of-relational-data-systems"><i class="fa fa-check"></i><b>11.2</b> Benefits of relational data systems</a></li>
+<li class="chapter" data-level="11.3" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#data-organization"><i class="fa fa-check"></i><b>11.3</b> Data Organization</a></li>
+<li class="chapter" data-level="11.4" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#multiple-tables"><i class="fa fa-check"></i><b>11.4</b> Multiple tables</a></li>
+<li class="chapter" data-level="11.5" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#inconsistent-observations"><i class="fa fa-check"></i><b>11.5</b> Inconsistent observations</a></li>
+<li class="chapter" data-level="11.6" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#inconsistent-variables"><i class="fa fa-check"></i><b>11.6</b> Inconsistent variables</a></li>
+<li class="chapter" data-level="11.7" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#marginal-sums-and-statistics"><i class="fa fa-check"></i><b>11.7</b> Marginal sums and statistics</a></li>
+<li class="chapter" data-level="11.8" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#good-enough-data-modeling"><i class="fa fa-check"></i><b>11.8</b> Good enough data modeling</a><ul>
+<li class="chapter" data-level="11.8.1" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#denormalized-data"><i class="fa fa-check"></i><b>11.8.1</b> Denormalized data</a></li>
+<li class="chapter" data-level="11.8.2" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#tabular-data"><i class="fa fa-check"></i><b>11.8.2</b> Tabular data</a></li>
+</ul></li>
+<li class="chapter" data-level="11.9" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#primary-and-foreign-keys"><i class="fa fa-check"></i><b>11.9</b> Primary and Foreign Keys</a></li>
+<li class="chapter" data-level="11.10" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#entity-relationship-model-er"><i class="fa fa-check"></i><b>11.10</b> Entity-Relationship Model (ER)</a></li>
+<li class="chapter" data-level="11.11" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#merging-data"><i class="fa fa-check"></i><b>11.11</b> Merging data</a></li>
+<li class="chapter" data-level="11.12" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#simple-guidelines-for-effective-data"><i class="fa fa-check"></i><b>11.12</b> Simple Guidelines for Effective Data</a></li>
+<li class="chapter" data-level="11.13" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#data-modeling-exercise"><i class="fa fa-check"></i><b>11.13</b> Data modeling exercise</a></li>
+<li class="chapter" data-level="11.14" data-path="data-modeling-tidy-data.html"><a href="data-modeling-tidy-data.html#related-resources"><i class="fa fa-check"></i><b>11.14</b> Related resources</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html"><i class="fa fa-check"></i><b>12</b> Data Cleaning and Manipulation</a><ul>
+<li class="chapter" data-level="12.1" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#learning-objectives-10"><i class="fa fa-check"></i><b>12.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="12.2" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#introduction-1"><i class="fa fa-check"></i><b>12.2</b> Introduction</a></li>
+<li class="chapter" data-level="12.3" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#setup"><i class="fa fa-check"></i><b>12.3</b> Setup</a></li>
+<li class="chapter" data-level="12.4" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#about-the-pipe-operator"><i class="fa fa-check"></i><b>12.4</b> About the pipe (<code>%&gt;%</code>) operator</a></li>
+<li class="chapter" data-level="12.5" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#selectingremoving-columns-select"><i class="fa fa-check"></i><b>12.5</b> Selecting/removing columns: <code>select()</code></a></li>
+<li class="chapter" data-level="12.6" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#quality-check"><i class="fa fa-check"></i><b>12.6</b> Quality Check</a></li>
+<li class="chapter" data-level="12.7" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#changing-column-content-mutate"><i class="fa fa-check"></i><b>12.7</b> Changing column content: <code>mutate()</code></a></li>
+<li class="chapter" data-level="12.8" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#changing-shape-pivot_longer-and-pivot_wider"><i class="fa fa-check"></i><b>12.8</b> Changing shape: <code>pivot_longer()</code> and <code>pivot_wider()</code></a></li>
+<li class="chapter" data-level="12.9" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#renaming-columns-with-rename"><i class="fa fa-check"></i><b>12.9</b> Renaming columns with <code>rename()</code></a></li>
+<li class="chapter" data-level="12.10" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#adding-columns-mutate"><i class="fa fa-check"></i><b>12.10</b> Adding columns: <code>mutate()</code></a></li>
+<li class="chapter" data-level="12.11" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#group_by-and-summarise"><i class="fa fa-check"></i><b>12.11</b> <code>group_by</code> and <code>summarise</code></a></li>
+<li class="chapter" data-level="12.12" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#filtering-rows-filter"><i class="fa fa-check"></i><b>12.12</b> Filtering rows: <code>filter()</code></a></li>
+<li class="chapter" data-level="12.13" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#sorting-your-data-arrange"><i class="fa fa-check"></i><b>12.13</b> Sorting your data: <code>arrange()</code></a></li>
+<li class="chapter" data-level="12.14" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#joins-in-dplyr"><i class="fa fa-check"></i><b>12.14</b> Joins in dplyr</a></li>
+<li class="chapter" data-level="12.15" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#separate-and-unite"><i class="fa fa-check"></i><b>12.15</b> <code>separate()</code> and <code>unite()</code></a></li>
+<li class="chapter" data-level="12.16" data-path="data-cleaning-and-manipulation.html"><a href="data-cleaning-and-manipulation.html#summary"><i class="fa fa-check"></i><b>12.16</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="creating-r-functions.html"><a href="creating-r-functions.html"><i class="fa fa-check"></i><b>13</b> Creating R Functions</a><ul>
+<li class="chapter" data-level="13.1" data-path="creating-r-functions.html"><a href="creating-r-functions.html#learning-outcomes"><i class="fa fa-check"></i><b>13.1</b> Learning outcomes</a></li>
+<li class="chapter" data-level="13.2" data-path="creating-r-functions.html"><a href="creating-r-functions.html#why-functions"><i class="fa fa-check"></i><b>13.2</b> Why functions?</a></li>
+<li class="chapter" data-level="13.3" data-path="creating-r-functions.html"><a href="creating-r-functions.html#temperature-conversion"><i class="fa fa-check"></i><b>13.3</b> Temperature conversion</a></li>
+<li class="chapter" data-level="13.4" data-path="creating-r-functions.html"><a href="creating-r-functions.html#creating-a-function"><i class="fa fa-check"></i><b>13.4</b> Creating a function</a></li>
+<li class="chapter" data-level="13.5" data-path="creating-r-functions.html"><a href="creating-r-functions.html#exercise-3"><i class="fa fa-check"></i><b>13.5</b> Exercise</a></li>
+<li class="chapter" data-level="13.6" data-path="creating-r-functions.html"><a href="creating-r-functions.html#documenting-r-functions"><i class="fa fa-check"></i><b>13.6</b> Documenting R functions</a></li>
+<li class="chapter" data-level="13.7" data-path="creating-r-functions.html"><a href="creating-r-functions.html#summary-1"><i class="fa fa-check"></i><b>13.7</b> Summary</a></li>
+<li class="chapter" data-level="13.8" data-path="creating-r-functions.html"><a href="creating-r-functions.html#spoiler-the-exercise-answered."><i class="fa fa-check"></i><b>13.8</b> Spoiler – the exercise answered.</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="creating-r-packages.html"><a href="creating-r-packages.html"><i class="fa fa-check"></i><b>14</b> Creating R Packages</a><ul>
+<li class="chapter" data-level="14.1" data-path="creating-r-packages.html"><a href="creating-r-packages.html#learning-objectives-11"><i class="fa fa-check"></i><b>14.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="14.2" data-path="creating-r-packages.html"><a href="creating-r-packages.html#why-packages"><i class="fa fa-check"></i><b>14.2</b> Why packages?</a></li>
+<li class="chapter" data-level="14.3" data-path="creating-r-packages.html"><a href="creating-r-packages.html#install-and-load-packages"><i class="fa fa-check"></i><b>14.3</b> Install and load packages</a></li>
+<li class="chapter" data-level="14.4" data-path="creating-r-packages.html"><a href="creating-r-packages.html#create-a-basic-package"><i class="fa fa-check"></i><b>14.4</b> Create a basic package</a></li>
+<li class="chapter" data-level="14.5" data-path="creating-r-packages.html"><a href="creating-r-packages.html#add-your-code"><i class="fa fa-check"></i><b>14.5</b> Add your code</a></li>
+<li class="chapter" data-level="14.6" data-path="creating-r-packages.html"><a href="creating-r-packages.html#add-documentation"><i class="fa fa-check"></i><b>14.6</b> Add documentation</a></li>
+<li class="chapter" data-level="14.7" data-path="creating-r-packages.html"><a href="creating-r-packages.html#test-your-package"><i class="fa fa-check"></i><b>14.7</b> Test your package</a></li>
+<li class="chapter" data-level="14.8" data-path="creating-r-packages.html"><a href="creating-r-packages.html#checking-and-installing-your-package"><i class="fa fa-check"></i><b>14.8</b> Checking and installing your package</a></li>
+<li class="chapter" data-level="14.9" data-path="creating-r-packages.html"><a href="creating-r-packages.html#sharing-and-releasing-your-package"><i class="fa fa-check"></i><b>14.9</b> Sharing and releasing your package</a></li>
+<li class="chapter" data-level="14.10" data-path="creating-r-packages.html"><a href="creating-r-packages.html#exercise-4"><i class="fa fa-check"></i><b>14.10</b> Exercise</a></li>
+<li class="chapter" data-level="14.11" data-path="creating-r-packages.html"><a href="creating-r-packages.html#more-reading"><i class="fa fa-check"></i><b>14.11</b> More reading</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="publication-graphics.html"><a href="publication-graphics.html"><i class="fa fa-check"></i><b>15</b> Publication Graphics</a><ul>
+<li class="chapter" data-level="15.1" data-path="publication-graphics.html"><a href="publication-graphics.html#learning-objectives-12"><i class="fa fa-check"></i><b>15.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="15.2" data-path="publication-graphics.html"><a href="publication-graphics.html#overview"><i class="fa fa-check"></i><b>15.2</b> Overview</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="publication-graphics.html"><a href="publication-graphics.html#ggplot-vs-base-vs-lattice-vs-xyz"><i class="fa fa-check"></i><b>15.2.1</b> ggplot vs base vs lattice vs XYZ…</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="publication-graphics.html"><a href="publication-graphics.html#setup-1"><i class="fa fa-check"></i><b>15.3</b> Setup</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="publication-graphics.html"><a href="publication-graphics.html#load-salmon-escapement-data"><i class="fa fa-check"></i><b>15.3.1</b> Load salmon escapement data</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="publication-graphics.html"><a href="publication-graphics.html#static-figures-using-ggplot2"><i class="fa fa-check"></i><b>15.4</b> Static figures using <code>ggplot2</code></a><ul>
+<li class="chapter" data-level="15.4.1" data-path="publication-graphics.html"><a href="publication-graphics.html#setting-ggplot-themes"><i class="fa fa-check"></i><b>15.4.1</b> Setting ggplot themes</a></li>
+<li class="chapter" data-level="15.4.2" data-path="publication-graphics.html"><a href="publication-graphics.html#smarter-tick-labels-using-scales"><i class="fa fa-check"></i><b>15.4.2</b> Smarter tick labels using <code>scales</code></a></li>
+<li class="chapter" data-level="15.4.3" data-path="publication-graphics.html"><a href="publication-graphics.html#creating-multiple-plots"><i class="fa fa-check"></i><b>15.4.3</b> Creating multiple plots</a></li>
+</ul></li>
+<li class="chapter" data-level="15.5" data-path="publication-graphics.html"><a href="publication-graphics.html#interactive-visualization-using-leaflet-and-dt"><i class="fa fa-check"></i><b>15.5</b> Interactive visualization using <code>leaflet</code> and <code>DT</code></a><ul>
+<li class="chapter" data-level="15.5.1" data-path="publication-graphics.html"><a href="publication-graphics.html#tables"><i class="fa fa-check"></i><b>15.5.1</b> Tables</a></li>
+<li class="chapter" data-level="15.5.2" data-path="publication-graphics.html"><a href="publication-graphics.html#maps"><i class="fa fa-check"></i><b>15.5.2</b> Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="15.6" data-path="publication-graphics.html"><a href="publication-graphics.html#resources-1"><i class="fa fa-check"></i><b>15.6</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html"><i class="fa fa-check"></i><b>16</b> Writing Good Data Management Plans</a><ul>
+<li class="chapter" data-level="16.1" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html#learning-objectives-13"><i class="fa fa-check"></i><b>16.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="16.2" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html#when-to-plan-the-data-life-cycle"><i class="fa fa-check"></i><b>16.2</b> When to Plan: The Data Life Cycle</a></li>
+<li class="chapter" data-level="16.3" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html#why-plan"><i class="fa fa-check"></i><b>16.3</b> Why Plan?</a></li>
+<li class="chapter" data-level="16.4" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html#how-to-plan"><i class="fa fa-check"></i><b>16.4</b> How to Plan</a></li>
+<li class="chapter" data-level="16.5" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html#what-to-include-in-a-dmp"><i class="fa fa-check"></i><b>16.5</b> What to include in a DMP</a></li>
+<li class="chapter" data-level="16.6" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html#nsf-dmp-requirements"><i class="fa fa-check"></i><b>16.6</b> NSF DMP requirements</a></li>
+<li class="chapter" data-level="16.7" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html#tools-in-support-of-creating-a-dmp"><i class="fa fa-check"></i><b>16.7</b> Tools in Support of Creating a DMP</a></li>
+<li class="chapter" data-level="16.8" data-path="writing-good-data-management-plans.html"><a href="writing-good-data-management-plans.html#hands-on-creating-a-dmp"><i class="fa fa-check"></i><b>16.8</b> Hands-On: Creating a DMP</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html"><i class="fa fa-check"></i><b>17</b> Introduction to Shiny</a><ul>
+<li class="chapter" data-level="17.1" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#learning-objectives-14"><i class="fa fa-check"></i><b>17.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="17.2" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#overview-1"><i class="fa fa-check"></i><b>17.2</b> Overview</a></li>
+<li class="chapter" data-level="17.3" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#create-a-sample-shiny-application"><i class="fa fa-check"></i><b>17.3</b> Create a sample shiny application</a></li>
+<li class="chapter" data-level="17.4" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#interactive-scatterplots"><i class="fa fa-check"></i><b>17.4</b> Interactive scatterplots</a><ul>
+<li class="chapter" data-level="17.4.1" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#load-data-for-the-example"><i class="fa fa-check"></i><b>17.4.1</b> Load data for the example</a></li>
+<li class="chapter" data-level="17.4.2" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#add-a-simple-scatterplot-using-ggplot"><i class="fa fa-check"></i><b>17.4.2</b> Add a simple scatterplot using ggplot</a></li>
+<li class="chapter" data-level="17.4.3" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#add-sliders-to-set-the-min-depth-and-max-depth-for-the-x-axis"><i class="fa fa-check"></i><b>17.4.3</b> Add sliders to set the min depth and max depth for the X axis</a></li>
+<li class="chapter" data-level="17.4.4" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#connect-the-slider-values-to-the-plot"><i class="fa fa-check"></i><b>17.4.4</b> Connect the slider values to the plot</a></li>
+<li class="chapter" data-level="17.4.5" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#negative-depths"><i class="fa fa-check"></i><b>17.4.5</b> Negative depths?</a></li>
+</ul></li>
+<li class="chapter" data-level="17.5" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#shiny-architecture"><i class="fa fa-check"></i><b>17.5</b> Shiny architecture</a></li>
+<li class="chapter" data-level="17.6" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#extending-the-user-interface-with-dynamic-plots"><i class="fa fa-check"></i><b>17.6</b> Extending the user interface with dynamic plots</a><ul>
+<li class="chapter" data-level="17.6.1" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#vertical-layout"><i class="fa fa-check"></i><b>17.6.1</b> Vertical layout</a></li>
+<li class="chapter" data-level="17.6.2" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#add-the-dynamic-plot"><i class="fa fa-check"></i><b>17.6.2</b> Add the dynamic plot</a></li>
+<li class="chapter" data-level="17.6.3" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#finishing-touches-data-citation"><i class="fa fa-check"></i><b>17.6.3</b> Finishing touches: data citation</a></li>
+</ul></li>
+<li class="chapter" data-level="17.7" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#publishing-shiny-applications"><i class="fa fa-check"></i><b>17.7</b> Publishing Shiny applications</a><ul>
+<li class="chapter" data-level="17.7.1" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#publishing-to-shinyapps.io"><i class="fa fa-check"></i><b>17.7.1</b> Publishing to shinyapps.io</a></li>
+</ul></li>
+<li class="chapter" data-level="17.8" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#summary-2"><i class="fa fa-check"></i><b>17.8</b> Summary</a></li>
+<li class="chapter" data-level="17.9" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#full-source-code-for-the-final-application"><i class="fa fa-check"></i><b>17.9</b> Full source code for the final application</a></li>
+<li class="chapter" data-level="17.10" data-path="introduction-to-shiny.html"><a href="introduction-to-shiny.html#resources-2"><i class="fa fa-check"></i><b>17.10</b> Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="hands-on-clean-and-integrate-datasets.html"><a href="hands-on-clean-and-integrate-datasets.html"><i class="fa fa-check"></i><b>18</b> Hands On: Clean and Integrate Datasets</a><ul>
+<li class="chapter" data-level="18.1" data-path="hands-on-clean-and-integrate-datasets.html"><a href="hands-on-clean-and-integrate-datasets.html#learning-objectives-15"><i class="fa fa-check"></i><b>18.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="18.2" data-path="hands-on-clean-and-integrate-datasets.html"><a href="hands-on-clean-and-integrate-datasets.html#outline"><i class="fa fa-check"></i><b>18.2</b> Outline</a></li>
+<li class="chapter" data-level="18.3" data-path="hands-on-clean-and-integrate-datasets.html"><a href="hands-on-clean-and-integrate-datasets.html#high-level-steps"><i class="fa fa-check"></i><b>18.3</b> High-level steps</a><ul>
+<li class="chapter" data-level="18.3.1" data-path="hands-on-clean-and-integrate-datasets.html"><a href="hands-on-clean-and-integrate-datasets.html#visual-schematic-of-steps"><i class="fa fa-check"></i><b>18.3.1</b> Visual schematic of steps</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4" data-path="hands-on-clean-and-integrate-datasets.html"><a href="hands-on-clean-and-integrate-datasets.html#full-solution"><i class="fa fa-check"></i><b>18.4</b> Full solution</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html"><i class="fa fa-check"></i><b>19</b> Spatial vector analysis using <code>sf</code></a><ul>
+<li class="chapter" data-level="19.1" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#learning-objectives-16"><i class="fa fa-check"></i><b>19.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="19.2" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#introduction-2"><i class="fa fa-check"></i><b>19.2</b> Introduction</a></li>
+<li class="chapter" data-level="19.3" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#reading-a-shapefile"><i class="fa fa-check"></i><b>19.3</b> Reading a shapefile</a><ul>
+<li class="chapter" data-level="19.3.1" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#coordinate-reference-system"><i class="fa fa-check"></i><b>19.3.1</b> Coordinate Reference System</a></li>
+<li class="chapter" data-level="19.3.2" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#attributes"><i class="fa fa-check"></i><b>19.3.2</b> Attributes</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#sf-the-tidyverse"><i class="fa fa-check"></i><b>19.4</b> <code>sf</code> &amp; the Tidyverse</a><ul>
+<li class="chapter" data-level="19.4.1" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#joins"><i class="fa fa-check"></i><b>19.4.1</b> Joins</a></li>
+<li class="chapter" data-level="19.4.2" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#group-and-summarize"><i class="fa fa-check"></i><b>19.4.2</b> Group and summarize</a></li>
+<li class="chapter" data-level="19.4.3" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#save"><i class="fa fa-check"></i><b>19.4.3</b> Save</a></li>
+</ul></li>
+<li class="chapter" data-level="19.5" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#visualize-with-ggplot"><i class="fa fa-check"></i><b>19.5</b> Visualize with ggplot</a></li>
+<li class="chapter" data-level="19.6" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#incorporate-base-maps-into-static-maps-using-ggmap"><i class="fa fa-check"></i><b>19.6</b> Incorporate base maps into static maps using <code>ggmap</code></a></li>
+<li class="chapter" data-level="19.7" data-path="spatial-vector-analysis-using-sf.html"><a href="spatial-vector-analysis-using-sf.html#visualize-sf-objects-with-leaflet"><i class="fa fa-check"></i><b>19.7</b> Visualize <code>sf</code> objects with leaflet</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="reproducibility-and-provenance.html"><a href="reproducibility-and-provenance.html"><i class="fa fa-check"></i><b>20</b> Reproducibility and Provenance</a><ul>
+<li class="chapter" data-level="20.1" data-path="reproducibility-and-provenance.html"><a href="reproducibility-and-provenance.html#learning-objectives-17"><i class="fa fa-check"></i><b>20.1</b> Learning Objectives</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="additional-resources-using-netcdf-files.html"><a href="additional-resources-using-netcdf-files.html"><i class="fa fa-check"></i><b>21</b> Additional Resources: Using NetCDF files</a><ul>
+<li class="chapter" data-level="21.1" data-path="additional-resources-using-netcdf-files.html"><a href="additional-resources-using-netcdf-files.html#learning-objectives-18"><i class="fa fa-check"></i><b>21.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="21.2" data-path="additional-resources-using-netcdf-files.html"><a href="additional-resources-using-netcdf-files.html#introduction-3"><i class="fa fa-check"></i><b>21.2</b> Introduction</a></li>
+<li class="chapter" data-level="21.3" data-path="additional-resources-using-netcdf-files.html"><a href="additional-resources-using-netcdf-files.html#reading-in-data"><i class="fa fa-check"></i><b>21.3</b> Reading in data</a></li>
+<li class="chapter" data-level="21.4" data-path="additional-resources-using-netcdf-files.html"><a href="additional-resources-using-netcdf-files.html#reshaping-the-data-into-a-data.frame"><i class="fa fa-check"></i><b>21.4</b> Reshaping the data into a data.frame</a></li>
+<li class="chapter" data-level="21.5" data-path="additional-resources-using-netcdf-files.html"><a href="additional-resources-using-netcdf-files.html#plotting"><i class="fa fa-check"></i><b>21.5</b> Plotting</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="additional-resources-collaboration-authorship-and-data-policies.html"><a href="additional-resources-collaboration-authorship-and-data-policies.html"><i class="fa fa-check"></i><b>22</b> Additional Resources: Collaboration, authorship and data policies</a><ul>
+<li class="chapter" data-level="22.1" data-path="additional-resources-collaboration-authorship-and-data-policies.html"><a href="additional-resources-collaboration-authorship-and-data-policies.html#resources-3"><i class="fa fa-check"></i><b>22.1</b> Resources</a></li>
+<li class="chapter" data-level="22.2" data-path="additional-resources-collaboration-authorship-and-data-policies.html"><a href="additional-resources-collaboration-authorship-and-data-policies.html#references"><i class="fa fa-check"></i><b>22.2</b> References</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Reproducible Research Techniques for Synthesis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="introduction-to-shiny" class="section level1">
+<h1><span class="header-section-number">17</span> Introduction to Shiny</h1>
+<div id="learning-objectives-14" class="section level2">
+<h2><span class="header-section-number">17.1</span> Learning Objectives</h2>
+<p>In this lesson we will:</p>
+<ul>
+<li>review the capabilities in Shiny applications</li>
+<li>learn about the basic layout for Shiny interfaces</li>
+<li>learn about the server component for Shiny applications</li>
+<li>build a simple shiny application for interactive plotting</li>
+</ul>
+</div>
+<div id="overview-1" class="section level2">
+<h2><span class="header-section-number">17.2</span> Overview</h2>
+<p><a href="http://shiny.rstudio.com/">Shiny</a> is an R package for creating interactive data visualizations embedded in a web application that you and your colleagues can view with just a web browser. Shiny apps are relatively easy to construct, and provide interactive features for letting others share and explore data and analyses.</p>
+<p>There are some really great examples of what Shiny can do on the RStudio webite like <a href="https://shiny.rstudio.com/gallery/movie-explorer.html">this one exploring movie metadata</a>. A more scientific example is a tool from the SASAP project exploring <a href="https://sasap-data.shinyapps.io/board_of_fisheries/">proposal data from the Alaska Board of Fisheries</a>.</p>
+<p><img src="images/shiny-sasap-app.png" width="1574" /></p>
+<p>Most any kind of analysis and visualization that you can do in R can be turned into a useful interactive visualization for the web that lets people explore your data more intuitively But, a Shiny application is not the best way to preserve or archive your data. Instead, for preservation use a repository that is archival in its mission like the <a href="https://knb.ecoinformatics.org">KNB Data Repository</a>, <a href="https://zenodo.org">Zenodo</a>, or <a href="https://datadryad.org">Dryad</a>. This will assign a citable identfier to the specific version of your data, which you can then read in an interactive visualiztion with Shiny.</p>
+<p>For example, the data for the Alaska Board of Fisheries application is published on the KNB and is citable as:</p>
+<p>Meagan Krupa, Molly Cunfer, and Jeanette Clark. 2017. Alaska Board of Fisheries Proposals 1959-2016. Knowledge Network for Biocomplexity. <a href="https://doi.org/10.5063/F1QN652R">doi:10.5063/F1QN652R</a>.</p>
+<p>While that is the best citation and archival location of the dataset, using Shiny, one can also provide an easy-to-use exploratory web application that you use to make your point that directly loads the data from the archival site. For example, the Board of Fisheries application above lets people who are not inherently familiar with the data to generate graphs showing the relationships between the variables in the dataset.</p>
+<p>We’re going to create a simple shiny app with two sliders so we can interactively control inputs to an R function. These sliders will allow us to interactively control a plot.</p>
+</div>
+<div id="create-a-sample-shiny-application" class="section level2">
+<h2><span class="header-section-number">17.3</span> Create a sample shiny application</h2>
+<ul>
+<li>File &gt; New &gt; Shiny Web App…</li>
+<li>Set some fields:
+<img src="images/shiny-new-app.png" alt="creating a new Shiny app with RStudio" />
+<ul>
+<li>Name it “myapp” or something else</li>
+<li>Select “Single File”</li>
+<li>Choose to create it in a new folder called ‘shiny-demo’</li>
+<li>Click Create</li>
+</ul></li>
+</ul>
+<p>RStudio will create a new file called <code>app.R</code> that contains the Shiny application.<br />
+Run it by choosing <code>Run App</code> from the RStudio editor header bar. This will bring up
+the default demo Shiny application, which plots a histogram and lets you control
+the number of bins in the plot.</p>
+<p><img src="images/shiny-default-app.png" /></p>
+<p>Note that you can drag the slider to change the number of bins in the histogram.</p>
+</div>
+<div id="interactive-scatterplots" class="section level2">
+<h2><span class="header-section-number">17.4</span> Interactive scatterplots</h2>
+<p>Let’s modify this application to plot water biogeochemistry data in a scatterplot, and allow
+aspects of the plot to be interactively changed.</p>
+<div id="load-data-for-the-example" class="section level3">
+<h3><span class="header-section-number">17.4.1</span> Load data for the example</h3>
+<p>Navigate to this dataset by Craig Tweedie that is published on the Arctic Data Center.
+<a href="http://doi.org/10.18739/A25T3FZ8X">Craig Tweedie. 2009. North Pole Environmental Observatory Bottle Chemistry. Arctic Data Center.
+doi:10.18739/A25T3FZ8X.</a>, and copy the URL for the first csv file
+called “BGchem2008data.csv”</p>
+<p>The data can be read into the application using <code>read.csv()</code>. The data contains chemistry measurements at various times and stations.</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">data_url &lt;-<span class="st"> &quot;https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A35ad7624-b159-4e29-a700-0c0770419941&quot;</span></a>
+<a class="sourceLine" id="cb179-2" data-line-number="2">bg_chem &lt;-<span class="st"> </span><span class="kw">read.csv</span>(data_url, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb179-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb179-4" data-line-number="4"><span class="co"># Sometimes you need to wrap the web address in url() on some platforms</span></a>
+<a class="sourceLine" id="cb179-5" data-line-number="5"><span class="co">#bg_chem &lt;- read.csv(url(data_url, method = &quot;libcurl&quot;), stringsAsFactors = FALSE)</span></a>
+<a class="sourceLine" id="cb179-6" data-line-number="6"><span class="kw">names</span>(bg_chem)</a></code></pre></div>
+<pre><code>##  [1] &quot;Date&quot;            &quot;Time&quot;            &quot;Station&quot;         &quot;Latitude&quot;       
+##  [5] &quot;Longitude&quot;       &quot;Target_Depth&quot;    &quot;CTD_Depth&quot;       &quot;CTD_Salinity&quot;   
+##  [9] &quot;CTD_Temperature&quot; &quot;Bottle_Salinity&quot; &quot;d18O&quot;            &quot;Ba&quot;             
+## [13] &quot;Si&quot;              &quot;NO3&quot;             &quot;NO2&quot;             &quot;NH4&quot;            
+## [17] &quot;P&quot;               &quot;TA&quot;              &quot;O2&quot;</code></pre>
+</div>
+<div id="add-a-simple-scatterplot-using-ggplot" class="section level3">
+<h3><span class="header-section-number">17.4.2</span> Add a simple scatterplot using ggplot</h3>
+<p>A number of chemistry parameters are sensitive to depth, so let’s start by plotting <code>CTD_Salinitiy</code> as
+a function of <code>CTD_Depth</code>. We do so by switching out the histogram code for a simple ggplot, like so:</p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1">server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output) {</a>
+<a class="sourceLine" id="cb181-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb181-3" data-line-number="3">    output<span class="op">$</span>depthPlot &lt;-<span class="st"> </span><span class="kw">renderPlot</span>({</a>
+<a class="sourceLine" id="cb181-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb181-5" data-line-number="5">        <span class="kw">ggplot</span>(bg_chem, <span class="dt">mapping =</span> <span class="kw">aes</span>(CTD_Depth, CTD_Salinity)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb181-6" data-line-number="6"><span class="st">            </span><span class="kw">geom_point</span>(<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>, <span class="dt">size=</span><span class="dv">4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb181-7" data-line-number="7"><span class="st">            </span><span class="kw">theme_light</span>()</a>
+<a class="sourceLine" id="cb181-8" data-line-number="8">    })</a>
+<a class="sourceLine" id="cb181-9" data-line-number="9">}</a></code></pre></div>
+<p>If you now reload the app, it will display the simple scatterplot instead of
+the histogram. At this point, we haven’t added any interactivity.</p>
+<p>In a Shiny application, the <code>server</code> function provides the part of the application
+that creates our interactive components, and returns them to the user interface (<code>ui</code>)
+to be displayed on the page.</p>
+</div>
+<div id="add-sliders-to-set-the-min-depth-and-max-depth-for-the-x-axis" class="section level3">
+<h3><span class="header-section-number">17.4.3</span> Add sliders to set the min depth and max depth for the X axis</h3>
+<p>To make the plot interactive, first we need to modify our user interface to include
+widgits that we’ll use to control the plot. Specifically, we will add a new slider
+for setting the <code>mindepth</code> parameter, and modify the existing slider to be used for
+the <code>maxdepth</code> parameter. To do so, modify the <code>sidebarPanel()</code> call to include two
+<code>sliderInput()</code> function calls:</p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1">        <span class="kw">sidebarPanel</span>(</a>
+<a class="sourceLine" id="cb182-2" data-line-number="2">            <span class="kw">sliderInput</span>(<span class="st">&quot;mindepth&quot;</span>, <span class="st">&quot;Min depth:&quot;</span>, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">500</span>, <span class="dt">value =</span> <span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb182-3" data-line-number="3">            <span class="kw">sliderInput</span>(<span class="st">&quot;maxdepth&quot;</span>, <span class="st">&quot;Max depth:&quot;</span>, <span class="dt">min =</span> <span class="dv">1</span>, <span class="dt">max =</span> <span class="dv">500</span>, <span class="dt">value =</span> <span class="dv">50</span>)</a>
+<a class="sourceLine" id="cb182-4" data-line-number="4">        )</a></code></pre></div>
+<p>If you reload the app, you’ll see two new sliders, but if you change them, they don’t
+make any changes to the plot. Let’s fix that.</p>
+</div>
+<div id="connect-the-slider-values-to-the-plot" class="section level3">
+<h3><span class="header-section-number">17.4.4</span> Connect the slider values to the plot</h3>
+<p>Finally, to make the plot interactive, we can use the <code>input</code> and <code>output</code> variables
+that are passed into the <code>server</code> function to access the current values of the sliders.
+In Shiny, each UI component is given an input identifier when it is created, which is used as the name of the value in the input list. So, we can access the minimum depth as <code>input$mindepth</code> and
+the max as <code>input$maxdepth</code>. Let’s use these values now by adding limits to our X axis
+in the ggplot:</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1">        <span class="kw">ggplot</span>(bg_chem, <span class="dt">mapping =</span> <span class="kw">aes</span>(CTD_Depth, CTD_Salinity)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb183-2" data-line-number="2"><span class="st">            </span><span class="kw">geom_point</span>(<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>, <span class="dt">size=</span><span class="dv">4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb183-3" data-line-number="3"><span class="st">            </span><span class="kw">xlim</span>(input<span class="op">$</span>mindepth,input<span class="op">$</span>maxdepth) <span class="op">+</span></a>
+<a class="sourceLine" id="cb183-4" data-line-number="4"><span class="st">            </span><span class="kw">theme_light</span>()</a></code></pre></div>
+<p>At this point, we have a fully interactive plot, and the sliders can be used to change the
+min and max of the Depth axis.</p>
+<p><img src="images/shiny-bgchem-1.png" /></p>
+<p>Looks so shiny!</p>
+</div>
+<div id="negative-depths" class="section level3">
+<h3><span class="header-section-number">17.4.5</span> Negative depths?</h3>
+<p>What happens if a clever user sets the minimum for the X axis at a greater value than the maximum?
+You’ll see that the direction of the X axis becomes reversed, and the plotted points display right
+to left. This is really an error condition. Rather than use two independent sliders, we can modify
+the first slider to output a range of values, which will prevent the min from being greater than
+the max. You do so by setting the value of the slider to a vector of length 2, representing
+the default min and max for the slider, such as <code>value = c(0,100)</code>. So, delete the second slider,
+rename the first, and provide a vector for the value, like this:</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" data-line-number="1">        <span class="kw">sidebarPanel</span>(</a>
+<a class="sourceLine" id="cb184-2" data-line-number="2">            <span class="kw">sliderInput</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;Depth:&quot;</span>, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">500</span>, <span class="dt">value =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">100</span>))</a>
+<a class="sourceLine" id="cb184-3" data-line-number="3">        )</a></code></pre></div>
+<p>Now, modify the ggplot to use this new <code>depth</code> slider value, which now will be returned
+as a vector of length 2. The first element of the depth vector is the min, and the
+second is the max value on the slider.</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1">        <span class="kw">ggplot</span>(bg_chem, <span class="dt">mapping =</span> <span class="kw">aes</span>(CTD_Depth, CTD_Salinity)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb185-2" data-line-number="2"><span class="st">            </span><span class="kw">geom_point</span>(<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>, <span class="dt">size=</span><span class="dv">4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb185-3" data-line-number="3"><span class="st">            </span><span class="kw">xlim</span>(input<span class="op">$</span>depth[<span class="dv">1</span>],input<span class="op">$</span>depth[<span class="dv">2</span>]) <span class="op">+</span></a>
+<a class="sourceLine" id="cb185-4" data-line-number="4"><span class="st">            </span><span class="kw">theme_light</span>()</a></code></pre></div>
+<p><img src="images/shiny-bgchem-2.png" /></p>
+</div>
+</div>
+<div id="shiny-architecture" class="section level2">
+<h2><span class="header-section-number">17.5</span> Shiny architecture</h2>
+<p>A Shiny application consists of two functions, the <code>ui</code> and the <code>server</code>. The <code>ui</code>
+function is responsible for drawing the web page, while the <code>server</code> is responsible
+for any calculations and for creating any dynamic components to be rendered.</p>
+<p>Each time that a user makes a change to one of the interactive widgets, the <code>ui</code>
+grabs the new value (say, the new slider min and max) and sends a request to the
+<code>server</code> to re-render the output, passing it the new <code>input</code> values that the user
+had set. These interactions can sometimes happen on one computer (e.g., if the
+application is running in your local RStudio instance). Other times, the <code>ui</code> runs on
+the web browser on one computer, while the <code>server</code> runs on a remote computer somewhere
+else on the Internet (e.g., if the application is deployed to a web server).</p>
+</div>
+<div id="extending-the-user-interface-with-dynamic-plots" class="section level2">
+<h2><span class="header-section-number">17.6</span> Extending the user interface with dynamic plots</h2>
+<p>If you want to display more than one plot in your application, and provide
+a different set of controls for each plot, the current layout would be too simple.
+Next we will extend the application to break the page up into vertical sections, and
+add a new plot in which the user can choose which variables are plotted. The current
+layout is set up such that the <code>FluidPage</code> contains the title element, and then
+a <code>sidebarLayout</code>, which is divided horizontally into a <code>sidebarPanel</code> and a
+<code>mainPanel</code>.</p>
+<p><img src="images/shiny-layout-1.png" /></p>
+<div id="vertical-layout" class="section level3">
+<h3><span class="header-section-number">17.6.1</span> Vertical layout</h3>
+<p>To extend the layout, we will first nest the existing <code>sidebarLayout</code> in a new
+<code>verticalLayout</code>, which simply flows components down the page vertically. Then
+we will add a new <code>sidebarLayout</code> to contain the bottom controls and graph.</p>
+<p><img src="images/shiny-layout-2.png" /></p>
+<p>This mechanism of alternately nesting vertical and horizontal panels can be used
+to segment the screen into boxes with rules about how each of the panels is resized,
+and how the content flows when the browser window is resized. The <code>sidebarLayout</code>
+works to keep the sidebar about 1/3 of the box, and the main panel about 2/3, which
+is a good proportion for our controls and plots. Add the verticalLayout, and the
+second sidebarLayout for the second plot as follows:</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">    <span class="kw">verticalLayout</span>(</a>
+<a class="sourceLine" id="cb186-2" data-line-number="2">        <span class="co"># Sidebar with a slider input for depth axis</span></a>
+<a class="sourceLine" id="cb186-3" data-line-number="3">        <span class="kw">sidebarLayout</span>(</a>
+<a class="sourceLine" id="cb186-4" data-line-number="4">            <span class="kw">sidebarPanel</span>(</a>
+<a class="sourceLine" id="cb186-5" data-line-number="5">                <span class="kw">sliderInput</span>(<span class="st">&quot;depth&quot;</span>,</a>
+<a class="sourceLine" id="cb186-6" data-line-number="6">                            <span class="st">&quot;Depth:&quot;</span>,</a>
+<a class="sourceLine" id="cb186-7" data-line-number="7">                            <span class="dt">min =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb186-8" data-line-number="8">                            <span class="dt">max =</span> <span class="dv">500</span>,</a>
+<a class="sourceLine" id="cb186-9" data-line-number="9">                            <span class="dt">value =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">100</span>))</a>
+<a class="sourceLine" id="cb186-10" data-line-number="10">            ),</a>
+<a class="sourceLine" id="cb186-11" data-line-number="11">            <span class="co"># Show a plot of the generated distribution</span></a>
+<a class="sourceLine" id="cb186-12" data-line-number="12">            <span class="kw">mainPanel</span>(</a>
+<a class="sourceLine" id="cb186-13" data-line-number="13">               <span class="kw">plotOutput</span>(<span class="st">&quot;depthPlot&quot;</span>)</a>
+<a class="sourceLine" id="cb186-14" data-line-number="14">            )</a>
+<a class="sourceLine" id="cb186-15" data-line-number="15">        ),</a>
+<a class="sourceLine" id="cb186-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb186-17" data-line-number="17">        tags<span class="op">$</span><span class="kw">hr</span>(),</a>
+<a class="sourceLine" id="cb186-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb186-19" data-line-number="19">        <span class="kw">sidebarLayout</span>(</a>
+<a class="sourceLine" id="cb186-20" data-line-number="20">            <span class="kw">sidebarPanel</span>(</a>
+<a class="sourceLine" id="cb186-21" data-line-number="21">                <span class="kw">selectInput</span>(<span class="st">&quot;x_variable&quot;</span>, <span class="st">&quot;X Variable&quot;</span>, cols, <span class="dt">selected =</span> <span class="st">&quot;CTD_Salinity&quot;</span>),</a>
+<a class="sourceLine" id="cb186-22" data-line-number="22">                <span class="kw">selectInput</span>(<span class="st">&quot;y_variable&quot;</span>, <span class="st">&quot;Y Variable&quot;</span>, cols, <span class="dt">selected =</span> <span class="st">&quot;d18O&quot;</span>),</a>
+<a class="sourceLine" id="cb186-23" data-line-number="23">                <span class="kw">selectInput</span>(<span class="st">&quot;color_variable&quot;</span>, <span class="st">&quot;Color&quot;</span>, cols, <span class="dt">selected =</span> <span class="st">&quot;P&quot;</span>)</a>
+<a class="sourceLine" id="cb186-24" data-line-number="24">            ),</a>
+<a class="sourceLine" id="cb186-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb186-26" data-line-number="26">            <span class="co"># Show a plot with configurable axes</span></a>
+<a class="sourceLine" id="cb186-27" data-line-number="27">            <span class="kw">mainPanel</span>(</a>
+<a class="sourceLine" id="cb186-28" data-line-number="28">                <span class="kw">plotOutput</span>(<span class="st">&quot;varPlot&quot;</span>)</a>
+<a class="sourceLine" id="cb186-29" data-line-number="29">            )</a>
+<a class="sourceLine" id="cb186-30" data-line-number="30">        ),</a>
+<a class="sourceLine" id="cb186-31" data-line-number="31">        tags<span class="op">$</span><span class="kw">hr</span>()</a></code></pre></div>
+<p>Note that the second <code>sidebarPanel</code> uses three <code>selectInput</code> elements to provide dropdown
+menus with the variable columns (<code>cols</code>) from our data frame. To manage that, we need to
+first set up the cols variable, which we do by selecting only the numeric variables
+from the <code>bg_chem</code> data frame, and then saving the name in a variable:</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1">bg_chem &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">url</span>(data_url, <span class="dt">method=</span><span class="st">&quot;libcurl&quot;</span>), <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb187-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>Date, <span class="op">-</span>Time, <span class="op">-</span>Station)</a>
+<a class="sourceLine" id="cb187-3" data-line-number="3">cols &lt;-<span class="st"> </span><span class="kw">names</span>(bg_chem)</a></code></pre></div>
+<p>Don’t forget to add <code>library(dplyr)</code> to the library imports at the top.</p>
+</div>
+<div id="add-the-dynamic-plot" class="section level3">
+<h3><span class="header-section-number">17.6.2</span> Add the dynamic plot</h3>
+<p>Because we named the second plot <code>varPlot</code> in our UI section, we now need to modify
+the server to produce this plot. Its very similar to the first plot, but this time
+we want to use the selected vsriables from the user controls to choose which
+variables are plotted. These variable names from the <code>$input</code> are character
+strings, and so would not be recognized as symbols in the <code>aes</code> mapping in ggplot.
+Instead, we can use <code>aes_string()</code> to provide character names for the variables to
+be used in the mappings.</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" data-line-number="1">    output<span class="op">$</span>varPlot &lt;-<span class="st"> </span><span class="kw">renderPlot</span>({</a>
+<a class="sourceLine" id="cb188-2" data-line-number="2">        <span class="kw">ggplot</span>(bg_chem, <span class="dt">mapping =</span> <span class="kw">aes_string</span>(<span class="dt">x =</span> input<span class="op">$</span>x_variable,</a>
+<a class="sourceLine" id="cb188-3" data-line-number="3">                                             <span class="dt">y =</span> input<span class="op">$</span>y_variable,</a>
+<a class="sourceLine" id="cb188-4" data-line-number="4">                                             <span class="dt">color =</span> input<span class="op">$</span>color_variable)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb188-5" data-line-number="5"><span class="st">            </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb188-6" data-line-number="6"><span class="st">            </span><span class="kw">scale_color_gradient2</span>(<span class="dt">low=</span><span class="st">&quot;midnightblue&quot;</span>, </a>
+<a class="sourceLine" id="cb188-7" data-line-number="7">                                  <span class="dt">mid=</span><span class="st">&quot;white&quot;</span>, </a>
+<a class="sourceLine" id="cb188-8" data-line-number="8">                                  <span class="dt">high=</span><span class="st">&quot;firebrick&quot;</span>, </a>
+<a class="sourceLine" id="cb188-9" data-line-number="9">                                  <span class="dt">midpoint =</span> <span class="kw">mean</span>(bg_chem[,input<span class="op">$</span>color_variable])) <span class="op">+</span></a>
+<a class="sourceLine" id="cb188-10" data-line-number="10"><span class="st">            </span><span class="kw">theme_light</span>()</a></code></pre></div>
+<p>Notice that we also use <code>scale_color_gradient2</code> to set up a continuous color
+scale that uses the mean of the chosen color variable as the midpoint of the
+color ramp, which makes the display balance nicely.</p>
+</div>
+<div id="finishing-touches-data-citation" class="section level3">
+<h3><span class="header-section-number">17.6.3</span> Finishing touches: data citation</h3>
+<p>Citing the data that we used for this application is the right thing to do, and easy.
+You can add arbitrary HTML to the layout using utility functions in the <code>tags</code> list.</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1">    <span class="co"># Application title</span></a>
+<a class="sourceLine" id="cb189-2" data-line-number="2">    <span class="kw">titlePanel</span>(<span class="st">&quot;Water biogeochemistry&quot;</span>),</a>
+<a class="sourceLine" id="cb189-3" data-line-number="3">    <span class="kw">p</span>(<span class="st">&quot;Data for this application are from: &quot;</span>),</a>
+<a class="sourceLine" id="cb189-4" data-line-number="4">    tags<span class="op">$</span><span class="kw">ul</span>(</a>
+<a class="sourceLine" id="cb189-5" data-line-number="5">        tags<span class="op">$</span><span class="kw">li</span>(<span class="st">&quot;Craig Tweedie. 2009. North Pole Environmental Observatory Bottle Chemistry. Arctic Data Center.&quot;</span>,</a>
+<a class="sourceLine" id="cb189-6" data-line-number="6">                tags<span class="op">$</span><span class="kw">a</span>(<span class="st">&quot;doi:10.18739/A25T3FZ8X&quot;</span>, <span class="dt">href=</span><span class="st">&quot;http://doi.org/10.18739/A25T3FZ8X&quot;</span>)</a>
+<a class="sourceLine" id="cb189-7" data-line-number="7">        )</a>
+<a class="sourceLine" id="cb189-8" data-line-number="8">    ),</a>
+<a class="sourceLine" id="cb189-9" data-line-number="9">    tags<span class="op">$</span><span class="kw">br</span>(),</a>
+<a class="sourceLine" id="cb189-10" data-line-number="10">    tags<span class="op">$</span><span class="kw">hr</span>(),</a></code></pre></div>
+<p>The final application shows the data citation, the depth plot, and the
+configurable scatterplot in three distinct panels.</p>
+<p><img src="images/shiny-bgchem-app.png" /></p>
+</div>
+</div>
+<div id="publishing-shiny-applications" class="section level2">
+<h2><span class="header-section-number">17.7</span> Publishing Shiny applications</h2>
+<p>Once you’ve finished your app, you’ll want to share it with others. To do so, you need to
+publish it to a server that is set up to <a href="https://shiny.rstudio.com/deploy/">handle Shiny apps</a>.<br />
+Your main choices are:</p>
+<ul>
+<li><a href="http://www.shinyapps.io/">shinyapps.io</a> (Hosted by RStudio)
+<ul>
+<li>This is a service offered by RStudio, which is initially free for 5 or fewer apps
+and for limited run time, but has paid tiers to support more demanding apps. You
+can deploy your app using a single button push from within RStudio.</li>
+</ul></li>
+<li><a href="https://www.rstudio.com/products/shiny/shiny-server/">Shiny server</a> (On premises)
+<ul>
+<li>This is an open source server which you can deploy for free on your own hardware.
+It requires more setup and configuration, but it can be used without a fee.</li>
+</ul></li>
+<li><a href="https://www.rstudio.com/products/connect/">RStudio connect</a> (On premises)
+<ul>
+<li>This is a paid product you install on your local hardware, and that contains the most
+advanced suite of services for hosting apps and RMarkdown reports. You can
+publish using a single button click from RStudio.</li>
+</ul></li>
+</ul>
+<p>A comparison of <a href="https://rstudio.com/products/shiny/shiny-server/">publishing features</a> is available from RStudio.</p>
+<div id="publishing-to-shinyapps.io" class="section level3">
+<h3><span class="header-section-number">17.7.1</span> Publishing to shinyapps.io</h3>
+<p>The easiest path is to create an account on shinyapps.io, and then configure RStudio to
+use that account for publishing. Instructions for enabling your local RStudio to publish
+to your account are displayed when you first log into shinyapps.io:</p>
+<p><img src="images/shiny-io-account.png" /></p>
+<p>Once your account is configured locally, you can simply use the <code>Publish</code> button from the
+application window in RStudio, and your app will be live before you know it!</p>
+<p><img src="images/shiny-publish.png" /></p>
+</div>
+</div>
+<div id="summary-2" class="section level2">
+<h2><span class="header-section-number">17.8</span> Summary</h2>
+<p>Shiny is a fantastic way to quickly and efficiently provide data exploration for your
+data and code. We highly recommend it for its interactivity, but an archival-quality
+repository is the best long-term home for your data and products. In this example,
+we used data drawn directly from the <a href="http://doi.org/10.18739/A25T3FZ8X">KNB repository</a>
+in our Shiny app, which offers both the preservation guarantees of an archive, plus
+the interactive data exploration from Shiny. You can utilize the full power of R and
+the tidyverse for writing your interactive applications.</p>
+</div>
+<div id="full-source-code-for-the-final-application" class="section level2">
+<h2><span class="header-section-number">17.9</span> Full source code for the final application</h2>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1"><span class="co">#</span></a>
+<a class="sourceLine" id="cb190-2" data-line-number="2"><span class="co"># This is a demonstration Shiny web application showing how to build a simple</span></a>
+<a class="sourceLine" id="cb190-3" data-line-number="3"><span class="co"># data exploration application.</span></a>
+<a class="sourceLine" id="cb190-4" data-line-number="4"><span class="co">#</span></a>
+<a class="sourceLine" id="cb190-5" data-line-number="5"><span class="kw">library</span>(shiny)</a>
+<a class="sourceLine" id="cb190-6" data-line-number="6"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb190-7" data-line-number="7"><span class="kw">library</span>(dplyr)</a>
+<a class="sourceLine" id="cb190-8" data-line-number="8"><span class="kw">library</span>(tidyr)</a>
+<a class="sourceLine" id="cb190-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb190-10" data-line-number="10"><span class="co"># Load data from Arctic Data Center</span></a>
+<a class="sourceLine" id="cb190-11" data-line-number="11">data_url &lt;-<span class="st"> &quot;https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A35ad7624-b159-4e29-a700-0c0770419941&quot;</span></a>
+<a class="sourceLine" id="cb190-12" data-line-number="12">bg_chem &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">url</span>(data_url, <span class="dt">method=</span><span class="st">&quot;libcurl&quot;</span>), <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb190-13" data-line-number="13"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>Date, <span class="op">-</span>Time, <span class="op">-</span>Station)</a>
+<a class="sourceLine" id="cb190-14" data-line-number="14">cols &lt;-<span class="st"> </span><span class="kw">names</span>(bg_chem)</a>
+<a class="sourceLine" id="cb190-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb190-16" data-line-number="16"><span class="co"># Define UI for application that draws two scatter plots</span></a>
+<a class="sourceLine" id="cb190-17" data-line-number="17">ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</a>
+<a class="sourceLine" id="cb190-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb190-19" data-line-number="19">    <span class="co"># Application title</span></a>
+<a class="sourceLine" id="cb190-20" data-line-number="20">    <span class="kw">titlePanel</span>(<span class="st">&quot;Water biogeochemistry&quot;</span>),</a>
+<a class="sourceLine" id="cb190-21" data-line-number="21">    <span class="kw">p</span>(<span class="st">&quot;Data for this application are from: &quot;</span>),</a>
+<a class="sourceLine" id="cb190-22" data-line-number="22">    tags<span class="op">$</span><span class="kw">ul</span>(</a>
+<a class="sourceLine" id="cb190-23" data-line-number="23">        tags<span class="op">$</span><span class="kw">li</span>(<span class="st">&quot;Craig Tweedie. 2009. North Pole Environmental Observatory Bottle Chemistry. Arctic Data Center.&quot;</span>,</a>
+<a class="sourceLine" id="cb190-24" data-line-number="24">                tags<span class="op">$</span><span class="kw">a</span>(<span class="st">&quot;doi:10.18739/A25T3FZ8X&quot;</span>, <span class="dt">href=</span><span class="st">&quot;http://doi.org/10.18739/A25T3FZ8X&quot;</span>)</a>
+<a class="sourceLine" id="cb190-25" data-line-number="25">        )</a>
+<a class="sourceLine" id="cb190-26" data-line-number="26">    ),</a>
+<a class="sourceLine" id="cb190-27" data-line-number="27">    tags<span class="op">$</span><span class="kw">br</span>(),</a>
+<a class="sourceLine" id="cb190-28" data-line-number="28">    tags<span class="op">$</span><span class="kw">hr</span>(),</a>
+<a class="sourceLine" id="cb190-29" data-line-number="29"></a>
+<a class="sourceLine" id="cb190-30" data-line-number="30">    <span class="kw">verticalLayout</span>(</a>
+<a class="sourceLine" id="cb190-31" data-line-number="31">        <span class="co"># Sidebar with a slider input for depth axis</span></a>
+<a class="sourceLine" id="cb190-32" data-line-number="32">        <span class="kw">sidebarLayout</span>(</a>
+<a class="sourceLine" id="cb190-33" data-line-number="33">            <span class="kw">sidebarPanel</span>(</a>
+<a class="sourceLine" id="cb190-34" data-line-number="34">                <span class="kw">sliderInput</span>(<span class="st">&quot;depth&quot;</span>,</a>
+<a class="sourceLine" id="cb190-35" data-line-number="35">                            <span class="st">&quot;Depth:&quot;</span>,</a>
+<a class="sourceLine" id="cb190-36" data-line-number="36">                            <span class="dt">min =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb190-37" data-line-number="37">                            <span class="dt">max =</span> <span class="dv">500</span>,</a>
+<a class="sourceLine" id="cb190-38" data-line-number="38">                            <span class="dt">value =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">100</span>))</a>
+<a class="sourceLine" id="cb190-39" data-line-number="39">            ),</a>
+<a class="sourceLine" id="cb190-40" data-line-number="40">            <span class="co"># Show a plot of the generated distribution</span></a>
+<a class="sourceLine" id="cb190-41" data-line-number="41">            <span class="kw">mainPanel</span>(</a>
+<a class="sourceLine" id="cb190-42" data-line-number="42">               <span class="kw">plotOutput</span>(<span class="st">&quot;depthPlot&quot;</span>)</a>
+<a class="sourceLine" id="cb190-43" data-line-number="43">            )</a>
+<a class="sourceLine" id="cb190-44" data-line-number="44">        ),</a>
+<a class="sourceLine" id="cb190-45" data-line-number="45"></a>
+<a class="sourceLine" id="cb190-46" data-line-number="46">        tags<span class="op">$</span><span class="kw">hr</span>(),</a>
+<a class="sourceLine" id="cb190-47" data-line-number="47">        </a>
+<a class="sourceLine" id="cb190-48" data-line-number="48">        <span class="co"># Sidebar with a select inputs to choose variables to plot</span></a>
+<a class="sourceLine" id="cb190-49" data-line-number="49">        <span class="kw">sidebarLayout</span>(</a>
+<a class="sourceLine" id="cb190-50" data-line-number="50">            <span class="kw">sidebarPanel</span>(</a>
+<a class="sourceLine" id="cb190-51" data-line-number="51">                <span class="kw">selectInput</span>(<span class="st">&quot;x_variable&quot;</span>, <span class="st">&quot;X Variable&quot;</span>, cols, <span class="dt">selected =</span> <span class="st">&quot;CTD_Salinity&quot;</span>),</a>
+<a class="sourceLine" id="cb190-52" data-line-number="52">                <span class="kw">selectInput</span>(<span class="st">&quot;y_variable&quot;</span>, <span class="st">&quot;Y Variable&quot;</span>, cols, <span class="dt">selected =</span> <span class="st">&quot;d18O&quot;</span>),</a>
+<a class="sourceLine" id="cb190-53" data-line-number="53">                <span class="kw">selectInput</span>(<span class="st">&quot;color_variable&quot;</span>, <span class="st">&quot;Color&quot;</span>, cols, <span class="dt">selected =</span> <span class="st">&quot;P&quot;</span>)</a>
+<a class="sourceLine" id="cb190-54" data-line-number="54">            ),</a>
+<a class="sourceLine" id="cb190-55" data-line-number="55"></a>
+<a class="sourceLine" id="cb190-56" data-line-number="56">            <span class="co"># Show a plot with configurable axes</span></a>
+<a class="sourceLine" id="cb190-57" data-line-number="57">            <span class="kw">mainPanel</span>(</a>
+<a class="sourceLine" id="cb190-58" data-line-number="58">                <span class="kw">plotOutput</span>(<span class="st">&quot;varPlot&quot;</span>)</a>
+<a class="sourceLine" id="cb190-59" data-line-number="59">            )</a>
+<a class="sourceLine" id="cb190-60" data-line-number="60">        ),</a>
+<a class="sourceLine" id="cb190-61" data-line-number="61">        tags<span class="op">$</span><span class="kw">hr</span>()</a>
+<a class="sourceLine" id="cb190-62" data-line-number="62">    )</a>
+<a class="sourceLine" id="cb190-63" data-line-number="63">)</a>
+<a class="sourceLine" id="cb190-64" data-line-number="64"></a>
+<a class="sourceLine" id="cb190-65" data-line-number="65"><span class="co"># Define server logic required to draw both plots</span></a>
+<a class="sourceLine" id="cb190-66" data-line-number="66">server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output) {</a>
+<a class="sourceLine" id="cb190-67" data-line-number="67"></a>
+<a class="sourceLine" id="cb190-68" data-line-number="68">    output<span class="op">$</span>depthPlot &lt;-<span class="st"> </span><span class="kw">renderPlot</span>({</a>
+<a class="sourceLine" id="cb190-69" data-line-number="69">       <span class="kw">ggplot</span>(bg_chem, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> CTD_Depth, <span class="dt">y =</span> CTD_Salinity)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb190-70" data-line-number="70"><span class="st">            </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">4</span>, <span class="dt">color=</span><span class="st">&quot;firebrick&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb190-71" data-line-number="71"><span class="st">            </span><span class="kw">xlim</span>(input<span class="op">$</span>depth[<span class="dv">1</span>],input<span class="op">$</span>depth[<span class="dv">2</span>]) <span class="op">+</span></a>
+<a class="sourceLine" id="cb190-72" data-line-number="72"><span class="st">            </span><span class="kw">theme_light</span>()</a>
+<a class="sourceLine" id="cb190-73" data-line-number="73">    })</a>
+<a class="sourceLine" id="cb190-74" data-line-number="74"></a>
+<a class="sourceLine" id="cb190-75" data-line-number="75">    output<span class="op">$</span>varPlot &lt;-<span class="st"> </span><span class="kw">renderPlot</span>({</a>
+<a class="sourceLine" id="cb190-76" data-line-number="76">        <span class="kw">ggplot</span>(bg_chem, <span class="dt">mapping =</span> <span class="kw">aes_string</span>(<span class="dt">x =</span> input<span class="op">$</span>x_variable,</a>
+<a class="sourceLine" id="cb190-77" data-line-number="77">                                             <span class="dt">y =</span> input<span class="op">$</span>y_variable,</a>
+<a class="sourceLine" id="cb190-78" data-line-number="78">                                             <span class="dt">color =</span> input<span class="op">$</span>color_variable)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb190-79" data-line-number="79"><span class="st">            </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb190-80" data-line-number="80"><span class="st">            </span><span class="kw">scale_color_gradient2</span>(<span class="dt">low=</span><span class="st">&quot;midnightblue&quot;</span>, </a>
+<a class="sourceLine" id="cb190-81" data-line-number="81">                                  <span class="dt">mid=</span><span class="st">&quot;white&quot;</span>, </a>
+<a class="sourceLine" id="cb190-82" data-line-number="82">                                  <span class="dt">high=</span><span class="st">&quot;firebrick&quot;</span>, </a>
+<a class="sourceLine" id="cb190-83" data-line-number="83">                                  <span class="dt">midpoint =</span> <span class="kw">mean</span>(bg_chem[,input<span class="op">$</span>color_variable])) <span class="op">+</span></a>
+<a class="sourceLine" id="cb190-84" data-line-number="84"><span class="st">            </span><span class="kw">theme_light</span>()</a>
+<a class="sourceLine" id="cb190-85" data-line-number="85">    })</a>
+<a class="sourceLine" id="cb190-86" data-line-number="86">}</a>
+<a class="sourceLine" id="cb190-87" data-line-number="87"></a>
+<a class="sourceLine" id="cb190-88" data-line-number="88"><span class="co"># Run the application</span></a>
+<a class="sourceLine" id="cb190-89" data-line-number="89"><span class="kw">shinyApp</span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</a></code></pre></div>
+</div>
+<div id="resources-2" class="section level2">
+<h2><span class="header-section-number">17.10</span> Resources</h2>
+<ul>
+<li><a href="http://shiny.rstudio.com/">Main Shiny site</a></li>
+<li><a href="http://shiny.rstudio.com/tutorial/">Official Shiny Tutorial</a></li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="writing-good-data-management-plans.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="hands-on-clean-and-integrate-datasets.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
