@@ -1,3 +1,3 @@
 ## Materials
 
-- [Reproducible Research for Synthesis](/2019-11-RRCourse)
+- [Reproducible Research for Synthesis](/2020-02-RRCourse)
