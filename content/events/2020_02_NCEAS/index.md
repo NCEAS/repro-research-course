@@ -60,12 +60,12 @@ We will primarily be using a web browser, `R`, RStudio, and `git`. Please be sur
 
 - **R packages:** Please be sure you have installed or updated the following packages:
 
-- devtools, dplyr, DT, ggplot2, leaflet, tidyr, EML, dataone, datapack, sf, rmarkdown, roxygen2, usethis, broom, captioner
+- dplyr, tidyr, devtools, usethis, roxygen2, leaflet, ggplot2, DT, scales, shiny, sf, ggmap, broom, captioner
 
 You can install these packages quickly by running the following two code snippets:
 
 ```r
-    packages <- c("DT", "dataone", "datapack", "devtools", "dplyr", "EML", "ggmap", "ggplot2", "leaflet", "readxl", "tidyr", "scales", "sf", "rmarkdown", "roxygen2", "usethis", "broom", "captioner")
+    packages <- c("dplyr", "tidyr", "devtools", "usethis", "roxygen2", "leaflet", "ggplot2", "DT", "scales", "shiny", "sf", "ggmap", "broom", "captioner")
 ```
 
 ```r
