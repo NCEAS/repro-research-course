@@ -1,15 +1,15 @@
 ---
-title: "Reproducible Research Techniques for Synthesis (November 2019)"
+title: "Reproducible Research Techniques for Synthesis (February 2020)"
 output:
   html_document:
     df_print: paged
-weight: 2
+weight: 1
 type: page
 ---
 
 
 
-__Dates__: November 4 - November 8, 2019<br>
+__Dates__: Febuary 3 - February 7, 2020<br>
 __Location__: Santa Barbara, CA<br>
 __Venue__: [NCEAS](https://www.nceas.ucsb.edu), 735 State St., Suite 300, UC Santa Barbara
 This 5-day workshop will provide researchers with an overview of best data management practices, data science tools, and concrete steps and methods for more easily producing transparent, reproducible workflows. This opportunity is for researchers from across career stages and sectors who want to gain fundamental data science skills that will improve their reproducible research techniques, particularly for the purposes of synthesis science.
@@ -53,7 +53,7 @@ For more detailed information on how to prepare for the workshop, see preparing 
 
 We will primarily be using a web browser, `R`, RStudio, and `git`. Please be sure these are all installed on your laptop, as follows:
 
-- **R:** We will use R version 3.6.1, which you can download and install from [CRAN](https://cran.rstudio.com)
+- **R:** We will use R version 3.6.2, which you can download and install from [CRAN](https://cran.rstudio.com)
 
 - **RStudio**: To download RStudio, visit [RStudio's download page](https://www.rstudio.com/products/rstudio/download/).
   *If you don't know how up to date your version of RStudio is, please download an updated copy and install it*
