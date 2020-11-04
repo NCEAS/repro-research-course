@@ -3,7 +3,7 @@ title: "Reproducible Research Techniques for Synthesis (February 2020)"
 output:
   html_document:
     df_print: paged
-weight: 1
+weight: 2
 type: page
 ---
 
