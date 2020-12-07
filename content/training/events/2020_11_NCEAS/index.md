@@ -40,7 +40,7 @@ For more detailed information on how to prepare for the workshop, see preparing 
 
 ## Materials
 
-[Workshop book](/2020-02-RRCourse)
+[Workshop book](/2020-11-RRCourse)
 
 ## Organizers
 

@@ -8,7 +8,10 @@ blogdown::html_page:
 </p>
 
 
-### Data Science Training
+### About the Learning Hub
 
-The research landscape is changing. Researchers are increasingly engaging in collaboration across networks; open science includes not just open publication but also open data, software, and workflows; and technology is evolving in support of this new paradigm. This five-day workshop is designed to help researchers stay abreast of current best practices and initiatives and get started on acquiring good data science skills to maximize their productivity, share their data with the scientific community effectively and efficiently, and benefit from the re-use of their data by others.
+Open, reproducible research is becoming ever more critical for answering today's complex environmental questions at the scale and speed needed for solutions. 
 
+Our courses, resources, mentored programs will help you rise to this need and get up to speed with the best practices and tools for collaborative data science. They will help you increase your efficiency, productivity, transparency, and collaborative capacity as a researcher - ultimately helping your research work better for society.
+
+The NCEAS Learning Hub is a welcoming and inclusive environment for data-oriented researchers from academic institutions, government agencies, NGOs, and other organizations and from all stages of their careers. Our offerings are applicable to a wide range of programming languages and skill levels.
