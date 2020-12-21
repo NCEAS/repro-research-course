@@ -1,17 +1,18 @@
 ---
-title: "Reproducible Research Techniques for Synthesis (February 2020)"
+title: "Reproducible Research Techniques for Synthesis (November 2020)"
 output:
   html_document:
     df_print: paged
 weight: 2
 type: page
+tags: ["Short Course"]
 ---
 
 
 
-__Dates__: Febuary 3 - February 7, 2020<br>
-__Location__: Santa Barbara, CA<br>
-__Venue__: [NCEAS](https://www.nceas.ucsb.edu), 735 State St., Suite 300, UC Santa Barbara
+__Dates__: November 12 - November 18, 2020<br>
+__Location__: Remote<br>
+
 This 5-day workshop will provide researchers with an overview of best data management practices, data science tools, and concrete steps and methods for more easily producing transparent, reproducible workflows. This opportunity is for researchers from across career stages and sectors who want to gain fundamental data science skills that will improve their reproducible research techniques, particularly for the purposes of synthesis science.
 
 
@@ -40,44 +41,53 @@ For more detailed information on how to prepare for the workshop, see preparing 
 
 ## Materials
 
-[Workshop book](/2020-02-RRCourse)
+[Workshop book](/2020-11-RRCourse)
 
 ## Organizers
 
 |Name         | Email              |
 |-------------|--------------------|
-|Matthew Jones| jones@nceas.ucsb.edu |
 |Amber Budden | aebudden@nceas.ucsb.edu|
 |Jeanette Clark| jclark@nceas.ucsb.edu |
+|Bryce Mecum| mecum@nceas.ucsb.edu |
 
 ## Preparing for the Workshop
 
 ### Required software
 
-We will primarily be using a web browser, `R`, RStudio, and `git`. Please be sure these are all installed on your laptop, as follows:
+**We will primarily be using a web browser along with an instance of RStudio server set
+up especially for this course.** However, we also recommend setting up R, RStudio,
+and git on your local system to more easily prepare you to utilize the skills you learned
+once the course ends.
 
-- **R:** We will use R version 3.6.2, which you can download and install from [CRAN](https://cran.rstudio.com)
+- **R:** We will use R version 4.0.2, which you can download and install from [CRAN](https://cran.rstudio.com)
 
 - **RStudio**: To download RStudio, visit [RStudio's download page](https://www.rstudio.com/products/rstudio/download/).
-  *If you don't know how up to date your version of RStudio is, please download an updated copy and install it*
 
-- **R packages:** Please be sure you have installed or updated the following packages:
+- **R packages:** We will be using the following packages:
 
-- dplyr, tidyr, devtools, usethis, roxygen2, leaflet, ggplot2, DT, scales, shiny, sf, ggmap, broom, captioner
+    - devtools
+    - dplyr
+    - DT
+    - ggplot2
+    - leaflet
+    - tidyr
+    - scales
+    - sf
 
-You can install these packages quickly by running the following two code snippets:
+    You can install these packages quickly by running the following two code snippets:
 
-```r
-    packages <- c("dplyr", "tidyr", "devtools", "usethis", "roxygen2", "leaflet", "ggplot2", "DT", "scales", "shiny", "sf", "ggmap", "broom", "captioner")
-```
+    ```r
+    packages <- c("devtools", "dplyr", "DT", "ggplot2", "leaflet", "tidyr", "scales", "sf")
+    ```
 
-```r
+    ```r
     for (package in packages) {
       if (!(package %in% installed.packages())) {
         install.packages(package)
       }
     }
-```
+    ```
 
 - **git:** [Download git](https://git-scm.com/downloads) and install it on your system.
 - **GitHub:** We will be using [GitHub](https://github.com) so you will need create (or remember your existing) GitHub login
@@ -88,10 +98,10 @@ This workshop assumes a base level of experience using R for scientific and stat
 However, we realize that not everyone will be at the same place in terms of familiarity with the tools we'll be using.
 If you'd like to brush up on your R skills prior to the workshop, check out this list of resources we like:
 
-- The [Data Scientist with R](https://www.datacamp.com/tracks/data-scientist-with-r) track at [DataCamp](https://www.datacamp.com)
-- The [Introduction to R](http://www.datacarpentry.org/R-ecology-lesson/01-intro-to-r.html) lesson in [Data Carpentry's R for data analysis](http://www.datacarpentry.org/R-ecology-lesson/) course.
-- The QCBS [Introduction to R](https://qcbs.ca/wiki/r) lesson
-- [RStudio's R Programming](https://www.rstudio.com/online-learning/) page
+- Learn R in the console with [swirl](https://swirlstats.com/)
+- The [Introduction to R](http://www.datacarpentry.org/R-ecology-lesson/01-intro-to-r.html) lesson in [Data Carpentry's R for data analysis](http://www.datacarpentry.org/R-ecology-lesson/) course
+- The Stat 545 [course materials](https://stat545.com/r-basics.html)
+- The QCBS [Introduction to R](https://qcbs.ca/wiki/r) lesson (in French)
 
 If you're a fan of cheat sheets, [RStudio](https://www.rstudio.com) provides some fantastic ones on their [Cheat Sheets](https://www.rstudio.com/resources/cheatsheets/) page.
 *Please make sure to print ahead of time if you prefer hard copies.*
