@@ -5,6 +5,7 @@ output:
     df_print: paged
 weight: 3
 type: page
+tags: ["Short Course"]
 ---
 
 
