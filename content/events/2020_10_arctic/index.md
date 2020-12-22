@@ -3,6 +3,7 @@ title: "Arctic Data Center Training (October 2020)"
 output:
   html_document:
     df_print: paged
+type: page
 tags: ["Arctic Data Center"]
 date: 2020-10-19
 ---

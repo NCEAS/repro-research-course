@@ -4,7 +4,7 @@ output:
   html_document:
     df_print: paged
 type: page
-tags: ["NEON Onboarding"]
+tags: ["NEON"]
 date: 2020-12-01
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "Tools for Data Science in Arctic Research (July 2017)"
 tags: ["Arctic Data Center"]
+type: "page"
 date: 2017-07-31
 ---
 

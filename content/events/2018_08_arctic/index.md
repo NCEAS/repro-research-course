@@ -1,6 +1,7 @@
 ---
 title: "Arctic Data Center Training (August 2018)"
 tags: ["Arctic Data Center"]
+type: "page"
 date: 2018-08-13
 ---
 

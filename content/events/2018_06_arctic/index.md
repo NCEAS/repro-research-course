@@ -1,6 +1,7 @@
 ---
 title: "Dataset Publishing with the Arctic Data Center (June 2018)"
 tags: ["Arctic Data Center"]
+type: "page"
 date: 2018-06-22
 ---
 
