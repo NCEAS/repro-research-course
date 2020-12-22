@@ -1,5 +1,5 @@
 ---
-title: "Inaugural Champions Cohort sponsored by Mozilla"
+title: "Openscapes Champions Cohort sponsored by Mozilla""
 output:
   html_document:
     df_print: paged

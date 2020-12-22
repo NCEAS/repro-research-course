@@ -1,5 +1,5 @@
 ---
-title: "Openscapes Champions Lesson Series"
+title: "Openscapes Champions Workshop with NOAA"
 output:
   html_document:
     df_print: paged
