@@ -8,10 +8,10 @@ tags: ["NEON Onboarding"]
 date: 2020-12-01
 ---
 
-__Dates__: December, 2020<br>
-__Location__: Virtual<br>
+__Dates__: December, 2020 <br>
+__Location__: Virtual <br>
 
 
 ### NEON Onboarding
 
-Coming soon.
+A self guided learning curricula to support new NEON postdocs as part of their onboarding experience. The curricula builds from the experience of ecological researchers, trainers, developers and information managers to provide resources and training in support of collaborative, reproducible research practices.
