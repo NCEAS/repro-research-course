@@ -1,62 +1,60 @@
 ---
-title: "Reproducible Research Techniques for Synthesis (November 2020)"
+title: "Arctic Data Center Training (October 2020)"
 output:
   html_document:
     df_print: paged
-type: page
-tags: ["Short Course"]
-date: 2020-11-12
+tags: ["Arctic Data Center"]
+date: 2020-10-19
 ---
 
 
 
-__Dates__: November 12 - November 18, 2020<br>
-__Location__: Remote<br>
+__Dates__: October 19 - October 23, 2020<br>
+__Location__: Online<br>
+__Venue__: [NCEAS](https://www.nceas.ucsb.edu), 735 State St., Suite 300, UC Santa Barbara
+The Arctic Data Center provides training in data science and data management, as these are critical skills for the stewardship of the data, software, and other research products that are preserved in the Arctic Data Center. A goal of the Arctic Data Center is to advance data archiving and promote reproducible science and data reuse. This 5-day workshop will provide researchers with an overview of best data management practices, data science tools and concrete steps and methods for more easily documenting and uploading their data to the Arctic Data Center.
 
-This 5-day workshop will provide researchers with an overview of best data management practices, data science tools, and concrete steps and methods for more easily producing transparent, reproducible workflows. This opportunity is for researchers from across career stages and sectors who want to gain fundamental data science skills that will improve their reproducible research techniques, particularly for the purposes of synthesis science.
+## Overview:
 
+Workshop topics will include:
 
-## Curriculum at a glance:
+* Arctic Data Center and NSF Standards and Policies
+* Data Management Plans
+* Effective Data Management for Data Preservation using R
+* Publishing Data at the Arctic Data Center
+* Data and Metadata Quality
+* Provenance for Data and Software
 
-#### Enable data reuse through better data management
-
-* Metadata - what is it and how to write a quality data description
-* Data modeling - tidy data for efficient access and storage
-* Data publishing, citation, and credit
-
-#### Build reproducible scientific workflows
-
-* Data munging with R tidyverse
-* Working collaboratively - git and GitHub
-* Writing functions in R
-* Building packages for publishing reproducible research
-
-#### Communicate results effectively
-
-* Literate analysis with RMarkdown
-* Publishing analytical web pages with GitHub pages
-* Data visualization with ggplot and leaflet
 
 For more detailed information on how to prepare for the workshop, see preparing for the workshop (below).
 
 ## Materials
 
-[Workshop book](/2020-11-RRCourse)
+[Link to course materials](http://training.arcticdata.io/2020-10-arctic/)
+
 
 ## Organizers
 
 |Name         | Email              |
 |-------------|--------------------|
-|Amber Budden | aebudden@nceas.ucsb.edu|
+|Matthew Jones| jones@nceas.ucsb.edu |
+|Amber Budden | budden@nceas.ucsb.edu|
 |Jeanette Clark| jclark@nceas.ucsb.edu |
-|Bryce Mecum| mecum@nceas.ucsb.edu |
+
+## Acknowledgements
+Work on this package was supported by:
+
+- [NSF award #1546024](http://www.nsf.gov/awardsearch/showAward?AWD_ID=1546024) to M. B. Jones, S. Baker-Yeboah, A. Budden, J. Dozier, and M. Schildhauer
+
+Additional support was provided for working group collaboration by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
+
 
 ## Preparing for the Workshop
 
 ### Required software
 
-**We will primarily be using a web browser along with an instance of RStudio server set
-up especially for this course.** However, we also recommend setting up R, RStudio,
+We will primarily be using a web browser along with an instance of RStudio server set
+up especially for this course. However, we also recommend setting up R, RStudio,
 and git on your local system to more easily prepare you to utilize the skills you learned
 once the course ends.
 
@@ -114,3 +112,5 @@ In particular, check out:
 * Data Visualization with ggplot2
 * R Markdown Reference Guide
 * The leaflet package
+
+## Participants

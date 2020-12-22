@@ -3,9 +3,9 @@ title: "Reproducible Research Techniques for Synthesis (November 2019)"
 output:
   html_document:
     df_print: paged
-weight: 4
 type: page
 tags: ["Short Course"]
+date: 2019-11-04
 ---
 
 

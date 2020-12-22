@@ -3,14 +3,14 @@ title: "Reproducible Research Techniques for Synthesis (February 2020)"
 output:
   html_document:
     df_print: paged
-weight: 3
 type: page
 tags: ["Short Course"]
+date: 2020-02-03
 ---
 
 
 
-__Dates__: Febuary 3 - February 7, 2020<br>
+__Dates__: February 3 - February 7, 2020<br>
 __Location__: Santa Barbara, CA<br>
 __Venue__: [NCEAS](https://www.nceas.ucsb.edu), 735 State St., Suite 300, UC Santa Barbara
 This 5-day workshop will provide researchers with an overview of best data management practices, data science tools, and concrete steps and methods for more easily producing transparent, reproducible workflows. This opportunity is for researchers from across career stages and sectors who want to gain fundamental data science skills that will improve their reproducible research techniques, particularly for the purposes of synthesis science.
