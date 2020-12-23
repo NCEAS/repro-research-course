@@ -18,7 +18,9 @@ This intensive 4-day workshop on Data Science and Collaboration Skills for Integ
 
 This training, sponsored by SNAPP, aims to bring together the SNAPP and NCEAS postdoctoral associates to foster communities and collaboration, as well as promote scientific computing and open science best practices.  
 
+## Materials
 
+[Course materials](https://science-for-nature-and-people.github.io/2020-data-collab-workshop/2020-02-snapp/)
 
 
 ## Curriculum at a glance:
