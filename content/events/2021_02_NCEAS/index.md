@@ -8,8 +8,6 @@ tags: ["Short Course"]
 date: 2021-02-25
 ---
 
-
-
 __Dates__: February 25-26, March 1-3, 2021<br>
 __Location__: Remote<br>
 
