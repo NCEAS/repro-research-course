@@ -1,8 +1,5 @@
 ---
 title: "Reproducible Research Techniques for Synthesis (February 2021)"
-output:
-  html_document:
-    df_print: paged
 type: page
 tags: ["Short Course"]
 date: 2021-02-25
