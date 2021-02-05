@@ -5,7 +5,7 @@ output:
     df_print: paged
 type: page
 tags: ["Short Course"]
-date: 2021-02-25
+date: 2021-02-05
 ---
 
 __Dates__: February 25-26, March 1-3, 2021<br>
