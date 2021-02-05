@@ -8,9 +8,8 @@ tags: ["Short Course"]
 date: 2021-02-25
 ---
 
-__Dates__: February 25-26, March 1-3, 2021
-
-__Location__: Remote
+__Dates__: February 25-26, March 1-3, 2021<br>
+__Location__: Remote<br>
 
 This 5-day workshop will provide researchers with an overview of best data management practices, data science tools, and concrete steps and methods for more easily producing transparent, reproducible workflows. This opportunity is for researchers from across career stages and sectors who want to gain fundamental data science skills that will improve their reproducible research techniques, particularly for the purposes of synthesis science.
 
