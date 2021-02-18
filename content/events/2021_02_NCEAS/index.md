@@ -37,6 +37,9 @@ This 5-day workshop will provide researchers with an overview of best data manag
 
 For more detailed information on how to prepare for the workshop, see preparing for the workshop (below).
 
+## Materials
+
+[Materials](2021-02-RRCourse)
 
 ## Organizers
 
