@@ -39,7 +39,7 @@ For more detailed information on how to prepare for the workshop, see preparing 
 
 ## Materials
 
-[Materials](2021-02-RRCourse)
+[Materials](/2021-02-RRCourse)
 
 ## Organizers
 
