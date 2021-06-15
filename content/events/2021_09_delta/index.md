@@ -1,5 +1,5 @@
 ---
-title: "Open Science Synthesis for the Delta Preservation Council"
+title: "Open Science Synthesis for the Delta Science Program"
 output:
   html_document:
     df_print: paged
