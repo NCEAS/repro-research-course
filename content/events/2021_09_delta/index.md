@@ -8,7 +8,7 @@ tags: ["Collaborative", "OSS"]
 date: 2021-05-27
 ---
 
-![](images/DSP_Logo_Horizonal.jpg)
+![](images/DSP_Logo_Horizontal.jpg)
 
 We propose to hold 3 one-week facilitated synthesis and training events
 for Delta researchers that will revolve around scientific computing and
@@ -27,6 +27,16 @@ synthesis projects related to the Delta ecosystem.
 The course will weave together several core themes which are reinforced
 -- and injected into the real-time synthetic scientific research process
 -- through work on group synthesis projects.
+
+## Schedule
+
+Week 1: September 13-17, 2021. Remote.
+Week 2: October 25-29, 2021. UC Davis.
+Week 3: November 1-5, 2021. UC Davis.
+
+## Materials
+
+[Materials link](https://learning.nceas.ucsb.edu/2021-09-delta/)
 
 ## Participants
 
