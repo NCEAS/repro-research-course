@@ -8,7 +8,7 @@ tags: ["Collaborative", "OSS"]
 date: 2021-05-27
 ---
 
-![](images/DSP_Logo_Horizontal.jpg)
+![](./images/DSP_Logo_Horizontal.jpg)
 
 We propose to hold 3 one-week facilitated synthesis and training events
 for Delta researchers that will revolve around scientific computing and
