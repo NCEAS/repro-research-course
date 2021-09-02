@@ -30,17 +30,35 @@ The course will weave together several core themes which are reinforced
 
 ## Schedule
 
-Week 1: September 13-17, 2021. Remote.
-Week 2: October 25-29, 2021. UC Davis.
-Week 3: November 1-5, 2021. UC Davis.
+Week 1: September 13-17, 2021. Remote.  
+Week 2: October 25-29, 2021. UC Davis.  
+Week 3: November 1-5, 2021. UC Davis.  
 
 ## Materials
 
 [Materials link](https://learning.nceas.ucsb.edu/2021-09-delta/)
 
+## Instructors
+
+#### Amber Budden
+
+Amber is the Director of Learning and Outreach at NCEAS and lead of community engagement and outreach at DataONE and the Arctic Data Center. She holds a PhD in Ecology in addition to research experience in bibliometrics. She has coordinated and taught numerous workshops focused on data management for Earth and environmental science. Her skills include data management, science communication and outreach, and training evaluation.
+
+#### Jeanette Clark
+
+Jeanette is a Projects Data Coordinator at NCEAS with extensive experience helping synthesis scientists find, synthesize, document, and publish datasets. She also helps maintain the Knowledge Network for Biocomplexity (KNB) data archive. She has expertise in R, GitHub, structured metadata, and data archival. Jeanette was introduced to data processing and data analysis through her academic background in physical oceanography, and enjoys applying this foundation to more interdisciplinary ecology research.
+
+#### Matt Jones
+
+Matt is the Director of Informatics Research and Development at NCEAS and has expertise in environmental informatics, particularly software for management, integration, analysis, and modeling of data. Jones has taught at over 20 training workshops over a decade on data science topics including analysis in R, GitHub, programming (e.g., Python), data management, quality assessment and reporting, metadata and data infrastructure, scientific workflow systems, and other topics.
+
+#### Julien Brun
+
+Julien is a scientific programmer at NCEAS with expertise in data analysis and programming, data management systems, GIS, and analytical modeling. He has worked extensively in systems like R, GitHub, Python, and UNIX. His scientific background is in Ecohydrology and Earth observation techniques (remote sensing and GIS).
+
 ## Participants
 
--   Shruti Khanna
+-    Shruti Khanna
 -    Christina Burdi
 -    Catarina Pien
 -    Peter Dudley
