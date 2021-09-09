@@ -1,0 +1,86 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+
+name: renderbook
+
+jobs:
+  bookdown:
+    name: Render-Book
+    runs-on: macOS-latest
+
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v1
+
+      - name: Install pandoc
+        run: |
+          brew install pandoc
+          
+      - name: Install hugo and theme
+        run: |
+          Rscript -e 'blogdown::install_hugo(version = "0.59.0")'
+          git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke
+
+      - name: Cache bookdown results
+        uses: actions/cache@v2
+        with:
+          path: _bookdown_files
+          key: bookdown-${{ hashFiles('**/*Rmd') }}
+          restore-keys: bookdown-
+
+      - name: Install dependencies
+        run: |
+          install.packages(c("remotes", "blogdown"))
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+
+      - name: Build training site
+        run: |
+              Rscript -e 'blogdown::build_site()'
+              sh _build_and_merge.sh
+              touch public/.nojekyll
+              cp CNAME public/CNAME
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: site
+          path: /
+
+# Need to first create an empty gh-pages branch
+# see https://pkgdown.r-lib.org/reference/deploy_site_github.html
+# and also add secrets for a GH_PAT and EMAIL to the repository
+# gh-action from Cecilapp/GitHub-Pages-deploy
+  checkout-and-deploy:
+   runs-on: ubuntu-latest
+   needs: bookdown
+   steps:
+     - name: Checkout
+       uses: actions/checkout@master
+     - name: Download artifact
+       uses: actions/download-artifact@v1.0.0
+       with:
+         # Artifact name
+         name: site # optional
+         # Destination path
+         path: / # optional
+     - name: Deploy to GitHub Pages
+       uses: Cecilapp/GitHub-Pages-deploy@v3
+       env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
+       with:
+          build_dir: docs/ # "_site/" by default
+          email: ${{ secrets.EMAIL }}  # must be a verified email
