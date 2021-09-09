@@ -30,6 +30,12 @@ jobs:
         run: |
           brew install pandoc
           
+      - name: Install dependencies
+        run: |
+          install.packages(c("remotes", "blogdown")
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+          
       - name: Install hugo and theme
         run: |
           Rscript -e 'blogdown::install_hugo(version = "0.59.0")'
@@ -41,12 +47,6 @@ jobs:
           path: _bookdown_files
           key: bookdown-${{ hashFiles('**/*Rmd') }}
           restore-keys: bookdown-
-
-      - name: Install dependencies
-        run: |
-          install.packages(c("remotes", "blogdown"))
-          remotes::install_deps(dependencies = TRUE)
-        shell: Rscript {0}
 
       - name: Build training site
         run: |
