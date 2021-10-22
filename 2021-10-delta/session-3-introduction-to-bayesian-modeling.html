@@ -298,7 +298,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><span class="math inline">\(trait_i \sim Normal(\mu_{sp(i)}, \sigma^2)\)</span></p>
 <p><span class="math inline">\(\mu_{sp} \sim Normal(\mu_{g(sp)}, \sigma^2_{g})\)</span></p>
 <p><span class="math inline">\(\mu_{g} \sim Normal(\mu_{f(g)}, \sigma^2_{f})\)</span></p>
-<p>In a single model, the hierarchical relationship between species, genus, and family can be encoded. The notation indicates that each observation <em>i</em> belongs to a species, each species belongs to a genus, and each genus belongs to a family.</p>
+<p>where <em>sp</em> represents species, <em>g</em> represents genus, and <em>f</em> represents families. The notation indicates that each observation <em>i</em> belongs to a species, each species belongs to a genus, and each genus belongs to a family. Thus, in a single model, the hierarchical relationship between species, genus, and family can be represented.</p>
 <p>Data can also be treated as arising from any distribution. For example, a inventory survey might yield counts of a particular species, but those counts might be clumped on the landscape, yielding large number of zero observations. A Poisson distribution describes the probability of a given number of events occurring in an interval of time or space, but doesn’t accommodate the extra zeros. In Bayesian modeling, it is straightforward to specify the surveyed counts as a mixture between Bernoulli and Poisson distributions, which accounts for the separate processes of dispersal (species arrives or not in plot) and frequency (if species arrives, the rate or density of arrival).</p>
 <p>Finally, Bayesian inference can accommodate a wide range of model and data possibilities, rather than having separate tools or approaches for different types of data or tests. T-test, ANOVA, linear model, non-linear models, and more can be specified in the same framework, using the same set of tools, and can even be combined. This allows the implementation of mathematical models with scientifically meaningful parameters, possibly in conjunction with an ANOVA or regression framework. For example, we might have leaf-level gas exchange data and want to fit a biochemical model of photosynthesis, but the scientific question is whether photosynthetic parameters differed between species and treatments. The flexible nature of a hierarchical approach means that the meaningful parameters (e.g., <span class="math inline">\(V_{cmax}\)</span>) can be represented by a linear model. We can use the data to make inference about the meaningful parameters in one step.</p>
 </div>
@@ -321,8 +321,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="probabability" class="section level3" number="4.3.1">
 <h3><span class="header-section-number">4.3.1</span> Probabability</h3>
 <p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-9-1.png" width="384" style="display: block; margin: auto;" /></p>
-<p>We define the marginal probability as the total area of circles A and B.</p>
-<p><span class="math inline">\(P(A) = {A_A}\)</span></p>
+<p>We define the marginal probability as the total area of circles A and B.
+<span class="math inline">\(P(A) = {A_A}\)</span></p>
 <p><span class="math inline">\(P(B) = {A_B}\)</span></p>
 <p>The joint probability is the shared area of circles A and B.</p>
 <p><span class="math inline">\(P(A,B) = A_{AB}\)</span></p>
@@ -335,6 +335,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="interactive-problem-conditional-probability" class="section level4 unnumbered aside">
 <h4>Interactive problem: Conditional probability</h4>
 <p>Conditional probability rules are very useful for breaking down complex problems. What are some possible ways to break down <span class="math inline">\(P(A, B, C)\)</span>?</p>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-10-1.png" width="384" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="bayes-rule" class="section level3" number="4.3.2">
@@ -415,9 +416,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
 <tr class="odd">
 <td>Normal <img src="images/distributions/normal_pdf.png" /></td>
-<td>Domain: <span class="math inline">\((-\infty, \infty)\)</span><br/>Parameters: <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span><br/>Example: Net primary productivity</td>
+<td>Domain: <span class="math inline">\((-\infty, \infty)\)</span><br/>Parameters: <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span><br/>Example: Net ecosystem exchange</td>
 <td>Poisson <img src="images/distributions/Poisson_pmf.svg" /></td>
-<td>Domain: 0 to <span class="math inline">\(\infty\)</span><br/>Parameter: <span class="math inline">\(\lambda\)</span><br/>Example: Fish counts</td>
+<td>Domain: 0 to <span class="math inline">\(\infty\)</span><br/>Parameter: <span class="math inline">\(\lambda\)</span><br/>Example: Count data</td>
 </tr>
 <tr class="even">
 <td>Gamma <img src="images/distributions/gamma_pdf.svg" /></td>
@@ -467,7 +468,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Conjugacy has a formal definition, but for our purposes, natural conjugate prior families have practical advantages for computation and interpretation.</p>
 <p>Some examples include the binomial-beta, Poisson-gamma, multinomial-Dirichlet, and exponential-gamma. For a normal likelihood, the conjugate prior for <span class="math inline">\(\mu\)</span> is normal and the conjugate prior for <span class="math inline">\(\sigma^2\)</span> is the inverse-gamma. In common Bayesian simulation software such as JAGS, OpenBUGS, and Stan, the scale parameter of a normal likelihood is defined as the precision (<span class="math inline">\(\tau = \frac{1}{\sigma^2}\)</span>); the conjugate prior for <span class="math inline">\(\tau\)</span> is a gamma distribution.</p>
 <p>Selecting priors is an important consideration of Bayesian modeling that will have its own lecture later in the week. For now, we can say that many parameters do not need informative priors in order to be reliably estimated by the data (e.g., regression parameters). Other parameters, such as observation error, will rarely be identifiable without strong prior information (or additional data).</p>
-<p>In practice, selecting priors can be part of the model development process. Different priors can be tested for their contribution to the posterior, which allows for evaluation of the sensitivity of the posterior to the prior specification. Particulal for non-identifiable parameters, convergence can be achieved more quickly with a more informative prior. One method can be to specify a uniform prior with realistic but conservative upper and lower bounds:</p>
+<p>In practice, selecting priors can be part of the model development process. Different priors can be tested for their contribution to the posterior, which allows for evaluation of the sensitivity of the posterior to the prior specification. Particularly for non-identifiable parameters, convergence can be achieved more quickly with a more informative prior. One method can be to specify a uniform prior with realistic but conservative upper and lower bounds:</p>
 <p><span class="math inline">\(\theta \sim Uniform(A, B)\)</span></p>
 <p>As such, the posterior distribution for <span class="math inline">\(\theta\)</span> will also be restricted to the interval [A,B], and the data likelihood will contribute to its shape.</p>
 </div>
@@ -492,11 +493,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>No sequence of edges returns to the parent node</li>
 </ul></li>
 </ul>
-<div id="htmlwidget-43c035ef037f02ea9960" style="width:672px;height:300px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-43c035ef037f02ea9960">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB, dir = back]\n  \n  node [shape = oval]        \n  rec1 [label = \"A\"]\n  rec2 [label = \"B\"]\n  rec3 [label = \"C\"]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-<p>The conditional probability model for the above DAG is:</p>
+<div id="htmlwidget-c63ed51b72f8dedd1f6c" style="width:672px;height:300px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c63ed51b72f8dedd1f6c">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB, dir = back]\n  \n  node [shape = oval]        \n  rec1 [label = \"A\"]\n  rec2 [label = \"B\"]\n  rec3 [label = \"C\"]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>In this DAG, A is a root node, C is a terminal node, and B is an internal node. The conditional probability model can be defined as:</p>
 <p><span class="math inline">\(P(A, B, C) = P(C|B)P(B|A)P(A)\)</span></p>
-<p>We will see in the example below that DAGs can be especially useful for helping translate between mathematical and code representations of models.</p>
+<p>We will see in the example below that DAGs can be especially useful for visualizing the mathematical representation of models.</p>
 </div>
 </div>
 <div id="simple-hierachical-example-snow-fences" class="section level2" number="4.5">
@@ -577,14 +578,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><span class="math inline">\(\beta \sim Exponential(1)\)</span></p>
 <p>The hyperparameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are root nodes, whose distributions are fixed rather than stochastic.</p>
 <p>The levels of this hierarchical model can be visualized by the following DAG:</p>
-<div id="htmlwidget-4ee454e2d7503deb7962" style="width:672px;height:300px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4ee454e2d7503deb7962">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = oval]        \n  rec1 [label = \"&#945;\"]\n  rec2 [label = \"&#946;\"]\n  rec3 [label = <<B>&#952;<\/B>>]\n  rec4 [label = <<B>y<\/B>>]\n  node [shape = rectangle] \n  rec5 [label = <<B>x<\/B>>]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec3 -> rec4 \n  rec2 -> rec3\n  rec4 -> rec5 [dir = back]\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-91b68a2ce31c9ef743a7" style="width:672px;height:300px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-91b68a2ce31c9ef743a7">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = oval]        \n  rec1 [label = \"&#945;\"]\n  rec2 [label = \"&#946;\"]\n  rec3 [label = <<B>&#952;<\/B>>]\n  rec4 [label = <<B>y<\/B>>]\n  node [shape = rectangle] \n  rec5 [label = <<B>x<\/B>>]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec3 -> rec4 \n  rec2 -> rec3\n  rec4 -> rec5 [dir = back]\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p>The bolded variables indicate vectors, which are indexed by <span class="math inline">\(i\)</span> in statistical notation. The rectangle around <span class="math inline">\(\bf{x}\)</span> indicates that it is a deterministic node, or fixed as data. Notably,the oval around the response variable <span class="math inline">\(\bf{y}\)</span> indicates that it is a stochastic node; that is, drawn from a distribution and given the Poisson likelihood. <span class="math inline">\(\bf{\theta}\)</span> is the parameter in the Poisson likelihood, and it is drawn from a conjugate gamma prior with two parameters, <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>.</p>
 <p>All of the stochastic nodes (ovals) are drawn from distributions. <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are root nodes, meaning that the parameter values for their distributions are fixed and must be defined numerically.</p>
 <div id="interactive-problem-logistic-regression-example" class="section level4 unnumbered aside">
 <h4>Interactive problem: Logistic regression example</h4>
-<p>Consider the case of selection pressure from discoloring of tree trunks from air pollution. One species of moth rests on tree trucks during the day, and their coloration acts as camouflage against bird predation. Researchers established a gradient of tree trunk color from Liverpool the countryside and selected 7 sites. At each site, they glued an equal number of dead light and dead dark moths to tree trunks and counted the number of removed moths after 24 hours.</p>
-<p>The dataset includes Site (1,2, … 7), Morph (1 = light, 2 = dark), Distance (from Liverpool, km) Placed (number of moths glued to trunks), and Removed (number of moths removed from trunks after 24 hours).</p>
+<p>Consider the case of selection pressure from discoloring of tree trunks from air pollution. One species of moth rests on tree trunks during the day, and their coloration acts as camouflage against bird predation. Researchers established a gradient of tree trunk color from Liverpool the countryside and selected 7 sites. At each site, they glued an equal number of dead light and dead dark moths to tree trunks and counted the number of removed moths after 24 hours.</p>
+<p>The dataset includes <em>Site</em> (1,2, … 7), <em>Morph</em> (1 = light, 2 = dark), <em>Distance</em> (from Liverpool, km) <em>Placed</em> (number of moths glued to trunks), and <em>Removed</em> (number of moths removed from trunks after 24 hours).</p>
 <table>
 <thead>
 <tr class="header">

@@ -280,11 +280,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="overview-of-the-bayesian-modeling-process" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> Overview of the Bayesian modeling process</h2>
 <p>In the first part of the lecture, we established the major reasons to use Bayesian inference and briefly reviewed the fundamentals of probability, Bayes’ rule, and distributions. We ended by walking through two examples that allowed us to practice model specification.</p>
-<div id="htmlwidget-da6beba2b224b374f607" style="width:672px;height:300px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-da6beba2b224b374f607">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle, fontcolor = coral]        \n  rec1 [label = \"Identify scientific objectives\"]\n  rec2 [label = \"Collect & understand data\"]\n  rec3 [label = \"Draw upon existing theory/knowledge\"]\n  node [shape = rectangle, fontcolor = darkorchid3]  \n  rec4 [label = \"Visualize model\"]\n  rec5 [label = \"Write model mathematically (probability notation & distributions)\"]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 \n  rec3 -> rec2 -> rec4 -> rec5\n  rec3 -> rec1\n  rec3 -> rec4\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-<p>In this lesson, we will explain and demonstrate how to ‘translate’ between statistical notation and model code, with particular emphasis on how to implement Bayesian models.</p>
-<div id="htmlwidget-d61226dc30071c7e0c50" style="width:672px;height:425px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d61226dc30071c7e0c50">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle, fontcolor = darkorchid3]  \n  rec2 [label = \"Write model mathematically (probability notation & distributions)\"]\n  node [shape = rectangle, fontcolor = goldenrod, style = dashed]  \n  rec3 [label = \"Write unnormalized posterior\"]\n  rec4 [label = \"Derive full conditional distributions\"]\n  rec5 [label = \"Construct MCMC algorithm\"]\n  node [shape = rectangle, fontcolor = goldenrod, style = bold]  \n  rec6 [label = \"Program model components in software\"]\n  rec7 [label = \"Fit data to model using MCMC\"]\n  node [shape = rectangle, fontcolor = steelblue, style = solid]\n  rec8 [label = \"Evaluate models (diagnostics, posterior predictive checks)\"]\n  rec9 [label = \"Use output to make inferences\"]\n  \n  # edge definitions with the node IDs\n  rec2 -> rec3 -> rec4 -> rec5 -> rec7 [style = dashed]\n  rec2 -> rec6 -> rec7 [style = bold]\n  rec7 -> rec8 -> rec9 [style = solid]\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-cb8e5e4db17a0c8b865a" style="width:672px;height:300px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cb8e5e4db17a0c8b865a">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle, fontcolor = coral]        \n  rec1 [label = \"Identify scientific objectives\"]\n  rec2 [label = \"Collect & understand data\"]\n  rec3 [label = \"Draw upon existing theory/knowledge\"]\n  node [shape = rectangle, fontcolor = darkorchid3]  \n  rec4 [label = \"Visualize model\"]\n  rec5 [label = \"Write model mathematically (probability notation & distributions)\"]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 \n  rec3 -> rec2 -> rec4 -> rec5\n  rec3 -> rec1\n  rec3 -> rec4\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>In this lesson, we will explain and demonstrate how to ‘translate’ between statistical notation and model code, with particular emphasis on implementing Bayesian models with MCMC software.</p>
+<div id="htmlwidget-11b99fb93c124ab206ac" style="width:672px;height:425px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-11b99fb93c124ab206ac">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle, fontcolor = darkorchid3]  \n  rec2 [label = \"Write model mathematically (probability notation & distributions)\"]\n  node [shape = rectangle, fontcolor = goldenrod, style = dashed]  \n  rec3 [label = \"Write unnormalized posterior\"]\n  rec4 [label = \"Derive full conditional distributions\"]\n  rec5 [label = \"Construct MCMC algorithm\"]\n  node [shape = rectangle, fontcolor = goldenrod, style = bold]  \n  rec6 [label = \"Program model components in software\"]\n  rec7 [label = \"Fit data to model using MCMC\"]\n  node [shape = rectangle, fontcolor = steelblue, style = solid]\n  rec8 [label = \"Evaluate models (diagnostics, posterior predictive checks)\"]\n  rec9 [label = \"Use output to make inferences\"]\n  \n  # edge definitions with the node IDs\n  rec2 -> rec3 -> rec4 -> rec5 -> rec7 [style = dashed]\n  rec2 -> rec6 -> rec7 [style = bold]\n  rec7 -> rec8 -> rec9 [style = solid]\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="markov-chain-monte-carlo" class="section level2" number="6.3">
 <h2><span class="header-section-number">6.3</span> Markov chain Monte Carlo</h2>
@@ -423,7 +423,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Here, we use the <code>traplot()</code> function from the package <code>mcmcplots</code>, which allows us to specify which parameter to visualize.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="session-5-implementing-bayesian-models.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traplot</span>(jm_coda,</span>
 <span id="cb13-2"><a href="session-5-implementing-bayesian-models.html#cb13-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">parms =</span> <span class="fu">c</span>(<span class="st">&quot;theta&quot;</span>, <span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta&quot;</span>))</span></code></pre></div>
-<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>The traceplots for the <code>theta</code> parameters are textbook ‘fuzzy catepillars’; the values are stable over time, while the three chains are very well-mixed. We can consider the <code>theta</code> parameters converged and of sufficient run length.</p>
 <p>The <code>alpha</code> and <code>beta</code> parameters are also converged, in that the 3 chains are well-mixed and stable. However, there is some autocorrelation present. We will switch to using the function <code>mcmcplot</code>, which provides the traceplot, autoccorelation, and density for specified parameters as an html file that can be viewed in a web browser.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="session-5-implementing-bayesian-models.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmcplot</span>(jm_coda,</span>
@@ -455,9 +455,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## Potential scale reduction factors:
 ## 
 ##             Point est. Upper C.I.
-## alpha                1       1.01
+## alpha                1       1.00
 ## beta                 1       1.00
-## pmean_theta          1       1.01
+## pmean_theta          1       1.00
 ## pstd_theta           1       1.00
 ## theta[1]             1       1.00
 ## theta[2]             1       1.00
@@ -466,8 +466,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## theta[5]             1       1.00
 ## theta[6]             1       1.00
 ## theta[7]             1       1.00
-## theta[8]             1       1.01
-## theta[9]             1       1.00
+## theta[8]             1       1.00
+## theta[9]             1       1.01
 ## theta[10]            1       1.00</code></pre>
 <p><span class="math inline">\(\hat{R} \leq 1.2\)</span> is generally indicates convergence. Here, all of the parameters have converged, which confirms our visual assessment of convergence.</p>
 </div>
@@ -477,25 +477,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="session-5-implementing-bayesian-models.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">caterplot</span>(jm_coda, </span>
 <span id="cb19-2"><a href="session-5-implementing-bayesian-models.html#cb19-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">parms =</span> <span class="st">&quot;theta&quot;</span>,</span>
 <span id="cb19-3"><a href="session-5-implementing-bayesian-models.html#cb19-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">reorder =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 <p>We can see that the rates for each snow fence (<span class="math inline">\(\theta_i\)</span>) are indeed distributed about the sample mean of 2 invasive plants per square meter.</p>
 <p>How do the fence-level rates compare with the regional-level rates? We can use the <code>summary()</code> function on the model output samples.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="session-5-implementing-bayesian-models.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jm_coda)[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>##                 Mean        SD    Naive SE Time-series SE
-## alpha       4.927848 1.7782893 0.018744815    0.020680867
-## beta        2.359847 0.9002537 0.009489507    0.010398606
-## pmean_theta 2.131955 0.3375905 0.003558516    0.003558476
-## pstd_theta  1.010556 0.2661770 0.002805752    0.002984073
-## theta[1]    1.921679 0.1591736 0.001677837    0.001677772
-## theta[2]    1.832903 0.1857446 0.001957919    0.001947547
-## theta[3]    2.385428 0.2044024 0.002154590    0.002133657
-## theta[4]    2.053049 0.1783009 0.001879456    0.001863333
-## theta[5]    2.212793 0.1680179 0.001771064    0.001779555
-## theta[6]    1.974328 0.1730969 0.001824602    0.001857601
-## theta[7]    2.018101 0.1918789 0.002022581    0.002046385
-## theta[8]    2.197780 0.1759760 0.001854950    0.001848555
-## theta[9]    1.735508 0.1442812 0.001520858    0.001569794
-## theta[10]   1.974487 0.1671563 0.001761982    0.001780232</code></pre>
+## alpha       4.940838 1.7791334 0.018753713    0.020548734
+## beta        2.362988 0.8990146 0.009476446    0.010344713
+## pmean_theta 2.133635 0.3355905 0.003537434    0.003613381
+## pstd_theta  1.009152 0.2599937 0.002740575    0.002992529
+## theta[1]    1.922982 0.1604328 0.001691110    0.001668412
+## theta[2]    1.830783 0.1898067 0.002000739    0.002020824
+## theta[3]    2.384865 0.2045426 0.002156068    0.002158823
+## theta[4]    2.050765 0.1813432 0.001911525    0.001931191
+## theta[5]    2.215917 0.1664404 0.001754436    0.001753172
+## theta[6]    1.972456 0.1739080 0.001833151    0.001782088
+## theta[7]    2.019942 0.1887418 0.001989513    0.001969378
+## theta[8]    2.199109 0.1749615 0.001844256    0.001887350
+## theta[9]    1.733456 0.1452889 0.001531480    0.001562532
+## theta[10]   1.977165 0.1674572 0.001765154    0.001781153</code></pre>
 <p>The regional rate of invasive plants has a posterior mean of ~2.4 and a posterior standard deviation of ~1. Thus, this hierarchical model acts as something of a random effects model, allowing us to account for variation among individual snow fences while reporting statistics at the regional level. The distinction between fixed and random effect is blurred in hierarchical Bayesian modeling, and there can be multiple ways of specifying random effects.</p>
 </div>
 <div id="interactive-problem-logistic-regression-model" class="section level3 unnumbered aside">
@@ -506,9 +506,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb22-3"><a href="session-5-implementing-bayesian-models.html#cb22-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">distance =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">7.2</span>, <span class="fl">24.1</span>, <span class="fl">30.2</span>, <span class="fl">36.4</span>, <span class="fl">41.5</span>, <span class="fl">51.2</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
 <span id="cb22-4"><a href="session-5-implementing-bayesian-models.html#cb22-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">placed =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">56</span>, <span class="dv">80</span>, <span class="dv">52</span>, <span class="dv">60</span>, <span class="dv">60</span>, <span class="dv">84</span>, <span class="dv">92</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
 <span id="cb22-5"><a href="session-5-implementing-bayesian-models.html#cb22-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">removed =</span> <span class="fu">c</span>(<span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">28</span>, <span class="dv">20</span>, <span class="dv">18</span>, <span class="dv">22</span>, <span class="dv">9</span>, <span class="dv">16</span>, <span class="dv">16</span>, <span class="dv">23</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">24</span>, <span class="dv">39</span>))</span></code></pre></div>
-<p>Helpful hints:
-* Use the <a href="https://people.stat.sc.edu/hansont/stat740/jags_user_manual.pdf">JAGS manual</a> to find the parameters of <code>dbin</code>, the binomial distribution</p>
+<p>Helpful hints:</p>
 <ul>
+<li><p>Use the <a href="https://people.stat.sc.edu/hansont/stat740/jags_user_manual.pdf">JAGS manual</a> to find the parameters of <code>dbin</code>, the binomial distribution</p></li>
 <li><p>No need to specify initials for this regression model</p></li>
 <li><p>Can add replicated data to evaluate model fit. Create a new variable <code>y.rep</code> beneath the likelihood and give it an identical distribution.</p></li>
 </ul>
