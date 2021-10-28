@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>11 Session 11: Missing Data | Open Science Synthesis for the Delta Science Program: Week 2</title>
+  <meta name="description" content="11 Session 11: Missing Data | Open Science Synthesis for the Delta Science Program: Week 2" />
+  <meta name="generator" content="bookdown 0.24.3 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="11 Session 11: Missing Data | Open Science Synthesis for the Delta Science Program: Week 2" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="11 Session 11: Missing Data | Open Science Synthesis for the Delta Science Program: Week 2" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="session-10-informative-priors.html"/>
+<link rel="next" href="session-11-timeseries.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
+<script src="libs/viz-1.8.2/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.6.1/grViz.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Open Science Synthesis for the Delta Science Program: Week 2</a>
+<ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#schedule"><i class="fa fa-check"></i><b>0.1</b> Schedule</a>
+<ul>
+<li class="chapter" data-level="0.1.1" data-path="index.html"><a href="index.html#code-of-conduct"><i class="fa fa-check"></i><b>0.1.1</b> Code of Conduct</a></li>
+<li class="chapter" data-level="0.1.2" data-path="index.html"><a href="index.html#logistics"><i class="fa fa-check"></i><b>0.1.2</b> Logistics</a></li>
+<li class="chapter" data-level="0.1.3" data-path="index.html"><a href="index.html#about-this-book"><i class="fa fa-check"></i><b>0.1.3</b> About this book</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="session-1-re-introductions-and-setup.html"><a href="session-1-re-introductions-and-setup.html"><i class="fa fa-check"></i><b>1</b> Session 1: Re-Introductions and Setup</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="session-1-re-introductions-and-setup.html"><a href="session-1-re-introductions-and-setup.html#datasets-of-interest"><i class="fa fa-check"></i><b>1.1</b> Datasets of Interest</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html"><i class="fa fa-check"></i><b>2</b> Session 2: git conflicts</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#learning-objectives"><i class="fa fa-check"></i><b>2.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="2.2" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#introduction"><i class="fa fa-check"></i><b>2.2</b> Introduction</a></li>
+<li class="chapter" data-level="2.3" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#collaborating-with-a-trusted-colleague-without-conflicts"><i class="fa fa-check"></i><b>2.3</b> Collaborating with a trusted colleague <strong>without conflicts</strong></a>
+<ul>
+<li class="chapter" data-level="" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#setup"><i class="fa fa-check"></i>Setup</a></li>
+<li><a href="session-2-git-conflicts.html#section"></a></li>
+<li class="chapter" data-level="2.3.1" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#step-1-collaborator-clone"><i class="fa fa-check"></i><b>2.3.1</b> Step 1: Collaborator clone</a></li>
+<li class="chapter" data-level="2.3.2" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#step-2-collaborator-edits"><i class="fa fa-check"></i><b>2.3.2</b> Step 2: Collaborator Edits</a></li>
+<li class="chapter" data-level="2.3.3" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#step-3-collaborator-commit-and-push"><i class="fa fa-check"></i><b>2.3.3</b> Step 3: Collaborator commit and push</a></li>
+<li class="chapter" data-level="2.3.4" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#step-4-owner-pull"><i class="fa fa-check"></i><b>2.3.4</b> Step 4: Owner pull</a></li>
+<li class="chapter" data-level="2.3.5" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#step-5-owner-edits-commit-and-push"><i class="fa fa-check"></i><b>2.3.5</b> Step 5: Owner edits, commit, and push</a></li>
+<li class="chapter" data-level="2.3.6" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#step-6-collaborator-pull"><i class="fa fa-check"></i><b>2.3.6</b> Step 6: Collaborator pull</a></li>
+<li class="chapter" data-level="" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#challenge"><i class="fa fa-check"></i>Challenge</a></li>
+<li><a href="session-2-git-conflicts.html#section-1"></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#merge-conflicts"><i class="fa fa-check"></i><b>2.4</b> Merge conflicts</a></li>
+<li class="chapter" data-level="2.5" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#how-to-resolve-a-conflict"><i class="fa fa-check"></i><b>2.5</b> How to resolve a conflict</a>
+<ul>
+<li class="chapter" data-level="" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#abort-abort-abort"><i class="fa fa-check"></i>Abort, abort, abort…</a></li>
+<li class="chapter" data-level="" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#checkout"><i class="fa fa-check"></i>Checkout</a></li>
+<li class="chapter" data-level="" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#pull-and-edit-the-file"><i class="fa fa-check"></i>Pull and edit the file</a></li>
+<li class="chapter" data-level="2.5.1" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#producing-and-resolving-merge-conflicts"><i class="fa fa-check"></i><b>2.5.1</b> Producing and resolving merge conflicts</a></li>
+<li class="chapter" data-level="" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#merge-conflict-challenge"><i class="fa fa-check"></i>Merge Conflict Challenge</a></li>
+<li><a href="session-2-git-conflicts.html#section-2"></a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#workflows-to-avoid-merge-conflicts"><i class="fa fa-check"></i><b>2.6</b> Workflows to avoid merge conflicts</a></li>
+<li class="chapter" data-level="2.7" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#collaborating-using-git"><i class="fa fa-check"></i><b>2.7</b> Collaborating using Git</a>
+<ul>
+<li class="chapter" data-level="2.7.1" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#learning-objectives-1"><i class="fa fa-check"></i><b>2.7.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="2.7.2" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#pull-requests"><i class="fa fa-check"></i><b>2.7.2</b> Pull requests</a></li>
+<li class="chapter" data-level="2.7.3" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#exercise-create-and-merge-pull-requests"><i class="fa fa-check"></i><b>2.7.3</b> Exercise: Create and merge pull requests</a></li>
+<li class="chapter" data-level="2.7.4" data-path="session-2-git-conflicts.html"><a href="session-2-git-conflicts.html#branches"><i class="fa fa-check"></i><b>2.7.4</b> Branches</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="session-2-collaborative-synthesis.html"><a href="session-2-collaborative-synthesis.html"><i class="fa fa-check"></i><b>3</b> Session 2: Collaborative Synthesis</a></li>
+<li class="chapter" data-level="4" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html"><i class="fa fa-check"></i><b>4</b> Session 3: Introduction to Bayesian modeling</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#learning-objectives-2"><i class="fa fa-check"></i><b>4.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="4.2" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#why-choose-bayesian"><i class="fa fa-check"></i><b>4.2</b> Why choose Bayesian?</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#philosophically-sound-and-consistent"><i class="fa fa-check"></i><b>4.2.1</b> Philosophically sound and consistent</a></li>
+<li class="chapter" data-level="4.2.2" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#flexible"><i class="fa fa-check"></i><b>4.2.2</b> Flexible</a></li>
+<li class="chapter" data-level="4.2.3" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#clear-inference"><i class="fa fa-check"></i><b>4.2.3</b> Clear inference</a></li>
+<li class="chapter" data-level="4.2.4" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#uses-all-available-information"><i class="fa fa-check"></i><b>4.2.4</b> Uses all available information</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#review-of-probability-bayes-rule-and-distributions"><i class="fa fa-check"></i><b>4.3</b> Review of probability, Bayes’ rule, and distributions</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#probabability"><i class="fa fa-check"></i><b>4.3.1</b> Probabability</a></li>
+<li class="chapter" data-level="4.3.2" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#bayes-rule"><i class="fa fa-check"></i><b>4.3.2</b> Bayes’ rule</a></li>
+<li class="chapter" data-level="4.3.3" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#bayesian-inference"><i class="fa fa-check"></i><b>4.3.3</b> Bayesian inference</a></li>
+<li class="chapter" data-level="4.3.4" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#quick-review-of-distributions"><i class="fa fa-check"></i><b>4.3.4</b> Quick review of distributions</a></li>
+<li class="chapter" data-level="4.3.5" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#selecting-priors"><i class="fa fa-check"></i><b>4.3.5</b> Selecting priors</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#drafting-bayesian-models"><i class="fa fa-check"></i><b>4.4</b> Drafting Bayesian models</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#graphical-representations-of-hierarchical-models"><i class="fa fa-check"></i><b>4.4.1</b> Graphical representations of hierarchical models</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#simple-hierachical-example-snow-fences"><i class="fa fa-check"></i><b>4.5</b> Simple hierachical example: snow fences</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="session-3-introduction-to-bayesian-modeling.html"><a href="session-3-introduction-to-bayesian-modeling.html#acknowledgements"><i class="fa fa-check"></i><b>4.5.1</b> Acknowledgements</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="session-4-collaborative-synthesis.html"><a href="session-4-collaborative-synthesis.html"><i class="fa fa-check"></i><b>5</b> Session 4: Collaborative Synthesis</a></li>
+<li class="chapter" data-level="6" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html"><i class="fa fa-check"></i><b>6</b> Session 5: Implementing Bayesian models</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#learning-objectives-3"><i class="fa fa-check"></i><b>6.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="6.2" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#overview-of-the-bayesian-modeling-process"><i class="fa fa-check"></i><b>6.2</b> Overview of the Bayesian modeling process</a></li>
+<li class="chapter" data-level="6.3" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#markov-chain-monte-carlo"><i class="fa fa-check"></i><b>6.3</b> Markov chain Monte Carlo</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#inference-from-iterative-simulation"><i class="fa fa-check"></i><b>6.3.1</b> Inference from iterative simulation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#programing-statistical-models"><i class="fa fa-check"></i><b>6.4</b> Programing statistical models</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#compiling-a-jags-model"><i class="fa fa-check"></i><b>6.4.1</b> Compiling a JAGS model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#sampling-the-posterior-distribution"><i class="fa fa-check"></i><b>6.4.2</b> Sampling the posterior distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#evaluating-model-diagnostics"><i class="fa fa-check"></i><b>6.5</b> Evaluating model diagnostics</a>
+<ul>
+<li class="chapter" data-level="" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#interactive-problem-logistic-regression-model"><i class="fa fa-check"></i>Interactive problem: Logistic regression model</a></li>
+<li class="chapter" data-level="6.5.1" data-path="session-5-implementing-bayesian-models.html"><a href="session-5-implementing-bayesian-models.html#acknowledgements-1"><i class="fa fa-check"></i><b>6.5.1</b> Acknowledgements</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="session-6-collaborative-synthesis.html"><a href="session-6-collaborative-synthesis.html"><i class="fa fa-check"></i><b>7</b> Session 6: Collaborative Synthesis</a></li>
+<li class="chapter" data-level="8" data-path="session-7-collaborative-synthesis.html"><a href="session-7-collaborative-synthesis.html"><i class="fa fa-check"></i><b>8</b> Session 7: Collaborative Synthesis</a></li>
+<li class="chapter" data-level="9" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html"><i class="fa fa-check"></i><b>9</b> Session 8: Informative Priors</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#priors"><i class="fa fa-check"></i><b>9.1</b> Priors</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#learning-objectives-4"><i class="fa fa-check"></i><b>9.1.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="9.1.2" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#background"><i class="fa fa-check"></i><b>9.1.2</b> Background</a></li>
+<li class="chapter" data-level="9.1.3" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#conjugate-priors"><i class="fa fa-check"></i><b>9.1.3</b> Conjugate Priors</a></li>
+<li class="chapter" data-level="9.1.4" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#uniformative-weak-flat-priors"><i class="fa fa-check"></i><b>9.1.4</b> Uniformative / Weak / Flat Priors</a></li>
+<li class="chapter" data-level="9.1.5" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#regularizing-priors"><i class="fa fa-check"></i><b>9.1.5</b> Regularizing priors</a></li>
+<li class="chapter" data-level="9.1.6" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#informative-priors"><i class="fa fa-check"></i><b>9.1.6</b> Informative Priors</a></li>
+<li class="chapter" data-level="9.1.7" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#generating-priors-based-or-expert-knowledge"><i class="fa fa-check"></i><b>9.1.7</b> <strong>Generating Priors based or Expert knowledge:</strong></a></li>
+<li class="chapter" data-level="9.1.8" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#statistical-fitting-to-data"><i class="fa fa-check"></i><b>9.1.8</b> Statistical fitting to data</a></li>
+<li class="chapter" data-level="9.1.9" data-path="session-8-informative-priors.html"><a href="session-8-informative-priors.html#references-and-further-reading"><i class="fa fa-check"></i><b>9.1.9</b> References and further reading</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html"><i class="fa fa-check"></i><b>10</b> Session 10: Informative Priors</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#priors-1"><i class="fa fa-check"></i><b>10.1</b> Priors</a>
+<ul>
+<li class="chapter" data-level="10.1.1" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#learning-objectives-5"><i class="fa fa-check"></i><b>10.1.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="10.1.2" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#background-1"><i class="fa fa-check"></i><b>10.1.2</b> Background</a></li>
+<li class="chapter" data-level="10.1.3" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#conjugate-priors-1"><i class="fa fa-check"></i><b>10.1.3</b> Conjugate Priors</a></li>
+<li class="chapter" data-level="10.1.4" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#uniformative-weak-flat-priors-1"><i class="fa fa-check"></i><b>10.1.4</b> Uniformative / Weak / Flat Priors</a></li>
+<li class="chapter" data-level="10.1.5" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#regularizing-priors-1"><i class="fa fa-check"></i><b>10.1.5</b> Regularizing priors</a></li>
+<li class="chapter" data-level="10.1.6" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#informative-priors-1"><i class="fa fa-check"></i><b>10.1.6</b> Informative Priors</a></li>
+<li class="chapter" data-level="10.1.7" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#generating-priors-based-or-expert-knowledge-1"><i class="fa fa-check"></i><b>10.1.7</b> <strong>Generating Priors based or Expert knowledge:</strong></a></li>
+<li class="chapter" data-level="10.1.8" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#statistical-fitting-to-data-1"><i class="fa fa-check"></i><b>10.1.8</b> Statistical fitting to data</a></li>
+<li class="chapter" data-level="10.1.9" data-path="session-10-informative-priors.html"><a href="session-10-informative-priors.html#references-and-further-reading-1"><i class="fa fa-check"></i><b>10.1.9</b> References and further reading</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="session-11-missing-data.html"><a href="session-11-missing-data.html"><i class="fa fa-check"></i><b>11</b> Session 11: Missing Data</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="session-11-missing-data.html"><a href="session-11-missing-data.html#missing-data"><i class="fa fa-check"></i><b>11.1</b> Missing Data</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="session-11-missing-data.html"><a href="session-11-missing-data.html#general-concepts"><i class="fa fa-check"></i><b>11.1.1</b> General Concepts</a></li>
+<li class="chapter" data-level="11.1.2" data-path="session-11-missing-data.html"><a href="session-11-missing-data.html#where-does-missing-data-come-from-or-go"><i class="fa fa-check"></i><b>11.1.2</b> Where does missing data come from (or go?)</a></li>
+<li class="chapter" data-level="11.1.3" data-path="session-11-missing-data.html"><a href="session-11-missing-data.html#what-to-do-about-missing-data"><i class="fa fa-check"></i><b>11.1.3</b> What to do about missing data</a></li>
+<li class="chapter" data-level="11.1.4" data-path="session-11-missing-data.html"><a href="session-11-missing-data.html#types-of-missing-data"><i class="fa fa-check"></i><b>11.1.4</b> Types of missing data</a></li>
+<li class="chapter" data-level="11.1.5" data-path="session-11-missing-data.html"><a href="session-11-missing-data.html#approaches"><i class="fa fa-check"></i><b>11.1.5</b> Approaches</a></li>
+<li class="chapter" data-level="11.1.6" data-path="session-11-missing-data.html"><a href="session-11-missing-data.html#references"><i class="fa fa-check"></i><b>11.1.6</b> References</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="session-11-timeseries.html"><a href="session-11-timeseries.html"><i class="fa fa-check"></i><b>12</b> Session 11: Timeseries</a></li>
+<li class="chapter" data-level="13" data-path="session-13-time-series-and-forecasting.html"><a href="session-13-time-series-and-forecasting.html"><i class="fa fa-check"></i><b>13</b> Session 13: Time series and forecasting</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Open Science Synthesis for the Delta Science Program: Week 2</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="session-11-missing-data" class="section level1" number="11">
+<h1><span class="header-section-number">11</span> Session 11: Missing Data</h1>
+<div id="missing-data" class="section level2" number="11.1">
+<h2><span class="header-section-number">11.1</span> Missing Data</h2>
+<div id="general-concepts" class="section level3" number="11.1.1">
+<h3><span class="header-section-number">11.1.1</span> General Concepts</h3>
+<ul>
+<li>a frequent problem</li>
+<li>can bias estimates of parameters and their variances</li>
+<li>lots of different ways to handle it</li>
+<li>too often, solution is to throw out data - easiest, and easiest to justify.</li>
+</ul>
+<p>But I am going review a few examples of how to get around missing data.</p>
+</div>
+<div id="where-does-missing-data-come-from-or-go" class="section level3" number="11.1.2">
+<h3><span class="header-section-number">11.1.2</span> Where does missing data come from (or go?)</h3>
+<p>Types of missing data</p>
+</div>
+<div id="what-to-do-about-missing-data" class="section level3" number="11.1.3">
+<h3><span class="header-section-number">11.1.3</span> What to do about missing data</h3>
+<p>How to record missing data
+- what does NULL mean? What does NA mean?
+- This is almost never specified. Some options:
+- observation was not recorded, or was recorded and not entered
+- data was collected and entered, but later found to be suspect, and removed
+- the data is in my notebook / I can’t be bothered to enter it
+- there was nothing to measure; a value here would not make sense</p>
+</div>
+<div id="types-of-missing-data" class="section level3" number="11.1.4">
+<h3><span class="header-section-number">11.1.4</span> Types of missing data</h3>
+<p>The first two can be safely removed (Gelman and Hill 2006)
+- Missing completely at random. A useful assumption; difficult to prove.
+- Missing at random. Missingness depends on observed variables - e.g. one species of fish can be observed but not caught and measured, or a sensor only works when the temperature is below some threshold.
+- Missing not at random
+- Missing but depends on unobserved variable
+- Missing but depends on the variable itself</p>
+</div>
+<div id="approaches" class="section level3" number="11.1.5">
+<h3><span class="header-section-number">11.1.5</span> Approaches</h3>
+<p>If there are a few missing data points (&lt;5-10%)
+- delete records with missing data
+- replace missing data
+If there are more, this can lead to bias.
+- MICE
+- Missing data in Bayesian models</p>
+<div id="mice-multiple-imputation-by-chained-equations" class="section level4" number="11.1.5.1">
+<h4><span class="header-section-number">11.1.5.1</span> MICE: Multiple Imputation by Chained Equations</h4>
+<p>This is one of the most commonly used approaches, because it is very powerful.</p>
+<p>A few limitations of the MICE approach include: it requires the assumption that data are missing completely at random. Further, it is based on empirical analysis rather than theory.</p>
+<p>Algorithm:
+- create multiple copies of data
+- impute missing values - use the distribution of a variable to impute plausible values for the missing data
+- perform analysis on the values
+- combine results</p>
+<p>See Rubin 1987 and White et al 2011 for background on the MICE algorithm.</p>
+</div>
+<div id="interpolation" class="section level4" number="11.1.5.2">
+<h4><span class="header-section-number">11.1.5.2</span> Interpolation</h4>
+<p>There are a variety of methods for interpolating missing data in time series. This is frequently used for environmental sensors - weather stations, eddy covariance towers, temperature or soil moisture data.</p>
+<p>Lets look at an example. This dataset doesn’t have any missing data, so we will make some.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="session-11-missing-data.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="session-11-missing-data.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb40-2"><a href="session-11-missing-data.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imputeTS)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="session-11-missing-data.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb42-2"><a href="session-11-missing-data.html#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb42-3"><a href="session-11-missing-data.html#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
+<span id="cb42-4"><a href="session-11-missing-data.html#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="session-11-missing-data.html#cb42-5" aria-hidden="true" tabindex="-1"></a>mac_daymet <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;../data/mac_daymet.csv&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-6"><a href="session-11-missing-data.html#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&gt;</span> <span class="dv">2016</span>)</span></code></pre></div>
+<pre><code>## Rows: 7665 Columns: 7</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl  (6): precip, tmax, tmin, tmean, trange, vpd
+## date (1): date</code></pre>
+<pre><code>## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="session-11-missing-data.html#cb46-1" aria-hidden="true" tabindex="-1"></a>mac_nas <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;../data/mac_nas.csv&#39;</span>)</span></code></pre></div>
+<pre><code>## Rows: 1460 Columns: 7</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl  (6): precip, tmax, tmin, tmean, trange, vpd
+## date (1): date</code></pre>
+<pre><code>## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="session-11-missing-data.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mac_daymet) <span class="sc">+</span> </span>
+<span id="cb50-2"><a href="session-11-missing-data.html#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(date, tmean))</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/sample_missing_data-1.png" width="672" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="session-11-missing-data.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb51-2"><a href="session-11-missing-data.html#cb51-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> mac_daymet, <span class="fu">aes</span>(date, tmean), <span class="at">color =</span> <span class="st">&#39;red&#39;</span>, <span class="at">size =</span> <span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb51-3"><a href="session-11-missing-data.html#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> mac_nas, <span class="fu">aes</span>(date, tmean), <span class="at">size =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 272 rows containing missing values (geom_point).</code></pre>
+<p><img src="reproducible-research-short-course_files/figure-html/sample_missing_data-2.png" width="672" /></p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="session-11-missing-data.html#cb53-1" aria-hidden="true" tabindex="-1"></a>mac_nojja <span class="ot">&lt;-</span> mac_daymet <span class="sc">%&gt;%</span> </span>
+<span id="cb53-2"><a href="session-11-missing-data.html#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">tmean =</span> <span class="fu">ifelse</span>(<span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span> <span class="sc">&amp;</span> <span class="fu">year</span>(date) <span class="sc">==</span> <span class="dv">2020</span>, <span class="cn">NA</span>, tmean))</span>
+<span id="cb53-3"><a href="session-11-missing-data.html#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-4"><a href="session-11-missing-data.html#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb53-5"><a href="session-11-missing-data.html#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> mac_daymet, <span class="fu">aes</span>(date, tmean), <span class="at">color =</span> <span class="st">&#39;red&#39;</span>, <span class="at">size =</span> <span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb53-6"><a href="session-11-missing-data.html#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> mac_nojja, <span class="fu">aes</span>(date, tmean), <span class="at">size =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 92 rows containing missing values (geom_point).</code></pre>
+<p><img src="reproducible-research-short-course_files/figure-html/sample_missing_data-3.png" width="672" /></p>
+<p>Now, what do we do?</p>
+<p>Well, lets look for a related variable -</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="session-11-missing-data.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(mac_daymet <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">==</span> <span class="dv">2020</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(precip, tmin, tmean, vpd, date))</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-44-1.png" width="672" />
+It looks like we can do a decent job of predicting tmean from tmin (or tmax for that matter … lets pretend that we don’t know the relationship tmean = (tmin + tmean) / 2 or have the ability to estimate )</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="session-11-missing-data.html#cb56-1" aria-hidden="true" tabindex="-1"></a>tmean_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(tmean <span class="sc">~</span> tmin, <span class="at">data =</span> mac_nas)</span>
+<span id="cb56-2"><a href="session-11-missing-data.html#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="session-11-missing-data.html#cb56-3" aria-hidden="true" tabindex="-1"></a>tmean_model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(tmean <span class="sc">~</span> tmin <span class="sc">+</span> precip, <span class="at">data =</span> mac_nas)</span>
+<span id="cb56-4"><a href="session-11-missing-data.html#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="session-11-missing-data.html#cb56-5" aria-hidden="true" tabindex="-1"></a>tmean_model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(tmean <span class="sc">~</span> vpd <span class="sc">+</span> tmin, <span class="at">data =</span> mac_nas)</span>
+<span id="cb56-6"><a href="session-11-missing-data.html#cb56-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-7"><a href="session-11-missing-data.html#cb56-7" aria-hidden="true" tabindex="-1"></a>tmean_model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(tmean <span class="sc">~</span> vpd <span class="sc">+</span> tmin <span class="sc">+</span> precip, <span class="at">data =</span> mac_nas)</span>
+<span id="cb56-8"><a href="session-11-missing-data.html#cb56-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-9"><a href="session-11-missing-data.html#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tmean_model4)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = tmean ~ vpd + tmin + precip, data = mac_nas)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.9949 -0.9598  0.0878  1.0588  5.2823 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  8.8403651  0.0996198  88.741  &lt; 2e-16 ***
+## vpd         -0.0018815  0.0001377 -13.663  &lt; 2e-16 ***
+## tmin         1.0703254  0.0077675 137.795  &lt; 2e-16 ***
+## precip      -0.1242346  0.0168094  -7.391 2.75e-13 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.5 on 1184 degrees of freedom
+##   (272 observations deleted due to missingness)
+## Multiple R-squared:  0.9687, Adjusted R-squared:  0.9686 
+## F-statistic: 1.221e+04 on 3 and 1184 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="session-11-missing-data.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(tmean_model, tmean_model2, tmean_model3, tmean_model4)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: tmean ~ tmin
+## Model 2: tmean ~ tmin + precip
+## Model 3: tmean ~ vpd + tmin
+## Model 4: tmean ~ vpd + tmin + precip
+##   Res.Df    RSS Df Sum of Sq       F    Pr(&gt;F)    
+## 1   1186 3311.5                                   
+## 2   1185 3086.1  1    225.48 100.150 &lt; 2.2e-16 ***
+## 3   1185 2788.7  0    297.34                      
+## 4   1184 2665.7  1    122.98  54.624 2.751e-13 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="session-11-missing-data.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="do">### another way to check if we need the full model </span></span>
+<span id="cb60-2"><a href="session-11-missing-data.html#cb60-2" aria-hidden="true" tabindex="-1"></a>MASS<span class="sc">::</span><span class="fu">stepAIC</span>(tmean_model4)</span></code></pre></div>
+<pre><code>## Start:  AIC=968.15
+## tmean ~ vpd + tmin + precip
+## 
+##          Df Sum of Sq   RSS    AIC
+## &lt;none&gt;                 2666  968.1
+## - precip  1       123  2789 1019.7
+## - vpd     1       420  3086 1140.1
+## - tmin    1     42750 45416 4334.6</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = tmean ~ vpd + tmin + precip, data = mac_nas)
+## 
+## Coefficients:
+## (Intercept)          vpd         tmin       precip  
+##    8.840365    -0.001882     1.070325    -0.124235</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="session-11-missing-data.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="do">### ok. both RSS and AIC say &#39;keep them all&#39;!</span></span>
+<span id="cb63-2"><a href="session-11-missing-data.html#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="session-11-missing-data.html#cb63-3" aria-hidden="true" tabindex="-1"></a>nas <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">is.na</span>(mac_nas<span class="sc">$</span>tmean))</span>
+<span id="cb63-4"><a href="session-11-missing-data.html#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="session-11-missing-data.html#cb63-5" aria-hidden="true" tabindex="-1"></a>pred_tmean <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> tmean_model4, <span class="at">newdata =</span> mac_nas[nas,])</span>
+<span id="cb63-6"><a href="session-11-missing-data.html#cb63-6" aria-hidden="true" tabindex="-1"></a>mac_pred <span class="ot">&lt;-</span> mac_nas</span>
+<span id="cb63-7"><a href="session-11-missing-data.html#cb63-7" aria-hidden="true" tabindex="-1"></a>mac_pred<span class="sc">$</span>tmean[nas] <span class="ot">&lt;-</span> pred_tmean</span>
+<span id="cb63-8"><a href="session-11-missing-data.html#cb63-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-9"><a href="session-11-missing-data.html#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tmean_model4)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-1.png" width="672" /><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-2.png" width="672" /><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-3.png" width="672" /><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-4.png" width="672" /></p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="session-11-missing-data.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pred_tmean, mac_daymet<span class="sc">$</span>tmean[nas]) <span class="sc">+</span></span>
+<span id="cb64-2"><a href="session-11-missing-data.html#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">40</span>,<span class="dv">0</span><span class="sc">:</span><span class="dv">40</span>, <span class="at">lty =</span> <span class="dv">2</span>) </span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-5.png" width="672" /></p>
+<pre><code>## integer(0)</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="session-11-missing-data.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pred_tmean <span class="sc">-</span> mac_daymet<span class="sc">$</span>tmean[nas], <span class="at">breaks =</span> <span class="dv">20</span>)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-6.png" width="672" /></p>
+<hr />
+<p>The book ’forecating practices and principles:</p>
+<p><a href="https://otexts.com/fpp2/missing-outliers.html" class="uri">https://otexts.com/fpp2/missing-outliers.html</a></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="session-11-missing-data.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nojja<span class="sc">$</span>tmean, </span>
+<span id="cb67-2"><a href="session-11-missing-data.html#cb67-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_imputations =</span> mac_pred<span class="sc">$</span>tmean, </span>
+<span id="cb67-3"><a href="session-11-missing-data.html#cb67-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span>
+<span id="cb67-4"><a href="session-11-missing-data.html#cb67-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-5"><a href="session-11-missing-data.html#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nas<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nas<span class="sc">$</span>date)</span>
+<span id="cb67-6"><a href="session-11-missing-data.html#cb67-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-7"><a href="session-11-missing-data.html#cb67-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-8"><a href="session-11-missing-data.html#cb67-8" aria-hidden="true" tabindex="-1"></a>interp <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(mac_nas<span class="sc">$</span>tmean)</span>
+<span id="cb67-9"><a href="session-11-missing-data.html#cb67-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-10"><a href="session-11-missing-data.html#cb67-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mac_daymet<span class="sc">$</span>tmean, interp)</span>
+<span id="cb67-11"><a href="session-11-missing-data.html#cb67-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-12"><a href="session-11-missing-data.html#cb67-12" aria-hidden="true" tabindex="-1"></a>interp_jjas <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(mac_nojja<span class="sc">$</span>tmean)</span>
+<span id="cb67-13"><a href="session-11-missing-data.html#cb67-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-14"><a href="session-11-missing-data.html#cb67-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mac_daymet<span class="sc">$</span>tmean, interp_jjas)</span>
+<span id="cb67-15"><a href="session-11-missing-data.html#cb67-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-16"><a href="session-11-missing-data.html#cb67-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-17"><a href="session-11-missing-data.html#cb67-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-18"><a href="session-11-missing-data.html#cb67-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-19"><a href="session-11-missing-data.html#cb67-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nas<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nas<span class="sc">$</span>date)</span>
+<span id="cb67-20"><a href="session-11-missing-data.html#cb67-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-21"><a href="session-11-missing-data.html#cb67-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nojja<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nojja<span class="sc">$</span>date)</span>
+<span id="cb67-22"><a href="session-11-missing-data.html#cb67-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-23"><a href="session-11-missing-data.html#cb67-23" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_intervals</span>(mac_nas<span class="sc">$</span>tmean)</span>
+<span id="cb67-24"><a href="session-11-missing-data.html#cb67-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_intervals</span>(mac_nojja<span class="sc">$</span>tmean)</span></code></pre></div>
+<p>Gap Filling - weather, time series</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="session-11-missing-data.html#cb68-1" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(mac_nas, <span class="at">option =</span> <span class="st">&#39;spline&#39;</span>)</span>
+<span id="cb68-2"><a href="session-11-missing-data.html#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nas<span class="sc">$</span>tmean, <span class="at">x_with_imputations =</span> imp<span class="sc">$</span>tmean, <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span>
+<span id="cb68-3"><a href="session-11-missing-data.html#cb68-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-4"><a href="session-11-missing-data.html#cb68-4" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(mac_nojja, <span class="at">option =</span> <span class="st">&#39;stine&#39;</span>)</span>
+<span id="cb68-5"><a href="session-11-missing-data.html#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nojja<span class="sc">$</span>tmean, <span class="at">x_with_imputations =</span> imp<span class="sc">$</span>tmean, <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span></code></pre></div>
+<p>Your turn:
+try some different aproaches to missing data imputation:</p>
+<ul>
+<li>replace with overall mean <code>na_mean</code></li>
+<li>replace with moving average <code>na_ma</code></li>
+<li>replace with … random draws? <code>na_random</code></li>
+</ul>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="session-11-missing-data.html#cb69-1" aria-hidden="true" tabindex="-1"></a>my_ts <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb69-2"><a href="session-11-missing-data.html#cb69-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ts</span>(x, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2017</span>, <span class="dv">1</span>), </span>
+<span id="cb69-3"><a href="session-11-missing-data.html#cb69-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2020</span>, <span class="dv">365</span>), </span>
+<span id="cb69-4"><a href="session-11-missing-data.html#cb69-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">deltat =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">365</span>)</span>
+<span id="cb69-5"><a href="session-11-missing-data.html#cb69-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb69-6"><a href="session-11-missing-data.html#cb69-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb69-7"><a href="session-11-missing-data.html#cb69-7" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_seasplit</span>(<span class="fu">my_ts</span>(mac_nojja<span class="sc">$</span>tmean))</span>
+<span id="cb69-8"><a href="session-11-missing-data.html#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> <span class="fu">my_ts</span>(mac_nojja<span class="sc">$</span>tmean), </span>
+<span id="cb69-9"><a href="session-11-missing-data.html#cb69-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_imputations =</span> imp, </span>
+<span id="cb69-10"><a href="session-11-missing-data.html#cb69-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_truth =</span> <span class="fu">my_ts</span>(mac_daymet<span class="sc">$</span>tmean ))</span></code></pre></div>
+</div>
+<div id="bayesian-imputation" class="section level4" number="11.1.5.3">
+<h4><span class="header-section-number">11.1.5.3</span> Bayesian Imputation</h4>
+<p>The brms package also provides utilities for handling missing data, including prior to model fitting using MICE and related methods as well as during model fitting. These are explained in the vignette by <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html">Brukner 2021 “Handle Missing Values with brms”</a> and the online version of <a href="https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/missing-data-and-other-opportunities.html#missing-data">Statistical Rethinking Chapter 14</a>.</p>
+<p>The same can be done using JAGS, it is possible to estimate variables as model parameters during model fitting. With both JAGS and brms, it is necessary to specify a model for any variable with data being estimated (e.g. predictor variables must be explictly modeled as a response, even if drawn directly from a prior).</p>
+<p>It is possible to use the MICE algorithm in Bayesian analysis. The disadvantage of using MICE with many Bayesian methods such as MCMC is that it increases the amount of computing time as a linear function of the number of datasets with imputed values (often 5-20x). Since many models can take hours or days to fit, this is an important limitation to consider.</p>
+</div>
+<div id="estimating-se-from-previously-published-findings-to-support-meta-analysis" class="section level4" number="11.1.5.4">
+<h4><span class="header-section-number">11.1.5.4</span> Estimating SE from previously published findings to support Meta-analysis</h4>
+<p>A tangent: Meta-analysis itself can be viewed as a missing data problem. Combining information from two studies that were conducted in different conditions or treatment levels, I am trying to make inference about a single variable such as response rate even if the studies measured different responses. However, that is not the focus here.</p>
+<p>Very often, meta-analysis models require measures of variance around a particular treatment response in order to weight the studies. However, the original studies have different goals than the meta-analysis, so these values may not be reported. A standard convention is to reject studies that do not have the required estimates of standard error. However, this can limit inference. It can also motivate sharing data - that would reduce the need for such laborious and uncertain approximations.</p>
+<p>Some methods for estimating SE from other statistics are summarized in LeBauer 2020 (developed at the time of LeBauer et al 2013 but not given a doi until 2020), before the text Koricheva et al 2013 gave a related perspective. LeBauer et al 2013 also provide examples for estimating these statistics even where they can’t be estimated while fitting a meta-analysis.</p>
+</div>
+</div>
+<div id="references" class="section level3" number="11.1.6">
+<h3><span class="header-section-number">11.1.6</span> References</h3>
+<p>Gelman and Hill 2006. Ch 25: Missing Data Imputation in “Data Analysis Using Regression and Multilevel/Hierarchical Models.” Cambridge University Press <a href="http://www.stat.columbia.edu/~gelman/arm/missing.pdf" class="uri">http://www.stat.columbia.edu/~gelman/arm/missing.pdf</a></p>
+<p>Su, Y.-S., Gelman, A., Hill, J., &amp; Yajima, M. (2011). Multiple Imputation with Diagnostics (mi) in R: Opening Windows into the Black Box. Journal of Statistical Software, 45(2), 1–31. <a href="https://doi.org/10.18637/jss.v045.i02" class="uri">https://doi.org/10.18637/jss.v045.i02</a> <a href="https://www.jstatsoft.org/article/view/v045i02" class="uri">https://www.jstatsoft.org/article/view/v045i02</a></p>
+<p>Rubin DB (1987). Multiple Imputation for Nonresponse in Surveys. John Wiley &amp; Sons, New
+York.</p>
+<p>White, Ian R., Patrick Royston, and Angela M. Wood. “Multiple imputation using chained equations: issues and guidance for practice.” Statistics in medicine 30.4 (2011): 377-399.</p>
+<p>Steffen Moritz and Thomas Bartz-Beielstein (2017) imputeTS: Time Series Missing Value Imputation in R. The R Journal (2017) 9:1, pages 207-218. <a href="https://journal.r-project.org/archive/2017/RJ-2017-009/index.html" class="uri">https://journal.r-project.org/archive/2017/RJ-2017-009/index.html</a></p>
+<p>CRAN Task View: Missing Data <a href="https://cran.r-project.org/web/views/MissingData.html" class="uri">https://cran.r-project.org/web/views/MissingData.html</a></p>
+<p>Koricheva, J., Gurevitch, J., &amp; Mengersen, K. (Eds.). (2013). Handbook of Meta-analysis in Ecology and Evolution. Princeton University Press. <a href="http://www.jstor.org/stable/j.ctt24hq6n" class="uri">http://www.jstor.org/stable/j.ctt24hq6n</a></p>
+<p>LeBauer, David S., et al. “Facilitating feedbacks between field measurements and ecosystem models.” Ecological Monographs 83.2 (2013): 133-154.</p>
+<p>LeBauer, David. “Transforming ANOVA and Regression statistics for Meta-analysis.” Authorea Preprints (2020). <a href="https://doi.org/10.22541/au.158359749.96662550" class="uri">https://doi.org/10.22541/au.158359749.96662550</a></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="session-10-informative-priors.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="session-11-timeseries.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
