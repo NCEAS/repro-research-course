@@ -486,49 +486,43 @@ It looks like we can do a decent job of predicting tmean from tmin (or tmax for 
 <span id="cb63-4"><a href="session-11-missing-data.html#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb63-5"><a href="session-11-missing-data.html#cb63-5" aria-hidden="true" tabindex="-1"></a>pred_tmean <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> tmean_model4, <span class="at">newdata =</span> mac_nas[nas,])</span>
 <span id="cb63-6"><a href="session-11-missing-data.html#cb63-6" aria-hidden="true" tabindex="-1"></a>mac_pred <span class="ot">&lt;-</span> mac_nas</span>
-<span id="cb63-7"><a href="session-11-missing-data.html#cb63-7" aria-hidden="true" tabindex="-1"></a>mac_pred<span class="sc">$</span>tmean[nas] <span class="ot">&lt;-</span> pred_tmean</span>
-<span id="cb63-8"><a href="session-11-missing-data.html#cb63-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-9"><a href="session-11-missing-data.html#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tmean_model4)</span></code></pre></div>
-<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-1.png" width="672" /><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-2.png" width="672" /><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-3.png" width="672" /><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-4.png" width="672" /></p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="session-11-missing-data.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pred_tmean, mac_daymet<span class="sc">$</span>tmean[nas]) <span class="sc">+</span></span>
-<span id="cb64-2"><a href="session-11-missing-data.html#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">40</span>,<span class="dv">0</span><span class="sc">:</span><span class="dv">40</span>, <span class="at">lty =</span> <span class="dv">2</span>) </span></code></pre></div>
-<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-5.png" width="672" /></p>
-<pre><code>## integer(0)</code></pre>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="session-11-missing-data.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pred_tmean <span class="sc">-</span> mac_daymet<span class="sc">$</span>tmean[nas], <span class="at">breaks =</span> <span class="dv">20</span>)</span></code></pre></div>
-<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-45-6.png" width="672" /></p>
+<span id="cb63-7"><a href="session-11-missing-data.html#cb63-7" aria-hidden="true" tabindex="-1"></a>mac_pred<span class="sc">$</span>tmean[nas] <span class="ot">&lt;-</span> pred_tmean</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="session-11-missing-data.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tmean_model4)</span>
+<span id="cb64-2"><a href="session-11-missing-data.html#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pred_tmean, mac_daymet<span class="sc">$</span>tmean[nas]) <span class="sc">+</span></span>
+<span id="cb64-3"><a href="session-11-missing-data.html#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">40</span>,<span class="dv">0</span><span class="sc">:</span><span class="dv">40</span>, <span class="at">lty =</span> <span class="dv">2</span>) </span>
+<span id="cb64-4"><a href="session-11-missing-data.html#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pred_tmean <span class="sc">-</span> mac_daymet<span class="sc">$</span>tmean[nas], <span class="at">breaks =</span> <span class="dv">20</span>)</span></code></pre></div>
 <hr />
 <p>The book ’forecating practices and principles:</p>
 <p><a href="https://otexts.com/fpp2/missing-outliers.html" class="uri">https://otexts.com/fpp2/missing-outliers.html</a></p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="session-11-missing-data.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nojja<span class="sc">$</span>tmean, </span>
-<span id="cb67-2"><a href="session-11-missing-data.html#cb67-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_imputations =</span> mac_pred<span class="sc">$</span>tmean, </span>
-<span id="cb67-3"><a href="session-11-missing-data.html#cb67-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span>
-<span id="cb67-4"><a href="session-11-missing-data.html#cb67-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-5"><a href="session-11-missing-data.html#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nas<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nas<span class="sc">$</span>date)</span>
-<span id="cb67-6"><a href="session-11-missing-data.html#cb67-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-7"><a href="session-11-missing-data.html#cb67-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-8"><a href="session-11-missing-data.html#cb67-8" aria-hidden="true" tabindex="-1"></a>interp <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(mac_nas<span class="sc">$</span>tmean)</span>
-<span id="cb67-9"><a href="session-11-missing-data.html#cb67-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-10"><a href="session-11-missing-data.html#cb67-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mac_daymet<span class="sc">$</span>tmean, interp)</span>
-<span id="cb67-11"><a href="session-11-missing-data.html#cb67-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-12"><a href="session-11-missing-data.html#cb67-12" aria-hidden="true" tabindex="-1"></a>interp_jjas <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(mac_nojja<span class="sc">$</span>tmean)</span>
-<span id="cb67-13"><a href="session-11-missing-data.html#cb67-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-14"><a href="session-11-missing-data.html#cb67-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mac_daymet<span class="sc">$</span>tmean, interp_jjas)</span>
-<span id="cb67-15"><a href="session-11-missing-data.html#cb67-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-16"><a href="session-11-missing-data.html#cb67-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-17"><a href="session-11-missing-data.html#cb67-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-18"><a href="session-11-missing-data.html#cb67-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-19"><a href="session-11-missing-data.html#cb67-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nas<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nas<span class="sc">$</span>date)</span>
-<span id="cb67-20"><a href="session-11-missing-data.html#cb67-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-21"><a href="session-11-missing-data.html#cb67-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nojja<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nojja<span class="sc">$</span>date)</span>
-<span id="cb67-22"><a href="session-11-missing-data.html#cb67-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-23"><a href="session-11-missing-data.html#cb67-23" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_intervals</span>(mac_nas<span class="sc">$</span>tmean)</span>
-<span id="cb67-24"><a href="session-11-missing-data.html#cb67-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_intervals</span>(mac_nojja<span class="sc">$</span>tmean)</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="session-11-missing-data.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nojja<span class="sc">$</span>tmean, </span>
+<span id="cb65-2"><a href="session-11-missing-data.html#cb65-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_imputations =</span> mac_pred<span class="sc">$</span>tmean, </span>
+<span id="cb65-3"><a href="session-11-missing-data.html#cb65-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="session-11-missing-data.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nas<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nas<span class="sc">$</span>date)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-47-2.png" width="672" /></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="session-11-missing-data.html#cb67-1" aria-hidden="true" tabindex="-1"></a>interp <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(mac_nas<span class="sc">$</span>tmean)</span>
+<span id="cb67-2"><a href="session-11-missing-data.html#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="session-11-missing-data.html#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mac_daymet<span class="sc">$</span>tmean, interp)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-47-3.png" width="672" /></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="session-11-missing-data.html#cb68-1" aria-hidden="true" tabindex="-1"></a>interp_jjas <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(mac_nojja<span class="sc">$</span>tmean)</span>
+<span id="cb68-2"><a href="session-11-missing-data.html#cb68-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-3"><a href="session-11-missing-data.html#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mac_daymet<span class="sc">$</span>tmean, interp_jjas)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-47-4.png" width="672" /></p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="session-11-missing-data.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nas<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nas<span class="sc">$</span>date)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-47-5.png" width="672" /></p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="session-11-missing-data.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_distribution</span>(mac_nojja<span class="sc">$</span>tmean, <span class="at">x_axis_labels =</span> mac_nojja<span class="sc">$</span>date)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-47-6.png" width="672" /></p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="session-11-missing-data.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_intervals</span>(mac_nas<span class="sc">$</span>tmean)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-47-7.png" width="672" /></p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="session-11-missing-data.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_intervals</span>(mac_nojja<span class="sc">$</span>tmean)</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-47-8.png" width="672" /></p>
 <p>Gap Filling - weather, time series</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="session-11-missing-data.html#cb68-1" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(mac_nas, <span class="at">option =</span> <span class="st">&#39;spline&#39;</span>)</span>
-<span id="cb68-2"><a href="session-11-missing-data.html#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nas<span class="sc">$</span>tmean, <span class="at">x_with_imputations =</span> imp<span class="sc">$</span>tmean, <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span>
-<span id="cb68-3"><a href="session-11-missing-data.html#cb68-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-4"><a href="session-11-missing-data.html#cb68-4" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(mac_nojja, <span class="at">option =</span> <span class="st">&#39;stine&#39;</span>)</span>
-<span id="cb68-5"><a href="session-11-missing-data.html#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nojja<span class="sc">$</span>tmean, <span class="at">x_with_imputations =</span> imp<span class="sc">$</span>tmean, <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="session-11-missing-data.html#cb73-1" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(mac_nas, <span class="at">option =</span> <span class="st">&#39;spline&#39;</span>)</span>
+<span id="cb73-2"><a href="session-11-missing-data.html#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nas<span class="sc">$</span>tmean, <span class="at">x_with_imputations =</span> imp<span class="sc">$</span>tmean, <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="session-11-missing-data.html#cb74-1" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(mac_nojja, <span class="at">option =</span> <span class="st">&#39;stine&#39;</span>)</span>
+<span id="cb74-2"><a href="session-11-missing-data.html#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> mac_nojja<span class="sc">$</span>tmean, <span class="at">x_with_imputations =</span> imp<span class="sc">$</span>tmean, <span class="at">x_with_truth =</span> mac_daymet<span class="sc">$</span>tmean )</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-48-2.png" width="672" /></p>
 <p>Your turn:
 try some different aproaches to missing data imputation:</p>
 <ul>
@@ -536,16 +530,18 @@ try some different aproaches to missing data imputation:</p>
 <li>replace with moving average <code>na_ma</code></li>
 <li>replace with … random draws? <code>na_random</code></li>
 </ul>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="session-11-missing-data.html#cb69-1" aria-hidden="true" tabindex="-1"></a>my_ts <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
-<span id="cb69-2"><a href="session-11-missing-data.html#cb69-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ts</span>(x, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2017</span>, <span class="dv">1</span>), </span>
-<span id="cb69-3"><a href="session-11-missing-data.html#cb69-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2020</span>, <span class="dv">365</span>), </span>
-<span id="cb69-4"><a href="session-11-missing-data.html#cb69-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">deltat =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">365</span>)</span>
-<span id="cb69-5"><a href="session-11-missing-data.html#cb69-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb69-6"><a href="session-11-missing-data.html#cb69-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb69-7"><a href="session-11-missing-data.html#cb69-7" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_seasplit</span>(<span class="fu">my_ts</span>(mac_nojja<span class="sc">$</span>tmean))</span>
-<span id="cb69-8"><a href="session-11-missing-data.html#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> <span class="fu">my_ts</span>(mac_nojja<span class="sc">$</span>tmean), </span>
-<span id="cb69-9"><a href="session-11-missing-data.html#cb69-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_imputations =</span> imp, </span>
-<span id="cb69-10"><a href="session-11-missing-data.html#cb69-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_truth =</span> <span class="fu">my_ts</span>(mac_daymet<span class="sc">$</span>tmean ))</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="session-11-missing-data.html#cb75-1" aria-hidden="true" tabindex="-1"></a>my_ts <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb75-2"><a href="session-11-missing-data.html#cb75-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ts</span>(x, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2017</span>, <span class="dv">1</span>), </span>
+<span id="cb75-3"><a href="session-11-missing-data.html#cb75-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2020</span>, <span class="dv">365</span>), </span>
+<span id="cb75-4"><a href="session-11-missing-data.html#cb75-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">deltat =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">365</span>)</span>
+<span id="cb75-5"><a href="session-11-missing-data.html#cb75-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb75-6"><a href="session-11-missing-data.html#cb75-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb75-7"><a href="session-11-missing-data.html#cb75-7" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_seasplit</span>(<span class="fu">my_ts</span>(mac_nojja<span class="sc">$</span>tmean))</span>
+<span id="cb75-8"><a href="session-11-missing-data.html#cb75-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-9"><a href="session-11-missing-data.html#cb75-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(<span class="at">x_with_na =</span> <span class="fu">my_ts</span>(mac_nojja<span class="sc">$</span>tmean), </span>
+<span id="cb75-10"><a href="session-11-missing-data.html#cb75-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_imputations =</span> imp, </span>
+<span id="cb75-11"><a href="session-11-missing-data.html#cb75-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x_with_truth =</span> <span class="fu">my_ts</span>(mac_daymet<span class="sc">$</span>tmean ))</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
 </div>
 <div id="bayesian-imputation" class="section level4" number="11.1.5.3">
 <h4><span class="header-section-number">11.1.5.3</span> Bayesian Imputation</h4>

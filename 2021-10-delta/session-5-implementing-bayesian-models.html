@@ -319,11 +319,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="overview-of-the-bayesian-modeling-process" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> Overview of the Bayesian modeling process</h2>
 <p>In the first part of the lecture, we established the major reasons to use Bayesian inference and briefly reviewed the fundamentals of probability, Bayes’ rule, and distributions. We ended by walking through two examples that allowed us to practice model specification.</p>
-<div id="htmlwidget-caa8f740dfd66b6db463" style="width:672px;height:300px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-caa8f740dfd66b6db463">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle, fontcolor = coral]        \n  rec1 [label = \"Identify scientific objectives\"]\n  rec2 [label = \"Collect & understand data\"]\n  rec3 [label = \"Draw upon existing theory/knowledge\"]\n  node [shape = rectangle, fontcolor = darkorchid3]  \n  rec4 [label = \"Visualize model\"]\n  rec5 [label = \"Write model mathematically (probability notation & distributions)\"]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 \n  rec3 -> rec2 -> rec4 -> rec5\n  rec3 -> rec1\n  rec3 -> rec4\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-c1434b4403ab0e2edf4f" style="width:672px;height:300px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c1434b4403ab0e2edf4f">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle, fontcolor = coral]        \n  rec1 [label = \"Identify scientific objectives\"]\n  rec2 [label = \"Collect & understand data\"]\n  rec3 [label = \"Draw upon existing theory/knowledge\"]\n  node [shape = rectangle, fontcolor = darkorchid3]  \n  rec4 [label = \"Visualize model\"]\n  rec5 [label = \"Write model mathematically (probability notation & distributions)\"]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 \n  rec3 -> rec2 -> rec4 -> rec5\n  rec3 -> rec1\n  rec3 -> rec4\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p>In this lesson, we will explain and demonstrate how to ‘translate’ between statistical notation and model code, with particular emphasis on implementing Bayesian models with MCMC software.</p>
-<div id="htmlwidget-3016596681b2af12418d" style="width:672px;height:425px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3016596681b2af12418d">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle, fontcolor = darkorchid3]  \n  rec2 [label = \"Write model mathematically (probability notation & distributions)\"]\n  node [shape = rectangle, fontcolor = goldenrod, style = dashed]  \n  rec3 [label = \"Write unnormalized posterior\"]\n  rec4 [label = \"Derive full conditional distributions\"]\n  rec5 [label = \"Construct MCMC algorithm\"]\n  node [shape = rectangle, fontcolor = goldenrod, style = bold]  \n  rec6 [label = \"Program model components in software\"]\n  rec7 [label = \"Fit data to model using MCMC\"]\n  node [shape = rectangle, fontcolor = steelblue, style = solid]\n  rec8 [label = \"Evaluate models (diagnostics, posterior predictive checks)\"]\n  rec9 [label = \"Use output to make inferences\"]\n  \n  # edge definitions with the node IDs\n  rec2 -> rec3 -> rec4 -> rec5 -> rec7 [style = dashed]\n  rec2 -> rec6 -> rec7 [style = bold]\n  rec7 -> rec8 -> rec9 [style = solid]\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-ec16415c6650f2285ae6" style="width:672px;height:425px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ec16415c6650f2285ae6">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle, fontcolor = darkorchid3]  \n  rec2 [label = \"Write model mathematically (probability notation & distributions)\"]\n  node [shape = rectangle, fontcolor = goldenrod, style = dashed]  \n  rec3 [label = \"Write unnormalized posterior\"]\n  rec4 [label = \"Derive full conditional distributions\"]\n  rec5 [label = \"Construct MCMC algorithm\"]\n  node [shape = rectangle, fontcolor = goldenrod, style = bold]  \n  rec6 [label = \"Program model components in software\"]\n  rec7 [label = \"Fit data to model using MCMC\"]\n  node [shape = rectangle, fontcolor = steelblue, style = solid]\n  rec8 [label = \"Evaluate models (diagnostics, posterior predictive checks)\"]\n  rec9 [label = \"Use output to make inferences\"]\n  \n  # edge definitions with the node IDs\n  rec2 -> rec3 -> rec4 -> rec5 -> rec7 [style = dashed]\n  rec2 -> rec6 -> rec7 [style = bold]\n  rec7 -> rec8 -> rec9 [style = solid]\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="markov-chain-monte-carlo" class="section level2" number="6.3">
 <h2><span class="header-section-number">6.3</span> Markov chain Monte Carlo</h2>
@@ -521,20 +521,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>How do the fence-level rates compare with the regional-level rates? We can use the <code>summary()</code> function on the model output samples.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="session-5-implementing-bayesian-models.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jm_coda)[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>##                 Mean        SD    Naive SE Time-series SE
-## alpha       4.921185 1.7278969 0.018213633    0.020161270
-## beta        2.353759 0.8777236 0.009252019    0.010033655
-## pmean_theta 2.133967 0.3363557 0.003545500    0.003545474
-## pstd_theta  1.008530 0.2526006 0.002662644    0.002746560
-## theta[1]    1.921376 0.1621546 0.001709260    0.001709264
-## theta[2]    1.832092 0.1869556 0.001970685    0.002044155
-## theta[3]    2.388161 0.2056814 0.002168072    0.002168113
-## theta[4]    2.051770 0.1824225 0.001922902    0.001902605
-## theta[5]    2.212867 0.1661275 0.001751137    0.001782401
-## theta[6]    1.972191 0.1743626 0.001837943    0.001838123
-## theta[7]    2.021874 0.1917691 0.002021424    0.002006558
-## theta[8]    2.198763 0.1761119 0.001856382    0.001839574
-## theta[9]    1.737339 0.1443798 0.001521897    0.001536911
-## theta[10]   1.975510 0.1704063 0.001796240    0.001814687</code></pre>
+## alpha       4.932648 1.7485225 0.018431046    0.020840124
+## beta        2.357358 0.8829682 0.009307302    0.010128396
+## pmean_theta 2.134685 0.3307012 0.003485897    0.003539697
+## pstd_theta  1.008835 0.2539192 0.002676543    0.002781655
+## theta[1]    1.921838 0.1593706 0.001679914    0.001679780
+## theta[2]    1.827899 0.1878863 0.001980496    0.001980480
+## theta[3]    2.391543 0.2051390 0.002162355    0.002162563
+## theta[4]    2.054517 0.1811255 0.001909231    0.001909116
+## theta[5]    2.213020 0.1667914 0.001758135    0.001760979
+## theta[6]    1.971297 0.1704775 0.001796991    0.001781030
+## theta[7]    2.021405 0.1900816 0.002003636    0.002003700
+## theta[8]    2.195808 0.1763917 0.001859332    0.001802335
+## theta[9]    1.735631 0.1466727 0.001546066    0.001544247
+## theta[10]   1.972669 0.1674529 0.001765108    0.001766131</code></pre>
 <p>The regional rate of invasive plants has a posterior mean of ~2.4 and a posterior standard deviation of ~1. Thus, this hierarchical model acts as something of a random effects model, allowing us to account for variation among individual snow fences while reporting statistics at the regional level. The distinction between fixed and random effect is blurred in hierarchical Bayesian modeling, and there can be multiple ways of specifying random effects.</p>
 </div>
 <div id="interactive-problem-logistic-regression-model" class="section level3 unnumbered aside">
