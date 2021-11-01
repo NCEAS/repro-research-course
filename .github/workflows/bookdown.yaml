@@ -21,14 +21,19 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-
+          
       - name: Setup R
         uses: r-lib/actions/setup-r@v1
+        
+      - name: Cache R packages 
+        uses: actions/cache@v1 
+         with: 
+            path: ${{ env.R_LIBS_USER }} 
+            key: r-${{ hashFiles('DESCRIPTION') }}
 
       - name: Install pandoc and jags
         run: |
           brew install pandoc
-          brew install jags
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "blogdown", "devtools"))
