@@ -210,7 +210,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2.3" data-path="session-4-programmatic-metadata-and-data-access.html"><a href="session-4-programmatic-metadata-and-data-access.html#publish-data-to-the-arctic-data-center-test-site"><i class="fa fa-check"></i><b>4.2.3</b> Publish data to the Arctic Data Center test site</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="session-5-collaborative-synthesis.html"><a href="session-5-collaborative-synthesis.html"><i class="fa fa-check"></i><b>5</b> Session 5: Collaborative synthesis</a></li>
+<li class="chapter" data-level="5" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html"><i class="fa fa-check"></i><b>5</b> Session 5: Model Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html#comparing-models-to-data"><i class="fa fa-check"></i><b>5.1</b> Comparing models to data</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html#statistical-tests-of-model-performance"><i class="fa fa-check"></i><b>5.1.1</b> Statistical tests of model performance</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html#simulation-models"><i class="fa fa-check"></i><b>5.2</b> Simulation Models</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html#example-a-photosynthesis-model"><i class="fa fa-check"></i><b>5.2.1</b> Example: A Photosynthesis model</a></li>
+<li class="chapter" data-level="5.2.2" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html#lets-run-this-model"><i class="fa fa-check"></i><b>5.2.2</b> Let’s run this model!</a></li>
+<li class="chapter" data-level="5.2.3" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html#variance-decomposition---which-of-these-parameters-are-most-important"><i class="fa fa-check"></i><b>5.2.3</b> Variance Decomposition - which of these parameters are most important?</a></li>
+<li class="chapter" data-level="5.2.4" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html#propagate-met-and-use-met-as-a-variable-sample-over-variation-within-the-hour"><i class="fa fa-check"></i><b>5.2.4</b> Propagate met and Use met as a variable, sample over variation within the hour</a></li>
+<li class="chapter" data-level="5.2.5" data-path="session-5-model-analysis.html"><a href="session-5-model-analysis.html#references-1"><i class="fa fa-check"></i><b>5.2.5</b> References</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="session-6-shiny.html"><a href="session-6-shiny.html"><i class="fa fa-check"></i><b>6</b> Session 6: Shiny</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="session-6-shiny.html"><a href="session-6-shiny.html#introduction-to-shiny"><i class="fa fa-check"></i><b>6.1</b> Introduction to Shiny</a>
@@ -333,19 +347,19 @@ processors for a total of 16 cores in this machine.</p>
 <p><img src="images/processors.png" /></p>
 <p>You can think of this as allowing 16 computations to happen at the same time. Theroetically, your computation would take 1/16 of the time (but only theoretically, more on that later).</p>
 <p>Historically, R has only utilized one processor, which makes it single-threaded. Which is a shame, because the 2017 MacBook Pro that I am writing this on is much more powerful than that:</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb174-1"><a href="session-8-reproducible-workflows-revisited.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@powder:~$</span> sysctl hw.ncpu hw.physicalcpu</span>
-<span id="cb174-2"><a href="session-8-reproducible-workflows-revisited.html#cb174-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.ncpu:</span> 8</span>
-<span id="cb174-3"><a href="session-8-reproducible-workflows-revisited.html#cb174-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.physicalcpu:</span> 4</span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb242-1"><a href="session-8-reproducible-workflows-revisited.html#cb242-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@powder:~$</span> sysctl hw.ncpu hw.physicalcpu</span>
+<span id="cb242-2"><a href="session-8-reproducible-workflows-revisited.html#cb242-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.ncpu:</span> 8</span>
+<span id="cb242-3"><a href="session-8-reproducible-workflows-revisited.html#cb242-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.physicalcpu:</span> 4</span></code></pre></div>
 <p>To interpret that output, this machine <code>powder</code> has 4 physical CPUs, each of which has
 two processing cores, for a total of 8 cores for computation. I’d sure like my R computations to use all of that processing power. Because its all on one machine, we can easily use <em>multicore</em> processing tools to make use of those cores. Now let’s look at
 the computational server <code>aurora</code> at NCEAS:</p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb175-1"><a href="session-8-reproducible-workflows-revisited.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@aurora:~$</span> lscpu <span class="kw">|</span> <span class="fu">egrep</span> <span class="st">&#39;CPU\(s\)|per core|per socket&#39;</span></span>
-<span id="cb175-2"><a href="session-8-reproducible-workflows-revisited.html#cb175-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CPU</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>                88</span>
-<span id="cb175-3"><a href="session-8-reproducible-workflows-revisited.html#cb175-3" aria-hidden="true" tabindex="-1"></a><span class="ex">On-line</span> CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">list:</span>   0-87</span>
-<span id="cb175-4"><a href="session-8-reproducible-workflows-revisited.html#cb175-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Thread</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> core:    2</span>
-<span id="cb175-5"><a href="session-8-reproducible-workflows-revisited.html#cb175-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Core</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> socket:    22</span>
-<span id="cb175-6"><a href="session-8-reproducible-workflows-revisited.html#cb175-6" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node0 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>     0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86</span>
-<span id="cb175-7"><a href="session-8-reproducible-workflows-revisited.html#cb175-7" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node1 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>     1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83,85,87</span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb243-1"><a href="session-8-reproducible-workflows-revisited.html#cb243-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@aurora:~$</span> lscpu <span class="kw">|</span> <span class="fu">egrep</span> <span class="st">&#39;CPU\(s\)|per core|per socket&#39;</span></span>
+<span id="cb243-2"><a href="session-8-reproducible-workflows-revisited.html#cb243-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CPU</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>                88</span>
+<span id="cb243-3"><a href="session-8-reproducible-workflows-revisited.html#cb243-3" aria-hidden="true" tabindex="-1"></a><span class="ex">On-line</span> CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">list:</span>   0-87</span>
+<span id="cb243-4"><a href="session-8-reproducible-workflows-revisited.html#cb243-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Thread</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> core:    2</span>
+<span id="cb243-5"><a href="session-8-reproducible-workflows-revisited.html#cb243-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Core</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> socket:    22</span>
+<span id="cb243-6"><a href="session-8-reproducible-workflows-revisited.html#cb243-6" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node0 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>     0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86</span>
+<span id="cb243-7"><a href="session-8-reproducible-workflows-revisited.html#cb243-7" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node1 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>     1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83,85,87</span></code></pre></div>
 <p>Now that’s some compute power! Aurora has 384 GB of RAM, and ample storage. All still under the control of a single operating system.</p>
 <p>However, maybe one of these NSF-sponsored high performance computing clusters (HPC) is looking attractive about now:</p>
 <ul>
@@ -370,36 +384,36 @@ the computational server <code>aurora</code> at NCEAS:</p>
 <div id="loops-and-repetitive-tasks-using-lapply" class="section level3" number="8.1.6">
 <h3><span class="header-section-number">8.1.6</span> Loops and repetitive tasks using lapply</h3>
 <p>When you have a list of repetitive tasks, you may be able to speed it up by adding more computing power. If each task is completely independent of the others, then it is a prime candidate for executing those tasks in parallel, each on its own core. For example, let’s build a simple loop that uses sample with replacement to do a bootstrap analysis. In this case, we select <code>Sepal.Length</code> and <code>Species</code> from the <code>iris</code> dataset, subset it to 100 observations, and then iterate across 10,000 trials, each time resampling the observations with replacement. We then run a logistic regression fitting species as a function of length, and record the coefficients for each trial to be returned.</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="session-8-reproducible-workflows-revisited.html#cb176-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
-<span id="cb176-2"><a href="session-8-reproducible-workflows-revisited.html#cb176-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb176-3"><a href="session-8-reproducible-workflows-revisited.html#cb176-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb176-4"><a href="session-8-reproducible-workflows-revisited.html#cb176-4" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb176-5"><a href="session-8-reproducible-workflows-revisited.html#cb176-5" aria-hidden="true" tabindex="-1"></a>  trial <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb176-6"><a href="session-8-reproducible-workflows-revisited.html#cb176-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>(trial <span class="sc">&lt;=</span> trials) {</span>
-<span id="cb176-7"><a href="session-8-reproducible-workflows-revisited.html#cb176-7" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb176-8"><a href="session-8-reproducible-workflows-revisited.html#cb176-8" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb176-9"><a href="session-8-reproducible-workflows-revisited.html#cb176-9" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
-<span id="cb176-10"><a href="session-8-reproducible-workflows-revisited.html#cb176-10" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res, r)</span>
-<span id="cb176-11"><a href="session-8-reproducible-workflows-revisited.html#cb176-11" aria-hidden="true" tabindex="-1"></a>    trial <span class="ot">&lt;-</span> trial <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb176-12"><a href="session-8-reproducible-workflows-revisited.html#cb176-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb176-13"><a href="session-8-reproducible-workflows-revisited.html#cb176-13" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="session-8-reproducible-workflows-revisited.html#cb244-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
+<span id="cb244-2"><a href="session-8-reproducible-workflows-revisited.html#cb244-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb244-3"><a href="session-8-reproducible-workflows-revisited.html#cb244-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb244-4"><a href="session-8-reproducible-workflows-revisited.html#cb244-4" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb244-5"><a href="session-8-reproducible-workflows-revisited.html#cb244-5" aria-hidden="true" tabindex="-1"></a>  trial <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb244-6"><a href="session-8-reproducible-workflows-revisited.html#cb244-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>(trial <span class="sc">&lt;=</span> trials) {</span>
+<span id="cb244-7"><a href="session-8-reproducible-workflows-revisited.html#cb244-7" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb244-8"><a href="session-8-reproducible-workflows-revisited.html#cb244-8" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb244-9"><a href="session-8-reproducible-workflows-revisited.html#cb244-9" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
+<span id="cb244-10"><a href="session-8-reproducible-workflows-revisited.html#cb244-10" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res, r)</span>
+<span id="cb244-11"><a href="session-8-reproducible-workflows-revisited.html#cb244-11" aria-hidden="true" tabindex="-1"></a>    trial <span class="ot">&lt;-</span> trial <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb244-12"><a href="session-8-reproducible-workflows-revisited.html#cb244-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb244-13"><a href="session-8-reproducible-workflows-revisited.html#cb244-13" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##  26.011   1.750  28.108</code></pre>
+##   25.74    1.75   27.78</code></pre>
 <p>The issue with this loop is that we execute each trial sequentially, which means that only one of our 8 processors on this machine are in use. In order to exploit parallelism, we need to be able to dispatch our tasks as functions, with one task
 going to each processor. To do that, we need to convert our task to a function, and then use the <code>*apply()</code> family of R functions to apply that function to all of the members of a set. In R, using <code>apply</code> used to be faster than the equivalent code in a loop, but now they are similar due to optimizations in R loop handling. However, using the function allows us to later take advantage of other approaches to parallelization. Here’s the same code rewritten to use <code>lapply()</code>, which applies a function to each of the members of a list (in this case the trials we want to run):</p>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="session-8-reproducible-workflows-revisited.html#cb178-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
-<span id="cb178-2"><a href="session-8-reproducible-workflows-revisited.html#cb178-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>)</span>
-<span id="cb178-3"><a href="session-8-reproducible-workflows-revisited.html#cb178-3" aria-hidden="true" tabindex="-1"></a>boot_fx <span class="ot">&lt;-</span> <span class="cf">function</span>(trial) {</span>
-<span id="cb178-4"><a href="session-8-reproducible-workflows-revisited.html#cb178-4" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb178-5"><a href="session-8-reproducible-workflows-revisited.html#cb178-5" aria-hidden="true" tabindex="-1"></a>  result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb178-6"><a href="session-8-reproducible-workflows-revisited.html#cb178-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
-<span id="cb178-7"><a href="session-8-reproducible-workflows-revisited.html#cb178-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(), r)</span>
-<span id="cb178-8"><a href="session-8-reproducible-workflows-revisited.html#cb178-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb178-9"><a href="session-8-reproducible-workflows-revisited.html#cb178-9" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb178-10"><a href="session-8-reproducible-workflows-revisited.html#cb178-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(trials, boot_fx)</span>
-<span id="cb178-11"><a href="session-8-reproducible-workflows-revisited.html#cb178-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="session-8-reproducible-workflows-revisited.html#cb246-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
+<span id="cb246-2"><a href="session-8-reproducible-workflows-revisited.html#cb246-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>)</span>
+<span id="cb246-3"><a href="session-8-reproducible-workflows-revisited.html#cb246-3" aria-hidden="true" tabindex="-1"></a>boot_fx <span class="ot">&lt;-</span> <span class="cf">function</span>(trial) {</span>
+<span id="cb246-4"><a href="session-8-reproducible-workflows-revisited.html#cb246-4" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb246-5"><a href="session-8-reproducible-workflows-revisited.html#cb246-5" aria-hidden="true" tabindex="-1"></a>  result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb246-6"><a href="session-8-reproducible-workflows-revisited.html#cb246-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
+<span id="cb246-7"><a href="session-8-reproducible-workflows-revisited.html#cb246-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(), r)</span>
+<span id="cb246-8"><a href="session-8-reproducible-workflows-revisited.html#cb246-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb246-9"><a href="session-8-reproducible-workflows-revisited.html#cb246-9" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb246-10"><a href="session-8-reproducible-workflows-revisited.html#cb246-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(trials, boot_fx)</span>
+<span id="cb246-11"><a href="session-8-reproducible-workflows-revisited.html#cb246-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##  26.979   1.248  29.615</code></pre>
+##   29.28    0.95   30.65</code></pre>
 </div>
 <div id="approaches-to-parallelization" class="section level3" number="8.1.7">
 <h3><span class="header-section-number">8.1.7</span> Approaches to parallelization</h3>
@@ -416,122 +430,122 @@ going to each processor. To do that, we need to convert our task to a function, 
 <div id="parallelize-using-mclapply" class="section level3" number="8.1.8">
 <h3><span class="header-section-number">8.1.8</span> Parallelize using: mclapply</h3>
 <p>The <code>parallel</code> library can be used to send tasks (encoded as function calls) to each of the processing cores on your machine in parallel. This is done by using the <code>parallel::mclapply</code> function, which is analogous to <code>lapply</code>, but distributes the tasks to multiple processors. <code>mclapply</code> gathers up the responses from each of these function calls, and returns a list of responses that is the same length as the list or vector of input data (one return per input item).</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="session-8-reproducible-workflows-revisited.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel)</span>
-<span id="cb180-2"><a href="session-8-reproducible-workflows-revisited.html#cb180-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="session-8-reproducible-workflows-revisited.html#cb248-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel)</span>
+<span id="cb248-2"><a href="session-8-reproducible-workflows-revisited.html#cb248-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;MASS&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:dplyr&#39;:
 ## 
 ##     select</code></pre>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="session-8-reproducible-workflows-revisited.html#cb183-1" aria-hidden="true" tabindex="-1"></a>starts <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">100</span>, <span class="dv">40</span>)</span>
-<span id="cb183-2"><a href="session-8-reproducible-workflows-revisited.html#cb183-2" aria-hidden="true" tabindex="-1"></a>fx <span class="ot">&lt;-</span> <span class="cf">function</span>(nstart) <span class="fu">kmeans</span>(Boston, <span class="dv">4</span>, <span class="at">nstart=</span>nstart)</span>
-<span id="cb183-3"><a href="session-8-reproducible-workflows-revisited.html#cb183-3" aria-hidden="true" tabindex="-1"></a>numCores <span class="ot">&lt;-</span> <span class="fu">detectCores</span>()</span>
-<span id="cb183-4"><a href="session-8-reproducible-workflows-revisited.html#cb183-4" aria-hidden="true" tabindex="-1"></a>numCores</span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="session-8-reproducible-workflows-revisited.html#cb251-1" aria-hidden="true" tabindex="-1"></a>starts <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">100</span>, <span class="dv">40</span>)</span>
+<span id="cb251-2"><a href="session-8-reproducible-workflows-revisited.html#cb251-2" aria-hidden="true" tabindex="-1"></a>fx <span class="ot">&lt;-</span> <span class="cf">function</span>(nstart) <span class="fu">kmeans</span>(Boston, <span class="dv">4</span>, <span class="at">nstart=</span>nstart)</span>
+<span id="cb251-3"><a href="session-8-reproducible-workflows-revisited.html#cb251-3" aria-hidden="true" tabindex="-1"></a>numCores <span class="ot">&lt;-</span> <span class="fu">detectCores</span>()</span>
+<span id="cb251-4"><a href="session-8-reproducible-workflows-revisited.html#cb251-4" aria-hidden="true" tabindex="-1"></a>numCores</span></code></pre></div>
 <pre><code>## [1] 3</code></pre>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="session-8-reproducible-workflows-revisited.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(</span>
-<span id="cb185-2"><a href="session-8-reproducible-workflows-revisited.html#cb185-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(starts, fx)</span>
-<span id="cb185-3"><a href="session-8-reproducible-workflows-revisited.html#cb185-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="session-8-reproducible-workflows-revisited.html#cb253-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(</span>
+<span id="cb253-2"><a href="session-8-reproducible-workflows-revisited.html#cb253-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(starts, fx)</span>
+<span id="cb253-3"><a href="session-8-reproducible-workflows-revisited.html#cb253-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   1.298   0.133   1.456</code></pre>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="session-8-reproducible-workflows-revisited.html#cb187-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(</span>
-<span id="cb187-2"><a href="session-8-reproducible-workflows-revisited.html#cb187-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(starts, fx, <span class="at">mc.cores =</span> numCores)</span>
-<span id="cb187-3"><a href="session-8-reproducible-workflows-revisited.html#cb187-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+##   1.356   0.131   1.493</code></pre>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="session-8-reproducible-workflows-revisited.html#cb255-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(</span>
+<span id="cb255-2"><a href="session-8-reproducible-workflows-revisited.html#cb255-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(starts, fx, <span class="at">mc.cores =</span> numCores)</span>
+<span id="cb255-3"><a href="session-8-reproducible-workflows-revisited.html#cb255-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.983   0.352   1.300</code></pre>
+##   0.997   0.322   0.759</code></pre>
 <p>Now let’s demonstrate with our bootstrap example:</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="session-8-reproducible-workflows-revisited.html#cb189-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
-<span id="cb189-2"><a href="session-8-reproducible-workflows-revisited.html#cb189-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>)</span>
-<span id="cb189-3"><a href="session-8-reproducible-workflows-revisited.html#cb189-3" aria-hidden="true" tabindex="-1"></a>boot_fx <span class="ot">&lt;-</span> <span class="cf">function</span>(trial) {</span>
-<span id="cb189-4"><a href="session-8-reproducible-workflows-revisited.html#cb189-4" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb189-5"><a href="session-8-reproducible-workflows-revisited.html#cb189-5" aria-hidden="true" tabindex="-1"></a>  result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb189-6"><a href="session-8-reproducible-workflows-revisited.html#cb189-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
-<span id="cb189-7"><a href="session-8-reproducible-workflows-revisited.html#cb189-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(), r)</span>
-<span id="cb189-8"><a href="session-8-reproducible-workflows-revisited.html#cb189-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb189-9"><a href="session-8-reproducible-workflows-revisited.html#cb189-9" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb189-10"><a href="session-8-reproducible-workflows-revisited.html#cb189-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(trials, boot_fx, <span class="at">mc.cores =</span> numCores)</span>
-<span id="cb189-11"><a href="session-8-reproducible-workflows-revisited.html#cb189-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="session-8-reproducible-workflows-revisited.html#cb257-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
+<span id="cb257-2"><a href="session-8-reproducible-workflows-revisited.html#cb257-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>)</span>
+<span id="cb257-3"><a href="session-8-reproducible-workflows-revisited.html#cb257-3" aria-hidden="true" tabindex="-1"></a>boot_fx <span class="ot">&lt;-</span> <span class="cf">function</span>(trial) {</span>
+<span id="cb257-4"><a href="session-8-reproducible-workflows-revisited.html#cb257-4" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb257-5"><a href="session-8-reproducible-workflows-revisited.html#cb257-5" aria-hidden="true" tabindex="-1"></a>  result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb257-6"><a href="session-8-reproducible-workflows-revisited.html#cb257-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
+<span id="cb257-7"><a href="session-8-reproducible-workflows-revisited.html#cb257-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(), r)</span>
+<span id="cb257-8"><a href="session-8-reproducible-workflows-revisited.html#cb257-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb257-9"><a href="session-8-reproducible-workflows-revisited.html#cb257-9" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb257-10"><a href="session-8-reproducible-workflows-revisited.html#cb257-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(trials, boot_fx, <span class="at">mc.cores =</span> numCores)</span>
+<span id="cb257-11"><a href="session-8-reproducible-workflows-revisited.html#cb257-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##  19.903   2.000  21.683</code></pre>
+##   20.71    1.49   13.59</code></pre>
 </div>
 <div id="parallelize-using-foreach-and-doparallel" class="section level3" number="8.1.9">
 <h3><span class="header-section-number">8.1.9</span> Parallelize using: foreach and doParallel</h3>
 <p>The normal <code>for</code> loop in R looks like:</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="session-8-reproducible-workflows-revisited.html#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
-<span id="cb191-2"><a href="session-8-reproducible-workflows-revisited.html#cb191-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">sqrt</span>(i))</span>
-<span id="cb191-3"><a href="session-8-reproducible-workflows-revisited.html#cb191-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="session-8-reproducible-workflows-revisited.html#cb259-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
+<span id="cb259-2"><a href="session-8-reproducible-workflows-revisited.html#cb259-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">sqrt</span>(i))</span>
+<span id="cb259-3"><a href="session-8-reproducible-workflows-revisited.html#cb259-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>## [1] 1
-## [1] 1.414214
-## [1] 1.732051</code></pre>
+## [1] 1.41
+## [1] 1.73</code></pre>
 <p>The <code>foreach</code> method is similar, but uses the sequential <code>%do%</code> operator to indicate an expression to run. Note the difference in the returned data structure.</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="session-8-reproducible-workflows-revisited.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
-<span id="cb193-2"><a href="session-8-reproducible-workflows-revisited.html#cb193-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%do%</span> {</span>
-<span id="cb193-3"><a href="session-8-reproducible-workflows-revisited.html#cb193-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb193-4"><a href="session-8-reproducible-workflows-revisited.html#cb193-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb261-1"><a href="session-8-reproducible-workflows-revisited.html#cb261-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb261-2"><a href="session-8-reproducible-workflows-revisited.html#cb261-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%do%</span> {</span>
+<span id="cb261-3"><a href="session-8-reproducible-workflows-revisited.html#cb261-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb261-4"><a href="session-8-reproducible-workflows-revisited.html#cb261-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>## [[1]]
 ## [1] 1
 ## 
 ## [[2]]
-## [1] 1.414214
+## [1] 1.41
 ## 
 ## [[3]]
-## [1] 1.732051</code></pre>
+## [1] 1.73</code></pre>
 <p>In addition, <code>foreach</code> supports a parallelizable operator <code>%dopar%</code> from the <code>doParallel</code> package. This allows each iteration through the loop to use different cores or different machines in a cluster. Here, we demonstrate with using all the cores on the current machine:</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="session-8-reproducible-workflows-revisited.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
-<span id="cb195-2"><a href="session-8-reproducible-workflows-revisited.html#cb195-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span></code></pre></div>
+<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb263-1"><a href="session-8-reproducible-workflows-revisited.html#cb263-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb263-2"><a href="session-8-reproducible-workflows-revisited.html#cb263-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span></code></pre></div>
 <pre><code>## Loading required package: iterators</code></pre>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="session-8-reproducible-workflows-revisited.html#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(numCores)  <span class="co"># use multicore, set to the number of our cores</span></span>
-<span id="cb197-2"><a href="session-8-reproducible-workflows-revisited.html#cb197-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%dopar%</span> {</span>
-<span id="cb197-3"><a href="session-8-reproducible-workflows-revisited.html#cb197-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb197-4"><a href="session-8-reproducible-workflows-revisited.html#cb197-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="session-8-reproducible-workflows-revisited.html#cb265-1" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(numCores)  <span class="co"># use multicore, set to the number of our cores</span></span>
+<span id="cb265-2"><a href="session-8-reproducible-workflows-revisited.html#cb265-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%dopar%</span> {</span>
+<span id="cb265-3"><a href="session-8-reproducible-workflows-revisited.html#cb265-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb265-4"><a href="session-8-reproducible-workflows-revisited.html#cb265-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>## [[1]]
 ## [1] 1
 ## 
 ## [[2]]
-## [1] 1.414214
+## [1] 1.41
 ## 
 ## [[3]]
-## [1] 1.732051</code></pre>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="session-8-reproducible-workflows-revisited.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To simplify output, foreach has the .combine parameter that can simplify return values</span></span>
-<span id="cb199-2"><a href="session-8-reproducible-workflows-revisited.html#cb199-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb199-3"><a href="session-8-reproducible-workflows-revisited.html#cb199-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a vector</span></span>
-<span id="cb199-4"><a href="session-8-reproducible-workflows-revisited.html#cb199-4" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine=</span>c) <span class="sc">%dopar%</span> {</span>
-<span id="cb199-5"><a href="session-8-reproducible-workflows-revisited.html#cb199-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb199-6"><a href="session-8-reproducible-workflows-revisited.html#cb199-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<pre><code>## [1] 1.000000 1.414214 1.732051</code></pre>
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="session-8-reproducible-workflows-revisited.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a data frame</span></span>
-<span id="cb201-2"><a href="session-8-reproducible-workflows-revisited.html#cb201-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine=</span>rbind) <span class="sc">%dopar%</span> {</span>
-<span id="cb201-3"><a href="session-8-reproducible-workflows-revisited.html#cb201-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb201-4"><a href="session-8-reproducible-workflows-revisited.html#cb201-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<pre><code>##              [,1]
-## result.1 1.000000
-## result.2 1.414214
-## result.3 1.732051</code></pre>
+## [1] 1.73</code></pre>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="session-8-reproducible-workflows-revisited.html#cb267-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To simplify output, foreach has the .combine parameter that can simplify return values</span></span>
+<span id="cb267-2"><a href="session-8-reproducible-workflows-revisited.html#cb267-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb267-3"><a href="session-8-reproducible-workflows-revisited.html#cb267-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a vector</span></span>
+<span id="cb267-4"><a href="session-8-reproducible-workflows-revisited.html#cb267-4" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine=</span>c) <span class="sc">%dopar%</span> {</span>
+<span id="cb267-5"><a href="session-8-reproducible-workflows-revisited.html#cb267-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb267-6"><a href="session-8-reproducible-workflows-revisited.html#cb267-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] 1.00 1.41 1.73</code></pre>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="session-8-reproducible-workflows-revisited.html#cb269-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a data frame</span></span>
+<span id="cb269-2"><a href="session-8-reproducible-workflows-revisited.html#cb269-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine=</span>rbind) <span class="sc">%dopar%</span> {</span>
+<span id="cb269-3"><a href="session-8-reproducible-workflows-revisited.html#cb269-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb269-4"><a href="session-8-reproducible-workflows-revisited.html#cb269-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>##          [,1]
+## result.1 1.00
+## result.2 1.41
+## result.3 1.73</code></pre>
 <p>The <a href="https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf">doParallel vignette</a> on CRAN shows a much more realistic example, where one can use `%dopar% to parallelize a bootstrap analysis where a data set is resampled 10,000 times and the analysis is rerun on each sample, and then the results combined:</p>
-<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="session-8-reproducible-workflows-revisited.html#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s use the iris data set to do a parallel bootstrap</span></span>
-<span id="cb203-2"><a href="session-8-reproducible-workflows-revisited.html#cb203-2" aria-hidden="true" tabindex="-1"></a><span class="co"># From the doParallel vignette, but slightly modified</span></span>
-<span id="cb203-3"><a href="session-8-reproducible-workflows-revisited.html#cb203-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
-<span id="cb203-4"><a href="session-8-reproducible-workflows-revisited.html#cb203-4" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb203-5"><a href="session-8-reproducible-workflows-revisited.html#cb203-5" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb203-6"><a href="session-8-reproducible-workflows-revisited.html#cb203-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%dopar%</span> {</span>
-<span id="cb203-7"><a href="session-8-reproducible-workflows-revisited.html#cb203-7" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb203-8"><a href="session-8-reproducible-workflows-revisited.html#cb203-8" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb203-9"><a href="session-8-reproducible-workflows-revisited.html#cb203-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefficients</span>(result1)</span>
-<span id="cb203-10"><a href="session-8-reproducible-workflows-revisited.html#cb203-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb203-11"><a href="session-8-reproducible-workflows-revisited.html#cb203-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="session-8-reproducible-workflows-revisited.html#cb271-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let&#39;s use the iris data set to do a parallel bootstrap</span></span>
+<span id="cb271-2"><a href="session-8-reproducible-workflows-revisited.html#cb271-2" aria-hidden="true" tabindex="-1"></a><span class="co"># From the doParallel vignette, but slightly modified</span></span>
+<span id="cb271-3"><a href="session-8-reproducible-workflows-revisited.html#cb271-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
+<span id="cb271-4"><a href="session-8-reproducible-workflows-revisited.html#cb271-4" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb271-5"><a href="session-8-reproducible-workflows-revisited.html#cb271-5" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb271-6"><a href="session-8-reproducible-workflows-revisited.html#cb271-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%dopar%</span> {</span>
+<span id="cb271-7"><a href="session-8-reproducible-workflows-revisited.html#cb271-7" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb271-8"><a href="session-8-reproducible-workflows-revisited.html#cb271-8" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb271-9"><a href="session-8-reproducible-workflows-revisited.html#cb271-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefficients</span>(result1)</span>
+<span id="cb271-10"><a href="session-8-reproducible-workflows-revisited.html#cb271-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb271-11"><a href="session-8-reproducible-workflows-revisited.html#cb271-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##  27.219   3.292  22.072</code></pre>
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="session-8-reproducible-workflows-revisited.html#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And compare that to what it takes to do the same analysis in serial</span></span>
-<span id="cb205-2"><a href="session-8-reproducible-workflows-revisited.html#cb205-2" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb205-3"><a href="session-8-reproducible-workflows-revisited.html#cb205-3" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%do%</span> {</span>
-<span id="cb205-4"><a href="session-8-reproducible-workflows-revisited.html#cb205-4" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb205-5"><a href="session-8-reproducible-workflows-revisited.html#cb205-5" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb205-6"><a href="session-8-reproducible-workflows-revisited.html#cb205-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefficients</span>(result1)</span>
-<span id="cb205-7"><a href="session-8-reproducible-workflows-revisited.html#cb205-7" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb205-8"><a href="session-8-reproducible-workflows-revisited.html#cb205-8" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+##   27.57    2.32   13.70</code></pre>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="session-8-reproducible-workflows-revisited.html#cb273-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And compare that to what it takes to do the same analysis in serial</span></span>
+<span id="cb273-2"><a href="session-8-reproducible-workflows-revisited.html#cb273-2" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb273-3"><a href="session-8-reproducible-workflows-revisited.html#cb273-3" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%do%</span> {</span>
+<span id="cb273-4"><a href="session-8-reproducible-workflows-revisited.html#cb273-4" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb273-5"><a href="session-8-reproducible-workflows-revisited.html#cb273-5" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb273-6"><a href="session-8-reproducible-workflows-revisited.html#cb273-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefficients</span>(result1)</span>
+<span id="cb273-7"><a href="session-8-reproducible-workflows-revisited.html#cb273-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb273-8"><a href="session-8-reproducible-workflows-revisited.html#cb273-8" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##  24.575   0.962  26.492</code></pre>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="session-8-reproducible-workflows-revisited.html#cb207-1" aria-hidden="true" tabindex="-1"></a><span class="co"># When you&#39;re done, clean up the cluster</span></span>
-<span id="cb207-2"><a href="session-8-reproducible-workflows-revisited.html#cb207-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopImplicitCluster</span>()</span></code></pre></div>
+##  26.159   0.802  27.383</code></pre>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="session-8-reproducible-workflows-revisited.html#cb275-1" aria-hidden="true" tabindex="-1"></a><span class="co"># When you&#39;re done, clean up the cluster</span></span>
+<span id="cb275-2"><a href="session-8-reproducible-workflows-revisited.html#cb275-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopImplicitCluster</span>()</span></code></pre></div>
 </div>
 <div id="summary-1" class="section level3" number="8.1.10">
 <h3><span class="header-section-number">8.1.10</span> Summary</h3>
