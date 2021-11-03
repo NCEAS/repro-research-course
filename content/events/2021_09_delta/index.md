@@ -28,6 +28,7 @@ Week 3: November 1-5, 2021. UC Davis.
 [Materials Week 1](https://learning.nceas.ucsb.edu/2021-09-delta/)
 
 [Materials Week 2](https://learning.nceas.ucsb.edu/2021-10-delta/)
+
 [Materials Week 3](https://learning.nceas.ucsb.edu/2021-11-delta/)
 
 
