@@ -423,17 +423,17 @@ to data from a weather station in Maricopa, AZ.</p>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -10.312  -2.628  -0.399   2.438   9.949 
+## -10.328  -2.636  -0.414   2.416  10.031 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   2.2372     0.7019    3.19   0.0016 ** 
-## mod           0.8512     0.0262   32.51   &lt;2e-16 ***
+## (Intercept)   2.2368     0.7017    3.19   0.0016 ** 
+## mod           0.8518     0.0262   32.55   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 3.94 on 303 degrees of freedom
-## Multiple R-squared:  0.777,  Adjusted R-squared:  0.776 
+## Multiple R-squared:  0.778,  Adjusted R-squared:  0.777 
 ## F-statistic: 1.06e+03 on 1 and 303 DF,  p-value: &lt;2e-16</code></pre>
 <p>Does the regression model includes the 1:1 line? Why is the P-value so low?</p>
 <details>
@@ -441,7 +441,7 @@ because the default hypothesis test is that the slope is different than 0, not d
 </details>
 <div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="session-5-model-analysis.html#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(reg)</span></code></pre></div>
 <pre><code>## (Intercept)         mod 
-##       2.237       0.851</code></pre>
+##       2.237       0.852</code></pre>
 <div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="session-5-model-analysis.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(reg)</span></code></pre></div>
 <pre><code>##             2.5 % 97.5 %
 ## (Intercept) 0.856  3.618
@@ -457,7 +457,7 @@ because the default hypothesis test is that the slope is different than 0, not d
 <p><span class="math display">\[RMSE=\sqrt{\frac{1}{n}(Y_{model}-Y_{obs})^2}\]</span></p>
 <div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="session-5-model-analysis.html#cb188-1" aria-hidden="true" tabindex="-1"></a>RMSE <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((mod <span class="sc">-</span> obs)<span class="sc">^</span><span class="dv">2</span>))</span>
 <span id="cb188-2"><a href="session-5-model-analysis.html#cb188-2" aria-hidden="true" tabindex="-1"></a>RMSE  </span></code></pre></div>
-<pre><code>## [1] 4.41</code></pre>
+<pre><code>## [1] 4.4</code></pre>
 <p>Sometimes you want a “Normalized” estimate of model error. That way the magnitude of the
 error is on the same scale as the observations. There are many ways to do this, a
 common approach is to divide by the mean of the observations. <span class="math inline">\(NRMSE=RMSE/\bar{Y}_{obs}\)</span> is equivalent to coefficient of variance <span class="math inline">\(CV=\frac{\sigma}{\bar{x}}\)</span>.</p>
@@ -484,7 +484,7 @@ common approach is to divide by the mean of the observations. <span class="math 
 ## t = 33, df = 303, p-value &lt;2e-16
 ## alternative hypothesis: true correlation is not equal to 0
 ## 95 percent confidence interval:
-##  0.854 0.904
+##  0.854 0.905
 ## sample estimates:
 ##   cor 
 ## 0.882</code></pre>
@@ -494,24 +494,24 @@ common approach is to divide by the mean of the observations. <span class="math 
 <p>Do you over or under predict?</p>
 <p><span class="math display">\[Y_{model}-Y_{obs}\]</span></p>
 <div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="session-5-model-analysis.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(mod <span class="sc">-</span> obs)</span></code></pre></div>
-<pre><code>## [1] 1.54</code></pre>
+<pre><code>## [1] 1.53</code></pre>
 <div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="session-5-model-analysis.html#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="co"># normalized</span></span>
 <span id="cb197-2"><a href="session-5-model-analysis.html#cb197-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb197-3"><a href="session-5-model-analysis.html#cb197-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(mod <span class="sc">-</span> obs)<span class="sc">/</span><span class="fu">mean</span>(obs)</span></code></pre></div>
-<pre><code>## [1] 0.0646</code></pre>
+<pre><code>## [1] 0.064</code></pre>
 <p>It is also useful to visualize and compute statistics on these differences.</p>
 <div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="session-5-model-analysis.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(mod<span class="sc">-</span>obs)</span></code></pre></div>
 <p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-82-1.png" width="672" /></p>
 <p>What fraction of the time is the model above the observation?</p>
 <div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="session-5-model-analysis.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(mod <span class="sc">&gt;</span> obs) <span class="sc">/</span> <span class="fu">length</span>(obs)</span></code></pre></div>
-<pre><code>## [1] 0.682</code></pre>
+<pre><code>## [1] 0.679</code></pre>
 </div>
 <div id="ratio-of-variances" class="section level4" number="5.2.1.5">
 <h4><span class="header-section-number">5.2.1.5</span> Ratio of variances</h4>
 <p>Does the model capture the observed variance? Often a model will have lower variances … why?</p>
 <p><span class="math display">\[\frac{SD_{Y_{model}}}{SD_{Y_{obs}}}\]</span></p>
 <div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="session-5-model-analysis.html#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(obs) <span class="sc">/</span> <span class="fu">sd</span>(mod)</span></code></pre></div>
-<pre><code>## [1] 0.965</code></pre>
+<pre><code>## [1] 0.966</code></pre>
 </div>
 <div id="taylor-diagram---three-metrics-in-two-dimensions" class="section level4" number="5.2.1.6">
 <h4><span class="header-section-number">5.2.1.6</span> Taylor Diagram - three metrics in two dimensions</h4>

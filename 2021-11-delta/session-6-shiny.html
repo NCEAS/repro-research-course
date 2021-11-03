@@ -354,7 +354,7 @@ else on the Internet (e.g., if the application is deployed to a web server).</p>
 </div>
 <div id="interactive-scatterplots" class="section level3" number="6.1.5">
 <h3><span class="header-section-number">6.1.5</span> Interactive scatterplots</h3>
-<p>Let’s modify this application to plot YOLO bypass secchi disk data in a time-series, and allow aspects of the plot to be interactively changed.</p>
+<p>Let’s modify this application to plot Yolo bypass secchi disk data in a time-series, and allow aspects of the plot to be interactively changed.</p>
 <div id="load-data-for-the-example" class="section level4" number="6.1.5.1">
 <h4><span class="header-section-number">6.1.5.1</span> Load data for the example</h4>
 <p>Use this code to load the data at the top of your <code>app.R</code> script. Note we are using <code>contentId</code> again, and we have filtered
@@ -430,8 +430,8 @@ min and max of the Depth axis.</p>
 <p><img src="images/shiny-yolo-1.png" /></p>
 <p>Looks so shiny!</p>
 </div>
-<div id="negative-depths" class="section level4" number="6.1.5.5">
-<h4><span class="header-section-number">6.1.5.5</span> Negative depths?</h4>
+<div id="reversed-axes" class="section level4" number="6.1.5.5">
+<h4><span class="header-section-number">6.1.5.5</span> Reversed Axes?</h4>
 <p>What happens if a clever user sets the minimum for the X axis at a greater value than the maximum?
 You’ll see that the direction of the X axis becomes reversed, and the plotted points display right
 to left. This is really an error condition. Rather than use two independent sliders, we can modify
@@ -528,15 +528,13 @@ from the <code>delta_data</code> data frame to a variable:</p>
 the server to produce this plot. Its very similar to the first plot, but this time
 we want to use the selected variables from the user controls to choose which
 variables are plotted. These variable names from the <code>$input</code> are character
-strings, and so would not be recognized as symbols in the <code>aes</code> mapping in ggplot.
-Instead, we can use <code>aes_string()</code> to provide character names for the variables to
-be used in the mappings.</p>
+strings, and so would not be recognized as symbols in the <code>aes</code> mapping in ggplot. As recommended by the tidyverse authors, we use the <a href="https://dplyr.tidyverse.org/articles/programming.html">non-standard evaluation</a> syntax of <code>.data[["colname"]]</code> to access the variables.</p>
 <div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="session-6-shiny.html#cb242-1" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb242-2"><a href="session-6-shiny.html#cb242-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes_string</span>(<span class="at">x =</span> input<span class="sc">$</span>x_variable,</span>
-<span id="cb242-3"><a href="session-6-shiny.html#cb242-3" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">y =</span> input<span class="sc">$</span>y_variable,</span>
-<span id="cb242-4"><a href="session-6-shiny.html#cb242-4" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">color =</span> input<span class="sc">$</span>color_variable)) <span class="sc">+</span></span>
-<span id="cb242-5"><a href="session-6-shiny.html#cb242-5" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb242-6"><a href="session-6-shiny.html#cb242-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
+<span id="cb242-2"><a href="session-6-shiny.html#cb242-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(delta_data, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>x_variable]],</span>
+<span id="cb242-3"><a href="session-6-shiny.html#cb242-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> .data[[input<span class="sc">$</span>y_variable]],</span>
+<span id="cb242-4"><a href="session-6-shiny.html#cb242-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">color =</span> .data[[input<span class="sc">$</span>color_variable]])) <span class="sc">+</span></span>
+<span id="cb242-5"><a href="session-6-shiny.html#cb242-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>)<span class="sc">+</span></span>
+<span id="cb242-6"><a href="session-6-shiny.html#cb242-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_light</span>()</span>
 <span id="cb242-7"><a href="session-6-shiny.html#cb242-7" aria-hidden="true" tabindex="-1"></a>    })</span></code></pre></div>
 </div>
 </div>
@@ -687,11 +685,11 @@ the tidyverse for writing your interactive applications.</p>
 <span id="cb244-79"><a href="session-6-shiny.html#cb244-79" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb244-80"><a href="session-6-shiny.html#cb244-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mix and  match plot</span></span>
 <span id="cb244-81"><a href="session-6-shiny.html#cb244-81" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb244-82"><a href="session-6-shiny.html#cb244-82" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes_string</span>(<span class="at">x =</span> input<span class="sc">$</span>x_variable,</span>
-<span id="cb244-83"><a href="session-6-shiny.html#cb244-83" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">y =</span> input<span class="sc">$</span>y_variable,</span>
-<span id="cb244-84"><a href="session-6-shiny.html#cb244-84" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">color =</span> input<span class="sc">$</span>color_variable)) <span class="sc">+</span></span>
-<span id="cb244-85"><a href="session-6-shiny.html#cb244-85" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb244-86"><a href="session-6-shiny.html#cb244-86" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
+<span id="cb244-82"><a href="session-6-shiny.html#cb244-82" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(delta_data, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>x_variable]],</span>
+<span id="cb244-83"><a href="session-6-shiny.html#cb244-83" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> .data[[input<span class="sc">$</span>y_variable]],</span>
+<span id="cb244-84"><a href="session-6-shiny.html#cb244-84" aria-hidden="true" tabindex="-1"></a>                             <span class="at">color =</span> .data[[input<span class="sc">$</span>color_variable]])) <span class="sc">+</span></span>
+<span id="cb244-85"><a href="session-6-shiny.html#cb244-85" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb244-86"><a href="session-6-shiny.html#cb244-86" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_light</span>()</span>
 <span id="cb244-87"><a href="session-6-shiny.html#cb244-87" aria-hidden="true" tabindex="-1"></a>    })</span>
 <span id="cb244-88"><a href="session-6-shiny.html#cb244-88" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb244-89"><a href="session-6-shiny.html#cb244-89" aria-hidden="true" tabindex="-1"></a></span>
@@ -824,9 +822,9 @@ the tidyverse for writing your interactive applications.</p>
 <span id="cb245-121"><a href="session-6-shiny.html#cb245-121" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb245-122"><a href="session-6-shiny.html#cb245-122" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mix and  match plot</span></span>
 <span id="cb245-123"><a href="session-6-shiny.html#cb245-123" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb245-124"><a href="session-6-shiny.html#cb245-124" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes_string</span>(<span class="at">x =</span> input<span class="sc">$</span>x_variable,</span>
-<span id="cb245-125"><a href="session-6-shiny.html#cb245-125" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">y =</span> input<span class="sc">$</span>y_variable,</span>
-<span id="cb245-126"><a href="session-6-shiny.html#cb245-126" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">color =</span> input<span class="sc">$</span>color_variable)) <span class="sc">+</span></span>
+<span id="cb245-124"><a href="session-6-shiny.html#cb245-124" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> .data[[x_variable]],</span>
+<span id="cb245-125"><a href="session-6-shiny.html#cb245-125" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">y =</span> .data[[y_variable]],</span>
+<span id="cb245-126"><a href="session-6-shiny.html#cb245-126" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">color =</span> .data[[color_variable]])) <span class="sc">+</span></span>
 <span id="cb245-127"><a href="session-6-shiny.html#cb245-127" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>x_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>),</span>
 <span id="cb245-128"><a href="session-6-shiny.html#cb245-128" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>y_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>),</span>
 <span id="cb245-129"><a href="session-6-shiny.html#cb245-129" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>color_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>)) <span class="sc">+</span></span>
