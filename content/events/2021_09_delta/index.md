@@ -26,8 +26,10 @@ Week 3: November 1-5, 2021. UC Davis.
 ## Materials
 
 [Materials Week 1](https://learning.nceas.ucsb.edu/2021-09-delta/)
+
 [Materials Week 2](https://learning.nceas.ucsb.edu/2021-10-delta/)
 [Materials Week 3](https://learning.nceas.ucsb.edu/2021-11-delta/)
+
 
 ## Instructors
 
@@ -47,7 +49,7 @@ Matt is the Director of Informatics Research and Development at NCEAS and has ex
 
 Chris Lortie is Professor of Ecology at York University. He received his B.Sc. in Biology, Bachelor’s of Education, and Master’s degrees from Queen’s University and was awarded a PhD in Botany from the University of British Columbia. Chris' areas of research include community ecology, seedbanks, invasive species, social ecology and theory development with a focus on synthesis and meta-analytical techniques.
 
-#### David DeLeBauer
+#### David LeBauer
 
 Dr. David LeBauer Director of Data Science for the Division of Agriculture, Life and Veterinary Sciences and Cooperative Extension, University of Arizona. David develops open data and software that enables synthesis of observations with systems-level understanding to improve understanding and prediction of agricultural yield potential as well as ecosystem carbon, nutrient, water, and energy budgets.
 
