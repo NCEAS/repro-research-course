@@ -568,7 +568,7 @@ the computational server <code>aurora</code> at NCEAS:</p>
 <span id="cb252-12"><a href="session-8-reproducible-workflows-revisited.html#cb252-12" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb252-13"><a href="session-8-reproducible-workflows-revisited.html#cb252-13" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   26.48    1.84   28.58</code></pre>
+##   23.84    1.58   25.48</code></pre>
 <p>The issue with this loop is that we execute each trial sequentially, which means that only one of our 8 processors on this machine are in use. In order to exploit parallelism, we need to be able to dispatch our tasks as functions, with one task
 going to each processor. To do that, we need to convert our task to a function, and then use the <code>*apply()</code> family of R functions to apply that function to all of the members of a set. In R, using <code>apply</code> used to be faster than the equivalent code in a loop, but now they are similar due to optimizations in R loop handling. However, using the function allows us to later take advantage of other approaches to parallelization. Here’s the same code rewritten to use <code>lapply()</code>, which applies a function to each of the members of a list (in this case the trials we want to run):</p>
 <div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="session-8-reproducible-workflows-revisited.html#cb254-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
@@ -583,7 +583,7 @@ going to each processor. To do that, we need to convert our task to a function, 
 <span id="cb254-10"><a href="session-8-reproducible-workflows-revisited.html#cb254-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(trials, boot_fx)</span>
 <span id="cb254-11"><a href="session-8-reproducible-workflows-revisited.html#cb254-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##  28.104   0.754  29.059</code></pre>
+##  25.894   0.756  26.711</code></pre>
 </div>
 <div id="approaches-to-parallelization" class="section level3" number="8.2.7">
 <h3><span class="header-section-number">8.2.7</span> Approaches to parallelization</h3>
@@ -616,12 +616,12 @@ going to each processor. To do that, we need to convert our task to a function, 
 <span id="cb261-2"><a href="session-8-reproducible-workflows-revisited.html#cb261-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(starts, fx)</span>
 <span id="cb261-3"><a href="session-8-reproducible-workflows-revisited.html#cb261-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##    1.27    0.13    1.40</code></pre>
+##   1.248   0.118   1.374</code></pre>
 <div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb263-1"><a href="session-8-reproducible-workflows-revisited.html#cb263-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(</span>
 <span id="cb263-2"><a href="session-8-reproducible-workflows-revisited.html#cb263-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(starts, fx, <span class="at">mc.cores =</span> numCores)</span>
 <span id="cb263-3"><a href="session-8-reproducible-workflows-revisited.html#cb263-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.907   0.280   0.669</code></pre>
+##   0.902   0.273   0.733</code></pre>
 <p>Now let’s demonstrate with our bootstrap example:</p>
 <div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="session-8-reproducible-workflows-revisited.html#cb265-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">&quot;setosa&quot;</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
 <span id="cb265-2"><a href="session-8-reproducible-workflows-revisited.html#cb265-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>)</span>
@@ -635,7 +635,7 @@ going to each processor. To do that, we need to convert our task to a function, 
 <span id="cb265-10"><a href="session-8-reproducible-workflows-revisited.html#cb265-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(trials, boot_fx, <span class="at">mc.cores =</span> numCores)</span>
 <span id="cb265-11"><a href="session-8-reproducible-workflows-revisited.html#cb265-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   19.61    1.29   12.23</code></pre>
+##   18.40    1.35   11.69</code></pre>
 </div>
 <div id="parallelize-using-foreach-and-doparallel" class="section level3" number="8.2.9">
 <h3><span class="header-section-number">8.2.9</span> Parallelize using: foreach and doParallel</h3>
@@ -703,7 +703,7 @@ going to each processor. To do that, we need to convert our task to a function, 
 <span id="cb279-10"><a href="session-8-reproducible-workflows-revisited.html#cb279-10" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb279-11"><a href="session-8-reproducible-workflows-revisited.html#cb279-11" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   26.18    2.07   12.05</code></pre>
+##   24.75    2.14   11.58</code></pre>
 <div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="session-8-reproducible-workflows-revisited.html#cb281-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And compare that to what it takes to do the same analysis in serial</span></span>
 <span id="cb281-2"><a href="session-8-reproducible-workflows-revisited.html#cb281-2" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
 <span id="cb281-3"><a href="session-8-reproducible-workflows-revisited.html#cb281-3" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%do%</span> {</span>
@@ -713,7 +713,7 @@ going to each processor. To do that, we need to convert our task to a function, 
 <span id="cb281-7"><a href="session-8-reproducible-workflows-revisited.html#cb281-7" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb281-8"><a href="session-8-reproducible-workflows-revisited.html#cb281-8" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##  25.836   0.769  26.783</code></pre>
+##  23.830   0.759  24.651</code></pre>
 <div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="session-8-reproducible-workflows-revisited.html#cb283-1" aria-hidden="true" tabindex="-1"></a><span class="co"># When you&#39;re done, clean up the cluster</span></span>
 <span id="cb283-2"><a href="session-8-reproducible-workflows-revisited.html#cb283-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopImplicitCluster</span>()</span></code></pre></div>
 </div>
