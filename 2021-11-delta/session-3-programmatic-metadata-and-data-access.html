@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3 Session 3: Programmatic metadata and data access | Open Science Synthesis for the Delta Science Program: Week 3</title>
   <meta name="description" content="3 Session 3: Programmatic metadata and data access | Open Science Synthesis for the Delta Science Program: Week 3" />
-  <meta name="generator" content="bookdown 0.24.3 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3 Session 3: Programmatic metadata and data access | Open Science Synthesis for the Delta Science Program: Week 3" />
   <meta property="og:type" content="book" />
@@ -309,19 +309,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">3</span> Session 3: Programmatic metadata and data access</h1>
 <div id="reproducible-data-access" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Reproducible Data Access</h2>
-<pre><code>## 
-## Attaching package: &#39;contentid&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:pins&#39;:
-## 
-##     pin</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dataone&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:solrium&#39;:
-## 
-##     ping</code></pre>
-<pre><code>## The following objects are masked from &#39;package:contentid&#39;:
-## 
-##     query, resolve</code></pre>
 <div id="learning-objectives-3" class="section level3" number="3.1.1">
 <h3><span class="header-section-number">3.1.1</span> Learning Objectives</h3>
 <p>In this lesson, you will learn:</p>
@@ -337,15 +324,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">3.1.2</span> Barriers to data access</h3>
 <p>Traditional ways of working with data – as files on a file system – limit the
 reproducibility of code to local compute environments. A typical R analysis file will load one or many data files from the local disk with code like this:</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb93-1" aria-hidden="true" tabindex="-1"></a>delta_catch <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;/Users/jkresearcher/Projects/2018/Delta_Analysis/delta_catch.csv&#39;</span>)</span>
-<span id="cb93-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb93-2" aria-hidden="true" tabindex="-1"></a>delta_taxa <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;../../Delta_2021/delta_taxa.csv&#39;</span>)</span>
-<span id="cb93-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb93-3" aria-hidden="true" tabindex="-1"></a>delta_effort <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;delta_effort.csv&#39;</span>)</span>
-<span id="cb93-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb93-4" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;data/delta_sites.csv&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb79-1" aria-hidden="true" tabindex="-1"></a>delta_catch <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;/Users/jkresearcher/Projects/2018/Delta_Analysis/delta_catch.csv&#39;</span>)</span>
+<span id="cb79-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb79-2" aria-hidden="true" tabindex="-1"></a>delta_taxa <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;../../Delta_2021/delta_taxa.csv&#39;</span>)</span>
+<span id="cb79-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb79-3" aria-hidden="true" tabindex="-1"></a>delta_effort <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;delta_effort.csv&#39;</span>)</span>
+<span id="cb79-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb79-4" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&#39;data/delta_sites.csv&#39;</span>)</span></code></pre></div>
 <p>Which of those file paths are the most portable? And which will run unmodified on both the original computer that they were written on, and on colleagues’ computers? In reality, none of them, in that they require that a specific data file be present in a specific location for the code to work properly, and these assumptions are rarely met and hard to maintain. Hardcoded paths like these are often spread deeply through the scripts that researchers write, and can become a surprise when they are encountered during execution.</p>
 <p>The Web partly solves this problem, because it allows code to access data that is located somewhere on the Internet with a web URI. For example, loading data from a web site can be much more portable than loading the equivalent data from a local computer.</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb94-1" aria-hidden="true" tabindex="-1"></a>delta_sites_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=6a82451e84be1fe82c9821f30ffc2d7d&#39;</span></span>
-<span id="cb94-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb94-2" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_sites_edi, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb94-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(delta_sites)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb80-1" aria-hidden="true" tabindex="-1"></a>delta_sites_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=6a82451e84be1fe82c9821f30ffc2d7d&#39;</span></span>
+<span id="cb80-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb80-2" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_sites_edi, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb80-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(delta_sites)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 4
 ##   MethodCode StationCode LatitudeLocation LongitudeLocation
 ##   &lt;chr&gt;      &lt;chr&gt;                  &lt;dbl&gt;             &lt;dbl&gt;
@@ -356,9 +343,9 @@ reproducibility of code to local compute environments. A typical R analysis file
 ## 5 BSEIN      BL1                     38.5             -122.
 ## 6 BSEIN      BL2                     38.4             -122.</code></pre>
 <p>In theory, that code will work from anyone’s computer with an internet connection. But code that downloads data each and every time it is run is not particularly efficient, and will be prohibitive for all but the smallest datasets. A simple solution to this issue is to cache a local copy of the dataset, and only retrieve the original from the web when we don’t have a local copy. In this way, people running code or a script will download the data the first time their code is run, but use a local copy from thence forward. While this can be accomplished with some simple conditional logic in R, the pattern has been simplified using the <code>pins</code> package:</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb96-1" aria-hidden="true" tabindex="-1"></a>delta_sites_edi <span class="ot">&lt;-</span> pins<span class="sc">::</span><span class="fu">pin</span>(<span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=6a82451e84be1fe82c9821f30ffc2d7d&#39;</span>)</span>
-<span id="cb96-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb96-2" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_sites_edi, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb96-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(delta_sites)</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb82-1" aria-hidden="true" tabindex="-1"></a>delta_sites_edi <span class="ot">&lt;-</span> pins<span class="sc">::</span><span class="fu">pin</span>(<span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=6a82451e84be1fe82c9821f30ffc2d7d&#39;</span>)</span>
+<span id="cb82-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb82-2" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_sites_edi, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb82-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(delta_sites)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 4
 ##   MethodCode StationCode LatitudeLocation LongitudeLocation
 ##   &lt;chr&gt;      &lt;chr&gt;                  &lt;dbl&gt;             &lt;dbl&gt;
@@ -402,23 +389,23 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 <li>Trap Effort</li>
 <li>Site locations</li>
 </ul>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb98-1" aria-hidden="true" tabindex="-1"></a>delta_catch_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=015e494911cf35c90089ced5a3127334&#39;</span></span>
-<span id="cb98-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb98-2" aria-hidden="true" tabindex="-1"></a>delta_taxa_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=0532048e856d4bd07deea11583b893dd&#39;</span></span>
-<span id="cb98-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb98-3" aria-hidden="true" tabindex="-1"></a>delta_effort_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=ace1ef25f940866865d24109b7250955&#39;</span></span>
-<span id="cb98-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb98-4" aria-hidden="true" tabindex="-1"></a>delta_sites_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=6a82451e84be1fe82c9821f30ffc2d7d&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb84-1" aria-hidden="true" tabindex="-1"></a>delta_catch_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=015e494911cf35c90089ced5a3127334&#39;</span></span>
+<span id="cb84-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb84-2" aria-hidden="true" tabindex="-1"></a>delta_taxa_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=0532048e856d4bd07deea11583b893dd&#39;</span></span>
+<span id="cb84-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb84-3" aria-hidden="true" tabindex="-1"></a>delta_effort_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=ace1ef25f940866865d24109b7250955&#39;</span></span>
+<span id="cb84-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb84-4" aria-hidden="true" tabindex="-1"></a>delta_sites_edi <span class="ot">&lt;-</span> <span class="st">&#39;https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=6a82451e84be1fe82c9821f30ffc2d7d&#39;</span></span></code></pre></div>
 </div>
 <div id="storing-a-content-identifier-from-a-uri" class="section level3" number="3.1.4">
 <h3><span class="header-section-number">3.1.4</span> Storing a content identifier from a URI</h3>
 <p>Use the <code>contentid</code> package for portable access to data. First, using a web URI, store the content identifier in your local content registry to cache it on your machine. The <code>contentid::store()</code> function retrieves the data from the URL, calculates a hash value for the content, and stores both in a local registry on your machine. This is very similar to the <code>pins::pin</code> function, but it uses the content identifier to point to the data.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-1" aria-hidden="true" tabindex="-1"></a>delta_catch_id <span class="ot">&lt;-</span> <span class="fu">store</span>(delta_catch_url)</span>
-<span id="cb99-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-2" aria-hidden="true" tabindex="-1"></a>delta_taxa_id <span class="ot">&lt;-</span> <span class="fu">store</span>(delta_taxa_url)</span>
-<span id="cb99-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-3" aria-hidden="true" tabindex="-1"></a>delta_effort_id <span class="ot">&lt;-</span> <span class="fu">store</span>(delta_effort_url)</span>
-<span id="cb99-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-4" aria-hidden="true" tabindex="-1"></a>delta_sites_id <span class="ot">&lt;-</span> <span class="fu">store</span>(delta_sites_url)</span>
-<span id="cb99-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(<span class="at">delta_catch_id=</span>delta_catch_id, </span>
-<span id="cb99-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">delta_taxa_id=</span>delta_taxa_id,</span>
-<span id="cb99-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">delta_effort_id=</span>delta_effort_id, </span>
-<span id="cb99-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">delta_sites_id=</span>delta_sites_id))</span></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-1" aria-hidden="true" tabindex="-1"></a>delta_catch_id <span class="ot">&lt;-</span> <span class="fu">store</span>(delta_catch_url)</span>
+<span id="cb85-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-2" aria-hidden="true" tabindex="-1"></a>delta_taxa_id <span class="ot">&lt;-</span> <span class="fu">store</span>(delta_taxa_url)</span>
+<span id="cb85-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-3" aria-hidden="true" tabindex="-1"></a>delta_effort_id <span class="ot">&lt;-</span> <span class="fu">store</span>(delta_effort_url)</span>
+<span id="cb85-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-4" aria-hidden="true" tabindex="-1"></a>delta_sites_id <span class="ot">&lt;-</span> <span class="fu">store</span>(delta_sites_url)</span>
+<span id="cb85-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(<span class="at">delta_catch_id=</span>delta_catch_id, </span>
+<span id="cb85-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">delta_taxa_id=</span>delta_taxa_id,</span>
+<span id="cb85-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">delta_effort_id=</span>delta_effort_id, </span>
+<span id="cb85-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb85-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">delta_sites_id=</span>delta_sites_id))</span></code></pre></div>
 <pre><code>##                                                                   delta_catch_id 
 ## &quot;hash://sha256/e0dc10d7f36cfc5ac147956abb91f24f2b2df9f914a004bbf1e85e7d9cf52f41&quot; 
 ##                                                                    delta_taxa_id 
@@ -431,68 +418,72 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 <div id="loading-data-from-a-content-identifier" class="section level3" number="3.1.5">
 <h3><span class="header-section-number">3.1.5</span> Loading data from a content identifier</h3>
 <p>Once you have the content identifier for a data file of interest (e.g., <code>delta_catch_id</code> in this case), you can call <code>contentid::resolve()</code> to find the locations where that data is stored. Because you already have it stored locally, it returns the file path to the file on your local registry, which you can then use to load the data into a data frame or process the data as needed.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb101-1" aria-hidden="true" tabindex="-1"></a>delta_catch_file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(delta_catch_id, <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb101-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb101-2" aria-hidden="true" tabindex="-1"></a>delta_catch <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_catch_file, <span class="at">show_col_types=</span><span class="cn">FALSE</span>)</span></code></pre></div>
-<pre><code>## Warning: One or more parsing issues, see `problems()` for details</code></pre>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(delta_catch)</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb87-1" aria-hidden="true" tabindex="-1"></a>delta_catch_file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(delta_catch_id, <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb87-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb87-2" aria-hidden="true" tabindex="-1"></a>delta_catch <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_catch_file, <span class="at">show_col_types=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## Warning: One or more parsing issues, see `problems()` for
+## details</code></pre>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(delta_catch)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 32
-##   SampleDate SampleTime StationCode MethodCode GearID   CommonName       
-##   &lt;chr&gt;      &lt;time&gt;     &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;            
-## 1 1/16/1998  14:05      YB          BSEIN      SEIN50   Threadfin Shad   
-## 2 1/16/1998  15:00      YB          BSEIN      SEIN50   Inland Silverside
-## 3 1/19/1998  12:17      YB          FNET       FKNT     Threadfin Shad   
-## 4 1/19/1998  12:17      YB          FNET       FKNT     Chinook Salmon   
-## 5 1/19/1998  11:00      YB          PSEIN      PSEIN100 Threadfin Shad   
-## 6 1/19/1998  11:30      YB          PSEIN      PSEIN100 Inland Silverside
-## # … with 26 more variables: GeneticallyConfirmed &lt;chr&gt;, GeneticID &lt;lgl&gt;,
-## #   Field_ID_CommonName &lt;chr&gt;, ForkLength &lt;dbl&gt;, Count &lt;dbl&gt;, FishSex &lt;chr&gt;,
-## #   Race &lt;chr&gt;, MarkCode &lt;chr&gt;, CWTSample &lt;lgl&gt;, FishTagID &lt;chr&gt;,
-## #   StageCode &lt;chr&gt;, Dead &lt;chr&gt;, GearConditionCode &lt;dbl&gt;, WeatherCode &lt;chr&gt;,
-## #   WaterTemperature &lt;dbl&gt;, Secchi &lt;dbl&gt;, Conductivity &lt;dbl&gt;, SpCnd &lt;dbl&gt;,
-## #   DO &lt;dbl&gt;, pH &lt;dbl&gt;, Turbidity &lt;dbl&gt;, SubstrateCode &lt;chr&gt;, Tide &lt;chr&gt;,
-## #   VolumeSeined &lt;dbl&gt;, Latitude &lt;dbl&gt;, Longitude &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And two more examples</span></span>
-<span id="cb105-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb105-2" aria-hidden="true" tabindex="-1"></a>delta_taxa_file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(delta_taxa_id, <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb105-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb105-3" aria-hidden="true" tabindex="-1"></a>delta_taxa <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_taxa_file, <span class="at">show_col_types=</span><span class="cn">FALSE</span>)</span>
-<span id="cb105-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb105-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb105-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb105-5" aria-hidden="true" tabindex="-1"></a>delta_sites_file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(delta_sites_id, <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb105-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb105-6" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_sites_file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+##   SampleDate SampleTime StationCode MethodCode GearID  
+##   &lt;chr&gt;      &lt;time&gt;     &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;   
+## 1 1/16/1998  14:05      YB          BSEIN      SEIN50  
+## 2 1/16/1998  15:00      YB          BSEIN      SEIN50  
+## 3 1/19/1998  12:17      YB          FNET       FKNT    
+## 4 1/19/1998  12:17      YB          FNET       FKNT    
+## 5 1/19/1998  11:00      YB          PSEIN      PSEIN100
+## 6 1/19/1998  11:30      YB          PSEIN      PSEIN100
+## # … with 27 more variables: CommonName &lt;chr&gt;,
+## #   GeneticallyConfirmed &lt;chr&gt;, GeneticID &lt;lgl&gt;,
+## #   Field_ID_CommonName &lt;chr&gt;, ForkLength &lt;dbl&gt;,
+## #   Count &lt;dbl&gt;, FishSex &lt;chr&gt;, Race &lt;chr&gt;,
+## #   MarkCode &lt;chr&gt;, CWTSample &lt;lgl&gt;, FishTagID &lt;chr&gt;,
+## #   StageCode &lt;chr&gt;, Dead &lt;chr&gt;, GearConditionCode &lt;dbl&gt;,
+## #   WeatherCode &lt;chr&gt;, WaterTemperature &lt;dbl&gt;, …</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And two more examples</span></span>
+<span id="cb91-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb91-2" aria-hidden="true" tabindex="-1"></a>delta_taxa_file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(delta_taxa_id, <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb91-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb91-3" aria-hidden="true" tabindex="-1"></a>delta_taxa <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_taxa_file, <span class="at">show_col_types=</span><span class="cn">FALSE</span>)</span>
+<span id="cb91-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb91-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb91-5" aria-hidden="true" tabindex="-1"></a>delta_sites_file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(delta_sites_id, <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb91-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb91-6" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_sites_file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>This approach is <strong>portable</strong>, as anyone can run it without having the data local beforehand. This is because <code>resolve(id)</code> will store the data locally if someone does not already have a copy of the data in their local cache. This works by consulting a number of well-know registries to discover the location of the files, including <a href="https://dataone.org">DataONE</a>, <a href="https://hash-archive.org">Hash Archive</a>, <a href="https://zenodo.org">Zenodo</a>, and <a href="https://software-heritage.org">Software Heritage</a>.</p>
 <p>This approach is <strong>persistent</strong>, because it pulls data from these persistent archives, and can take advantage of archive redundancy. For example, here is the list of locations that can be currently used to retrieve this data file:</p>
 <!-- WARNING MBJ: currently set to only use local repos, switch back before final build -->
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb106-1" aria-hidden="true" tabindex="-1"></a>contentid<span class="sc">::</span><span class="fu">query_sources</span>(delta_catch_id, <span class="at">cols=</span><span class="fu">c</span>(<span class="st">&quot;identifier&quot;</span>, <span class="st">&quot;source&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="st">&quot;status&quot;</span>, <span class="st">&quot;sha1&quot;</span>, <span class="st">&quot;sha256&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb92-1" aria-hidden="true" tabindex="-1"></a>contentid<span class="sc">::</span><span class="fu">query_sources</span>(delta_catch_id, <span class="at">cols=</span><span class="fu">c</span>(<span class="st">&quot;identifier&quot;</span>, <span class="st">&quot;source&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="st">&quot;status&quot;</span>, <span class="st">&quot;sha1&quot;</span>, <span class="st">&quot;sha256&quot;</span>))</span></code></pre></div>
 <pre><code>##                                                                       identifier
 ## 1 hash://sha256/e0dc10d7f36cfc5ac147956abb91f24f2b2df9f914a004bbf1e85e7d9cf52f41
 ## 2 hash://sha256/e0dc10d7f36cfc5ac147956abb91f24f2b2df9f914a004bbf1e85e7d9cf52f41
 ##                                                                                                                                                 source
-## 1  /Users/runner/Library/Application Support/org.R-project.R/R/contentid/sha256/e0/dc/e0dc10d7f36cfc5ac147956abb91f24f2b2df9f914a004bbf1e85e7d9cf52f41
+## 1                                  /home/jclark/.local/share/R/contentid/sha256/e0/dc/e0dc10d7f36cfc5ac147956abb91f24f2b2df9f914a004bbf1e85e7d9cf52f41
 ## 2 https://gmn.edirepository.org/mn/v2/object/https%3A%2F%2Fpasta.lternet.edu%2Fpackage%2Fdata%2Feml%2Fedi%2F233%2F2%2F015e494911cf35c90089ced5a3127334
-##                  date status                              sha1
-## 1 2021-11-05 20:55:15    200                              &lt;NA&gt;
-## 2 2020-04-12 23:05:21    200 sha1-MX1/hA5Zj1875zKrDgTwCoBRxtA=
+##                  date status
+## 1 2021-10-29 10:11:58    200
+## 2 2020-04-12 16:05:21    200
+##                                sha1
+## 1                              &lt;NA&gt;
+## 2 sha1-MX1/hA5Zj1875zKrDgTwCoBRxtA=
 ##                                                                           sha256
 ## 1 hash://sha256/e0dc10d7f36cfc5ac147956abb91f24f2b2df9f914a004bbf1e85e7d9cf52f41
 ## 2                            sha256-4NwQ1/Ns/FrBR5Vqu5HyTyst+fkUoAS78ehefZz1L0E=</code></pre>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># [</span><span class="al">BUG</span><span class="co"> FILED](https://github.com/cboettig/contentid/issues/81): `query_sources should not return an error on inaccessible repos -- it should skip them and produce a warning, so that the local repo will still work when disconnected from the internet</span></span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># [</span><span class="al">BUG</span><span class="co"> FILED](https://github.com/cboettig/contentid/issues/81): `query_sources should not return an error on inaccessible repos -- it should skip them and produce a warning, so that the local repo will still work when disconnected from the internet</span></span></code></pre></div>
 <p>This approach is <strong>reproducible</strong>, as the exact version of the data will be used every time (even if someone changes the data at the original web URI, which would require a new content identifier).</p>
 <p>This approach is <strong>traceable</strong> because there is a reference in the code to the specific data used based on in its content identifier, and the only way to change which data are used is to change the <code>checksum</code> that is being referenced to a new version.</p>
 </div>
 <div id="storing-and-using-local-data-identifiers" class="section level3" number="3.1.6">
 <h3><span class="header-section-number">3.1.6</span> Storing and using local data identifiers</h3>
 <p>Because not all data are already published, it is also helpful to being working with content identifiers before the data are made public on the web. This is easily accomplished by storing a file in the local regitry, and then using its content identifier during analysis.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Store a local file</span></span>
-<span id="cb109-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb109-2" aria-hidden="true" tabindex="-1"></a>vostok_co2 <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;vostok.icecore.co2&quot;</span>, <span class="at">package =</span> <span class="st">&quot;contentid&quot;</span>)</span>
-<span id="cb109-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb109-3" aria-hidden="true" tabindex="-1"></a>id <span class="ot">&lt;-</span> <span class="fu">store</span>(vostok_co2)</span>
-<span id="cb109-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb109-4" aria-hidden="true" tabindex="-1"></a>vostok <span class="ot">&lt;-</span> <span class="fu">retrieve</span>(id)</span>
-<span id="cb109-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb109-5" aria-hidden="true" tabindex="-1"></a>co2 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(vostok, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;age_ice&quot;</span>, <span class="st">&quot;age_air&quot;</span>, <span class="st">&quot;co2&quot;</span>), <span class="at">skip =</span> <span class="dv">21</span>)</span>
-<span id="cb109-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb109-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(co2)</span></code></pre></div>
-<pre><code>##   depth age_ice age_air   co2
-## 1 149.1    5679    2342 284.7
-## 2 173.1    6828    3634 272.8
-## 3 177.4    7043    3833 268.1
-## 4 228.6    9523    6220 262.2
-## 5 250.3   10579    7327 254.6
-## 6 266.0   11334    8113 259.6</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Store a local file</span></span>
+<span id="cb95-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb95-2" aria-hidden="true" tabindex="-1"></a>vostok_co2 <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;vostok.icecore.co2&quot;</span>, <span class="at">package =</span> <span class="st">&quot;contentid&quot;</span>)</span>
+<span id="cb95-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb95-3" aria-hidden="true" tabindex="-1"></a>id <span class="ot">&lt;-</span> <span class="fu">store</span>(vostok_co2)</span>
+<span id="cb95-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb95-4" aria-hidden="true" tabindex="-1"></a>vostok <span class="ot">&lt;-</span> <span class="fu">retrieve</span>(id)</span>
+<span id="cb95-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb95-5" aria-hidden="true" tabindex="-1"></a>co2 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(vostok, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;age_ice&quot;</span>, <span class="st">&quot;age_air&quot;</span>, <span class="st">&quot;co2&quot;</span>), <span class="at">skip =</span> <span class="dv">21</span>)</span>
+<span id="cb95-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb95-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(co2)</span></code></pre></div>
+<pre><code>##   depth age_ice age_air co2
+## 1   149    5679    2342 285
+## 2   173    6828    3634 273
+## 3   177    7043    3833 268
+## 4   229    9523    6220 262
+## 5   250   10579    7327 255
+## 6   266   11334    8113 260</code></pre>
 <p>Later, when the data file is published to a DataONE repository, or registered in Hash Archive, the script will work for other people trying to access it via <code>contentid::resolve()</code>.</p>
 </div>
 <div id="improvements-to-content-identifiers" class="section level3" number="3.1.7">
@@ -500,7 +491,7 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 <p>The <code>contentid</code> package is a work in progress, but holds tremendous potential to provide portable, persistent data access. However, some issues still remain to be worked out.</p>
 <p>First, content identifiers are not well-linked to DOIs. DOIs are the current standard for citing data, and carry the citation metadata for data packages (such as author, title, publication year, etc.). But the <code>contentid</code> package currently lacks a mechanism to determine the citation for a file that is used in a script. Because data networks like <a href="https://dataone.org">DataONE</a> maintain the association between each content-identifier that is registered there with the assigned DOI for the Dataset that the object is part of, it would be technically feasible to extend the contentid package to retrieve the citation for a given content identifier.</p>
 <p>For example, if the data is on DataONE, we could write a function to print the citation:</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_citation</span>(id)</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_citation</span>(id)</span></code></pre></div>
 <pre><code>## [1] &quot;H.A.J. Meijer,M.H. Pertuisot,J. van der Plicht. 2006. High Accuracy 14C Measurements for Atmospheric CO2 Samples from the South Pole and Point Barrow, Alaska by Accelerator Mass Spectrometry. ESS-DIVE. ess-dive-8c0779e4f3ed341-20180716T234812410 https://search.dataone.org/view/ess-dive-8c0779e4f3ed341-20180716T234812410&quot;</code></pre>
 <p>And this can even be displayed inline in the markdown text. For example, this chapter used data from:</p>
 <blockquote>
@@ -526,54 +517,54 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 <div id="about-ecological-metadata-language-eml" class="section level4" number="3.2.2.1">
 <h4><span class="header-section-number">3.2.2.1</span> About Ecological Metadata Language (EML)</h4>
 <p>EML, the metadata standard that the Arctic Data Center uses, looks like this:</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb113-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
-<span id="cb113-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">eml:eml</span><span class="ot"> packageId=</span><span class="st">&quot;df35d.442.6&quot;</span><span class="ot"> system=</span><span class="st">&quot;knb&quot;</span></span>
-<span id="cb113-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    xmlns:eml=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span>&gt;</span>
-<span id="cb113-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">dataset</span>&gt;</span>
-<span id="cb113-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-5" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">title</span>&gt;Improving Preseason Forecasts of Sockeye Salmon Runs through</span>
-<span id="cb113-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-6" aria-hidden="true" tabindex="-1"></a>            Salmon Smolt Monitoring in Kenai River, Alaska: 2005 - 2007&lt;/<span class="kw">title</span>&gt;</span>
-<span id="cb113-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">creator</span><span class="ot"> id=</span><span class="st">&quot;1385594069457&quot;</span>&gt;</span>
-<span id="cb113-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-8" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">individualName</span>&gt;</span>
-<span id="cb113-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-9" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">givenName</span>&gt;Mark&lt;/<span class="kw">givenName</span>&gt;</span>
-<span id="cb113-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-10" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">surName</span>&gt;Willette&lt;/<span class="kw">surName</span>&gt;</span>
-<span id="cb113-11"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-11" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">individualName</span>&gt;</span>
-<span id="cb113-12"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-12" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">organizationName</span>&gt;Alaska Department of Fish and Game&lt;/<span class="kw">organizationName</span>&gt;</span>
-<span id="cb113-13"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-13" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">positionName</span>&gt;Fishery Biologist&lt;/<span class="kw">positionName</span>&gt;</span>
-<span id="cb113-14"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-14" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">address</span>&gt;</span>
-<span id="cb113-15"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-15" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">city</span>&gt;Soldotna&lt;/<span class="kw">city</span>&gt;</span>
-<span id="cb113-16"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-16" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">administrativeArea</span>&gt;Alaska&lt;/<span class="kw">administrativeArea</span>&gt;</span>
-<span id="cb113-17"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-17" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">country</span>&gt;USA&lt;/<span class="kw">country</span>&gt;</span>
-<span id="cb113-18"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-18" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">address</span>&gt;</span>
-<span id="cb113-19"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-19" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">phone</span><span class="ot"> phonetype=</span><span class="st">&quot;voice&quot;</span>&gt;(907)260-2911&lt;/<span class="kw">phone</span>&gt;</span>
-<span id="cb113-20"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-20" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">electronicMailAddress</span>&gt;mark.willette@alaska.gov&lt;/<span class="kw">electronicMailAddress</span>&gt;</span>
-<span id="cb113-21"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-21" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">creator</span>&gt;</span>
-<span id="cb113-22"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-22" aria-hidden="true" tabindex="-1"></a>        ...</span>
-<span id="cb113-23"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-23" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">dataset</span>&gt;</span>
-<span id="cb113-24"><a href="session-3-programmatic-metadata-and-data-access.html#cb113-24" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">eml:eml</span>&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb99-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb99-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">eml:eml</span><span class="ot"> packageId=</span><span class="st">&quot;df35d.442.6&quot;</span><span class="ot"> system=</span><span class="st">&quot;knb&quot;</span></span>
+<span id="cb99-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    xmlns:eml=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span>&gt;</span>
+<span id="cb99-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">dataset</span>&gt;</span>
+<span id="cb99-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-5" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">title</span>&gt;Improving Preseason Forecasts of Sockeye Salmon Runs through</span>
+<span id="cb99-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-6" aria-hidden="true" tabindex="-1"></a>            Salmon Smolt Monitoring in Kenai River, Alaska: 2005 - 2007&lt;/<span class="kw">title</span>&gt;</span>
+<span id="cb99-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">creator</span><span class="ot"> id=</span><span class="st">&quot;1385594069457&quot;</span>&gt;</span>
+<span id="cb99-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-8" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">individualName</span>&gt;</span>
+<span id="cb99-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-9" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">givenName</span>&gt;Mark&lt;/<span class="kw">givenName</span>&gt;</span>
+<span id="cb99-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-10" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">surName</span>&gt;Willette&lt;/<span class="kw">surName</span>&gt;</span>
+<span id="cb99-11"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-11" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">individualName</span>&gt;</span>
+<span id="cb99-12"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-12" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">organizationName</span>&gt;Alaska Department of Fish and Game&lt;/<span class="kw">organizationName</span>&gt;</span>
+<span id="cb99-13"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-13" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">positionName</span>&gt;Fishery Biologist&lt;/<span class="kw">positionName</span>&gt;</span>
+<span id="cb99-14"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-14" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">address</span>&gt;</span>
+<span id="cb99-15"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-15" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">city</span>&gt;Soldotna&lt;/<span class="kw">city</span>&gt;</span>
+<span id="cb99-16"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-16" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">administrativeArea</span>&gt;Alaska&lt;/<span class="kw">administrativeArea</span>&gt;</span>
+<span id="cb99-17"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-17" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">country</span>&gt;USA&lt;/<span class="kw">country</span>&gt;</span>
+<span id="cb99-18"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-18" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">address</span>&gt;</span>
+<span id="cb99-19"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-19" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">phone</span><span class="ot"> phonetype=</span><span class="st">&quot;voice&quot;</span>&gt;(907)260-2911&lt;/<span class="kw">phone</span>&gt;</span>
+<span id="cb99-20"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-20" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">electronicMailAddress</span>&gt;mark.willette@alaska.gov&lt;/<span class="kw">electronicMailAddress</span>&gt;</span>
+<span id="cb99-21"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-21" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">creator</span>&gt;</span>
+<span id="cb99-22"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-22" aria-hidden="true" tabindex="-1"></a>        ...</span>
+<span id="cb99-23"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-23" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">dataset</span>&gt;</span>
+<span id="cb99-24"><a href="session-3-programmatic-metadata-and-data-access.html#cb99-24" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">eml:eml</span>&gt;</span></code></pre></div>
 <p>Earlier in this course we learned how to create an EML document like this using the Arctic Data Center web form. Now, we will learn how to create it using R. This can be especially useful to decrease the repetitiveness of metadata creation when you have many files with the same format, files with many attributes, or many data packages with a similar format.</p>
 <p>When you create metadata using the web form, the form creates valid metadata for you. Valid, structured metadata is what enables computers to predictably parse the information in a metadata document, enabling search, display, and even meta-analysis. When we create metadata in R, there aren’t as many user-friendly checks in place to ensure we create valid EML, so we need to understand the structure of the document more completely in order to make sure that it will be compatible with the Arctic Data Center.</p>
 <p>Let’s look at a simplified version of the example above:</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb114-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
-<span id="cb114-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">eml:eml</span><span class="ot"> packageId=</span><span class="st">&quot;df35d.442.6&quot;</span><span class="ot"> system=</span><span class="st">&quot;knb&quot;</span></span>
-<span id="cb114-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    xmlns:eml=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span>&gt;</span>
-<span id="cb114-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">dataset</span>&gt;</span>
-<span id="cb114-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-5" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">title</span>&gt;Improving Preseason Forecasts of Sockeye Salmon Runs through</span>
-<span id="cb114-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-6" aria-hidden="true" tabindex="-1"></a>            Salmon Smolt Monitoring in Kenai River, Alaska: 2005 - 2007&lt;/<span class="kw">title</span>&gt;</span>
-<span id="cb114-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">creator</span><span class="ot"> id=</span><span class="st">&quot;1385594069457&quot;</span>&gt;</span>
-<span id="cb114-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-8" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">individualName</span>&gt;</span>
-<span id="cb114-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-9" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">givenName</span>&gt;Mark&lt;/<span class="kw">givenName</span>&gt;</span>
-<span id="cb114-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-10" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">surName</span>&gt;Willette&lt;/<span class="kw">surName</span>&gt;</span>
-<span id="cb114-11"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-11" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">individualName</span>&gt;</span>
-<span id="cb114-12"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-12" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">creator</span>&gt;</span>
-<span id="cb114-13"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-13" aria-hidden="true" tabindex="-1"></a>        ...</span>
-<span id="cb114-14"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-14" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">dataset</span>&gt;</span>
-<span id="cb114-15"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-15" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">eml:eml</span>&gt;</span></code></pre></div>
-<p>EML is written in XML (eXtensisble Markup Language). One of the key concepts in XML is the element. An XML element is everything that is encompassed by a start tag (<code>&lt;...&gt;</code>) and an end tag (<code>&lt;/...&gt;</code>). So, a simple element in the example above is <code>&lt;surName&gt;Willette&lt;/surName&gt;</code>. The name of this element is <code>surName</code> and the value is simple text, “Willette”. Each element in EML has a specific (case sensitive!) name and description that is specified in the schema. The description of the <code>surName</code> element is: “The surname field is used for the last name of the individual associated with the resource. This is typically the family name of an individual…” The EML schema specifies not only the names and descriptions of all EML elements, but also certain requirements, like which elements must be included, what type of values are allowed within elements, and how the elements are organized. An EML document is valid when it adheres to all of the requirements speficied in the EML schema.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb100-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb100-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">eml:eml</span><span class="ot"> packageId=</span><span class="st">&quot;df35d.442.6&quot;</span><span class="ot"> system=</span><span class="st">&quot;knb&quot;</span></span>
+<span id="cb100-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    xmlns:eml=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span>&gt;</span>
+<span id="cb100-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">dataset</span>&gt;</span>
+<span id="cb100-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-5" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">title</span>&gt;Improving Preseason Forecasts of Sockeye Salmon Runs through</span>
+<span id="cb100-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-6" aria-hidden="true" tabindex="-1"></a>            Salmon Smolt Monitoring in Kenai River, Alaska: 2005 - 2007&lt;/<span class="kw">title</span>&gt;</span>
+<span id="cb100-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">creator</span><span class="ot"> id=</span><span class="st">&quot;1385594069457&quot;</span>&gt;</span>
+<span id="cb100-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-8" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">individualName</span>&gt;</span>
+<span id="cb100-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-9" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">givenName</span>&gt;Mark&lt;/<span class="kw">givenName</span>&gt;</span>
+<span id="cb100-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-10" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">surName</span>&gt;Willette&lt;/<span class="kw">surName</span>&gt;</span>
+<span id="cb100-11"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-11" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">individualName</span>&gt;</span>
+<span id="cb100-12"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-12" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">creator</span>&gt;</span>
+<span id="cb100-13"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-13" aria-hidden="true" tabindex="-1"></a>        ...</span>
+<span id="cb100-14"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-14" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">dataset</span>&gt;</span>
+<span id="cb100-15"><a href="session-3-programmatic-metadata-and-data-access.html#cb100-15" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">eml:eml</span>&gt;</span></code></pre></div>
+<p>EML is written in XML (eXtensisble Markup Language). One of the key concepts in XML is the element. An XML element is everything that is encompassed by a start tag (<code>&lt;...&gt;</code>) and an end tag (<code>&lt;/...&gt;</code>). So, a simple element in the example above is <code>&lt;surName&gt;Willette&lt;/surName&gt;</code>. The name of this element is <code>surName</code> and the value is simple text, “Willette.” Each element in EML has a specific (case sensitive!) name and description that is specified in the schema. The description of the <code>surName</code> element is: “The surname field is used for the last name of the individual associated with the resource. This is typically the family name of an individual…” The EML schema specifies not only the names and descriptions of all EML elements, but also certain requirements, like which elements must be included, what type of values are allowed within elements, and how the elements are organized. An EML document is valid when it adheres to all of the requirements speficied in the EML schema.</p>
 <p>You’ll notice that some elements, rather than having a simple value, instead contain other elements that are nested within them. Let’s look at <code>individualName</code>.</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb115-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb115-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">individualName</span>&gt;</span>
-<span id="cb115-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb115-2" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">givenName</span>&gt;Mark&lt;/<span class="kw">givenName</span>&gt;</span>
-<span id="cb115-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb115-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">surName</span>&gt;Willette&lt;/<span class="kw">surName</span>&gt;</span>
-<span id="cb115-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb115-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">individualName</span>&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb101-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb101-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">individualName</span>&gt;</span>
+<span id="cb101-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb101-2" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">givenName</span>&gt;Mark&lt;/<span class="kw">givenName</span>&gt;</span>
+<span id="cb101-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb101-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">surName</span>&gt;Willette&lt;/<span class="kw">surName</span>&gt;</span>
+<span id="cb101-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb101-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">individualName</span>&gt;</span></code></pre></div>
 <p>This element is a collection of other elements (sometimes referred to as child elements). In this example, the <code>individualName</code> element has a <code>givenName</code> and a <code>surName</code> child element. We can check the requirements of any particular element by looking at the <a href="https://eml.ecoinformatics.org/schema/">schema documents</a>, which includes some helpful diagrams.</p>
 <p>The diagram in the <code>individualName</code> <a href="https://eml.ecoinformatics.org/schema/eml-party_xsd.html#ResponsibleParty_individualName">section</a> of the schema looks like this:</p>
 <p><img src="images/individualName_schema.png" /></p>
@@ -584,12 +575,12 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 <h4><span class="header-section-number">3.2.2.2</span> Metadata in R: a simple example</h4>
 <p>Now, let’s learn how the <a href="https://github.com/ropensci/EML">EML package</a> can help us create EML in R.</p>
 <p>First, load the EML package in R.</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(EML)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(EML)</span></code></pre></div>
 <p>The EML package relies on named list structures to generate name-value pairs for elements. “Named list structures” may sound unfamiliar, but they aren’t dissimilar from <code>data.frames</code>. A <code>data.frame</code> is just a named list of vectors of the same length, where the name of the vector is the column name. In this section, we will use the familiar <code>$</code> operator to dig down into the named list structure that we generate.</p>
 <p>To show how this works, let’s create the <code>individualName</code> element, and save it as an object called <code>me</code>. Remember the schema requirements - <code>indvidualName</code> has child elements <code>salutation</code>, <code>givenName</code>, and <code>surName</code>. At least <code>surName</code> is required.</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb117-1" aria-hidden="true" tabindex="-1"></a>me <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">givenName =</span> <span class="st">&quot;Jeanette&quot;</span>,</span>
-<span id="cb117-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb117-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">surName =</span> <span class="st">&quot;Clark&quot;</span>)</span>
-<span id="cb117-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb117-3" aria-hidden="true" tabindex="-1"></a>me</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb103-1" aria-hidden="true" tabindex="-1"></a>me <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">givenName =</span> <span class="st">&quot;Jeanette&quot;</span>,</span>
+<span id="cb103-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb103-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">surName =</span> <span class="st">&quot;Clark&quot;</span>)</span>
+<span id="cb103-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb103-3" aria-hidden="true" tabindex="-1"></a>me</span></code></pre></div>
 <pre><code>## $givenName
 ## [1] &quot;Jeanette&quot;
 ## 
@@ -597,53 +588,53 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 ## [1] &quot;Clark&quot;</code></pre>
 <p>So we have created the contents of an <code>individualName</code> element, with child elements <code>givenName</code> and <code>surName</code>, and assigned the values of those child elements to my name.</p>
 <p>This might look confusing, hard to remember, and if you aren’t intimitely familiar with the EML schema, you are probably feeling a little intimidated. Luckily the <code>EML</code> package has a set of helper list constructor functions which tell you what child elements can be used in a parent element. The helper functions have the format <code>eml$elementName()</code>. When combined with the RStudio autocomplete functionality, the whole process gets a lot easier!</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb119-1" aria-hidden="true" tabindex="-1"></a>me <span class="ot">&lt;-</span> eml<span class="sc">$</span><span class="fu">individualName</span>(<span class="at">givenName =</span> <span class="st">&quot;Jeanette&quot;</span>,</span>
-<span id="cb119-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb119-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">surName =</span> <span class="st">&quot;Clark&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb105-1" aria-hidden="true" tabindex="-1"></a>me <span class="ot">&lt;-</span> eml<span class="sc">$</span><span class="fu">individualName</span>(<span class="at">givenName =</span> <span class="st">&quot;Jeanette&quot;</span>,</span>
+<span id="cb105-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb105-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">surName =</span> <span class="st">&quot;Clark&quot;</span>)</span></code></pre></div>
 <p>We can then use this object <code>me</code>, which represents the <code>individualName</code> element, and insert it into a larger EML document.</p>
 <p>At the top level of a complete EML document are the <code>packageId</code> and <code>system</code> elements. This is how your document can be uniquely identified within whatever system manages it. The <code>packageId</code> element typically contains the DOI (Digital Object Identifier) or other identifier for the dataset. Nested within the top level is the <code>dataset</code> element. All EML documents must have, at a minimum, a <code>title</code>, <code>creator</code>, and <code>contact</code>, in addition to the <code>packageId</code> and <code>system</code>.</p>
 <p>Let’s create a minimal valid EML dataset, with an arbitrary <code>packageId</code> and <code>system</code>.</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb120-1" aria-hidden="true" tabindex="-1"></a>doc <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">packageId =</span> <span class="st">&quot;dataset-1&quot;</span>, <span class="at">system =</span> <span class="st">&quot;local&quot;</span>,</span>
-<span id="cb120-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb120-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">dataset =</span> eml<span class="sc">$</span><span class="fu">dataset</span>(<span class="at">title =</span> <span class="st">&quot;A minimial valid EML dataset&quot;</span>,</span>
-<span id="cb120-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb120-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">creator =</span> eml<span class="sc">$</span><span class="fu">creator</span>(<span class="at">individualName =</span> me),</span>
-<span id="cb120-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb120-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">contact =</span> eml<span class="sc">$</span><span class="fu">contact</span>(<span class="at">individualName =</span> me)))</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb106-1" aria-hidden="true" tabindex="-1"></a>doc <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">packageId =</span> <span class="st">&quot;dataset-1&quot;</span>, <span class="at">system =</span> <span class="st">&quot;local&quot;</span>,</span>
+<span id="cb106-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb106-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">dataset =</span> eml<span class="sc">$</span><span class="fu">dataset</span>(<span class="at">title =</span> <span class="st">&quot;A minimial valid EML dataset&quot;</span>,</span>
+<span id="cb106-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb106-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">creator =</span> eml<span class="sc">$</span><span class="fu">creator</span>(<span class="at">individualName =</span> me),</span>
+<span id="cb106-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb106-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">contact =</span> eml<span class="sc">$</span><span class="fu">contact</span>(<span class="at">individualName =</span> me)))</span></code></pre></div>
 <p>Unlike the web editor, in R there is nothing stopping you from inserting arbitrary elements into your EML document. A critical step to creating EML is validating your EML document to make sure it conforms to the schema requirements. In R this can be done using the <code>eml_validate</code> function.</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eml_validate</span>(doc)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eml_validate</span>(doc)</span></code></pre></div>
 <pre><code>## [1] TRUE
 ## attr(,&quot;errors&quot;)
 ## character(0)</code></pre>
 <p>We can write our EML using <code>write_eml</code>.</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_eml</span>(doc, <span class="st">&quot;../files/simple_example.xml&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_eml</span>(doc, <span class="st">&quot;../files/simple_example.xml&quot;</span>)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>Here is what the written file looks like:</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb125-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
-<span id="cb125-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">eml:eml</span><span class="ot"> xmlns:eml=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span><span class="ot"> xmlns:xsi=</span><span class="st">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="ot"> xmlns:stmml=</span><span class="st">&quot;http://www.xml-cml.org/schema/stmml-1.1&quot;</span><span class="ot"> packageId=</span><span class="st">&quot;id&quot;</span><span class="ot"> system=</span><span class="st">&quot;system&quot;</span><span class="ot"> xsi:schemaLocation=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1/ eml.xsd&quot;</span>&gt;</span>
-<span id="cb125-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-3" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">dataset</span>&gt;</span>
-<span id="cb125-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">title</span>&gt;A minimal valid EML dataset&lt;/<span class="kw">title</span>&gt;</span>
-<span id="cb125-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">creator</span>&gt;</span>
-<span id="cb125-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-6" aria-hidden="true" tabindex="-1"></a>      &lt;<span class="kw">individualName</span>&gt;</span>
-<span id="cb125-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">givenName</span>&gt;Jeanette&lt;/<span class="kw">givenName</span>&gt;</span>
-<span id="cb125-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-8" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">surName</span>&gt;Clark&lt;/<span class="kw">surName</span>&gt;</span>
-<span id="cb125-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-9" aria-hidden="true" tabindex="-1"></a>      &lt;/<span class="kw">individualName</span>&gt;</span>
-<span id="cb125-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-10" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">creator</span>&gt;</span>
-<span id="cb125-11"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-11" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">contact</span>&gt;</span>
-<span id="cb125-12"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-12" aria-hidden="true" tabindex="-1"></a>      &lt;<span class="kw">individualName</span>&gt;</span>
-<span id="cb125-13"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-13" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">givenName</span>&gt;Jeanette&lt;/<span class="kw">givenName</span>&gt;</span>
-<span id="cb125-14"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-14" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">surName</span>&gt;Clark&lt;/<span class="kw">surName</span>&gt;</span>
-<span id="cb125-15"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-15" aria-hidden="true" tabindex="-1"></a>      &lt;/<span class="kw">individualName</span>&gt;</span>
-<span id="cb125-16"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-16" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">contact</span>&gt;</span>
-<span id="cb125-17"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-17" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">dataset</span>&gt;</span>
-<span id="cb125-18"><a href="session-3-programmatic-metadata-and-data-access.html#cb125-18" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">eml:eml</span>&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb111-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb111-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">eml:eml</span><span class="ot"> xmlns:eml=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span><span class="ot"> xmlns:xsi=</span><span class="st">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="ot"> xmlns:stmml=</span><span class="st">&quot;http://www.xml-cml.org/schema/stmml-1.1&quot;</span><span class="ot"> packageId=</span><span class="st">&quot;id&quot;</span><span class="ot"> system=</span><span class="st">&quot;system&quot;</span><span class="ot"> xsi:schemaLocation=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1/ eml.xsd&quot;</span>&gt;</span>
+<span id="cb111-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-3" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">dataset</span>&gt;</span>
+<span id="cb111-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">title</span>&gt;A minimal valid EML dataset&lt;/<span class="kw">title</span>&gt;</span>
+<span id="cb111-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">creator</span>&gt;</span>
+<span id="cb111-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-6" aria-hidden="true" tabindex="-1"></a>      &lt;<span class="kw">individualName</span>&gt;</span>
+<span id="cb111-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">givenName</span>&gt;Jeanette&lt;/<span class="kw">givenName</span>&gt;</span>
+<span id="cb111-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-8" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">surName</span>&gt;Clark&lt;/<span class="kw">surName</span>&gt;</span>
+<span id="cb111-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-9" aria-hidden="true" tabindex="-1"></a>      &lt;/<span class="kw">individualName</span>&gt;</span>
+<span id="cb111-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-10" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">creator</span>&gt;</span>
+<span id="cb111-11"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-11" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">contact</span>&gt;</span>
+<span id="cb111-12"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-12" aria-hidden="true" tabindex="-1"></a>      &lt;<span class="kw">individualName</span>&gt;</span>
+<span id="cb111-13"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-13" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">givenName</span>&gt;Jeanette&lt;/<span class="kw">givenName</span>&gt;</span>
+<span id="cb111-14"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-14" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">surName</span>&gt;Clark&lt;/<span class="kw">surName</span>&gt;</span>
+<span id="cb111-15"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-15" aria-hidden="true" tabindex="-1"></a>      &lt;/<span class="kw">individualName</span>&gt;</span>
+<span id="cb111-16"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-16" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">contact</span>&gt;</span>
+<span id="cb111-17"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-17" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">dataset</span>&gt;</span>
+<span id="cb111-18"><a href="session-3-programmatic-metadata-and-data-access.html#cb111-18" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">eml:eml</span>&gt;</span></code></pre></div>
 </div>
 <div id="validation-errors" class="section level4" number="3.2.2.3">
 <h4><span class="header-section-number">3.2.2.3</span> Validation Errors</h4>
 <p>One of the hardest parts about creating EML in R is diagnosing validation errors. I won’t get into too much detail, but here is a simple example. The <code>eml$...</code> family of helpers can help prevent validation errors, since they have a set list of arguments which are allowed. Here, I bypass the <code>eml$dataset()</code> helper function to show what the error looks like.</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-1" aria-hidden="true" tabindex="-1"></a>doc <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">packageId =</span> <span class="st">&quot;dataset-1&quot;</span>, <span class="at">system =</span> <span class="st">&quot;local&quot;</span>,</span>
-<span id="cb126-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">dataset =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">&quot;A minimial valid EML dataset&quot;</span>,</span>
-<span id="cb126-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">creator =</span> eml<span class="sc">$</span><span class="fu">creator</span>(<span class="at">individualName =</span> me),</span>
-<span id="cb126-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">contact =</span> eml<span class="sc">$</span><span class="fu">contact</span>(<span class="at">individualName =</span> me),</span>
-<span id="cb126-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">arbitrary =</span> <span class="st">&quot;This element isn&#39;t in the schema&quot;</span>))</span>
-<span id="cb126-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb126-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-7" aria-hidden="true" tabindex="-1"></a><span class="fu">eml_validate</span>(doc)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb112-1" aria-hidden="true" tabindex="-1"></a>doc <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">packageId =</span> <span class="st">&quot;dataset-1&quot;</span>, <span class="at">system =</span> <span class="st">&quot;local&quot;</span>,</span>
+<span id="cb112-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb112-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">dataset =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">&quot;A minimial valid EML dataset&quot;</span>,</span>
+<span id="cb112-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb112-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">creator =</span> eml<span class="sc">$</span><span class="fu">creator</span>(<span class="at">individualName =</span> me),</span>
+<span id="cb112-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb112-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">contact =</span> eml<span class="sc">$</span><span class="fu">contact</span>(<span class="at">individualName =</span> me),</span>
+<span id="cb112-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb112-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">arbitrary =</span> <span class="st">&quot;This element isn&#39;t in the schema&quot;</span>))</span>
+<span id="cb112-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb112-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb112-7" aria-hidden="true" tabindex="-1"></a><span class="fu">eml_validate</span>(doc)</span></code></pre></div>
 <pre><code>## [1] FALSE
 ## attr(,&quot;errors&quot;)
 ## [1] &quot;Element &#39;arbitrary&#39;: This element is not expected. Expected is one of ( references, alternateIdentifier, shortName, title ).&quot;</code></pre>
@@ -667,30 +658,30 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 <div id="title-creator-contact" class="section level5" number="3.2.2.4.1">
 <h5><span class="header-section-number">3.2.2.4.1</span> Title, creator, contact</h5>
 <p>To start, lets create a basic EML skeleton using our example above, but with more information in the creator and contact information besides just my name.</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eml creator and contact have identical schema requirements (both fall under `responsibleParty`)</span></span>
-<span id="cb128-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-2" aria-hidden="true" tabindex="-1"></a>me <span class="ot">&lt;-</span> eml<span class="sc">$</span><span class="fu">creator</span>(<span class="at">individualName =</span> eml<span class="sc">$</span><span class="fu">individualName</span>(<span class="at">givenName =</span> <span class="st">&quot;Jeanette&quot;</span>,</span>
-<span id="cb128-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-3" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">surName =</span> <span class="st">&quot;Clark&quot;</span>),</span>
-<span id="cb128-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">organizationName =</span> <span class="st">&quot;National Center for Ecological Analysis and Synthesis&quot;</span>,</span>
-<span id="cb128-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">electronicMailAddress =</span> <span class="st">&quot;jclark@nceas.ucsb.edu&quot;</span>,</span>
-<span id="cb128-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">userId =</span> <span class="fu">list</span>(<span class="at">directory =</span> <span class="st">&quot;https://orcid.org&quot;</span>,</span>
-<span id="cb128-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">userId =</span> <span class="st">&quot;https://orcid.org/0000-0003-4703-1974&quot;</span>))</span>
-<span id="cb128-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-9" aria-hidden="true" tabindex="-1"></a>doc <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">packageId =</span> <span class="st">&quot;dataset-1&quot;</span>, <span class="at">system =</span> <span class="st">&quot;local&quot;</span>,</span>
-<span id="cb128-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">dataset =</span> eml<span class="sc">$</span><span class="fu">dataset</span>(<span class="at">title =</span> <span class="st">&quot;A more robust valid EML dataset&quot;</span>,</span>
-<span id="cb128-11"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">creator =</span> me,</span>
-<span id="cb128-12"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-12" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">contact =</span> me))</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eml creator and contact have identical schema requirements (both fall under `responsibleParty`)</span></span>
+<span id="cb114-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-2" aria-hidden="true" tabindex="-1"></a>me <span class="ot">&lt;-</span> eml<span class="sc">$</span><span class="fu">creator</span>(<span class="at">individualName =</span> eml<span class="sc">$</span><span class="fu">individualName</span>(<span class="at">givenName =</span> <span class="st">&quot;Jeanette&quot;</span>,</span>
+<span id="cb114-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-3" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">surName =</span> <span class="st">&quot;Clark&quot;</span>),</span>
+<span id="cb114-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">organizationName =</span> <span class="st">&quot;National Center for Ecological Analysis and Synthesis&quot;</span>,</span>
+<span id="cb114-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">electronicMailAddress =</span> <span class="st">&quot;jclark@nceas.ucsb.edu&quot;</span>,</span>
+<span id="cb114-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">userId =</span> <span class="fu">list</span>(<span class="at">directory =</span> <span class="st">&quot;https://orcid.org&quot;</span>,</span>
+<span id="cb114-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">userId =</span> <span class="st">&quot;https://orcid.org/0000-0003-4703-1974&quot;</span>))</span>
+<span id="cb114-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-9" aria-hidden="true" tabindex="-1"></a>doc <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">packageId =</span> <span class="st">&quot;dataset-1&quot;</span>, <span class="at">system =</span> <span class="st">&quot;local&quot;</span>,</span>
+<span id="cb114-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">dataset =</span> eml<span class="sc">$</span><span class="fu">dataset</span>(<span class="at">title =</span> <span class="st">&quot;A more robust valid EML dataset&quot;</span>,</span>
+<span id="cb114-11"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">creator =</span> me,</span>
+<span id="cb114-12"><a href="session-3-programmatic-metadata-and-data-access.html#cb114-12" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">contact =</span> me))</span></code></pre></div>
 <p>Because we have used the <code>eml$dataset</code> helper, all of the possible sub-elements have been populated in our EML document, allowing us to easily access and edit them using R autocomplete.</p>
 </div>
 <div id="abstract" class="section level5" number="3.2.2.4.2">
 <h5><span class="header-section-number">3.2.2.4.2</span> Abstract</h5>
 <p>We can use this to dive down into sub-elements and edit them. Let’s do the abstract. This is a simple element so we can just assign the value of the <code>abstract</code> to a character string.</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb129-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>abstract <span class="ot">&lt;-</span> <span class="st">&quot;A brief but comprehensive description of the who, what, where, when, why, and how of my dataset.&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb115-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>abstract <span class="ot">&lt;-</span> <span class="st">&quot;A brief but comprehensive description of the who, what, where, when, why, and how of my dataset.&quot;</span></span></code></pre></div>
 </div>
 <div id="methods-1" class="section level5" number="3.2.2.4.3">
 <h5><span class="header-section-number">3.2.2.4.3</span> Methods</h5>
 <p>We can use the <code>set_methods</code> function to parse a markdown (or word) document and insert it into the methods section. This way of adding text is especially nice because it preserves formatting.</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb130-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>methods <span class="ot">&lt;-</span> <span class="fu">set_methods</span>(<span class="st">&quot;../files/methods.md&quot;</span>)</span>
-<span id="cb130-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb130-2" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>methods</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb116-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>methods <span class="ot">&lt;-</span> <span class="fu">set_methods</span>(<span class="st">&quot;../files/methods.md&quot;</span>)</span>
+<span id="cb116-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb116-2" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>methods</span></code></pre></div>
 <pre><code>## $sampling
 ## NULL
 ## 
@@ -716,23 +707,23 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 <div id="coverage" class="section level5" number="3.2.2.4.4">
 <h5><span class="header-section-number">3.2.2.4.4</span> Coverage</h5>
 <p>The geographic and temporal coverage can be set using <code>set_coverage</code>.</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb132-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>coverage <span class="ot">&lt;-</span> <span class="fu">set_coverage</span>(<span class="at">beginDate =</span> <span class="dv">2001</span>,</span>
-<span id="cb132-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb132-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">endDate =</span> <span class="dv">2010</span>,</span>
-<span id="cb132-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb132-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">geographicDescription =</span> <span class="st">&quot;Alaska, United States&quot;</span>,</span>
-<span id="cb132-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb132-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">westBoundingCoordinate =</span> <span class="sc">-</span><span class="fl">179.9</span>,</span>
-<span id="cb132-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb132-5" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">eastBoundingCoordinate =</span> <span class="sc">-</span><span class="dv">120</span>,</span>
-<span id="cb132-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb132-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">northBoundingCoordinate =</span> <span class="dv">75</span>,</span>
-<span id="cb132-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb132-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">southBoundingCoordinate =</span> <span class="dv">55</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb118-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>coverage <span class="ot">&lt;-</span> <span class="fu">set_coverage</span>(<span class="at">beginDate =</span> <span class="dv">2001</span>,</span>
+<span id="cb118-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb118-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">endDate =</span> <span class="dv">2010</span>,</span>
+<span id="cb118-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb118-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">geographicDescription =</span> <span class="st">&quot;Alaska, United States&quot;</span>,</span>
+<span id="cb118-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb118-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">westBoundingCoordinate =</span> <span class="sc">-</span><span class="fl">179.9</span>,</span>
+<span id="cb118-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb118-5" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">eastBoundingCoordinate =</span> <span class="sc">-</span><span class="dv">120</span>,</span>
+<span id="cb118-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb118-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">northBoundingCoordinate =</span> <span class="dv">75</span>,</span>
+<span id="cb118-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb118-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">southBoundingCoordinate =</span> <span class="dv">55</span>)</span></code></pre></div>
 </div>
 <div id="data-file-script" class="section level5" number="3.2.2.4.5">
 <h5><span class="header-section-number">3.2.2.4.5</span> Data file: script</h5>
 <p>Information about data files (or <code>entity</code> level information) can be added in child elements of the <code>dataset</code> element. Here we will use the element <code>otherEntity</code> (other options include <code>spatialVector</code>, <code>spatialRaster</code>, and <code>dataTable</code>) to represent the R script.</p>
 <p>First, some high level information.</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb133-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>otherEntity <span class="ot">&lt;-</span> eml<span class="sc">$</span><span class="fu">otherEntity</span>(<span class="at">entityName =</span> <span class="st">&quot;../files/datfiles_processing.R&quot;</span>,</span>
-<span id="cb133-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb133-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">entityDescription =</span> <span class="st">&quot;Data processing script&quot;</span>,</span>
-<span id="cb133-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb133-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">entityType =</span> <span class="st">&quot;application/R&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb119-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>otherEntity <span class="ot">&lt;-</span> eml<span class="sc">$</span><span class="fu">otherEntity</span>(<span class="at">entityName =</span> <span class="st">&quot;../files/datfiles_processing.R&quot;</span>,</span>
+<span id="cb119-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb119-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">entityDescription =</span> <span class="st">&quot;Data processing script&quot;</span>,</span>
+<span id="cb119-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb119-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">entityType =</span> <span class="st">&quot;application/R&quot;</span>)</span></code></pre></div>
 <p>We can use the <code>set_physical</code> helper to set more specific information about the file, like its size, delimiter, and checksum. This function automatically detects fundamental characteristics about the file if you give it a path to your file on your system.</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb134-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>otherEntity<span class="sc">$</span>physical <span class="ot">&lt;-</span> <span class="fu">set_physical</span>(<span class="st">&quot;../files/datfiles_processing.R&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb120-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>otherEntity<span class="sc">$</span>physical <span class="ot">&lt;-</span> <span class="fu">set_physical</span>(<span class="st">&quot;../files/datfiles_processing.R&quot;</span>)</span></code></pre></div>
 <pre><code>## Automatically calculated file size using file.size(&quot;../files/datfiles_processing.R&quot;)</code></pre>
 <pre><code>## Automatically calculated authentication size using digest::digest(&quot;../files/datfiles_processing.R&quot;, algo = &quot;md5&quot;, file = TRUE)</code></pre>
 </div>
@@ -740,10 +731,10 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 <h5><span class="header-section-number">3.2.2.4.6</span> Data file: tabular</h5>
 <p>Here we will use the element <code>dataTable</code> to describe the tabular data file.</p>
 <p>As before, we set the <code>entityName</code>, <code>entityDescription</code>, and the <code>physical</code> sections.</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb137-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>dataTable <span class="ot">&lt;-</span> eml<span class="sc">$</span><span class="fu">dataTable</span>(<span class="at">entityName =</span> <span class="st">&quot;../files/my-data.csv&quot;</span>,</span>
-<span id="cb137-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb137-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">entityDescription =</span> <span class="st">&quot;Temperature data from in-situ loggers&quot;</span>)</span>
-<span id="cb137-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb137-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb137-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb137-4" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>dataTable<span class="sc">$</span>physical <span class="ot">&lt;-</span> <span class="fu">set_physical</span>(<span class="st">&quot;../files/my-data.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb123-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>dataTable <span class="ot">&lt;-</span> eml<span class="sc">$</span><span class="fu">dataTable</span>(<span class="at">entityName =</span> <span class="st">&quot;../files/my-data.csv&quot;</span>,</span>
+<span id="cb123-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb123-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">entityDescription =</span> <span class="st">&quot;Temperature data from in-situ loggers&quot;</span>)</span>
+<span id="cb123-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb123-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb123-4" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>dataTable<span class="sc">$</span>physical <span class="ot">&lt;-</span> <span class="fu">set_physical</span>(<span class="st">&quot;../files/my-data.csv&quot;</span>)</span></code></pre></div>
 <pre><code>## Automatically calculated file size using file.size(&quot;../files/my-data.csv&quot;)</code></pre>
 <pre><code>## Automatically calculated authentication size using digest::digest(&quot;../files/my-data.csv&quot;, algo = &quot;md5&quot;, file = TRUE)</code></pre>
 <p>Next, perhaps the most important part of metadata, but frequently the most difficult to document in a metadata standard: attribute level information. An attribute is a variable in your dataset. For tabular data, this is information about columns within data tables, critical to understanding what kind of information is actually in the table!</p>
@@ -758,28 +749,28 @@ It also is visible from the <a href="https://portal.edirepository.org/nis/mapbro
 </ul>
 <p>Two other sub-elements, the <code>domain</code> and <code>measurementScale</code>, can be inferred from the <code>col_classes</code> argument to <code>set_attributes</code>.</p>
 <p>Let’s create our attributes <code>data.frame</code>.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-1" aria-hidden="true" tabindex="-1"></a>atts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">attributeName =</span> <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;temperature&quot;</span>, <span class="st">&quot;site&quot;</span>),</span>
-<span id="cb140-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">attributeDefinition =</span> <span class="fu">c</span>(<span class="st">&quot;time of measurement&quot;</span>, <span class="st">&quot;measured temperature in degrees Celsius&quot;</span>, <span class="st">&quot;site identifier&quot;</span>),</span>
-<span id="cb140-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">unit =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="st">&quot;celsius&quot;</span>, <span class="cn">NA</span>),</span>
-<span id="cb140-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">numberType =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="st">&quot;real&quot;</span>, <span class="cn">NA</span>),</span>
-<span id="cb140-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">formatString =</span> <span class="fu">c</span>(<span class="st">&quot;HH:MM:SS&quot;</span>, <span class="cn">NA</span>, <span class="cn">NA</span>),</span>
-<span id="cb140-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">definition =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">&quot;site identifier&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-1" aria-hidden="true" tabindex="-1"></a>atts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">attributeName =</span> <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;temperature&quot;</span>, <span class="st">&quot;site&quot;</span>),</span>
+<span id="cb126-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">attributeDefinition =</span> <span class="fu">c</span>(<span class="st">&quot;time of measurement&quot;</span>, <span class="st">&quot;measured temperature in degrees Celsius&quot;</span>, <span class="st">&quot;site identifier&quot;</span>),</span>
+<span id="cb126-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">unit =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="st">&quot;celsius&quot;</span>, <span class="cn">NA</span>),</span>
+<span id="cb126-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">numberType =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="st">&quot;real&quot;</span>, <span class="cn">NA</span>),</span>
+<span id="cb126-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">formatString =</span> <span class="fu">c</span>(<span class="st">&quot;HH:MM:SS&quot;</span>, <span class="cn">NA</span>, <span class="cn">NA</span>),</span>
+<span id="cb126-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb126-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">definition =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">&quot;site identifier&quot;</span>))</span></code></pre></div>
 <p>We will then use this in our <code>set_attributes</code> function, along with the <code>col_classes</code> argument, to generate a complete <code>attributeList</code>.</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb141-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>dataTable<span class="sc">$</span>attributeList <span class="ot">&lt;-</span> <span class="fu">set_attributes</span>(<span class="at">attributes =</span> atts,</span>
-<span id="cb141-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb141-2" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">col_classes =</span> <span class="fu">c</span>(<span class="st">&quot;Date&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;character&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb127-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>dataTable<span class="sc">$</span>attributeList <span class="ot">&lt;-</span> <span class="fu">set_attributes</span>(<span class="at">attributes =</span> atts,</span>
+<span id="cb127-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb127-2" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">col_classes =</span> <span class="fu">c</span>(<span class="st">&quot;Date&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;character&quot;</span>))</span></code></pre></div>
 <p>As you might imagine, this can get VERY tedious with wide data tables. The function <code>shiny_attributes</code> calls an interactive table that can not only automatically detect and attempt to fill in attribute information from a <code>data.frame</code>, but also helps with on the fly validation.</p>
 <p>Note: this requires that the <code>shinyjs</code> package is installed.</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb142-1" aria-hidden="true" tabindex="-1"></a>atts_shiny <span class="ot">&lt;-</span> <span class="fu">shiny_attributes</span>(<span class="at">data =</span> <span class="fu">read.csv</span>(<span class="st">&quot;../files/my-data.csv&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb128-1" aria-hidden="true" tabindex="-1"></a>atts_shiny <span class="ot">&lt;-</span> <span class="fu">shiny_attributes</span>(<span class="at">data =</span> <span class="fu">read.csv</span>(<span class="st">&quot;../files/my-data.csv&quot;</span>))</span></code></pre></div>
 <p>This produces a <code>data.frame</code> that you can insert into <code>set_attributes</code> as above.</p>
 </div>
 <div id="validating-and-writing-the-file" class="section level5" number="3.2.2.4.7">
 <h5><span class="header-section-number">3.2.2.4.7</span> Validating and writing the file</h5>
 <p>Finally, we need to validate and write our file.</p>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eml_validate</span>(doc)</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eml_validate</span>(doc)</span></code></pre></div>
 <pre><code>## [1] TRUE
 ## attr(,&quot;errors&quot;)
 ## character(0)</code></pre>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_eml</span>(doc, <span class="st">&quot;../files/complex_example.xml&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_eml</span>(doc, <span class="st">&quot;../files/complex_example.xml&quot;</span>)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 </div>
 </div>
@@ -820,54 +811,54 @@ member repositories like the <a href="https://knb.ecoinformatics.org">KNB Data R
 <h4><span class="header-section-number">3.2.3.2</span> Uploading A Package Using R with <code>uploadDataPackage</code></h4>
 <p>Datasets and metadata can be uploaded individually or as a collection. Such a collection, whether contained in local R objects or existing on a DataONE repository, will be informally referred to as a <code>package</code>.</p>
 <p>Load the libraries:</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dataone)</span>
-<span id="cb147-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(datapack)</span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dataone)</span>
+<span id="cb133-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(datapack)</span></code></pre></div>
 <p>First we need to create an R object that describes what coordinating and member nodes we will be uploading our dataset to. We do this with the <code>dataone</code> function <code>D1Client</code> (DataONE client). The first argument specifies the DataONE coordinating node (in this case a test node called STAGING) and the second specifices the member node.</p>
 <p>We’ll also create an object that only represents the member node, which is helpful for some functions.</p>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb148-1" aria-hidden="true" tabindex="-1"></a>d1c <span class="ot">&lt;-</span> <span class="fu">D1Client</span>(<span class="st">&quot;STAGING&quot;</span>, <span class="st">&quot;urn:node:mnTestARCTIC&quot;</span>)</span>
-<span id="cb148-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb148-2" aria-hidden="true" tabindex="-1"></a>mn <span class="ot">&lt;-</span> d1c<span class="sc">@</span>mn</span></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb134-1" aria-hidden="true" tabindex="-1"></a>d1c <span class="ot">&lt;-</span> <span class="fu">D1Client</span>(<span class="st">&quot;STAGING&quot;</span>, <span class="st">&quot;urn:node:mnTestARCTIC&quot;</span>)</span>
+<span id="cb134-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb134-2" aria-hidden="true" tabindex="-1"></a>mn <span class="ot">&lt;-</span> d1c<span class="sc">@</span>mn</span></code></pre></div>
 <p>Next, we create a <code>DataPackage</code> as a container for our data, metadata, and scripts using the <code>new</code> function. This just creates an empty object with the class <code>DataPackage</code></p>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb149-1" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;DataPackage&quot;</span>)</span>
-<span id="cb149-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb149-2" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb135-1" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;DataPackage&quot;</span>)</span>
+<span id="cb135-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb135-2" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
 <pre><code>## This package does not contain any DataObjects.</code></pre>
 <p>We then need to add a metadata file and data file to this package. First we generate some identifiers for the objects. We’ll use the <code>uuid</code> scheme for all of our objects. If we were uploading to production, you would likely want use an identifier with the <code>doi</code> scheme for your metadata document.</p>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb151-1" aria-hidden="true" tabindex="-1"></a>data_id <span class="ot">&lt;-</span> <span class="fu">generateIdentifier</span>(mn, <span class="at">scheme =</span> <span class="st">&quot;uuid&quot;</span>)</span>
-<span id="cb151-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb151-2" aria-hidden="true" tabindex="-1"></a>script_id <span class="ot">&lt;-</span> <span class="fu">generateIdentifier</span>(mn, <span class="at">scheme =</span> <span class="st">&quot;uuid&quot;</span>)</span>
-<span id="cb151-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb151-3" aria-hidden="true" tabindex="-1"></a>metadata_id <span class="ot">&lt;-</span> <span class="fu">generateIdentifier</span>(mn, <span class="at">scheme =</span> <span class="st">&quot;uuid&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb137-1" aria-hidden="true" tabindex="-1"></a>data_id <span class="ot">&lt;-</span> <span class="fu">generateIdentifier</span>(mn, <span class="at">scheme =</span> <span class="st">&quot;uuid&quot;</span>)</span>
+<span id="cb137-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb137-2" aria-hidden="true" tabindex="-1"></a>script_id <span class="ot">&lt;-</span> <span class="fu">generateIdentifier</span>(mn, <span class="at">scheme =</span> <span class="st">&quot;uuid&quot;</span>)</span>
+<span id="cb137-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb137-3" aria-hidden="true" tabindex="-1"></a>metadata_id <span class="ot">&lt;-</span> <span class="fu">generateIdentifier</span>(mn, <span class="at">scheme =</span> <span class="st">&quot;uuid&quot;</span>)</span></code></pre></div>
 <p>Now we need to modify our EML document to include these identifiers. This increases the accessibility of the files in our dataset.</p>
 <p>First read in the EML that we created earlier.</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb152-1" aria-hidden="true" tabindex="-1"></a>doc <span class="ot">&lt;-</span> <span class="fu">read_eml</span>(<span class="st">&quot;../files/complex_example.xml&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb138-1" aria-hidden="true" tabindex="-1"></a>doc <span class="ot">&lt;-</span> <span class="fu">read_eml</span>(<span class="st">&quot;../files/complex_example.xml&quot;</span>)</span></code></pre></div>
 <p>Let’s replace the arbitrary <code>packageId</code> and <code>system</code> that we set in the example above to reflect the identifier we created for this package, and the system we are uploading the package to.</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb153-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>packageId <span class="ot">&lt;-</span> metadata_id</span>
-<span id="cb153-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb153-2" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>system <span class="ot">&lt;-</span> mn<span class="sc">@</span>identifier</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb139-1" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>packageId <span class="ot">&lt;-</span> metadata_id</span>
+<span id="cb139-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb139-2" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>system <span class="ot">&lt;-</span> mn<span class="sc">@</span>identifier</span></code></pre></div>
 <p>Now let’s add a distribution URL to the <code>physical</code> section of our entity information. All of the distribution URLs look something like this <code>https://test.arcticdata.io/metacat/d1/mn/v2/object/urn:uuid:A0cc95b46-a318-4dd1-8f8a-0e6c280e1d95</code>, where <code>https://test.arcticdata.io/metacat/d1/mn/v2/</code> is the member node end point, and <code>urn:uuid:A0cc95b46-a318-4dd1-8f8a-0e6c280e1d95</code> is the identifier of the object.</p>
 <p>We can easily construct this URL using the <code>paste0</code> function, and insert it into the <code>physical</code> section of the <code>dataTable</code> element.</p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set url for csv</span></span>
-<span id="cb154-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-2" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>dataTable<span class="sc">$</span>physical<span class="sc">$</span>distribution<span class="sc">$</span>online<span class="sc">$</span>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(mn<span class="sc">@</span>endpoint,</span>
-<span id="cb154-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-3" aria-hidden="true" tabindex="-1"></a>                                                                 <span class="st">&quot;object/&quot;</span>,</span>
-<span id="cb154-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-4" aria-hidden="true" tabindex="-1"></a>                                                                 data_id)</span>
-<span id="cb154-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set url for script</span></span>
-<span id="cb154-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-6" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>otherEntity<span class="sc">$</span>physical<span class="sc">$</span>distribution<span class="sc">$</span>online<span class="sc">$</span>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(mn<span class="sc">@</span>endpoint,</span>
-<span id="cb154-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-7" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="st">&quot;object/&quot;</span>,</span>
-<span id="cb154-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-8" aria-hidden="true" tabindex="-1"></a>                                                                   script_id)</span>
-<span id="cb154-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb154-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb154-10" aria-hidden="true" tabindex="-1"></a><span class="fu">write_eml</span>(doc, <span class="st">&quot;../files/complex_example.xml&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set url for csv</span></span>
+<span id="cb140-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-2" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>dataTable<span class="sc">$</span>physical<span class="sc">$</span>distribution<span class="sc">$</span>online<span class="sc">$</span>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(mn<span class="sc">@</span>endpoint,</span>
+<span id="cb140-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-3" aria-hidden="true" tabindex="-1"></a>                                                                 <span class="st">&quot;object/&quot;</span>,</span>
+<span id="cb140-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-4" aria-hidden="true" tabindex="-1"></a>                                                                 data_id)</span>
+<span id="cb140-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set url for script</span></span>
+<span id="cb140-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-6" aria-hidden="true" tabindex="-1"></a>doc<span class="sc">$</span>dataset<span class="sc">$</span>otherEntity<span class="sc">$</span>physical<span class="sc">$</span>distribution<span class="sc">$</span>online<span class="sc">$</span>url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(mn<span class="sc">@</span>endpoint,</span>
+<span id="cb140-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-7" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="st">&quot;object/&quot;</span>,</span>
+<span id="cb140-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-8" aria-hidden="true" tabindex="-1"></a>                                                                   script_id)</span>
+<span id="cb140-9"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb140-10"><a href="session-3-programmatic-metadata-and-data-access.html#cb140-10" aria-hidden="true" tabindex="-1"></a><span class="fu">write_eml</span>(doc, <span class="st">&quot;../files/complex_example.xml&quot;</span>)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>Now we have a full metadata document ready to be uploaded. We now need to add our files to the <code>DataPackage</code>.</p>
-<p>First, let’s create a new <code>DataObject</code>, which is another object class specific to <code>datapack</code>. Our metadata file, data file, and script will all need to be added as a <code>DataObject</code>. Remember that all files in a package are considered data objects, not just the ones that we you traditionally think of as being “data”.</p>
+<p>First, let’s create a new <code>DataObject</code>, which is another object class specific to <code>datapack</code>. Our metadata file, data file, and script will all need to be added as a <code>DataObject</code>. Remember that all files in a package are considered data objects, not just the ones that we you traditionally think of as being “data.”</p>
 <p>The <code>format</code> argument specifies the type of file, and should match one of the list of DataONE formatIds (listed in the Id field) <a href="https://cn.dataone.org/cn/v2/formats">here</a>.</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the metadata document to the package</span></span>
-<span id="cb156-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb156-2" aria-hidden="true" tabindex="-1"></a>metadataObj <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;DataObject&quot;</span>,</span>
-<span id="cb156-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb156-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">id =</span> metadata_id,</span>
-<span id="cb156-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb156-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">format =</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span>,</span>
-<span id="cb156-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb156-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">filename =</span> <span class="st">&quot;../files/complex_example.xml&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the metadata document to the package</span></span>
+<span id="cb142-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb142-2" aria-hidden="true" tabindex="-1"></a>metadataObj <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;DataObject&quot;</span>,</span>
+<span id="cb142-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb142-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">id =</span> metadata_id,</span>
+<span id="cb142-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb142-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">format =</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span>,</span>
+<span id="cb142-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb142-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">filename =</span> <span class="st">&quot;../files/complex_example.xml&quot;</span>)</span></code></pre></div>
 <p>After creating the <code>DataObject</code> that represents the metadata file, we add it to the data package using <code>addMember</code>.</p>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb157-1" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">addMember</span>(dp, metadataObj)</span>
-<span id="cb157-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb157-2" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb143-1" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">addMember</span>(dp, metadataObj)</span>
+<span id="cb143-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb143-2" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
 <pre><code>## Members:
 ## 
-## filename        format    mediaType  size     identifier         modified local 
-## comple...le.xml eml...1.1 NA         5907     urn:uui...d0f7ffd1 n        y     
+## filename   format   mediaType  size     identifier modified local 
+## com....xml em...1.1 NA         5907     urn...ffd1 n        y     
 ## 
 ## Package identifier: NA
 ## RightsHolder: NA
@@ -875,19 +866,19 @@ member repositories like the <a href="https://knb.ecoinformatics.org">KNB Data R
 ## 
 ## This package does not contain any provenance relationships.</code></pre>
 <p>We add the data file and the script similarly. The only difference is in the <code>addMember</code> function we have to set the <code>mo</code> (metadata object) argument equal to the <code>DataObject</code> that represents the metadata file. Adding our csv file to the package this way not only adds the file to the data package, but it also specifies that the csv is described by the metadata.</p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add our data file to the package</span></span>
-<span id="cb159-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb159-2" aria-hidden="true" tabindex="-1"></a>sourceObj <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;DataObject&quot;</span>,</span>
-<span id="cb159-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb159-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">id =</span> data_id,</span>
-<span id="cb159-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb159-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">format =</span> <span class="st">&quot;text/csv&quot;</span>,</span>
-<span id="cb159-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb159-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">filename =</span> <span class="st">&quot;../files/my-data.csv&quot;</span>)</span>
-<span id="cb159-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb159-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb159-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb159-7" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">addMember</span>(dp, sourceObj, <span class="at">mo =</span> metadataObj)</span>
-<span id="cb159-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb159-8" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add our data file to the package</span></span>
+<span id="cb145-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-2" aria-hidden="true" tabindex="-1"></a>sourceObj <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;DataObject&quot;</span>,</span>
+<span id="cb145-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">id =</span> data_id,</span>
+<span id="cb145-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">format =</span> <span class="st">&quot;text/csv&quot;</span>,</span>
+<span id="cb145-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">filename =</span> <span class="st">&quot;../files/my-data.csv&quot;</span>)</span>
+<span id="cb145-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-7" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">addMember</span>(dp, sourceObj, <span class="at">mo =</span> metadataObj)</span>
+<span id="cb145-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb145-8" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
 <pre><code>## Members:
 ## 
-## filename        format    mediaType  size     identifier         modified local 
-## my-data.csv     text/csv  NA         45       urn:uui...34a4a4aa n        y     
-## comple...le.xml eml...1.1 NA         5907     urn:uui...d0f7ffd1 n        y     
+## filename   format   mediaType  size     identifier modified local 
+## my-....csv text/csv NA         45       urn...a4aa n        y     
+## com....xml em...1.1 NA         5907     urn...ffd1 n        y     
 ## 
 ## Package identifier: NA
 ## RightsHolder: NA
@@ -895,24 +886,24 @@ member repositories like the <a href="https://knb.ecoinformatics.org">KNB Data R
 ## 
 ## Relationships (updated):
 ## 
-##               subject           predicate              object
-## 1 complex_example.xml      cito:documents         my-data.csv
-## 2         my-data.csv cito:isDocumentedBy complex_example.xml</code></pre>
+##            subject        predicate           object
+## 1 comple...ple.xml   cito:documents      my-data.csv
+## 2      my-data.csv cito:i...entedBy comple...ple.xml</code></pre>
 <p>Next we add our script in the same way.</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add our script to the package</span></span>
-<span id="cb161-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb161-2" aria-hidden="true" tabindex="-1"></a>scriptObj <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;DataObject&quot;</span>,</span>
-<span id="cb161-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb161-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">id =</span> script_id,</span>
-<span id="cb161-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb161-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">format =</span> <span class="st">&quot;application/R&quot;</span>,</span>
-<span id="cb161-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb161-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">filename =</span> <span class="st">&quot;../files/datfiles_processing.R&quot;</span>)</span>
-<span id="cb161-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb161-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb161-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb161-7" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">addMember</span>(dp, scriptObj, <span class="at">mo =</span> metadataObj)</span>
-<span id="cb161-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb161-8" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add our script to the package</span></span>
+<span id="cb147-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-2" aria-hidden="true" tabindex="-1"></a>scriptObj <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">&quot;DataObject&quot;</span>,</span>
+<span id="cb147-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">id =</span> script_id,</span>
+<span id="cb147-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">format =</span> <span class="st">&quot;application/R&quot;</span>,</span>
+<span id="cb147-5"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">filename =</span> <span class="st">&quot;../files/datfiles_processing.R&quot;</span>)</span>
+<span id="cb147-6"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-7"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-7" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">addMember</span>(dp, scriptObj, <span class="at">mo =</span> metadataObj)</span>
+<span id="cb147-8"><a href="session-3-programmatic-metadata-and-data-access.html#cb147-8" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
 <pre><code>## Members:
 ## 
-## filename        format    mediaType  size     identifier         modified local 
-## my-data.csv     text/csv  NA         45       urn:uui...34a4a4aa n        y     
-## comple...le.xml eml...1.1 NA         5907     urn:uui...d0f7ffd1 n        y     
-## datfil...sing.R app...n/R NA         5625     urn:uui...d7038ed9 n        y     
+## filename   format   mediaType  size     identifier modified local 
+## my-....csv text/csv NA         45       urn...a4aa n        y     
+## com....xml em...1.1 NA         5907     urn...ffd1 n        y     
+## dat...ng.R ap...n/R NA         5625     urn...8ed9 n        y     
 ## 
 ## Package identifier: NA
 ## RightsHolder: NA
@@ -920,20 +911,20 @@ member repositories like the <a href="https://knb.ecoinformatics.org">KNB Data R
 ## 
 ## Relationships (updated):
 ## 
-##                 subject           predicate                object
-## 1   complex_example.xml      cito:documents           my-data.csv
-## 3   complex_example.xml      cito:documents datfiles_processing.R
-## 4 datfiles_processing.R cito:isDocumentedBy   complex_example.xml
-## 2           my-data.csv cito:isDocumentedBy   complex_example.xml</code></pre>
+##            subject        predicate           object
+## 1 comple...ple.xml   cito:documents      my-data.csv
+## 3 comple...ple.xml   cito:documents datfil...ssing.R
+## 4 datfil...ssing.R cito:i...entedBy comple...ple.xml
+## 2      my-data.csv cito:i...entedBy comple...ple.xml</code></pre>
 <p>You can also specify other information about the relationships between files in your data package by adding provenance information. Here, we specify that the R script (<code>program</code>) uses the csv (<code>sources</code>) by including them as the specified arguments in the <code>describeWorkflow</code> function.</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb163-1" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">describeWorkflow</span>(dp, <span class="at">sources =</span> sourceObj, <span class="at">program =</span> scriptObj)</span>
-<span id="cb163-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb163-2" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb149-1" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">describeWorkflow</span>(dp, <span class="at">sources =</span> sourceObj, <span class="at">program =</span> scriptObj)</span>
+<span id="cb149-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb149-2" aria-hidden="true" tabindex="-1"></a>dp</span></code></pre></div>
 <pre><code>## Members:
 ## 
-## filename        format    mediaType  size     identifier         modified local 
-## my-data.csv     text/csv  NA         45       urn:uui...34a4a4aa n        y     
-## comple...le.xml eml...1.1 NA         5907     urn:uui...d0f7ffd1 n        y     
-## datfil...sing.R app...n/R NA         5625     urn:uui...d7038ed9 n        y     
+## filename   format   mediaType  size     identifier modified local 
+## my-....csv text/csv NA         45       urn...a4aa n        y     
+## com....xml em...1.1 NA         5907     urn...ffd1 n        y     
+## dat...ng.R ap...n/R NA         5625     urn...8ed9 n        y     
 ## 
 ## Package identifier: NA
 ## RightsHolder: NA
@@ -941,19 +932,19 @@ member repositories like the <a href="https://knb.ecoinformatics.org">KNB Data R
 ## 
 ## Relationships (updated):
 ## 
-##                    subject               predicate                  object
-## 9  _86a18d30-...4cf4f09c65                rdf:type        prov:Association
-## 8  _86a18d30-...4cf4f09c65            prov:hadPlan   datfiles_processing.R
-## 1      complex_example.xml          cito:documents             my-data.csv
-## 3      complex_example.xml          cito:documents   datfiles_processing.R
-## 4    datfiles_processing.R     cito:isDocumentedBy     complex_example.xml
-## 10   datfiles_processing.R                rdf:type         provone:Program
-## 2              my-data.csv     cito:isDocumentedBy     complex_example.xml
-## 5              my-data.csv                rdf:type            provone:Data
-## 11 urn:uuid:d...ff4803e3d8      dcterms:identifier urn:uuid:d...ff4803e3d8
-## 7  urn:uuid:d...ff4803e3d8                rdf:type       provone:Execution
-## 6  urn:uuid:d...ff4803e3d8 prov:quali...ssociation _86a18d30-...4cf4f09c65
-## 12 urn:uuid:d...ff4803e3d8               prov:used             my-data.csv</code></pre>
+##             subject        predicate           object
+## 9  _87f26...86fac83         rdf:type prov:Association
+## 8  _87f26...86fac83     prov:hadPlan datfil...ssing.R
+## 1  comple...ple.xml   cito:documents      my-data.csv
+## 3  comple...ple.xml   cito:documents datfil...ssing.R
+## 4  datfil...ssing.R cito:i...entedBy comple...ple.xml
+## 10 datfil...ssing.R         rdf:type  provone:Program
+## 2       my-data.csv cito:i...entedBy comple...ple.xml
+## 5       my-data.csv         rdf:type     provone:Data
+## 11 urn:uu...95b3687 dcterm...ntifier urn:uu...95b3687
+## 7  urn:uu...95b3687         rdf:type provon...ecution
+## 6  urn:uu...95b3687 prov:q...ciation _87f26...86fac83
+## 12 urn:uu...95b3687        prov:used      my-data.csv</code></pre>
 <p>Each object in a data package has an access policy. There are three levels of access you can grant either to individual files, or the package as a whole.</p>
 <ul>
 <li>read: the ability to view when published</li>
@@ -961,12 +952,12 @@ member repositories like the <a href="https://knb.ecoinformatics.org">KNB Data R
 <li>changePermission: the ability to grant other people read, write, or changePermission access</li>
 </ul>
 <p>Here, I give my colleague (via his ORCID) “read” and “write” permission to my entire data package using <code>addAccessRule</code>.</p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb165-1" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">addAccessRule</span>(dp,</span>
-<span id="cb165-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb165-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">subject =</span> <span class="st">&quot;http://orcid.org/0000-0003-0077-4738&quot;</span>,</span>
-<span id="cb165-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb165-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">permission =</span> <span class="fu">c</span>(<span class="st">&quot;read&quot;</span>,<span class="st">&quot;write&quot;</span>),</span>
-<span id="cb165-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb165-4" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">getIdentifiers</span>(dp))</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb151-1" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">addAccessRule</span>(dp,</span>
+<span id="cb151-2"><a href="session-3-programmatic-metadata-and-data-access.html#cb151-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">subject =</span> <span class="st">&quot;http://orcid.org/0000-0003-0077-4738&quot;</span>,</span>
+<span id="cb151-3"><a href="session-3-programmatic-metadata-and-data-access.html#cb151-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">permission =</span> <span class="fu">c</span>(<span class="st">&quot;read&quot;</span>,<span class="st">&quot;write&quot;</span>),</span>
+<span id="cb151-4"><a href="session-3-programmatic-metadata-and-data-access.html#cb151-4" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">getIdentifiers</span>(dp))</span></code></pre></div>
 <p>Finally, we upload the package to the test server for the Arctic Data Center using <code>uploadDataPackage</code>. This function takes as arguments <code>d1c</code> (the DataONE client which specifies which coordinating and member nodes to use), <code>dp</code> (the data package itself), whether you want the package to include public read access (<code>public = TRUE</code>).</p>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb166-1" aria-hidden="true" tabindex="-1"></a>packageId <span class="ot">&lt;-</span> <span class="fu">uploadDataPackage</span>(d1c, dp, <span class="at">public =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="session-3-programmatic-metadata-and-data-access.html#cb152-1" aria-hidden="true" tabindex="-1"></a>packageId <span class="ot">&lt;-</span> <span class="fu">uploadDataPackage</span>(d1c, dp, <span class="at">public =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>You can now search for and view the package at <a href="https://test.arcticdata.io" class="uri">https://test.arcticdata.io</a>:</p>
 <p><img src="images/data-uploaded-simple.png" /></p>
 
