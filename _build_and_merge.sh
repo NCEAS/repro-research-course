@@ -3,7 +3,7 @@
 set -e
 
 BRANCH=$1
-BRANCH='2021-11-delta'
+BRANCH='2021-11-RRCourse'
 
 export TOP
 TOP=$(pwd)
