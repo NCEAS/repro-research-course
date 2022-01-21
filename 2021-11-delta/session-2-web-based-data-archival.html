@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2 Session 2: Web based data archival | Open Science Synthesis for the Delta Science Program: Week 3</title>
   <meta name="description" content="2 Session 2: Web based data archival | Open Science Synthesis for the Delta Science Program: Week 3" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24.4 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2 Session 2: Web based data archival | Open Science Synthesis for the Delta Science Program: Week 3" />
   <meta property="og:type" content="book" />
@@ -51,6 +51,14 @@
 
 <link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
 
 
 <style type="text/css">
@@ -286,6 +294,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="8.0.1" data-path="session-8-wrap-up.html"><a href="session-8-wrap-up.html#material-to-include"><i class="fa fa-check"></i><b>8.0.1</b> Material to include:</a></li>
 </ul></li>
+<li class="chapter" data-level="9" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html"><i class="fa fa-check"></i><b>9</b> Session 9: One-day workshop</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#spatial-vector-analysis-using-sf"><i class="fa fa-check"></i><b>9.1</b> Spatial vector analysis using <code>sf</code></a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#learning-objectives-7"><i class="fa fa-check"></i><b>9.1.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="9.1.2" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#introduction-2"><i class="fa fa-check"></i><b>9.1.2</b> Introduction</a></li>
+<li class="chapter" data-level="9.1.3" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#working-with-geospatial-data"><i class="fa fa-check"></i><b>9.1.3</b> Working with geospatial data</a></li>
+<li class="chapter" data-level="9.1.4" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#sf-the-tidyverse"><i class="fa fa-check"></i><b>9.1.4</b> <code>sf</code> &amp; the Tidyverse</a></li>
+<li class="chapter" data-level="9.1.5" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#visualize-with-ggplot"><i class="fa fa-check"></i><b>9.1.5</b> Visualize with ggplot</a></li>
+<li class="chapter" data-level="9.1.6" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#visualize-sf-objects-with-leaflet"><i class="fa fa-check"></i><b>9.1.6</b> Visualize <code>sf</code> objects with leaflet</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -415,7 +435,7 @@ Imagine that you’re writing your metadata for a typical researcher (who might 
 <p>Not only is this information helpful to you and any other researcher in the future using your data, but it is also helpful to search engines. The <a href="https://arcticdata.io/semantic-annotations/">semantics</a> of your dataset are crucial to ensure your data is both discoverable by others and interoperable (that is, reusable).</p>
 <p>For example, if you were to search for the character string <code>carbon dioxide flux</code> in the general search box at the Arctic Data Center, not all relevant results will be shown due to varying vocabulary conventions (ie, <code>CO2 flux</code> instead of <code>carbon dioxide flux</code>) across disciplines — only datasets containing the exact words <code>carbon dioxide flux</code> are returned. With correct semantic annotation of the variables, your dataset that includes information about carbon dioxide flux but that calls it <code>CO2 flux</code> WOULD be included in that search.</p>
 <p><img src="images/semantic-search.png" /></p>
-<p>Demonstrates a typical search for “carbon dioxide flux,” yielding 20 datasets. (right) Illustrates an annotated search for “carbon dioxide flux,” yielding 29 datasets. Note that if you were to interact with the site and explore the results of the figure on the right, the dataset in red of Figure 3 will not appear in the typical search for “carbon dioxide flux.”</p>
+<p>Demonstrates a typical search for “carbon dioxide flux”, yielding 20 datasets. (right) Illustrates an annotated search for “carbon dioxide flux”, yielding 29 datasets. Note that if you were to interact with the site and explore the results of the figure on the right, the dataset in red of Figure 3 will not appear in the typical search for “carbon dioxide flux.”</p>
 <p><em>Rights and Attribution</em></p>
 <p>Correctly assigning a way for your datasets to be cited and reused is the last piece of a complete metadata document. This section sets the scientific rights and expectations for the future on your data, like:</p>
 <ul>
@@ -509,30 +529,30 @@ collected, and why it was collected.</p>
 <p>For consistency, metadata are typically structured following metadata content
 standards such as the <a href="https://knb.ecoinformatics.org/software/eml/">Ecological Metadata Language (EML)</a>.
 For example, here’s an excerpt of the metadata for a sockeye salmon data set:</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb78-1"><a href="session-2-web-based-data-archival.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
-<span id="cb78-2"><a href="session-2-web-based-data-archival.html#cb78-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">eml:eml</span><span class="ot"> packageId=</span><span class="st">&quot;df35d.442.6&quot;</span><span class="ot"> system=</span><span class="st">&quot;knb&quot;</span> </span>
-<span id="cb78-3"><a href="session-2-web-based-data-archival.html#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    xmlns:eml=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span>&gt;</span>
-<span id="cb78-4"><a href="session-2-web-based-data-archival.html#cb78-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">dataset</span>&gt;</span>
-<span id="cb78-5"><a href="session-2-web-based-data-archival.html#cb78-5" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">title</span>&gt;Improving Preseason Forecasts of Sockeye Salmon Runs through </span>
-<span id="cb78-6"><a href="session-2-web-based-data-archival.html#cb78-6" aria-hidden="true" tabindex="-1"></a>            Salmon Smolt Monitoring in Kenai River, Alaska: 2005 - 2007&lt;/<span class="kw">title</span>&gt;</span>
-<span id="cb78-7"><a href="session-2-web-based-data-archival.html#cb78-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">creator</span><span class="ot"> id=</span><span class="st">&quot;1385594069457&quot;</span>&gt;</span>
-<span id="cb78-8"><a href="session-2-web-based-data-archival.html#cb78-8" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">individualName</span>&gt;</span>
-<span id="cb78-9"><a href="session-2-web-based-data-archival.html#cb78-9" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">givenName</span>&gt;Mark&lt;/<span class="kw">givenName</span>&gt;</span>
-<span id="cb78-10"><a href="session-2-web-based-data-archival.html#cb78-10" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">surName</span>&gt;Willette&lt;/<span class="kw">surName</span>&gt;</span>
-<span id="cb78-11"><a href="session-2-web-based-data-archival.html#cb78-11" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">individualName</span>&gt;</span>
-<span id="cb78-12"><a href="session-2-web-based-data-archival.html#cb78-12" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">organizationName</span>&gt;Alaska Department of Fish and Game&lt;/<span class="kw">organizationName</span>&gt;</span>
-<span id="cb78-13"><a href="session-2-web-based-data-archival.html#cb78-13" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">positionName</span>&gt;Fishery Biologist&lt;/<span class="kw">positionName</span>&gt;</span>
-<span id="cb78-14"><a href="session-2-web-based-data-archival.html#cb78-14" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">address</span>&gt;</span>
-<span id="cb78-15"><a href="session-2-web-based-data-archival.html#cb78-15" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">city</span>&gt;Soldotna&lt;/<span class="kw">city</span>&gt;</span>
-<span id="cb78-16"><a href="session-2-web-based-data-archival.html#cb78-16" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">administrativeArea</span>&gt;Alaska&lt;/<span class="kw">administrativeArea</span>&gt;</span>
-<span id="cb78-17"><a href="session-2-web-based-data-archival.html#cb78-17" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">country</span>&gt;USA&lt;/<span class="kw">country</span>&gt;</span>
-<span id="cb78-18"><a href="session-2-web-based-data-archival.html#cb78-18" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">address</span>&gt;</span>
-<span id="cb78-19"><a href="session-2-web-based-data-archival.html#cb78-19" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">phone</span><span class="ot"> phonetype=</span><span class="st">&quot;voice&quot;</span>&gt;(907)260-2911&lt;/<span class="kw">phone</span>&gt;</span>
-<span id="cb78-20"><a href="session-2-web-based-data-archival.html#cb78-20" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">electronicMailAddress</span>&gt;mark.willette@alaska.gov&lt;/<span class="kw">electronicMailAddress</span>&gt;</span>
-<span id="cb78-21"><a href="session-2-web-based-data-archival.html#cb78-21" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">creator</span>&gt;</span>
-<span id="cb78-22"><a href="session-2-web-based-data-archival.html#cb78-22" aria-hidden="true" tabindex="-1"></a>        ...</span>
-<span id="cb78-23"><a href="session-2-web-based-data-archival.html#cb78-23" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">dataset</span>&gt;</span>
-<span id="cb78-24"><a href="session-2-web-based-data-archival.html#cb78-24" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">eml:eml</span>&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb87-1"><a href="session-2-web-based-data-archival.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb87-2"><a href="session-2-web-based-data-archival.html#cb87-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">eml:eml</span><span class="ot"> packageId=</span><span class="st">&quot;df35d.442.6&quot;</span><span class="ot"> system=</span><span class="st">&quot;knb&quot;</span> </span>
+<span id="cb87-3"><a href="session-2-web-based-data-archival.html#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    xmlns:eml=</span><span class="st">&quot;eml://ecoinformatics.org/eml-2.1.1&quot;</span>&gt;</span>
+<span id="cb87-4"><a href="session-2-web-based-data-archival.html#cb87-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">dataset</span>&gt;</span>
+<span id="cb87-5"><a href="session-2-web-based-data-archival.html#cb87-5" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">title</span>&gt;Improving Preseason Forecasts of Sockeye Salmon Runs through </span>
+<span id="cb87-6"><a href="session-2-web-based-data-archival.html#cb87-6" aria-hidden="true" tabindex="-1"></a>            Salmon Smolt Monitoring in Kenai River, Alaska: 2005 - 2007&lt;/<span class="kw">title</span>&gt;</span>
+<span id="cb87-7"><a href="session-2-web-based-data-archival.html#cb87-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">creator</span><span class="ot"> id=</span><span class="st">&quot;1385594069457&quot;</span>&gt;</span>
+<span id="cb87-8"><a href="session-2-web-based-data-archival.html#cb87-8" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">individualName</span>&gt;</span>
+<span id="cb87-9"><a href="session-2-web-based-data-archival.html#cb87-9" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">givenName</span>&gt;Mark&lt;/<span class="kw">givenName</span>&gt;</span>
+<span id="cb87-10"><a href="session-2-web-based-data-archival.html#cb87-10" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">surName</span>&gt;Willette&lt;/<span class="kw">surName</span>&gt;</span>
+<span id="cb87-11"><a href="session-2-web-based-data-archival.html#cb87-11" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">individualName</span>&gt;</span>
+<span id="cb87-12"><a href="session-2-web-based-data-archival.html#cb87-12" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">organizationName</span>&gt;Alaska Department of Fish and Game&lt;/<span class="kw">organizationName</span>&gt;</span>
+<span id="cb87-13"><a href="session-2-web-based-data-archival.html#cb87-13" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">positionName</span>&gt;Fishery Biologist&lt;/<span class="kw">positionName</span>&gt;</span>
+<span id="cb87-14"><a href="session-2-web-based-data-archival.html#cb87-14" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">address</span>&gt;</span>
+<span id="cb87-15"><a href="session-2-web-based-data-archival.html#cb87-15" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">city</span>&gt;Soldotna&lt;/<span class="kw">city</span>&gt;</span>
+<span id="cb87-16"><a href="session-2-web-based-data-archival.html#cb87-16" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">administrativeArea</span>&gt;Alaska&lt;/<span class="kw">administrativeArea</span>&gt;</span>
+<span id="cb87-17"><a href="session-2-web-based-data-archival.html#cb87-17" aria-hidden="true" tabindex="-1"></a>                &lt;<span class="kw">country</span>&gt;USA&lt;/<span class="kw">country</span>&gt;</span>
+<span id="cb87-18"><a href="session-2-web-based-data-archival.html#cb87-18" aria-hidden="true" tabindex="-1"></a>            &lt;/<span class="kw">address</span>&gt;</span>
+<span id="cb87-19"><a href="session-2-web-based-data-archival.html#cb87-19" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">phone</span><span class="ot"> phonetype=</span><span class="st">&quot;voice&quot;</span>&gt;(907)260-2911&lt;/<span class="kw">phone</span>&gt;</span>
+<span id="cb87-20"><a href="session-2-web-based-data-archival.html#cb87-20" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">electronicMailAddress</span>&gt;mark.willette@alaska.gov&lt;/<span class="kw">electronicMailAddress</span>&gt;</span>
+<span id="cb87-21"><a href="session-2-web-based-data-archival.html#cb87-21" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">creator</span>&gt;</span>
+<span id="cb87-22"><a href="session-2-web-based-data-archival.html#cb87-22" aria-hidden="true" tabindex="-1"></a>        ...</span>
+<span id="cb87-23"><a href="session-2-web-based-data-archival.html#cb87-23" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">dataset</span>&gt;</span>
+<span id="cb87-24"><a href="session-2-web-based-data-archival.html#cb87-24" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">eml:eml</span>&gt;</span></code></pre></div>
 <p>That same metadata document can be converted to HTML format and displayed in a much
 more readable form on the web: <a href="https://knb.ecoinformatics.org/#view/doi:10.5063/F1F18WN4" class="uri">https://knb.ecoinformatics.org/#view/doi:10.5063/F1F18WN4</a></p>
 <p><img src="images/knb-metadata.png" />

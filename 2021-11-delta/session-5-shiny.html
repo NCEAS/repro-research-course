@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5 Session 5: Shiny | Open Science Synthesis for the Delta Science Program: Week 3</title>
   <meta name="description" content="5 Session 5: Shiny | Open Science Synthesis for the Delta Science Program: Week 3" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24.4 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5 Session 5: Shiny | Open Science Synthesis for the Delta Science Program: Week 3" />
   <meta property="og:type" content="book" />
@@ -51,6 +51,14 @@
 
 <link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
 
 
 <style type="text/css">
@@ -286,6 +294,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="8.0.1" data-path="session-8-wrap-up.html"><a href="session-8-wrap-up.html#material-to-include"><i class="fa fa-check"></i><b>8.0.1</b> Material to include:</a></li>
 </ul></li>
+<li class="chapter" data-level="9" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html"><i class="fa fa-check"></i><b>9</b> Session 9: One-day workshop</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#spatial-vector-analysis-using-sf"><i class="fa fa-check"></i><b>9.1</b> Spatial vector analysis using <code>sf</code></a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#learning-objectives-7"><i class="fa fa-check"></i><b>9.1.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="9.1.2" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#introduction-2"><i class="fa fa-check"></i><b>9.1.2</b> Introduction</a></li>
+<li class="chapter" data-level="9.1.3" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#working-with-geospatial-data"><i class="fa fa-check"></i><b>9.1.3</b> Working with geospatial data</a></li>
+<li class="chapter" data-level="9.1.4" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#sf-the-tidyverse"><i class="fa fa-check"></i><b>9.1.4</b> <code>sf</code> &amp; the Tidyverse</a></li>
+<li class="chapter" data-level="9.1.5" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#visualize-with-ggplot"><i class="fa fa-check"></i><b>9.1.5</b> Visualize with ggplot</a></li>
+<li class="chapter" data-level="9.1.6" data-path="session-9-one-day-workshop.html"><a href="session-9-one-day-workshop.html#visualize-sf-objects-with-leaflet"><i class="fa fa-check"></i><b>9.1.6</b> Visualize <code>sf</code> objects with leaflet</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -371,34 +391,34 @@ else on the Internet (e.g., if the application is deployed to a web server).</p>
 <h4><span class="header-section-number">5.1.5.1</span> Load data for the example</h4>
 <p>Use this code to load the data at the top of your <code>app.R</code> script. Note we are using <code>contentId</code> again, and we have filtered
 for some species of interest.</p>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="session-5-shiny.html#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
-<span id="cb220-2"><a href="session-5-shiny.html#cb220-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(contentid)</span>
-<span id="cb220-3"><a href="session-5-shiny.html#cb220-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb220-4"><a href="session-5-shiny.html#cb220-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb220-5"><a href="session-5-shiny.html#cb220-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb220-6"><a href="session-5-shiny.html#cb220-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb220-7"><a href="session-5-shiny.html#cb220-7" aria-hidden="true" tabindex="-1"></a>sha1 <span class="ot">&lt;-</span> <span class="st">&#39;hash://sha1/317d7f840e598f5f3be732ab0e04f00a8051c6d0&#39;</span></span>
-<span id="cb220-8"><a href="session-5-shiny.html#cb220-8" aria-hidden="true" tabindex="-1"></a>delta.file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(sha1, <span class="at">registries=</span><span class="fu">c</span>(<span class="st">&quot;dataone&quot;</span>), <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb220-9"><a href="session-5-shiny.html#cb220-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb220-10"><a href="session-5-shiny.html#cb220-10" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the sample date format, and filter for species of interest</span></span>
-<span id="cb220-11"><a href="session-5-shiny.html#cb220-11" aria-hidden="true" tabindex="-1"></a>delta_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(delta.file) <span class="sc">%&gt;%</span> </span>
-<span id="cb220-12"><a href="session-5-shiny.html#cb220-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleDate =</span> <span class="fu">mdy</span>(SampleDate))  <span class="sc">%&gt;%</span> </span>
-<span id="cb220-13"><a href="session-5-shiny.html#cb220-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;Salmon|Striped Bass|Smelt|Sturgeon&quot;</span>, CommonName))</span>
-<span id="cb220-14"><a href="session-5-shiny.html#cb220-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb220-15"><a href="session-5-shiny.html#cb220-15" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(delta_data)</span></code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="session-5-shiny.html#cb228-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb228-2"><a href="session-5-shiny.html#cb228-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(contentid)</span>
+<span id="cb228-3"><a href="session-5-shiny.html#cb228-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb228-4"><a href="session-5-shiny.html#cb228-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb228-5"><a href="session-5-shiny.html#cb228-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb228-6"><a href="session-5-shiny.html#cb228-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb228-7"><a href="session-5-shiny.html#cb228-7" aria-hidden="true" tabindex="-1"></a>sha1 <span class="ot">&lt;-</span> <span class="st">&#39;hash://sha1/317d7f840e598f5f3be732ab0e04f00a8051c6d0&#39;</span></span>
+<span id="cb228-8"><a href="session-5-shiny.html#cb228-8" aria-hidden="true" tabindex="-1"></a>delta.file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(sha1, <span class="at">registries=</span><span class="fu">c</span>(<span class="st">&quot;dataone&quot;</span>), <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb228-9"><a href="session-5-shiny.html#cb228-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb228-10"><a href="session-5-shiny.html#cb228-10" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the sample date format, and filter for species of interest</span></span>
+<span id="cb228-11"><a href="session-5-shiny.html#cb228-11" aria-hidden="true" tabindex="-1"></a>delta_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(delta.file) <span class="sc">%&gt;%</span> </span>
+<span id="cb228-12"><a href="session-5-shiny.html#cb228-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleDate =</span> <span class="fu">mdy</span>(SampleDate))  <span class="sc">%&gt;%</span> </span>
+<span id="cb228-13"><a href="session-5-shiny.html#cb228-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;Salmon|Striped Bass|Smelt|Sturgeon&quot;</span>, CommonName))</span>
+<span id="cb228-14"><a href="session-5-shiny.html#cb228-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb228-15"><a href="session-5-shiny.html#cb228-15" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(delta_data)</span></code></pre></div>
 </div>
 <div id="add-a-simple-timeseries-using-ggplot" class="section level4" number="5.1.5.2">
 <h4><span class="header-section-number">5.1.5.2</span> Add a simple timeseries using ggplot</h4>
 <p>We know there has been a lot of variation through time in the delta, so let’s plot a time-series of Secchi depth. We do so by switching out the histogram code for a simple ggplot, like so:</p>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="session-5-shiny.html#cb221-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb221-2"><a href="session-5-shiny.html#cb221-2" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb221-3"><a href="session-5-shiny.html#cb221-3" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>distPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb221-4"><a href="session-5-shiny.html#cb221-4" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb221-5"><a href="session-5-shiny.html#cb221-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
-<span id="cb221-6"><a href="session-5-shiny.html#cb221-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb221-7"><a href="session-5-shiny.html#cb221-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
-<span id="cb221-8"><a href="session-5-shiny.html#cb221-8" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb221-9"><a href="session-5-shiny.html#cb221-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="session-5-shiny.html#cb229-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb229-2"><a href="session-5-shiny.html#cb229-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb229-3"><a href="session-5-shiny.html#cb229-3" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>distPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb229-4"><a href="session-5-shiny.html#cb229-4" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb229-5"><a href="session-5-shiny.html#cb229-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
+<span id="cb229-6"><a href="session-5-shiny.html#cb229-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb229-7"><a href="session-5-shiny.html#cb229-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
+<span id="cb229-8"><a href="session-5-shiny.html#cb229-8" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb229-9"><a href="session-5-shiny.html#cb229-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>If you now reload the app, it will display the simple time-series instead of
 the histogram. At this point, we haven’t added any interactivity.</p>
 <p>In a Shiny application, the <code>server</code> function provides the part of the application
@@ -412,18 +432,18 @@ widgits that we’ll use to control the plot. Specifically, we will add a new sl
 for setting the <code>minDate</code> parameter, and modify the existing slider to be used for
 the <code>maxDate</code> parameter. To do so, modify the <code>sidebarPanel()</code> call to include two
 <code>sliderInput()</code> function calls:</p>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="session-5-shiny.html#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sidebarPanel</span>(</span>
-<span id="cb222-2"><a href="session-5-shiny.html#cb222-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sliderInput</span>(<span class="st">&quot;minDate&quot;</span>,</span>
-<span id="cb222-3"><a href="session-5-shiny.html#cb222-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;Min Date:&quot;</span>,</span>
-<span id="cb222-4"><a href="session-5-shiny.html#cb222-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
-<span id="cb222-5"><a href="session-5-shiny.html#cb222-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
-<span id="cb222-6"><a href="session-5-shiny.html#cb222-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">value =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>)),</span>
-<span id="cb222-7"><a href="session-5-shiny.html#cb222-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sliderInput</span>(<span class="st">&quot;maxDate&quot;</span>,</span>
-<span id="cb222-8"><a href="session-5-shiny.html#cb222-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;Max Date:&quot;</span>,</span>
-<span id="cb222-9"><a href="session-5-shiny.html#cb222-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
-<span id="cb222-10"><a href="session-5-shiny.html#cb222-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
-<span id="cb222-11"><a href="session-5-shiny.html#cb222-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">value =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2005-01-01&quot;</span>))</span>
-<span id="cb222-12"><a href="session-5-shiny.html#cb222-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="session-5-shiny.html#cb230-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sidebarPanel</span>(</span>
+<span id="cb230-2"><a href="session-5-shiny.html#cb230-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sliderInput</span>(<span class="st">&quot;minDate&quot;</span>,</span>
+<span id="cb230-3"><a href="session-5-shiny.html#cb230-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;Min Date:&quot;</span>,</span>
+<span id="cb230-4"><a href="session-5-shiny.html#cb230-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
+<span id="cb230-5"><a href="session-5-shiny.html#cb230-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
+<span id="cb230-6"><a href="session-5-shiny.html#cb230-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">value =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>)),</span>
+<span id="cb230-7"><a href="session-5-shiny.html#cb230-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sliderInput</span>(<span class="st">&quot;maxDate&quot;</span>,</span>
+<span id="cb230-8"><a href="session-5-shiny.html#cb230-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;Max Date:&quot;</span>,</span>
+<span id="cb230-9"><a href="session-5-shiny.html#cb230-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
+<span id="cb230-10"><a href="session-5-shiny.html#cb230-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
+<span id="cb230-11"><a href="session-5-shiny.html#cb230-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">value =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2005-01-01&quot;</span>))</span>
+<span id="cb230-12"><a href="session-5-shiny.html#cb230-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>If you reload the app, you’ll see two new sliders, but if you change them, they don’t
 make any changes to the plot. Let’s fix that.</p>
 </div>
@@ -433,10 +453,10 @@ make any changes to the plot. Let’s fix that.</p>
 that are passed into the <code>server</code> function to access the current values of the sliders.
 In Shiny, each UI component is given an input identifier when it is created, which is used as the name of the value in the input list. So, we can access the minimum depth as <code>input$minDate</code> and the max as <code>input$maxDate</code>. Let’s use these values now by adding limits to our X axis
 in the ggplot:</p>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="session-5-shiny.html#cb223-1" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
-<span id="cb223-2"><a href="session-5-shiny.html#cb223-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb223-3"><a href="session-5-shiny.html#cb223-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">xlim</span>(<span class="fu">c</span>(input<span class="sc">$</span>minDate,input<span class="sc">$</span>maxDate)) <span class="sc">+</span></span>
-<span id="cb223-4"><a href="session-5-shiny.html#cb223-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="session-5-shiny.html#cb231-1" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
+<span id="cb231-2"><a href="session-5-shiny.html#cb231-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb231-3"><a href="session-5-shiny.html#cb231-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">xlim</span>(<span class="fu">c</span>(input<span class="sc">$</span>minDate,input<span class="sc">$</span>maxDate)) <span class="sc">+</span></span>
+<span id="cb231-4"><a href="session-5-shiny.html#cb231-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span></code></pre></div>
 <p>At this point, we have a fully interactive plot, and the sliders can be used to change the
 min and max of the Depth axis.</p>
 <p><img src="images/shiny-yolo-1.png" /></p>
@@ -451,19 +471,19 @@ the first slider to output a range of values, which will prevent the min from be
 the max. You do so by setting the value of the slider to a vector of length 2, representing
 the default min and max date for the slider, such as <code>c(as.Date("1998-01-01"), as.Date("2020-01-01"))</code>. So, delete the second slider,
 rename the first, and provide a vector for the value, like this:</p>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="session-5-shiny.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sliderInput</span>(<span class="st">&quot;date&quot;</span>,</span>
-<span id="cb224-2"><a href="session-5-shiny.html#cb224-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Date:&quot;</span>,</span>
-<span id="cb224-3"><a href="session-5-shiny.html#cb224-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
-<span id="cb224-4"><a href="session-5-shiny.html#cb224-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
-<span id="cb224-5"><a href="session-5-shiny.html#cb224-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)))</span>
-<span id="cb224-6"><a href="session-5-shiny.html#cb224-6" aria-hidden="true" tabindex="-1"></a><span class="er">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="session-5-shiny.html#cb232-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sliderInput</span>(<span class="st">&quot;date&quot;</span>,</span>
+<span id="cb232-2"><a href="session-5-shiny.html#cb232-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;Date:&quot;</span>,</span>
+<span id="cb232-3"><a href="session-5-shiny.html#cb232-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
+<span id="cb232-4"><a href="session-5-shiny.html#cb232-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
+<span id="cb232-5"><a href="session-5-shiny.html#cb232-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)))</span>
+<span id="cb232-6"><a href="session-5-shiny.html#cb232-6" aria-hidden="true" tabindex="-1"></a><span class="er">)</span></span></code></pre></div>
 <p>Now, modify the ggplot to use this new <code>date</code> slider value, which now will be returned
 as a vector of length 2. The first element of the depth vector is the min, and the
 second is the max value on the slider.</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="session-5-shiny.html#cb225-1" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
-<span id="cb225-2"><a href="session-5-shiny.html#cb225-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb225-3"><a href="session-5-shiny.html#cb225-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">xlim</span>(<span class="fu">c</span>(input<span class="sc">$</span>date[<span class="dv">1</span>],input<span class="sc">$</span>date[<span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb225-4"><a href="session-5-shiny.html#cb225-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="session-5-shiny.html#cb233-1" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
+<span id="cb233-2"><a href="session-5-shiny.html#cb233-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb233-3"><a href="session-5-shiny.html#cb233-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">xlim</span>(<span class="fu">c</span>(input<span class="sc">$</span>date[<span class="dv">1</span>],input<span class="sc">$</span>date[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb233-4"><a href="session-5-shiny.html#cb233-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span></code></pre></div>
 <p><img src="images/shiny-yolo-2.png" /></p>
 </div>
 </div>
@@ -489,50 +509,50 @@ and how the content flows when the browser window is resized. The <code>sidebarL
 works to keep the sidebar about 1/3 of the box, and the main panel about 2/3, which
 is a good proportion for our controls and plots. Add the verticalLayout, and the
 second sidebarLayout for the second plot as follows:</p>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="session-5-shiny.html#cb226-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">verticalLayout</span>(</span>
-<span id="cb226-2"><a href="session-5-shiny.html#cb226-2" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Sidebar with a slider input for depth axis</span></span>
-<span id="cb226-3"><a href="session-5-shiny.html#cb226-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarLayout</span>(</span>
-<span id="cb226-4"><a href="session-5-shiny.html#cb226-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sidebarPanel</span>(</span>
-<span id="cb226-5"><a href="session-5-shiny.html#cb226-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">sliderInput</span>(<span class="st">&quot;date&quot;</span>,</span>
-<span id="cb226-6"><a href="session-5-shiny.html#cb226-6" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;Date:&quot;</span>,</span>
-<span id="cb226-7"><a href="session-5-shiny.html#cb226-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
-<span id="cb226-8"><a href="session-5-shiny.html#cb226-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
-<span id="cb226-9"><a href="session-5-shiny.html#cb226-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)))</span>
-<span id="cb226-10"><a href="session-5-shiny.html#cb226-10" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb226-11"><a href="session-5-shiny.html#cb226-11" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Show a plot of the generated distribution</span></span>
-<span id="cb226-12"><a href="session-5-shiny.html#cb226-12" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mainPanel</span>(</span>
-<span id="cb226-13"><a href="session-5-shiny.html#cb226-13" aria-hidden="true" tabindex="-1"></a>               <span class="fu">plotOutput</span>(<span class="st">&quot;distPlot&quot;</span>)</span>
-<span id="cb226-14"><a href="session-5-shiny.html#cb226-14" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb226-15"><a href="session-5-shiny.html#cb226-15" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb226-16"><a href="session-5-shiny.html#cb226-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb226-17"><a href="session-5-shiny.html#cb226-17" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
-<span id="cb226-18"><a href="session-5-shiny.html#cb226-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb226-19"><a href="session-5-shiny.html#cb226-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarLayout</span>(</span>
-<span id="cb226-20"><a href="session-5-shiny.html#cb226-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sidebarPanel</span>(</span>
-<span id="cb226-21"><a href="session-5-shiny.html#cb226-21" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;x_variable&quot;</span>, <span class="st">&quot;X Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;SampleDate&quot;</span>),</span>
-<span id="cb226-22"><a href="session-5-shiny.html#cb226-22" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;y_variable&quot;</span>, <span class="st">&quot;Y Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;Count&quot;</span>),</span>
-<span id="cb226-23"><a href="session-5-shiny.html#cb226-23" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;color_variable&quot;</span>, <span class="st">&quot;Color&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;CommonName&quot;</span>)</span>
-<span id="cb226-24"><a href="session-5-shiny.html#cb226-24" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb226-25"><a href="session-5-shiny.html#cb226-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb226-26"><a href="session-5-shiny.html#cb226-26" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Show a plot with configurable axes</span></span>
-<span id="cb226-27"><a href="session-5-shiny.html#cb226-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mainPanel</span>(</span>
-<span id="cb226-28"><a href="session-5-shiny.html#cb226-28" aria-hidden="true" tabindex="-1"></a>                <span class="fu">plotOutput</span>(<span class="st">&quot;varPlot&quot;</span>)</span>
-<span id="cb226-29"><a href="session-5-shiny.html#cb226-29" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb226-30"><a href="session-5-shiny.html#cb226-30" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb226-31"><a href="session-5-shiny.html#cb226-31" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">hr</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="session-5-shiny.html#cb234-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">verticalLayout</span>(</span>
+<span id="cb234-2"><a href="session-5-shiny.html#cb234-2" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Sidebar with a slider input for depth axis</span></span>
+<span id="cb234-3"><a href="session-5-shiny.html#cb234-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarLayout</span>(</span>
+<span id="cb234-4"><a href="session-5-shiny.html#cb234-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sidebarPanel</span>(</span>
+<span id="cb234-5"><a href="session-5-shiny.html#cb234-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">sliderInput</span>(<span class="st">&quot;date&quot;</span>,</span>
+<span id="cb234-6"><a href="session-5-shiny.html#cb234-6" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;Date:&quot;</span>,</span>
+<span id="cb234-7"><a href="session-5-shiny.html#cb234-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
+<span id="cb234-8"><a href="session-5-shiny.html#cb234-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
+<span id="cb234-9"><a href="session-5-shiny.html#cb234-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)))</span>
+<span id="cb234-10"><a href="session-5-shiny.html#cb234-10" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb234-11"><a href="session-5-shiny.html#cb234-11" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Show a plot of the generated distribution</span></span>
+<span id="cb234-12"><a href="session-5-shiny.html#cb234-12" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mainPanel</span>(</span>
+<span id="cb234-13"><a href="session-5-shiny.html#cb234-13" aria-hidden="true" tabindex="-1"></a>               <span class="fu">plotOutput</span>(<span class="st">&quot;distPlot&quot;</span>)</span>
+<span id="cb234-14"><a href="session-5-shiny.html#cb234-14" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb234-15"><a href="session-5-shiny.html#cb234-15" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb234-16"><a href="session-5-shiny.html#cb234-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-17"><a href="session-5-shiny.html#cb234-17" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
+<span id="cb234-18"><a href="session-5-shiny.html#cb234-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-19"><a href="session-5-shiny.html#cb234-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarLayout</span>(</span>
+<span id="cb234-20"><a href="session-5-shiny.html#cb234-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sidebarPanel</span>(</span>
+<span id="cb234-21"><a href="session-5-shiny.html#cb234-21" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;x_variable&quot;</span>, <span class="st">&quot;X Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;SampleDate&quot;</span>),</span>
+<span id="cb234-22"><a href="session-5-shiny.html#cb234-22" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;y_variable&quot;</span>, <span class="st">&quot;Y Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;Count&quot;</span>),</span>
+<span id="cb234-23"><a href="session-5-shiny.html#cb234-23" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;color_variable&quot;</span>, <span class="st">&quot;Color&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;CommonName&quot;</span>)</span>
+<span id="cb234-24"><a href="session-5-shiny.html#cb234-24" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb234-25"><a href="session-5-shiny.html#cb234-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb234-26"><a href="session-5-shiny.html#cb234-26" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Show a plot with configurable axes</span></span>
+<span id="cb234-27"><a href="session-5-shiny.html#cb234-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mainPanel</span>(</span>
+<span id="cb234-28"><a href="session-5-shiny.html#cb234-28" aria-hidden="true" tabindex="-1"></a>                <span class="fu">plotOutput</span>(<span class="st">&quot;varPlot&quot;</span>)</span>
+<span id="cb234-29"><a href="session-5-shiny.html#cb234-29" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb234-30"><a href="session-5-shiny.html#cb234-30" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb234-31"><a href="session-5-shiny.html#cb234-31" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">hr</span>()</span></code></pre></div>
 <p>Note that the second <code>sidebarPanel</code> uses three <code>selectInput</code> elements to provide dropdown
 menus with the variable columns (<code>cols</code>) from our data frame. To manage that, we need to
 first set up the cols variable, which we do by saving the variables names
 from the <code>delta_data</code> data frame to a variable:</p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="session-5-shiny.html#cb227-1" aria-hidden="true" tabindex="-1"></a>sha1 <span class="ot">&lt;-</span> <span class="st">&#39;hash://sha1/317d7f840e598f5f3be732ab0e04f00a8051c6d0&#39;</span></span>
-<span id="cb227-2"><a href="session-5-shiny.html#cb227-2" aria-hidden="true" tabindex="-1"></a>delta.file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(sha1, <span class="at">registries=</span><span class="fu">c</span>(<span class="st">&quot;dataone&quot;</span>), <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb227-3"><a href="session-5-shiny.html#cb227-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb227-4"><a href="session-5-shiny.html#cb227-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the sample date format, and filter for species of interest</span></span>
-<span id="cb227-5"><a href="session-5-shiny.html#cb227-5" aria-hidden="true" tabindex="-1"></a>delta_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(delta.file) <span class="sc">%&gt;%</span> </span>
-<span id="cb227-6"><a href="session-5-shiny.html#cb227-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleDate =</span> <span class="fu">mdy</span>(SampleDate))  <span class="sc">%&gt;%</span> </span>
-<span id="cb227-7"><a href="session-5-shiny.html#cb227-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;Salmon|Striped Bass|Smelt|Sturgeon&quot;</span>, CommonName))</span>
-<span id="cb227-8"><a href="session-5-shiny.html#cb227-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb227-9"><a href="session-5-shiny.html#cb227-9" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">names</span>(delta_data)</span></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="session-5-shiny.html#cb235-1" aria-hidden="true" tabindex="-1"></a>sha1 <span class="ot">&lt;-</span> <span class="st">&#39;hash://sha1/317d7f840e598f5f3be732ab0e04f00a8051c6d0&#39;</span></span>
+<span id="cb235-2"><a href="session-5-shiny.html#cb235-2" aria-hidden="true" tabindex="-1"></a>delta.file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(sha1, <span class="at">registries=</span><span class="fu">c</span>(<span class="st">&quot;dataone&quot;</span>), <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb235-3"><a href="session-5-shiny.html#cb235-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb235-4"><a href="session-5-shiny.html#cb235-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the sample date format, and filter for species of interest</span></span>
+<span id="cb235-5"><a href="session-5-shiny.html#cb235-5" aria-hidden="true" tabindex="-1"></a>delta_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(delta.file) <span class="sc">%&gt;%</span> </span>
+<span id="cb235-6"><a href="session-5-shiny.html#cb235-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleDate =</span> <span class="fu">mdy</span>(SampleDate))  <span class="sc">%&gt;%</span> </span>
+<span id="cb235-7"><a href="session-5-shiny.html#cb235-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;Salmon|Striped Bass|Smelt|Sturgeon&quot;</span>, CommonName))</span>
+<span id="cb235-8"><a href="session-5-shiny.html#cb235-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb235-9"><a href="session-5-shiny.html#cb235-9" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">names</span>(delta_data)</span></code></pre></div>
 </div>
 <div id="add-the-dynamic-plot" class="section level4" number="5.1.6.2">
 <h4><span class="header-section-number">5.1.6.2</span> Add the dynamic plot</h4>
@@ -541,29 +561,29 @@ the server to produce this plot. Its very similar to the first plot, but this ti
 we want to use the selected variables from the user controls to choose which
 variables are plotted. These variable names from the <code>$input</code> are character
 strings, and so would not be recognized as symbols in the <code>aes</code> mapping in ggplot. As recommended by the tidyverse authors, we use the <a href="https://dplyr.tidyverse.org/articles/programming.html">non-standard evaluation</a> syntax of <code>.data[["colname"]]</code> to access the variables.</p>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="session-5-shiny.html#cb228-1" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb228-2"><a href="session-5-shiny.html#cb228-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(delta_data, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>x_variable]],</span>
-<span id="cb228-3"><a href="session-5-shiny.html#cb228-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> .data[[input<span class="sc">$</span>y_variable]],</span>
-<span id="cb228-4"><a href="session-5-shiny.html#cb228-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">color =</span> .data[[input<span class="sc">$</span>color_variable]])) <span class="sc">+</span></span>
-<span id="cb228-5"><a href="session-5-shiny.html#cb228-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>)<span class="sc">+</span></span>
-<span id="cb228-6"><a href="session-5-shiny.html#cb228-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_light</span>()</span>
-<span id="cb228-7"><a href="session-5-shiny.html#cb228-7" aria-hidden="true" tabindex="-1"></a>    })</span></code></pre></div>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="session-5-shiny.html#cb236-1" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb236-2"><a href="session-5-shiny.html#cb236-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(delta_data, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>x_variable]],</span>
+<span id="cb236-3"><a href="session-5-shiny.html#cb236-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> .data[[input<span class="sc">$</span>y_variable]],</span>
+<span id="cb236-4"><a href="session-5-shiny.html#cb236-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">color =</span> .data[[input<span class="sc">$</span>color_variable]])) <span class="sc">+</span></span>
+<span id="cb236-5"><a href="session-5-shiny.html#cb236-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>)<span class="sc">+</span></span>
+<span id="cb236-6"><a href="session-5-shiny.html#cb236-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_light</span>()</span>
+<span id="cb236-7"><a href="session-5-shiny.html#cb236-7" aria-hidden="true" tabindex="-1"></a>    })</span></code></pre></div>
 </div>
 </div>
 <div id="finishing-touches-data-citation" class="section level3" number="5.1.7">
 <h3><span class="header-section-number">5.1.7</span> Finishing touches: data citation</h3>
 <p>Citing the data that we used for this application is the right thing to do, and easy.
 You can add arbitrary HTML to the layout using utility functions in the <code>tags</code> list.</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="session-5-shiny.html#cb229-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Application title</span></span>
-<span id="cb229-2"><a href="session-5-shiny.html#cb229-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">&quot;Yolo Bypass Fish and Water Quality Data&quot;</span>),</span>
-<span id="cb229-3"><a href="session-5-shiny.html#cb229-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">p</span>(<span class="st">&quot;Data for this application are from: &quot;</span>),</span>
-<span id="cb229-4"><a href="session-5-shiny.html#cb229-4" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">ul</span>(</span>
-<span id="cb229-5"><a href="session-5-shiny.html#cb229-5" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">li</span>(<span class="st">&quot;Interagency Ecological Program: Fish catch and water quality data from the Sacramento River floodplain and tidal slough, collected by the Yolo Bypass Fish Monitoring Program, 1998-2018.&quot;</span>,</span>
-<span id="cb229-6"><a href="session-5-shiny.html#cb229-6" aria-hidden="true" tabindex="-1"></a>                tags<span class="sc">$</span><span class="fu">a</span>(<span class="st">&quot;doi:10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>, <span class="at">href=</span><span class="st">&quot;http://doi.org/10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>)</span>
-<span id="cb229-7"><a href="session-5-shiny.html#cb229-7" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb229-8"><a href="session-5-shiny.html#cb229-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb229-9"><a href="session-5-shiny.html#cb229-9" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">br</span>(),</span>
-<span id="cb229-10"><a href="session-5-shiny.html#cb229-10" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">hr</span>(),</span></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="session-5-shiny.html#cb237-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Application title</span></span>
+<span id="cb237-2"><a href="session-5-shiny.html#cb237-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">&quot;Yolo Bypass Fish and Water Quality Data&quot;</span>),</span>
+<span id="cb237-3"><a href="session-5-shiny.html#cb237-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">p</span>(<span class="st">&quot;Data for this application are from: &quot;</span>),</span>
+<span id="cb237-4"><a href="session-5-shiny.html#cb237-4" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">ul</span>(</span>
+<span id="cb237-5"><a href="session-5-shiny.html#cb237-5" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">li</span>(<span class="st">&quot;Interagency Ecological Program: Fish catch and water quality data from the Sacramento River floodplain and tidal slough, collected by the Yolo Bypass Fish Monitoring Program, 1998-2018.&quot;</span>,</span>
+<span id="cb237-6"><a href="session-5-shiny.html#cb237-6" aria-hidden="true" tabindex="-1"></a>                tags<span class="sc">$</span><span class="fu">a</span>(<span class="st">&quot;doi:10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>, <span class="at">href=</span><span class="st">&quot;http://doi.org/10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>)</span>
+<span id="cb237-7"><a href="session-5-shiny.html#cb237-7" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb237-8"><a href="session-5-shiny.html#cb237-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb237-9"><a href="session-5-shiny.html#cb237-9" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">br</span>(),</span>
+<span id="cb237-10"><a href="session-5-shiny.html#cb237-10" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">hr</span>(),</span></code></pre></div>
 <p>The final application shows the data citation, the depth plot, and the
 configurable scatterplot in three distinct panels.</p>
 <p><img src="images/shiny-yolo-app.png" /></p>
@@ -616,238 +636,238 @@ the tidyverse for writing your interactive applications.</p>
 </div>
 <div id="full-source-code-for-the-final-application" class="section level3" number="5.1.10">
 <h3><span class="header-section-number">5.1.10</span> Full source code for the final application</h3>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="session-5-shiny.html#cb230-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
-<span id="cb230-2"><a href="session-5-shiny.html#cb230-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(contentid)</span>
-<span id="cb230-3"><a href="session-5-shiny.html#cb230-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb230-4"><a href="session-5-shiny.html#cb230-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb230-5"><a href="session-5-shiny.html#cb230-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb230-6"><a href="session-5-shiny.html#cb230-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-7"><a href="session-5-shiny.html#cb230-7" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the data from EDI</span></span>
-<span id="cb230-8"><a href="session-5-shiny.html#cb230-8" aria-hidden="true" tabindex="-1"></a>sha1 <span class="ot">&lt;-</span> <span class="st">&#39;hash://sha1/317d7f840e598f5f3be732ab0e04f00a8051c6d0&#39;</span></span>
-<span id="cb230-9"><a href="session-5-shiny.html#cb230-9" aria-hidden="true" tabindex="-1"></a>delta.file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(sha1, <span class="at">registries=</span><span class="fu">c</span>(<span class="st">&quot;dataone&quot;</span>), <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb230-10"><a href="session-5-shiny.html#cb230-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-11"><a href="session-5-shiny.html#cb230-11" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the sample date format, and filter for species of interest</span></span>
-<span id="cb230-12"><a href="session-5-shiny.html#cb230-12" aria-hidden="true" tabindex="-1"></a>delta_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(delta.file) <span class="sc">%&gt;%</span> </span>
-<span id="cb230-13"><a href="session-5-shiny.html#cb230-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleDate =</span> <span class="fu">mdy</span>(SampleDate))  <span class="sc">%&gt;%</span> </span>
-<span id="cb230-14"><a href="session-5-shiny.html#cb230-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;Salmon|Striped Bass|Smelt|Sturgeon&quot;</span>, CommonName))</span>
-<span id="cb230-15"><a href="session-5-shiny.html#cb230-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-16"><a href="session-5-shiny.html#cb230-16" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">names</span>(delta_data)</span>
-<span id="cb230-17"><a href="session-5-shiny.html#cb230-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb230-18"><a href="session-5-shiny.html#cb230-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-19"><a href="session-5-shiny.html#cb230-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-20"><a href="session-5-shiny.html#cb230-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for application that draws a two plots</span></span>
-<span id="cb230-21"><a href="session-5-shiny.html#cb230-21" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
-<span id="cb230-22"><a href="session-5-shiny.html#cb230-22" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb230-23"><a href="session-5-shiny.html#cb230-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Application title and data  source</span></span>
-<span id="cb230-24"><a href="session-5-shiny.html#cb230-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">&quot;Sacramento River floodplain fish and water quality dataa&quot;</span>),</span>
-<span id="cb230-25"><a href="session-5-shiny.html#cb230-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">p</span>(<span class="st">&quot;Data for this application are from: &quot;</span>),</span>
-<span id="cb230-26"><a href="session-5-shiny.html#cb230-26" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">ul</span>(</span>
-<span id="cb230-27"><a href="session-5-shiny.html#cb230-27" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">li</span>(<span class="st">&quot;Interagency Ecological Program: Fish catch and water quality data from the Sacramento River floodplain and tidal slough, collected by the Yolo Bypass Fish Monitoring Program, 1998-2018.&quot;</span>,</span>
-<span id="cb230-28"><a href="session-5-shiny.html#cb230-28" aria-hidden="true" tabindex="-1"></a>                tags<span class="sc">$</span><span class="fu">a</span>(<span class="st">&quot;doi:10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>, <span class="at">href=</span><span class="st">&quot;http://doi.org/10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>)</span>
-<span id="cb230-29"><a href="session-5-shiny.html#cb230-29" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb230-30"><a href="session-5-shiny.html#cb230-30" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb230-31"><a href="session-5-shiny.html#cb230-31" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">br</span>(),</span>
-<span id="cb230-32"><a href="session-5-shiny.html#cb230-32" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
-<span id="cb230-33"><a href="session-5-shiny.html#cb230-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb230-34"><a href="session-5-shiny.html#cb230-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">verticalLayout</span>(</span>
-<span id="cb230-35"><a href="session-5-shiny.html#cb230-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Sidebar with a slider input for time axis</span></span>
-<span id="cb230-36"><a href="session-5-shiny.html#cb230-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarLayout</span>(</span>
-<span id="cb230-37"><a href="session-5-shiny.html#cb230-37" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sidebarPanel</span>(</span>
-<span id="cb230-38"><a href="session-5-shiny.html#cb230-38" aria-hidden="true" tabindex="-1"></a>                <span class="fu">sliderInput</span>(<span class="st">&quot;date&quot;</span>,</span>
-<span id="cb230-39"><a href="session-5-shiny.html#cb230-39" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;Date:&quot;</span>,</span>
-<span id="cb230-40"><a href="session-5-shiny.html#cb230-40" aria-hidden="true" tabindex="-1"></a>                            <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
-<span id="cb230-41"><a href="session-5-shiny.html#cb230-41" aria-hidden="true" tabindex="-1"></a>                            <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
-<span id="cb230-42"><a href="session-5-shiny.html#cb230-42" aria-hidden="true" tabindex="-1"></a>                            <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)))</span>
-<span id="cb230-43"><a href="session-5-shiny.html#cb230-43" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb230-44"><a href="session-5-shiny.html#cb230-44" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Show a plot of the generated timeseries</span></span>
-<span id="cb230-45"><a href="session-5-shiny.html#cb230-45" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mainPanel</span>(</span>
-<span id="cb230-46"><a href="session-5-shiny.html#cb230-46" aria-hidden="true" tabindex="-1"></a>                <span class="fu">plotOutput</span>(<span class="st">&quot;distPlot&quot;</span>)</span>
-<span id="cb230-47"><a href="session-5-shiny.html#cb230-47" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb230-48"><a href="session-5-shiny.html#cb230-48" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb230-49"><a href="session-5-shiny.html#cb230-49" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb230-50"><a href="session-5-shiny.html#cb230-50" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
-<span id="cb230-51"><a href="session-5-shiny.html#cb230-51" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb230-52"><a href="session-5-shiny.html#cb230-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarLayout</span>(</span>
-<span id="cb230-53"><a href="session-5-shiny.html#cb230-53" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sidebarPanel</span>(</span>
-<span id="cb230-54"><a href="session-5-shiny.html#cb230-54" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;x_variable&quot;</span>, <span class="st">&quot;X Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;SampleDate&quot;</span>),</span>
-<span id="cb230-55"><a href="session-5-shiny.html#cb230-55" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;y_variable&quot;</span>, <span class="st">&quot;Y Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;Count&quot;</span>),</span>
-<span id="cb230-56"><a href="session-5-shiny.html#cb230-56" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;color_variable&quot;</span>, <span class="st">&quot;Color&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;CommonName&quot;</span>)</span>
-<span id="cb230-57"><a href="session-5-shiny.html#cb230-57" aria-hidden="true" tabindex="-1"></a>            ),</span>
-<span id="cb230-58"><a href="session-5-shiny.html#cb230-58" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb230-59"><a href="session-5-shiny.html#cb230-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Show a plot with configurable axes</span></span>
-<span id="cb230-60"><a href="session-5-shiny.html#cb230-60" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mainPanel</span>(</span>
-<span id="cb230-61"><a href="session-5-shiny.html#cb230-61" aria-hidden="true" tabindex="-1"></a>                <span class="fu">plotOutput</span>(<span class="st">&quot;varPlot&quot;</span>)</span>
-<span id="cb230-62"><a href="session-5-shiny.html#cb230-62" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb230-63"><a href="session-5-shiny.html#cb230-63" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb230-64"><a href="session-5-shiny.html#cb230-64" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">hr</span>()</span>
-<span id="cb230-65"><a href="session-5-shiny.html#cb230-65" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb230-66"><a href="session-5-shiny.html#cb230-66" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb230-67"><a href="session-5-shiny.html#cb230-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-68"><a href="session-5-shiny.html#cb230-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic required to draw the two plots</span></span>
-<span id="cb230-69"><a href="session-5-shiny.html#cb230-69" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb230-70"><a href="session-5-shiny.html#cb230-70" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb230-71"><a href="session-5-shiny.html#cb230-71" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  turbidity plot</span></span>
-<span id="cb230-72"><a href="session-5-shiny.html#cb230-72" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>distPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb230-73"><a href="session-5-shiny.html#cb230-73" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb230-74"><a href="session-5-shiny.html#cb230-74" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
-<span id="cb230-75"><a href="session-5-shiny.html#cb230-75" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb230-76"><a href="session-5-shiny.html#cb230-76" aria-hidden="true" tabindex="-1"></a>            <span class="fu">xlim</span>(<span class="fu">c</span>(input<span class="sc">$</span>date[<span class="dv">1</span>],input<span class="sc">$</span>date[<span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb230-77"><a href="session-5-shiny.html#cb230-77" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
-<span id="cb230-78"><a href="session-5-shiny.html#cb230-78" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb230-79"><a href="session-5-shiny.html#cb230-79" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb230-80"><a href="session-5-shiny.html#cb230-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mix and  match plot</span></span>
-<span id="cb230-81"><a href="session-5-shiny.html#cb230-81" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb230-82"><a href="session-5-shiny.html#cb230-82" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(delta_data, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>x_variable]],</span>
-<span id="cb230-83"><a href="session-5-shiny.html#cb230-83" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> .data[[input<span class="sc">$</span>y_variable]],</span>
-<span id="cb230-84"><a href="session-5-shiny.html#cb230-84" aria-hidden="true" tabindex="-1"></a>                             <span class="at">color =</span> .data[[input<span class="sc">$</span>color_variable]])) <span class="sc">+</span></span>
-<span id="cb230-85"><a href="session-5-shiny.html#cb230-85" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb230-86"><a href="session-5-shiny.html#cb230-86" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_light</span>()</span>
-<span id="cb230-87"><a href="session-5-shiny.html#cb230-87" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb230-88"><a href="session-5-shiny.html#cb230-88" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb230-89"><a href="session-5-shiny.html#cb230-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-90"><a href="session-5-shiny.html#cb230-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb230-91"><a href="session-5-shiny.html#cb230-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the application </span></span>
-<span id="cb230-92"><a href="session-5-shiny.html#cb230-92" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="session-5-shiny.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb238-2"><a href="session-5-shiny.html#cb238-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(contentid)</span>
+<span id="cb238-3"><a href="session-5-shiny.html#cb238-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb238-4"><a href="session-5-shiny.html#cb238-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb238-5"><a href="session-5-shiny.html#cb238-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb238-6"><a href="session-5-shiny.html#cb238-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-7"><a href="session-5-shiny.html#cb238-7" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the data from EDI</span></span>
+<span id="cb238-8"><a href="session-5-shiny.html#cb238-8" aria-hidden="true" tabindex="-1"></a>sha1 <span class="ot">&lt;-</span> <span class="st">&#39;hash://sha1/317d7f840e598f5f3be732ab0e04f00a8051c6d0&#39;</span></span>
+<span id="cb238-9"><a href="session-5-shiny.html#cb238-9" aria-hidden="true" tabindex="-1"></a>delta.file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(sha1, <span class="at">registries=</span><span class="fu">c</span>(<span class="st">&quot;dataone&quot;</span>), <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb238-10"><a href="session-5-shiny.html#cb238-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-11"><a href="session-5-shiny.html#cb238-11" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the sample date format, and filter for species of interest</span></span>
+<span id="cb238-12"><a href="session-5-shiny.html#cb238-12" aria-hidden="true" tabindex="-1"></a>delta_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(delta.file) <span class="sc">%&gt;%</span> </span>
+<span id="cb238-13"><a href="session-5-shiny.html#cb238-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleDate =</span> <span class="fu">mdy</span>(SampleDate))  <span class="sc">%&gt;%</span> </span>
+<span id="cb238-14"><a href="session-5-shiny.html#cb238-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;Salmon|Striped Bass|Smelt|Sturgeon&quot;</span>, CommonName))</span>
+<span id="cb238-15"><a href="session-5-shiny.html#cb238-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-16"><a href="session-5-shiny.html#cb238-16" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">names</span>(delta_data)</span>
+<span id="cb238-17"><a href="session-5-shiny.html#cb238-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb238-18"><a href="session-5-shiny.html#cb238-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-19"><a href="session-5-shiny.html#cb238-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-20"><a href="session-5-shiny.html#cb238-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for application that draws a two plots</span></span>
+<span id="cb238-21"><a href="session-5-shiny.html#cb238-21" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb238-22"><a href="session-5-shiny.html#cb238-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb238-23"><a href="session-5-shiny.html#cb238-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Application title and data  source</span></span>
+<span id="cb238-24"><a href="session-5-shiny.html#cb238-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">&quot;Sacramento River floodplain fish and water quality dataa&quot;</span>),</span>
+<span id="cb238-25"><a href="session-5-shiny.html#cb238-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">p</span>(<span class="st">&quot;Data for this application are from: &quot;</span>),</span>
+<span id="cb238-26"><a href="session-5-shiny.html#cb238-26" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">ul</span>(</span>
+<span id="cb238-27"><a href="session-5-shiny.html#cb238-27" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">li</span>(<span class="st">&quot;Interagency Ecological Program: Fish catch and water quality data from the Sacramento River floodplain and tidal slough, collected by the Yolo Bypass Fish Monitoring Program, 1998-2018.&quot;</span>,</span>
+<span id="cb238-28"><a href="session-5-shiny.html#cb238-28" aria-hidden="true" tabindex="-1"></a>                tags<span class="sc">$</span><span class="fu">a</span>(<span class="st">&quot;doi:10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>, <span class="at">href=</span><span class="st">&quot;http://doi.org/10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>)</span>
+<span id="cb238-29"><a href="session-5-shiny.html#cb238-29" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb238-30"><a href="session-5-shiny.html#cb238-30" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb238-31"><a href="session-5-shiny.html#cb238-31" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">br</span>(),</span>
+<span id="cb238-32"><a href="session-5-shiny.html#cb238-32" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
+<span id="cb238-33"><a href="session-5-shiny.html#cb238-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb238-34"><a href="session-5-shiny.html#cb238-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">verticalLayout</span>(</span>
+<span id="cb238-35"><a href="session-5-shiny.html#cb238-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Sidebar with a slider input for time axis</span></span>
+<span id="cb238-36"><a href="session-5-shiny.html#cb238-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarLayout</span>(</span>
+<span id="cb238-37"><a href="session-5-shiny.html#cb238-37" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sidebarPanel</span>(</span>
+<span id="cb238-38"><a href="session-5-shiny.html#cb238-38" aria-hidden="true" tabindex="-1"></a>                <span class="fu">sliderInput</span>(<span class="st">&quot;date&quot;</span>,</span>
+<span id="cb238-39"><a href="session-5-shiny.html#cb238-39" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;Date:&quot;</span>,</span>
+<span id="cb238-40"><a href="session-5-shiny.html#cb238-40" aria-hidden="true" tabindex="-1"></a>                            <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
+<span id="cb238-41"><a href="session-5-shiny.html#cb238-41" aria-hidden="true" tabindex="-1"></a>                            <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
+<span id="cb238-42"><a href="session-5-shiny.html#cb238-42" aria-hidden="true" tabindex="-1"></a>                            <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)))</span>
+<span id="cb238-43"><a href="session-5-shiny.html#cb238-43" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb238-44"><a href="session-5-shiny.html#cb238-44" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Show a plot of the generated timeseries</span></span>
+<span id="cb238-45"><a href="session-5-shiny.html#cb238-45" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mainPanel</span>(</span>
+<span id="cb238-46"><a href="session-5-shiny.html#cb238-46" aria-hidden="true" tabindex="-1"></a>                <span class="fu">plotOutput</span>(<span class="st">&quot;distPlot&quot;</span>)</span>
+<span id="cb238-47"><a href="session-5-shiny.html#cb238-47" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb238-48"><a href="session-5-shiny.html#cb238-48" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb238-49"><a href="session-5-shiny.html#cb238-49" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb238-50"><a href="session-5-shiny.html#cb238-50" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
+<span id="cb238-51"><a href="session-5-shiny.html#cb238-51" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb238-52"><a href="session-5-shiny.html#cb238-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarLayout</span>(</span>
+<span id="cb238-53"><a href="session-5-shiny.html#cb238-53" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sidebarPanel</span>(</span>
+<span id="cb238-54"><a href="session-5-shiny.html#cb238-54" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;x_variable&quot;</span>, <span class="st">&quot;X Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;SampleDate&quot;</span>),</span>
+<span id="cb238-55"><a href="session-5-shiny.html#cb238-55" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;y_variable&quot;</span>, <span class="st">&quot;Y Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;Count&quot;</span>),</span>
+<span id="cb238-56"><a href="session-5-shiny.html#cb238-56" aria-hidden="true" tabindex="-1"></a>                <span class="fu">selectInput</span>(<span class="st">&quot;color_variable&quot;</span>, <span class="st">&quot;Color&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;CommonName&quot;</span>)</span>
+<span id="cb238-57"><a href="session-5-shiny.html#cb238-57" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb238-58"><a href="session-5-shiny.html#cb238-58" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb238-59"><a href="session-5-shiny.html#cb238-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Show a plot with configurable axes</span></span>
+<span id="cb238-60"><a href="session-5-shiny.html#cb238-60" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mainPanel</span>(</span>
+<span id="cb238-61"><a href="session-5-shiny.html#cb238-61" aria-hidden="true" tabindex="-1"></a>                <span class="fu">plotOutput</span>(<span class="st">&quot;varPlot&quot;</span>)</span>
+<span id="cb238-62"><a href="session-5-shiny.html#cb238-62" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb238-63"><a href="session-5-shiny.html#cb238-63" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb238-64"><a href="session-5-shiny.html#cb238-64" aria-hidden="true" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">hr</span>()</span>
+<span id="cb238-65"><a href="session-5-shiny.html#cb238-65" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb238-66"><a href="session-5-shiny.html#cb238-66" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb238-67"><a href="session-5-shiny.html#cb238-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-68"><a href="session-5-shiny.html#cb238-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic required to draw the two plots</span></span>
+<span id="cb238-69"><a href="session-5-shiny.html#cb238-69" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb238-70"><a href="session-5-shiny.html#cb238-70" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb238-71"><a href="session-5-shiny.html#cb238-71" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  turbidity plot</span></span>
+<span id="cb238-72"><a href="session-5-shiny.html#cb238-72" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>distPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb238-73"><a href="session-5-shiny.html#cb238-73" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb238-74"><a href="session-5-shiny.html#cb238-74" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
+<span id="cb238-75"><a href="session-5-shiny.html#cb238-75" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb238-76"><a href="session-5-shiny.html#cb238-76" aria-hidden="true" tabindex="-1"></a>            <span class="fu">xlim</span>(<span class="fu">c</span>(input<span class="sc">$</span>date[<span class="dv">1</span>],input<span class="sc">$</span>date[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb238-77"><a href="session-5-shiny.html#cb238-77" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
+<span id="cb238-78"><a href="session-5-shiny.html#cb238-78" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb238-79"><a href="session-5-shiny.html#cb238-79" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb238-80"><a href="session-5-shiny.html#cb238-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mix and  match plot</span></span>
+<span id="cb238-81"><a href="session-5-shiny.html#cb238-81" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb238-82"><a href="session-5-shiny.html#cb238-82" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(delta_data, <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>x_variable]],</span>
+<span id="cb238-83"><a href="session-5-shiny.html#cb238-83" aria-hidden="true" tabindex="-1"></a>                             <span class="at">y =</span> .data[[input<span class="sc">$</span>y_variable]],</span>
+<span id="cb238-84"><a href="session-5-shiny.html#cb238-84" aria-hidden="true" tabindex="-1"></a>                             <span class="at">color =</span> .data[[input<span class="sc">$</span>color_variable]])) <span class="sc">+</span></span>
+<span id="cb238-85"><a href="session-5-shiny.html#cb238-85" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb238-86"><a href="session-5-shiny.html#cb238-86" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_light</span>()</span>
+<span id="cb238-87"><a href="session-5-shiny.html#cb238-87" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb238-88"><a href="session-5-shiny.html#cb238-88" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb238-89"><a href="session-5-shiny.html#cb238-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-90"><a href="session-5-shiny.html#cb238-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-91"><a href="session-5-shiny.html#cb238-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the application </span></span>
+<span id="cb238-92"><a href="session-5-shiny.html#cb238-92" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code></pre></div>
 </div>
 <div id="a-shinier-app-with-tabs-and-a-map" class="section level3" number="5.1.11">
 <h3><span class="header-section-number">5.1.11</span> A shinier app with tabs and a map!</h3>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="session-5-shiny.html#cb231-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
-<span id="cb231-2"><a href="session-5-shiny.html#cb231-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(contentid)</span>
-<span id="cb231-3"><a href="session-5-shiny.html#cb231-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb231-4"><a href="session-5-shiny.html#cb231-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb231-5"><a href="session-5-shiny.html#cb231-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb231-6"><a href="session-5-shiny.html#cb231-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb231-7"><a href="session-5-shiny.html#cb231-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shinythemes)</span>
-<span id="cb231-8"><a href="session-5-shiny.html#cb231-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb231-9"><a href="session-5-shiny.html#cb231-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
-<span id="cb231-10"><a href="session-5-shiny.html#cb231-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(snakecase)</span>
-<span id="cb231-11"><a href="session-5-shiny.html#cb231-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-12"><a href="session-5-shiny.html#cb231-12" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the data from EDI</span></span>
-<span id="cb231-13"><a href="session-5-shiny.html#cb231-13" aria-hidden="true" tabindex="-1"></a>sha1 <span class="ot">&lt;-</span> <span class="st">&#39;hash://sha1/317d7f840e598f5f3be732ab0e04f00a8051c6d0&#39;</span></span>
-<span id="cb231-14"><a href="session-5-shiny.html#cb231-14" aria-hidden="true" tabindex="-1"></a>delta.file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(sha1, <span class="at">registries=</span><span class="fu">c</span>(<span class="st">&quot;dataone&quot;</span>), <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb231-15"><a href="session-5-shiny.html#cb231-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-16"><a href="session-5-shiny.html#cb231-16" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the sample date format, and filter for species of interest</span></span>
-<span id="cb231-17"><a href="session-5-shiny.html#cb231-17" aria-hidden="true" tabindex="-1"></a>delta_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(delta.file) <span class="sc">%&gt;%</span> </span>
-<span id="cb231-18"><a href="session-5-shiny.html#cb231-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleDate =</span> <span class="fu">mdy</span>(SampleDate))  <span class="sc">%&gt;%</span> </span>
-<span id="cb231-19"><a href="session-5-shiny.html#cb231-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;Salmon|Striped Bass|Smelt|Sturgeon&quot;</span>, CommonName)) <span class="sc">%&gt;%</span> </span>
-<span id="cb231-20"><a href="session-5-shiny.html#cb231-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">DissolvedOxygen =</span> DO,</span>
-<span id="cb231-21"><a href="session-5-shiny.html#cb231-21" aria-hidden="true" tabindex="-1"></a>           <span class="at">Ph =</span> pH,</span>
-<span id="cb231-22"><a href="session-5-shiny.html#cb231-22" aria-hidden="true" tabindex="-1"></a>           <span class="at">SpecificConductivity =</span> SpCnd)</span>
-<span id="cb231-23"><a href="session-5-shiny.html#cb231-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-24"><a href="session-5-shiny.html#cb231-24" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">names</span>(delta_data)</span>
-<span id="cb231-25"><a href="session-5-shiny.html#cb231-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-26"><a href="session-5-shiny.html#cb231-26" aria-hidden="true" tabindex="-1"></a>sites <span class="ot">&lt;-</span> delta_data <span class="sc">%&gt;%</span> </span>
-<span id="cb231-27"><a href="session-5-shiny.html#cb231-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(StationCode, Latitude, Longitude) <span class="sc">%&gt;%</span> </span>
-<span id="cb231-28"><a href="session-5-shiny.html#cb231-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb231-29"><a href="session-5-shiny.html#cb231-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&#39;Longitude&#39;</span>,<span class="st">&#39;Latitude&#39;</span>), <span class="at">crs =</span> <span class="dv">4269</span>,  <span class="at">remove =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb231-30"><a href="session-5-shiny.html#cb231-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-31"><a href="session-5-shiny.html#cb231-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-32"><a href="session-5-shiny.html#cb231-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-33"><a href="session-5-shiny.html#cb231-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for application</span></span>
-<span id="cb231-34"><a href="session-5-shiny.html#cb231-34" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
-<span id="cb231-35"><a href="session-5-shiny.html#cb231-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">navbarPage</span>(<span class="at">theme =</span> <span class="fu">shinytheme</span>(<span class="st">&quot;flatly&quot;</span>), <span class="at">collapsible =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb231-36"><a href="session-5-shiny.html#cb231-36" aria-hidden="true" tabindex="-1"></a>               <span class="fu">HTML</span>(<span class="st">&#39;&lt;a style=&quot;text-decoration:none;cursor:default;color:#FFFFFF;&quot; class=&quot;active&quot; href=&quot;#&quot;&gt;Sacramento River Floodplain Data&lt;/a&gt;&#39;</span>), <span class="at">id=</span><span class="st">&quot;nav&quot;</span>,</span>
-<span id="cb231-37"><a href="session-5-shiny.html#cb231-37" aria-hidden="true" tabindex="-1"></a>               <span class="at">windowTitle =</span> <span class="st">&quot;Sacramento River floodplain fish and water quality data&quot;</span>,</span>
-<span id="cb231-38"><a href="session-5-shiny.html#cb231-38" aria-hidden="true" tabindex="-1"></a>               </span>
-<span id="cb231-39"><a href="session-5-shiny.html#cb231-39" aria-hidden="true" tabindex="-1"></a>               <span class="fu">tabPanel</span>(<span class="st">&quot;Data Sources&quot;</span>,</span>
-<span id="cb231-40"><a href="session-5-shiny.html#cb231-40" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">verticalLayout</span>(</span>
-<span id="cb231-41"><a href="session-5-shiny.html#cb231-41" aria-hidden="true" tabindex="-1"></a>                            <span class="co"># Application title and data  source</span></span>
-<span id="cb231-42"><a href="session-5-shiny.html#cb231-42" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">titlePanel</span>(<span class="st">&quot;Sacramento River floodplain fish and water quality data&quot;</span>),</span>
-<span id="cb231-43"><a href="session-5-shiny.html#cb231-43" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">p</span>(<span class="st">&quot;Data for this application are from: &quot;</span>),</span>
-<span id="cb231-44"><a href="session-5-shiny.html#cb231-44" aria-hidden="true" tabindex="-1"></a>                            tags<span class="sc">$</span><span class="fu">ul</span>(</span>
-<span id="cb231-45"><a href="session-5-shiny.html#cb231-45" aria-hidden="true" tabindex="-1"></a>                                tags<span class="sc">$</span><span class="fu">li</span>(<span class="st">&quot;Interagency Ecological Program: Fish catch and water quality data from the Sacramento River floodplain and tidal slough, collected by the Yolo Bypass Fish Monitoring Program, 1998-2018.&quot;</span>,</span>
-<span id="cb231-46"><a href="session-5-shiny.html#cb231-46" aria-hidden="true" tabindex="-1"></a>                                        tags<span class="sc">$</span><span class="fu">a</span>(<span class="st">&quot;doi:10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>, <span class="at">href=</span><span class="st">&quot;http://doi.org/10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>)</span>
-<span id="cb231-47"><a href="session-5-shiny.html#cb231-47" aria-hidden="true" tabindex="-1"></a>                                )</span>
-<span id="cb231-48"><a href="session-5-shiny.html#cb231-48" aria-hidden="true" tabindex="-1"></a>                            ),</span>
-<span id="cb231-49"><a href="session-5-shiny.html#cb231-49" aria-hidden="true" tabindex="-1"></a>                            tags<span class="sc">$</span><span class="fu">br</span>(),</span>
-<span id="cb231-50"><a href="session-5-shiny.html#cb231-50" aria-hidden="true" tabindex="-1"></a>                            tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
-<span id="cb231-51"><a href="session-5-shiny.html#cb231-51" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">p</span>(<span class="st">&quot;Map of sampling locations&quot;</span>),</span>
-<span id="cb231-52"><a href="session-5-shiny.html#cb231-52" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">mainPanel</span>(<span class="fu">leafletOutput</span>(<span class="st">&quot;map&quot;</span>))</span>
-<span id="cb231-53"><a href="session-5-shiny.html#cb231-53" aria-hidden="true" tabindex="-1"></a>                        )</span>
-<span id="cb231-54"><a href="session-5-shiny.html#cb231-54" aria-hidden="true" tabindex="-1"></a>               ),</span>
-<span id="cb231-55"><a href="session-5-shiny.html#cb231-55" aria-hidden="true" tabindex="-1"></a>               </span>
-<span id="cb231-56"><a href="session-5-shiny.html#cb231-56" aria-hidden="true" tabindex="-1"></a>               <span class="fu">tabPanel</span>(</span>
-<span id="cb231-57"><a href="session-5-shiny.html#cb231-57" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Explore&quot;</span>,</span>
-<span id="cb231-58"><a href="session-5-shiny.html#cb231-58" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">verticalLayout</span>(</span>
-<span id="cb231-59"><a href="session-5-shiny.html#cb231-59" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">mainPanel</span>(</span>
-<span id="cb231-60"><a href="session-5-shiny.html#cb231-60" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">plotOutput</span>(<span class="st">&quot;distPlot&quot;</span>),</span>
-<span id="cb231-61"><a href="session-5-shiny.html#cb231-61" aria-hidden="true" tabindex="-1"></a>                           <span class="at">width =</span>  <span class="dv">12</span>,</span>
-<span id="cb231-62"><a href="session-5-shiny.html#cb231-62" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">absolutePanel</span>(<span class="at">id =</span> <span class="st">&quot;controls&quot;</span>,</span>
-<span id="cb231-63"><a href="session-5-shiny.html#cb231-63" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">class =</span> <span class="st">&quot;panel panel-default&quot;</span>,</span>
-<span id="cb231-64"><a href="session-5-shiny.html#cb231-64" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">top =</span> <span class="dv">175</span>, <span class="at">left =</span> <span class="dv">75</span>, <span class="at">width =</span> <span class="dv">300</span>, <span class="at">fixed=</span><span class="cn">TRUE</span>,</span>
-<span id="cb231-65"><a href="session-5-shiny.html#cb231-65" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">draggable =</span> <span class="cn">TRUE</span>, <span class="at">height =</span> <span class="st">&quot;auto&quot;</span>,</span>
-<span id="cb231-66"><a href="session-5-shiny.html#cb231-66" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">sliderInput</span>(<span class="st">&quot;date&quot;</span>,</span>
-<span id="cb231-67"><a href="session-5-shiny.html#cb231-67" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">&quot;Date:&quot;</span>,</span>
-<span id="cb231-68"><a href="session-5-shiny.html#cb231-68" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
-<span id="cb231-69"><a href="session-5-shiny.html#cb231-69" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
-<span id="cb231-70"><a href="session-5-shiny.html#cb231-70" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)))</span>
-<span id="cb231-71"><a href="session-5-shiny.html#cb231-71" aria-hidden="true" tabindex="-1"></a>                                         </span>
-<span id="cb231-72"><a href="session-5-shiny.html#cb231-72" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb231-73"><a href="session-5-shiny.html#cb231-73" aria-hidden="true" tabindex="-1"></a>                       ),</span>
-<span id="cb231-74"><a href="session-5-shiny.html#cb231-74" aria-hidden="true" tabindex="-1"></a>                       </span>
-<span id="cb231-75"><a href="session-5-shiny.html#cb231-75" aria-hidden="true" tabindex="-1"></a>                       tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
-<span id="cb231-76"><a href="session-5-shiny.html#cb231-76" aria-hidden="true" tabindex="-1"></a>                       </span>
-<span id="cb231-77"><a href="session-5-shiny.html#cb231-77" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">sidebarLayout</span>(</span>
-<span id="cb231-78"><a href="session-5-shiny.html#cb231-78" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">sidebarPanel</span>(</span>
-<span id="cb231-79"><a href="session-5-shiny.html#cb231-79" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">selectInput</span>(<span class="st">&quot;x_variable&quot;</span>, <span class="st">&quot;X Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;SampleDate&quot;</span>),</span>
-<span id="cb231-80"><a href="session-5-shiny.html#cb231-80" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">selectInput</span>(<span class="st">&quot;y_variable&quot;</span>, <span class="st">&quot;Y Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;Count&quot;</span>),</span>
-<span id="cb231-81"><a href="session-5-shiny.html#cb231-81" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">selectInput</span>(<span class="st">&quot;color_variable&quot;</span>, <span class="st">&quot;Color&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;CommonName&quot;</span>)</span>
-<span id="cb231-82"><a href="session-5-shiny.html#cb231-82" aria-hidden="true" tabindex="-1"></a>                           ),</span>
-<span id="cb231-83"><a href="session-5-shiny.html#cb231-83" aria-hidden="true" tabindex="-1"></a>                           </span>
-<span id="cb231-84"><a href="session-5-shiny.html#cb231-84" aria-hidden="true" tabindex="-1"></a>                           <span class="co"># Show a plot with configurable axes</span></span>
-<span id="cb231-85"><a href="session-5-shiny.html#cb231-85" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">mainPanel</span>(</span>
-<span id="cb231-86"><a href="session-5-shiny.html#cb231-86" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">plotOutput</span>(<span class="st">&quot;varPlot&quot;</span>)</span>
-<span id="cb231-87"><a href="session-5-shiny.html#cb231-87" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb231-88"><a href="session-5-shiny.html#cb231-88" aria-hidden="true" tabindex="-1"></a>                       ),</span>
-<span id="cb231-89"><a href="session-5-shiny.html#cb231-89" aria-hidden="true" tabindex="-1"></a>                       tags<span class="sc">$</span><span class="fu">hr</span>()</span>
-<span id="cb231-90"><a href="session-5-shiny.html#cb231-90" aria-hidden="true" tabindex="-1"></a>                   )</span>
-<span id="cb231-91"><a href="session-5-shiny.html#cb231-91" aria-hidden="true" tabindex="-1"></a>               )</span>
-<span id="cb231-92"><a href="session-5-shiny.html#cb231-92" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb231-93"><a href="session-5-shiny.html#cb231-93" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb231-94"><a href="session-5-shiny.html#cb231-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-95"><a href="session-5-shiny.html#cb231-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic required to draw the two plots</span></span>
-<span id="cb231-96"><a href="session-5-shiny.html#cb231-96" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb231-97"><a href="session-5-shiny.html#cb231-97" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb231-98"><a href="session-5-shiny.html#cb231-98" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb231-99"><a href="session-5-shiny.html#cb231-99" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>map <span class="ot">&lt;-</span> <span class="fu">renderLeaflet</span>({<span class="fu">leaflet</span>(sites) <span class="sc">%&gt;%</span> </span>
-<span id="cb231-100"><a href="session-5-shiny.html#cb231-100" aria-hidden="true" tabindex="-1"></a>            <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb231-101"><a href="session-5-shiny.html#cb231-101" aria-hidden="true" tabindex="-1"></a>            <span class="fu">addCircleMarkers</span>(<span class="at">data =</span> sites,</span>
-<span id="cb231-102"><a href="session-5-shiny.html#cb231-102" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lat =</span> <span class="sc">~</span>Latitude,</span>
-<span id="cb231-103"><a href="session-5-shiny.html#cb231-103" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lng =</span> <span class="sc">~</span>Longitude,</span>
-<span id="cb231-104"><a href="session-5-shiny.html#cb231-104" aria-hidden="true" tabindex="-1"></a>                             <span class="at">radius =</span> <span class="dv">10</span>, <span class="co"># arbitrary scaling</span></span>
-<span id="cb231-105"><a href="session-5-shiny.html#cb231-105" aria-hidden="true" tabindex="-1"></a>                             <span class="at">fillColor =</span> <span class="st">&quot;gray&quot;</span>,</span>
-<span id="cb231-106"><a href="session-5-shiny.html#cb231-106" aria-hidden="true" tabindex="-1"></a>                             <span class="at">fillOpacity =</span> <span class="dv">1</span>,</span>
-<span id="cb231-107"><a href="session-5-shiny.html#cb231-107" aria-hidden="true" tabindex="-1"></a>                             <span class="at">weight =</span> <span class="fl">0.25</span>,</span>
-<span id="cb231-108"><a href="session-5-shiny.html#cb231-108" aria-hidden="true" tabindex="-1"></a>                             <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
-<span id="cb231-109"><a href="session-5-shiny.html#cb231-109" aria-hidden="true" tabindex="-1"></a>                             <span class="at">label =</span> <span class="sc">~</span>StationCode)</span>
-<span id="cb231-110"><a href="session-5-shiny.html#cb231-110" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb231-111"><a href="session-5-shiny.html#cb231-111" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb231-112"><a href="session-5-shiny.html#cb231-112" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  turbidity plot</span></span>
-<span id="cb231-113"><a href="session-5-shiny.html#cb231-113" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>distPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb231-114"><a href="session-5-shiny.html#cb231-114" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb231-115"><a href="session-5-shiny.html#cb231-115" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
-<span id="cb231-116"><a href="session-5-shiny.html#cb231-116" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb231-117"><a href="session-5-shiny.html#cb231-117" aria-hidden="true" tabindex="-1"></a>            <span class="fu">xlim</span>(<span class="fu">c</span>(input<span class="sc">$</span>date[<span class="dv">1</span>],input<span class="sc">$</span>date[<span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb231-118"><a href="session-5-shiny.html#cb231-118" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Sample Date&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Secchi Depth (m)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb231-119"><a href="session-5-shiny.html#cb231-119" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
-<span id="cb231-120"><a href="session-5-shiny.html#cb231-120" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb231-121"><a href="session-5-shiny.html#cb231-121" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb231-122"><a href="session-5-shiny.html#cb231-122" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mix and  match plot</span></span>
-<span id="cb231-123"><a href="session-5-shiny.html#cb231-123" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb231-124"><a href="session-5-shiny.html#cb231-124" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>x_variable]],</span>
-<span id="cb231-125"><a href="session-5-shiny.html#cb231-125" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">y =</span> .data[[input<span class="sc">$</span>y_variable]],</span>
-<span id="cb231-126"><a href="session-5-shiny.html#cb231-126" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">color =</span> .data[[input<span class="sc">$</span>color_variable]])) <span class="sc">+</span></span>
-<span id="cb231-127"><a href="session-5-shiny.html#cb231-127" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>x_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>),</span>
-<span id="cb231-128"><a href="session-5-shiny.html#cb231-128" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>y_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>),</span>
-<span id="cb231-129"><a href="session-5-shiny.html#cb231-129" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>color_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb231-130"><a href="session-5-shiny.html#cb231-130" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb231-131"><a href="session-5-shiny.html#cb231-131" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
-<span id="cb231-132"><a href="session-5-shiny.html#cb231-132" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb231-133"><a href="session-5-shiny.html#cb231-133" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb231-134"><a href="session-5-shiny.html#cb231-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-135"><a href="session-5-shiny.html#cb231-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb231-136"><a href="session-5-shiny.html#cb231-136" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the application </span></span>
-<span id="cb231-137"><a href="session-5-shiny.html#cb231-137" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="session-5-shiny.html#cb239-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb239-2"><a href="session-5-shiny.html#cb239-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(contentid)</span>
+<span id="cb239-3"><a href="session-5-shiny.html#cb239-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb239-4"><a href="session-5-shiny.html#cb239-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb239-5"><a href="session-5-shiny.html#cb239-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb239-6"><a href="session-5-shiny.html#cb239-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb239-7"><a href="session-5-shiny.html#cb239-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shinythemes)</span>
+<span id="cb239-8"><a href="session-5-shiny.html#cb239-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb239-9"><a href="session-5-shiny.html#cb239-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb239-10"><a href="session-5-shiny.html#cb239-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(snakecase)</span>
+<span id="cb239-11"><a href="session-5-shiny.html#cb239-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-12"><a href="session-5-shiny.html#cb239-12" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the data from EDI</span></span>
+<span id="cb239-13"><a href="session-5-shiny.html#cb239-13" aria-hidden="true" tabindex="-1"></a>sha1 <span class="ot">&lt;-</span> <span class="st">&#39;hash://sha1/317d7f840e598f5f3be732ab0e04f00a8051c6d0&#39;</span></span>
+<span id="cb239-14"><a href="session-5-shiny.html#cb239-14" aria-hidden="true" tabindex="-1"></a>delta.file <span class="ot">&lt;-</span> contentid<span class="sc">::</span><span class="fu">resolve</span>(sha1, <span class="at">registries=</span><span class="fu">c</span>(<span class="st">&quot;dataone&quot;</span>), <span class="at">store =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb239-15"><a href="session-5-shiny.html#cb239-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-16"><a href="session-5-shiny.html#cb239-16" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the sample date format, and filter for species of interest</span></span>
+<span id="cb239-17"><a href="session-5-shiny.html#cb239-17" aria-hidden="true" tabindex="-1"></a>delta_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(delta.file) <span class="sc">%&gt;%</span> </span>
+<span id="cb239-18"><a href="session-5-shiny.html#cb239-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SampleDate =</span> <span class="fu">mdy</span>(SampleDate))  <span class="sc">%&gt;%</span> </span>
+<span id="cb239-19"><a href="session-5-shiny.html#cb239-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">&quot;Salmon|Striped Bass|Smelt|Sturgeon&quot;</span>, CommonName)) <span class="sc">%&gt;%</span> </span>
+<span id="cb239-20"><a href="session-5-shiny.html#cb239-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">DissolvedOxygen =</span> DO,</span>
+<span id="cb239-21"><a href="session-5-shiny.html#cb239-21" aria-hidden="true" tabindex="-1"></a>           <span class="at">Ph =</span> pH,</span>
+<span id="cb239-22"><a href="session-5-shiny.html#cb239-22" aria-hidden="true" tabindex="-1"></a>           <span class="at">SpecificConductivity =</span> SpCnd)</span>
+<span id="cb239-23"><a href="session-5-shiny.html#cb239-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-24"><a href="session-5-shiny.html#cb239-24" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">names</span>(delta_data)</span>
+<span id="cb239-25"><a href="session-5-shiny.html#cb239-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-26"><a href="session-5-shiny.html#cb239-26" aria-hidden="true" tabindex="-1"></a>sites <span class="ot">&lt;-</span> delta_data <span class="sc">%&gt;%</span> </span>
+<span id="cb239-27"><a href="session-5-shiny.html#cb239-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(StationCode, Latitude, Longitude) <span class="sc">%&gt;%</span> </span>
+<span id="cb239-28"><a href="session-5-shiny.html#cb239-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb239-29"><a href="session-5-shiny.html#cb239-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&#39;Longitude&#39;</span>,<span class="st">&#39;Latitude&#39;</span>), <span class="at">crs =</span> <span class="dv">4269</span>,  <span class="at">remove =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb239-30"><a href="session-5-shiny.html#cb239-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-31"><a href="session-5-shiny.html#cb239-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-32"><a href="session-5-shiny.html#cb239-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-33"><a href="session-5-shiny.html#cb239-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for application</span></span>
+<span id="cb239-34"><a href="session-5-shiny.html#cb239-34" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb239-35"><a href="session-5-shiny.html#cb239-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">navbarPage</span>(<span class="at">theme =</span> <span class="fu">shinytheme</span>(<span class="st">&quot;flatly&quot;</span>), <span class="at">collapsible =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb239-36"><a href="session-5-shiny.html#cb239-36" aria-hidden="true" tabindex="-1"></a>               <span class="fu">HTML</span>(<span class="st">&#39;&lt;a style=&quot;text-decoration:none;cursor:default;color:#FFFFFF;&quot; class=&quot;active&quot; href=&quot;#&quot;&gt;Sacramento River Floodplain Data&lt;/a&gt;&#39;</span>), <span class="at">id=</span><span class="st">&quot;nav&quot;</span>,</span>
+<span id="cb239-37"><a href="session-5-shiny.html#cb239-37" aria-hidden="true" tabindex="-1"></a>               <span class="at">windowTitle =</span> <span class="st">&quot;Sacramento River floodplain fish and water quality data&quot;</span>,</span>
+<span id="cb239-38"><a href="session-5-shiny.html#cb239-38" aria-hidden="true" tabindex="-1"></a>               </span>
+<span id="cb239-39"><a href="session-5-shiny.html#cb239-39" aria-hidden="true" tabindex="-1"></a>               <span class="fu">tabPanel</span>(<span class="st">&quot;Data Sources&quot;</span>,</span>
+<span id="cb239-40"><a href="session-5-shiny.html#cb239-40" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">verticalLayout</span>(</span>
+<span id="cb239-41"><a href="session-5-shiny.html#cb239-41" aria-hidden="true" tabindex="-1"></a>                            <span class="co"># Application title and data  source</span></span>
+<span id="cb239-42"><a href="session-5-shiny.html#cb239-42" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">titlePanel</span>(<span class="st">&quot;Sacramento River floodplain fish and water quality data&quot;</span>),</span>
+<span id="cb239-43"><a href="session-5-shiny.html#cb239-43" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">p</span>(<span class="st">&quot;Data for this application are from: &quot;</span>),</span>
+<span id="cb239-44"><a href="session-5-shiny.html#cb239-44" aria-hidden="true" tabindex="-1"></a>                            tags<span class="sc">$</span><span class="fu">ul</span>(</span>
+<span id="cb239-45"><a href="session-5-shiny.html#cb239-45" aria-hidden="true" tabindex="-1"></a>                                tags<span class="sc">$</span><span class="fu">li</span>(<span class="st">&quot;Interagency Ecological Program: Fish catch and water quality data from the Sacramento River floodplain and tidal slough, collected by the Yolo Bypass Fish Monitoring Program, 1998-2018.&quot;</span>,</span>
+<span id="cb239-46"><a href="session-5-shiny.html#cb239-46" aria-hidden="true" tabindex="-1"></a>                                        tags<span class="sc">$</span><span class="fu">a</span>(<span class="st">&quot;doi:10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>, <span class="at">href=</span><span class="st">&quot;http://doi.org/10.6073/pasta/b0b15aef7f3b52d2c5adc10004c05a6f&quot;</span>)</span>
+<span id="cb239-47"><a href="session-5-shiny.html#cb239-47" aria-hidden="true" tabindex="-1"></a>                                )</span>
+<span id="cb239-48"><a href="session-5-shiny.html#cb239-48" aria-hidden="true" tabindex="-1"></a>                            ),</span>
+<span id="cb239-49"><a href="session-5-shiny.html#cb239-49" aria-hidden="true" tabindex="-1"></a>                            tags<span class="sc">$</span><span class="fu">br</span>(),</span>
+<span id="cb239-50"><a href="session-5-shiny.html#cb239-50" aria-hidden="true" tabindex="-1"></a>                            tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
+<span id="cb239-51"><a href="session-5-shiny.html#cb239-51" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">p</span>(<span class="st">&quot;Map of sampling locations&quot;</span>),</span>
+<span id="cb239-52"><a href="session-5-shiny.html#cb239-52" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">mainPanel</span>(<span class="fu">leafletOutput</span>(<span class="st">&quot;map&quot;</span>))</span>
+<span id="cb239-53"><a href="session-5-shiny.html#cb239-53" aria-hidden="true" tabindex="-1"></a>                        )</span>
+<span id="cb239-54"><a href="session-5-shiny.html#cb239-54" aria-hidden="true" tabindex="-1"></a>               ),</span>
+<span id="cb239-55"><a href="session-5-shiny.html#cb239-55" aria-hidden="true" tabindex="-1"></a>               </span>
+<span id="cb239-56"><a href="session-5-shiny.html#cb239-56" aria-hidden="true" tabindex="-1"></a>               <span class="fu">tabPanel</span>(</span>
+<span id="cb239-57"><a href="session-5-shiny.html#cb239-57" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;Explore&quot;</span>,</span>
+<span id="cb239-58"><a href="session-5-shiny.html#cb239-58" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">verticalLayout</span>(</span>
+<span id="cb239-59"><a href="session-5-shiny.html#cb239-59" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">mainPanel</span>(</span>
+<span id="cb239-60"><a href="session-5-shiny.html#cb239-60" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">plotOutput</span>(<span class="st">&quot;distPlot&quot;</span>),</span>
+<span id="cb239-61"><a href="session-5-shiny.html#cb239-61" aria-hidden="true" tabindex="-1"></a>                           <span class="at">width =</span>  <span class="dv">12</span>,</span>
+<span id="cb239-62"><a href="session-5-shiny.html#cb239-62" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">absolutePanel</span>(<span class="at">id =</span> <span class="st">&quot;controls&quot;</span>,</span>
+<span id="cb239-63"><a href="session-5-shiny.html#cb239-63" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">class =</span> <span class="st">&quot;panel panel-default&quot;</span>,</span>
+<span id="cb239-64"><a href="session-5-shiny.html#cb239-64" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">top =</span> <span class="dv">175</span>, <span class="at">left =</span> <span class="dv">75</span>, <span class="at">width =</span> <span class="dv">300</span>, <span class="at">fixed=</span><span class="cn">TRUE</span>,</span>
+<span id="cb239-65"><a href="session-5-shiny.html#cb239-65" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">draggable =</span> <span class="cn">TRUE</span>, <span class="at">height =</span> <span class="st">&quot;auto&quot;</span>,</span>
+<span id="cb239-66"><a href="session-5-shiny.html#cb239-66" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">sliderInput</span>(<span class="st">&quot;date&quot;</span>,</span>
+<span id="cb239-67"><a href="session-5-shiny.html#cb239-67" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">&quot;Date:&quot;</span>,</span>
+<span id="cb239-68"><a href="session-5-shiny.html#cb239-68" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">min =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>),</span>
+<span id="cb239-69"><a href="session-5-shiny.html#cb239-69" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">max =</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>),</span>
+<span id="cb239-70"><a href="session-5-shiny.html#cb239-70" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">&quot;1998-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)))</span>
+<span id="cb239-71"><a href="session-5-shiny.html#cb239-71" aria-hidden="true" tabindex="-1"></a>                                         </span>
+<span id="cb239-72"><a href="session-5-shiny.html#cb239-72" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb239-73"><a href="session-5-shiny.html#cb239-73" aria-hidden="true" tabindex="-1"></a>                       ),</span>
+<span id="cb239-74"><a href="session-5-shiny.html#cb239-74" aria-hidden="true" tabindex="-1"></a>                       </span>
+<span id="cb239-75"><a href="session-5-shiny.html#cb239-75" aria-hidden="true" tabindex="-1"></a>                       tags<span class="sc">$</span><span class="fu">hr</span>(),</span>
+<span id="cb239-76"><a href="session-5-shiny.html#cb239-76" aria-hidden="true" tabindex="-1"></a>                       </span>
+<span id="cb239-77"><a href="session-5-shiny.html#cb239-77" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">sidebarLayout</span>(</span>
+<span id="cb239-78"><a href="session-5-shiny.html#cb239-78" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">sidebarPanel</span>(</span>
+<span id="cb239-79"><a href="session-5-shiny.html#cb239-79" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">selectInput</span>(<span class="st">&quot;x_variable&quot;</span>, <span class="st">&quot;X Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;SampleDate&quot;</span>),</span>
+<span id="cb239-80"><a href="session-5-shiny.html#cb239-80" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">selectInput</span>(<span class="st">&quot;y_variable&quot;</span>, <span class="st">&quot;Y Variable&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;Count&quot;</span>),</span>
+<span id="cb239-81"><a href="session-5-shiny.html#cb239-81" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">selectInput</span>(<span class="st">&quot;color_variable&quot;</span>, <span class="st">&quot;Color&quot;</span>, cols, <span class="at">selected =</span> <span class="st">&quot;CommonName&quot;</span>)</span>
+<span id="cb239-82"><a href="session-5-shiny.html#cb239-82" aria-hidden="true" tabindex="-1"></a>                           ),</span>
+<span id="cb239-83"><a href="session-5-shiny.html#cb239-83" aria-hidden="true" tabindex="-1"></a>                           </span>
+<span id="cb239-84"><a href="session-5-shiny.html#cb239-84" aria-hidden="true" tabindex="-1"></a>                           <span class="co"># Show a plot with configurable axes</span></span>
+<span id="cb239-85"><a href="session-5-shiny.html#cb239-85" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">mainPanel</span>(</span>
+<span id="cb239-86"><a href="session-5-shiny.html#cb239-86" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">plotOutput</span>(<span class="st">&quot;varPlot&quot;</span>)</span>
+<span id="cb239-87"><a href="session-5-shiny.html#cb239-87" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb239-88"><a href="session-5-shiny.html#cb239-88" aria-hidden="true" tabindex="-1"></a>                       ),</span>
+<span id="cb239-89"><a href="session-5-shiny.html#cb239-89" aria-hidden="true" tabindex="-1"></a>                       tags<span class="sc">$</span><span class="fu">hr</span>()</span>
+<span id="cb239-90"><a href="session-5-shiny.html#cb239-90" aria-hidden="true" tabindex="-1"></a>                   )</span>
+<span id="cb239-91"><a href="session-5-shiny.html#cb239-91" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb239-92"><a href="session-5-shiny.html#cb239-92" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb239-93"><a href="session-5-shiny.html#cb239-93" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb239-94"><a href="session-5-shiny.html#cb239-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-95"><a href="session-5-shiny.html#cb239-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic required to draw the two plots</span></span>
+<span id="cb239-96"><a href="session-5-shiny.html#cb239-96" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb239-97"><a href="session-5-shiny.html#cb239-97" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb239-98"><a href="session-5-shiny.html#cb239-98" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb239-99"><a href="session-5-shiny.html#cb239-99" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>map <span class="ot">&lt;-</span> <span class="fu">renderLeaflet</span>({<span class="fu">leaflet</span>(sites) <span class="sc">%&gt;%</span> </span>
+<span id="cb239-100"><a href="session-5-shiny.html#cb239-100" aria-hidden="true" tabindex="-1"></a>            <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb239-101"><a href="session-5-shiny.html#cb239-101" aria-hidden="true" tabindex="-1"></a>            <span class="fu">addCircleMarkers</span>(<span class="at">data =</span> sites,</span>
+<span id="cb239-102"><a href="session-5-shiny.html#cb239-102" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lat =</span> <span class="sc">~</span>Latitude,</span>
+<span id="cb239-103"><a href="session-5-shiny.html#cb239-103" aria-hidden="true" tabindex="-1"></a>                             <span class="at">lng =</span> <span class="sc">~</span>Longitude,</span>
+<span id="cb239-104"><a href="session-5-shiny.html#cb239-104" aria-hidden="true" tabindex="-1"></a>                             <span class="at">radius =</span> <span class="dv">10</span>, <span class="co"># arbitrary scaling</span></span>
+<span id="cb239-105"><a href="session-5-shiny.html#cb239-105" aria-hidden="true" tabindex="-1"></a>                             <span class="at">fillColor =</span> <span class="st">&quot;gray&quot;</span>,</span>
+<span id="cb239-106"><a href="session-5-shiny.html#cb239-106" aria-hidden="true" tabindex="-1"></a>                             <span class="at">fillOpacity =</span> <span class="dv">1</span>,</span>
+<span id="cb239-107"><a href="session-5-shiny.html#cb239-107" aria-hidden="true" tabindex="-1"></a>                             <span class="at">weight =</span> <span class="fl">0.25</span>,</span>
+<span id="cb239-108"><a href="session-5-shiny.html#cb239-108" aria-hidden="true" tabindex="-1"></a>                             <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb239-109"><a href="session-5-shiny.html#cb239-109" aria-hidden="true" tabindex="-1"></a>                             <span class="at">label =</span> <span class="sc">~</span>StationCode)</span>
+<span id="cb239-110"><a href="session-5-shiny.html#cb239-110" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb239-111"><a href="session-5-shiny.html#cb239-111" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb239-112"><a href="session-5-shiny.html#cb239-112" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  turbidity plot</span></span>
+<span id="cb239-113"><a href="session-5-shiny.html#cb239-113" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>distPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb239-114"><a href="session-5-shiny.html#cb239-114" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb239-115"><a href="session-5-shiny.html#cb239-115" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(SampleDate, Secchi)) <span class="sc">+</span></span>
+<span id="cb239-116"><a href="session-5-shiny.html#cb239-116" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb239-117"><a href="session-5-shiny.html#cb239-117" aria-hidden="true" tabindex="-1"></a>            <span class="fu">xlim</span>(<span class="fu">c</span>(input<span class="sc">$</span>date[<span class="dv">1</span>],input<span class="sc">$</span>date[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb239-118"><a href="session-5-shiny.html#cb239-118" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Sample Date&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Secchi Depth (m)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb239-119"><a href="session-5-shiny.html#cb239-119" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
+<span id="cb239-120"><a href="session-5-shiny.html#cb239-120" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb239-121"><a href="session-5-shiny.html#cb239-121" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb239-122"><a href="session-5-shiny.html#cb239-122" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mix and  match plot</span></span>
+<span id="cb239-123"><a href="session-5-shiny.html#cb239-123" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>varPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb239-124"><a href="session-5-shiny.html#cb239-124" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(delta_data, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> .data[[input<span class="sc">$</span>x_variable]],</span>
+<span id="cb239-125"><a href="session-5-shiny.html#cb239-125" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">y =</span> .data[[input<span class="sc">$</span>y_variable]],</span>
+<span id="cb239-126"><a href="session-5-shiny.html#cb239-126" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">color =</span> .data[[input<span class="sc">$</span>color_variable]])) <span class="sc">+</span></span>
+<span id="cb239-127"><a href="session-5-shiny.html#cb239-127" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>x_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>),</span>
+<span id="cb239-128"><a href="session-5-shiny.html#cb239-128" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>y_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>),</span>
+<span id="cb239-129"><a href="session-5-shiny.html#cb239-129" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="fu">to_any_case</span>(input<span class="sc">$</span>color_variable, <span class="at">case =</span> <span class="st">&quot;title&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb239-130"><a href="session-5-shiny.html#cb239-130" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb239-131"><a href="session-5-shiny.html#cb239-131" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_light</span>()</span>
+<span id="cb239-132"><a href="session-5-shiny.html#cb239-132" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb239-133"><a href="session-5-shiny.html#cb239-133" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb239-134"><a href="session-5-shiny.html#cb239-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-135"><a href="session-5-shiny.html#cb239-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-136"><a href="session-5-shiny.html#cb239-136" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the application </span></span>
+<span id="cb239-137"><a href="session-5-shiny.html#cb239-137" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code></pre></div>
 </div>
 <div id="resources" class="section level3" number="5.1.12">
 <h3><span class="header-section-number">5.1.12</span> Resources</h3>
