@@ -496,19 +496,19 @@ div.csl-indent {
 <p>Use the following two code chunks to set up your species table. The code I use here incorporates two new packages that I thought would be worth showing.</p>
 <p>The first, <code>rvest</code>, is a package that enables easy scraping and handling of information from websites. It requires a moderate amount of knowledge of <code>html</code> to use, but can be very handy. In this case, I use it because I couldn’t find a plain text version of the BBL species codes anywhere. To build a reproducible and long lived workflow, I would want to run this code and then store a plain text version of the data in a long lived location, which cites the original source appropriately.</p>
 <p>The second package, <code>janitor</code>, is a great package that has simple tools for cleaning up data. It is especially handy for handling improperly named variables in a <code>data.frame.</code> In this case, I use it to handle a bunch of spaces in the column names so that our lives are a little easier later on.</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="session-11-1.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
-<span id="cb144-2"><a href="session-11-1.html#cb144-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb144-3"><a href="session-11-1.html#cb144-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb144-4"><a href="session-11-1.html#cb144-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code></pre></div>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="session-11-1.html#cb145-1" aria-hidden="true" tabindex="-1"></a>webpage <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">&quot;https://www.pwrc.usgs.gov/bbl/manual/speclist.cfm&quot;</span>)</span>
-<span id="cb145-2"><a href="session-11-1.html#cb145-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb145-3"><a href="session-11-1.html#cb145-3" aria-hidden="true" tabindex="-1"></a>tbls <span class="ot">&lt;-</span> <span class="fu">html_nodes</span>(webpage, <span class="st">&quot;table&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb145-4"><a href="session-11-1.html#cb145-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb145-5"><a href="session-11-1.html#cb145-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb145-6"><a href="session-11-1.html#cb145-6" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> tbls[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
-<span id="cb145-7"><a href="session-11-1.html#cb145-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb145-8"><a href="session-11-1.html#cb145-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(alpha_code, common_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb145-9"><a href="session-11-1.html#cb145-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="session-11-1.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb146-2"><a href="session-11-1.html#cb146-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb146-3"><a href="session-11-1.html#cb146-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb146-4"><a href="session-11-1.html#cb146-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="session-11-1.html#cb147-1" aria-hidden="true" tabindex="-1"></a>webpage <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">&quot;https://www.pwrc.usgs.gov/bbl/manual/speclist.cfm&quot;</span>)</span>
+<span id="cb147-2"><a href="session-11-1.html#cb147-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-3"><a href="session-11-1.html#cb147-3" aria-hidden="true" tabindex="-1"></a>tbls <span class="ot">&lt;-</span> <span class="fu">html_nodes</span>(webpage, <span class="st">&quot;table&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb147-4"><a href="session-11-1.html#cb147-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb147-5"><a href="session-11-1.html#cb147-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-6"><a href="session-11-1.html#cb147-6" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> tbls[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb147-7"><a href="session-11-1.html#cb147-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb147-8"><a href="session-11-1.html#cb147-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(alpha_code, common_name) <span class="sc">%&gt;%</span> </span>
+<span id="cb147-9"><a href="session-11-1.html#cb147-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span></code></pre></div>
 </div>
 <div id="visual-schematic-of-data" class="section level4 unnumbered hasAnchor">
 <h4>Visual schematic of data<a href="session-11-1.html#visual-schematic-of-data" class="anchor-section" aria-label="Anchor link to header"></a></h4>
@@ -552,103 +552,103 @@ American Golden-Plover  2009             92        443</code></pre>
 <div id="full-solution.-warning-spoilers-ahead" class="section level3 hasAnchor" number="13.1.3">
 <h3><span class="header-section-number">13.1.3</span> Full solution. Warning, spoilers ahead!<a href="session-11-1.html#full-solution.-warning-spoilers-ahead" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Load in the libraries and the species table, as described above.</p>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="session-11-1.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
-<span id="cb148-2"><a href="session-11-1.html#cb148-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb148-3"><a href="session-11-1.html#cb148-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb148-4"><a href="session-11-1.html#cb148-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb148-5"><a href="session-11-1.html#cb148-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="session-11-1.html#cb149-1" aria-hidden="true" tabindex="-1"></a>webpage <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">&quot;https://www.pwrc.usgs.gov/bbl/manual/speclist.cfm&quot;</span>)</span>
-<span id="cb149-2"><a href="session-11-1.html#cb149-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb149-3"><a href="session-11-1.html#cb149-3" aria-hidden="true" tabindex="-1"></a>tbls <span class="ot">&lt;-</span> <span class="fu">html_nodes</span>(webpage, <span class="st">&quot;table&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb149-4"><a href="session-11-1.html#cb149-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb149-5"><a href="session-11-1.html#cb149-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb149-6"><a href="session-11-1.html#cb149-6" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> tbls[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
-<span id="cb149-7"><a href="session-11-1.html#cb149-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb149-8"><a href="session-11-1.html#cb149-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(alpha_code, common_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb149-9"><a href="session-11-1.html#cb149-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span></code></pre></div>
-<p>Read in the two data files.</p>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="session-11-1.html#cb150-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A9ffec04c-7e2d-41dd-9e88-b6c2e8c4375e&quot;</span>)</span>
-<span id="cb150-2"><a href="session-11-1.html#cb150-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb150-3"><a href="session-11-1.html#cb150-3" aria-hidden="true" tabindex="-1"></a>nests <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A982bd2fc-4edf-4da7-96ef-0d11b853102d&quot;</span>)</span></code></pre></div>
-<p>Define a function to join the species table to an arbirary table with a species column in this dataset. Note that this version has some extra conditionals for the optional challenge.</p>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="session-11-1.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Function to add common name to data.frame according to the BBL list of species codes</span></span>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="session-11-1.html#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb150-2"><a href="session-11-1.html#cb150-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb150-3"><a href="session-11-1.html#cb150-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb150-4"><a href="session-11-1.html#cb150-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb150-5"><a href="session-11-1.html#cb150-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="session-11-1.html#cb151-1" aria-hidden="true" tabindex="-1"></a>webpage <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">&quot;https://www.pwrc.usgs.gov/bbl/manual/speclist.cfm&quot;</span>)</span>
 <span id="cb151-2"><a href="session-11-1.html#cb151-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb151-3"><a href="session-11-1.html#cb151-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param df A data frame containing BBL species codes in column `species`</span></span>
-<span id="cb151-4"><a href="session-11-1.html#cb151-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param species A data frame defining BBL species codes with columns `alpha_code` and `common_name`</span></span>
-<span id="cb151-5"><a href="session-11-1.html#cb151-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A data frame with original data df, plus the common name of species</span></span>
-<span id="cb151-6"><a href="session-11-1.html#cb151-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb151-7"><a href="session-11-1.html#cb151-7" aria-hidden="true" tabindex="-1"></a>assign_species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species){</span>
-<span id="cb151-8"><a href="session-11-1.html#cb151-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>(<span class="st">&quot;alpha_code&quot;</span> <span class="sc">%in%</span> <span class="fu">names</span>(species)) <span class="sc">|</span></span>
-<span id="cb151-9"><a href="session-11-1.html#cb151-9" aria-hidden="true" tabindex="-1"></a>        <span class="sc">!</span>(<span class="st">&quot;species&quot;</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) <span class="sc">|</span></span>
-<span id="cb151-10"><a href="session-11-1.html#cb151-10" aria-hidden="true" tabindex="-1"></a>        <span class="sc">!</span>(<span class="st">&quot;common_name&quot;</span> <span class="sc">%in%</span> <span class="fu">names</span>(species))){</span>
-<span id="cb151-11"><a href="session-11-1.html#cb151-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Tables appear to be formatted incorrectly.&quot;</span>)</span>
-<span id="cb151-12"><a href="session-11-1.html#cb151-12" aria-hidden="true" tabindex="-1"></a>    }  </span>
-<span id="cb151-13"><a href="session-11-1.html#cb151-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb151-14"><a href="session-11-1.html#cb151-14" aria-hidden="true" tabindex="-1"></a>    return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;species&quot;</span> <span class="ot">=</span> <span class="st">&quot;alpha_code&quot;</span>))</span>
-<span id="cb151-15"><a href="session-11-1.html#cb151-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb151-16"><a href="session-11-1.html#cb151-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">nrow</span>(return_df) <span class="sc">&gt;</span> <span class="fu">nrow</span>(df)){</span>
-<span id="cb151-17"><a href="session-11-1.html#cb151-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="st">&quot;Joined table has more rows than original table. Check species table for duplicated code values.&quot;</span>)</span>
-<span id="cb151-18"><a href="session-11-1.html#cb151-18" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb151-19"><a href="session-11-1.html#cb151-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb151-20"><a href="session-11-1.html#cb151-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">which</span>(<span class="fu">is.na</span>(return_df<span class="sc">$</span>common_name))) <span class="sc">&gt;</span> <span class="dv">0</span>){</span>
-<span id="cb151-21"><a href="session-11-1.html#cb151-21" aria-hidden="true" tabindex="-1"></a>      x <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(<span class="fu">is.na</span>(return_df<span class="sc">$</span>common_name)))</span>
-<span id="cb151-22"><a href="session-11-1.html#cb151-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="fu">paste</span>(<span class="st">&quot;Common name has&quot;</span>, x, <span class="st">&quot;rows containing NA&quot;</span>))</span>
-<span id="cb151-23"><a href="session-11-1.html#cb151-23" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb151-24"><a href="session-11-1.html#cb151-24" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb151-25"><a href="session-11-1.html#cb151-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(return_df)</span>
-<span id="cb151-26"><a href="session-11-1.html#cb151-26" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb151-27"><a href="session-11-1.html#cb151-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>Or a simple version without the extra challenges added:</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="session-11-1.html#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Function to add common name to data.frame according to the BBL list of species codes</span></span>
+<span id="cb151-3"><a href="session-11-1.html#cb151-3" aria-hidden="true" tabindex="-1"></a>tbls <span class="ot">&lt;-</span> <span class="fu">html_nodes</span>(webpage, <span class="st">&quot;table&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb151-4"><a href="session-11-1.html#cb151-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb151-5"><a href="session-11-1.html#cb151-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb151-6"><a href="session-11-1.html#cb151-6" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> tbls[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb151-7"><a href="session-11-1.html#cb151-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb151-8"><a href="session-11-1.html#cb151-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(alpha_code, common_name) <span class="sc">%&gt;%</span> </span>
+<span id="cb151-9"><a href="session-11-1.html#cb151-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span></code></pre></div>
+<p>Read in the two data files.</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="session-11-1.html#cb152-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A9ffec04c-7e2d-41dd-9e88-b6c2e8c4375e&quot;</span>)</span>
 <span id="cb152-2"><a href="session-11-1.html#cb152-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb152-3"><a href="session-11-1.html#cb152-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param df A data frame containing BBL species codes in column `species`</span></span>
-<span id="cb152-4"><a href="session-11-1.html#cb152-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param species A data frame defining BBL species codes with columns `alpha_code` and `common_name`</span></span>
-<span id="cb152-5"><a href="session-11-1.html#cb152-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A data frame with original data df, plus the common name of species</span></span>
-<span id="cb152-6"><a href="session-11-1.html#cb152-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb152-7"><a href="session-11-1.html#cb152-7" aria-hidden="true" tabindex="-1"></a>assign_species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species){</span>
-<span id="cb152-8"><a href="session-11-1.html#cb152-8" aria-hidden="true" tabindex="-1"></a>    return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;species&quot;</span> <span class="ot">=</span> <span class="st">&quot;alpha_code&quot;</span>))</span>
-<span id="cb152-9"><a href="session-11-1.html#cb152-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(return_df)</span>
-<span id="cb152-10"><a href="session-11-1.html#cb152-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb152-3"><a href="session-11-1.html#cb152-3" aria-hidden="true" tabindex="-1"></a>nests <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A982bd2fc-4edf-4da7-96ef-0d11b853102d&quot;</span>)</span></code></pre></div>
+<p>Define a function to join the species table to an arbirary table with a species column in this dataset. Note that this version has some extra conditionals for the optional challenge.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="session-11-1.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Function to add common name to data.frame according to the BBL list of species codes</span></span>
+<span id="cb153-2"><a href="session-11-1.html#cb153-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-3"><a href="session-11-1.html#cb153-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param df A data frame containing BBL species codes in column `species`</span></span>
+<span id="cb153-4"><a href="session-11-1.html#cb153-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param species A data frame defining BBL species codes with columns `alpha_code` and `common_name`</span></span>
+<span id="cb153-5"><a href="session-11-1.html#cb153-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A data frame with original data df, plus the common name of species</span></span>
+<span id="cb153-6"><a href="session-11-1.html#cb153-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-7"><a href="session-11-1.html#cb153-7" aria-hidden="true" tabindex="-1"></a>assign_species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species){</span>
+<span id="cb153-8"><a href="session-11-1.html#cb153-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>(<span class="st">&quot;alpha_code&quot;</span> <span class="sc">%in%</span> <span class="fu">names</span>(species)) <span class="sc">|</span></span>
+<span id="cb153-9"><a href="session-11-1.html#cb153-9" aria-hidden="true" tabindex="-1"></a>        <span class="sc">!</span>(<span class="st">&quot;species&quot;</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) <span class="sc">|</span></span>
+<span id="cb153-10"><a href="session-11-1.html#cb153-10" aria-hidden="true" tabindex="-1"></a>        <span class="sc">!</span>(<span class="st">&quot;common_name&quot;</span> <span class="sc">%in%</span> <span class="fu">names</span>(species))){</span>
+<span id="cb153-11"><a href="session-11-1.html#cb153-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;Tables appear to be formatted incorrectly.&quot;</span>)</span>
+<span id="cb153-12"><a href="session-11-1.html#cb153-12" aria-hidden="true" tabindex="-1"></a>    }  </span>
+<span id="cb153-13"><a href="session-11-1.html#cb153-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb153-14"><a href="session-11-1.html#cb153-14" aria-hidden="true" tabindex="-1"></a>    return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;species&quot;</span> <span class="ot">=</span> <span class="st">&quot;alpha_code&quot;</span>))</span>
+<span id="cb153-15"><a href="session-11-1.html#cb153-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb153-16"><a href="session-11-1.html#cb153-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">nrow</span>(return_df) <span class="sc">&gt;</span> <span class="fu">nrow</span>(df)){</span>
+<span id="cb153-17"><a href="session-11-1.html#cb153-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="st">&quot;Joined table has more rows than original table. Check species table for duplicated code values.&quot;</span>)</span>
+<span id="cb153-18"><a href="session-11-1.html#cb153-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb153-19"><a href="session-11-1.html#cb153-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb153-20"><a href="session-11-1.html#cb153-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">which</span>(<span class="fu">is.na</span>(return_df<span class="sc">$</span>common_name))) <span class="sc">&gt;</span> <span class="dv">0</span>){</span>
+<span id="cb153-21"><a href="session-11-1.html#cb153-21" aria-hidden="true" tabindex="-1"></a>      x <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(<span class="fu">is.na</span>(return_df<span class="sc">$</span>common_name)))</span>
+<span id="cb153-22"><a href="session-11-1.html#cb153-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="fu">paste</span>(<span class="st">&quot;Common name has&quot;</span>, x, <span class="st">&quot;rows containing NA&quot;</span>))</span>
+<span id="cb153-23"><a href="session-11-1.html#cb153-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb153-24"><a href="session-11-1.html#cb153-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb153-25"><a href="session-11-1.html#cb153-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(return_df)</span>
+<span id="cb153-26"><a href="session-11-1.html#cb153-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb153-27"><a href="session-11-1.html#cb153-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Or a simple version without the extra challenges added:</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="session-11-1.html#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Function to add common name to data.frame according to the BBL list of species codes</span></span>
+<span id="cb154-2"><a href="session-11-1.html#cb154-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb154-3"><a href="session-11-1.html#cb154-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param df A data frame containing BBL species codes in column `species`</span></span>
+<span id="cb154-4"><a href="session-11-1.html#cb154-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param species A data frame defining BBL species codes with columns `alpha_code` and `common_name`</span></span>
+<span id="cb154-5"><a href="session-11-1.html#cb154-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return A data frame with original data df, plus the common name of species</span></span>
+<span id="cb154-6"><a href="session-11-1.html#cb154-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb154-7"><a href="session-11-1.html#cb154-7" aria-hidden="true" tabindex="-1"></a>assign_species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species){</span>
+<span id="cb154-8"><a href="session-11-1.html#cb154-8" aria-hidden="true" tabindex="-1"></a>    return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;species&quot;</span> <span class="ot">=</span> <span class="st">&quot;alpha_code&quot;</span>))</span>
+<span id="cb154-9"><a href="session-11-1.html#cb154-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(return_df)</span>
+<span id="cb154-10"><a href="session-11-1.html#cb154-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div id="question-1-what-species-of-predator-is-the-most-abundant-and-has-this-changed-through-time" class="section level4 unnumbered hasAnchor">
 <h4>Question 1: What species of predator is the most abundant and has this changed through time?<a href="session-11-1.html#question-1-what-species-of-predator-is-the-most-abundant-and-has-this-changed-through-time" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Calculate the number of each species by year. Species counts with no common name are removed after examining the data and determining that the species code in these cases was “none”, as in, no predators were observed that day.</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="session-11-1.html#cb153-1" aria-hidden="true" tabindex="-1"></a>pred_species <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(pred, species) <span class="sc">%&gt;%</span> </span>
-<span id="cb153-2"><a href="session-11-1.html#cb153-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(year, common_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb153-3"><a href="session-11-1.html#cb153-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">pred_count =</span> <span class="fu">sum</span>(count, <span class="at">na.rm =</span> T), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb153-4"><a href="session-11-1.html#cb153-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="session-11-1.html#cb155-1" aria-hidden="true" tabindex="-1"></a>pred_species <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(pred, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb155-2"><a href="session-11-1.html#cb155-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(year, common_name) <span class="sc">%&gt;%</span> </span>
+<span id="cb155-3"><a href="session-11-1.html#cb155-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">pred_count =</span> <span class="fu">sum</span>(count, <span class="at">na.rm =</span> T), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb155-4"><a href="session-11-1.html#cb155-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span></code></pre></div>
 <pre><code>## Warning in assign_species_name(pred, species): Common name has 268 rows
 ## containing NA</code></pre>
 <p>Plot the result.</p>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="session-11-1.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_species, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> pred_count, <span class="at">color =</span> common_name)) <span class="sc">+</span></span>
-<span id="cb155-2"><a href="session-11-1.html#cb155-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb155-3"><a href="session-11-1.html#cb155-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb155-4"><a href="session-11-1.html#cb155-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Number of Predators&quot;</span>, <span class="at">color =</span> <span class="st">&quot;Species&quot;</span>) <span class="sc">+</span></span>
-<span id="cb155-5"><a href="session-11-1.html#cb155-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
-<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-111-1.png" width="672" /></p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="session-11-1.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pred_species, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> pred_count, <span class="at">color =</span> common_name)) <span class="sc">+</span></span>
+<span id="cb157-2"><a href="session-11-1.html#cb157-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb157-3"><a href="session-11-1.html#cb157-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb157-4"><a href="session-11-1.html#cb157-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Number of Predators&quot;</span>, <span class="at">color =</span> <span class="st">&quot;Species&quot;</span>) <span class="sc">+</span></span>
+<span id="cb157-5"><a href="session-11-1.html#cb157-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-113-1.png" width="672" /></p>
 </div>
 <div id="question-2-does-the-number-of-eggs-predated-increase-with-the-total-number-of-predators-for-all-species-laying-nests" class="section level4 unnumbered hasAnchor">
 <h4>Question 2: Does the number of eggs predated increase with the total number of predators for all species laying nests?<a href="session-11-1.html#question-2-does-the-number-of-eggs-predated-increase-with-the-total-number-of-predators-for-all-species-laying-nests" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Calculate the number of eggs predated by year and species. Species with no common name were examined, and found to have missing values in the species code as well. This is likely a data entry error that should be examined more closely, but for simplicity here we can drop these rows.</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="session-11-1.html#cb156-1" aria-hidden="true" tabindex="-1"></a>nests_species <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(nests, species) <span class="sc">%&gt;%</span> </span>
-<span id="cb156-2"><a href="session-11-1.html#cb156-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(common_name, year) <span class="sc">%&gt;%</span> </span>
-<span id="cb156-3"><a href="session-11-1.html#cb156-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_predated =</span> <span class="fu">sum</span>(number_eggs_predated, <span class="at">na.rm =</span> T),</span>
-<span id="cb156-4"><a href="session-11-1.html#cb156-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb156-5"><a href="session-11-1.html#cb156-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="session-11-1.html#cb158-1" aria-hidden="true" tabindex="-1"></a>nests_species <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(nests, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb158-2"><a href="session-11-1.html#cb158-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(common_name, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb158-3"><a href="session-11-1.html#cb158-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_predated =</span> <span class="fu">sum</span>(number_eggs_predated, <span class="at">na.rm =</span> T),</span>
+<span id="cb158-4"><a href="session-11-1.html#cb158-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb158-5"><a href="session-11-1.html#cb158-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span></code></pre></div>
 <pre><code>## Warning in assign_species_name(nests, species): Common name has 4 rows
 ## containing NA</code></pre>
 <p>Calculate total number of predators across all species by year.</p>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="session-11-1.html#cb158-1" aria-hidden="true" tabindex="-1"></a>pred_total <span class="ot">&lt;-</span> pred_species <span class="sc">%&gt;%</span> </span>
-<span id="cb158-2"><a href="session-11-1.html#cb158-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> </span>
-<span id="cb158-3"><a href="session-11-1.html#cb158-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">pred_count =</span> <span class="fu">sum</span>(pred_count, <span class="at">na.rm =</span> T), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="session-11-1.html#cb160-1" aria-hidden="true" tabindex="-1"></a>pred_total <span class="ot">&lt;-</span> pred_species <span class="sc">%&gt;%</span> </span>
+<span id="cb160-2"><a href="session-11-1.html#cb160-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> </span>
+<span id="cb160-3"><a href="session-11-1.html#cb160-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">pred_count =</span> <span class="fu">sum</span>(pred_count, <span class="at">na.rm =</span> T), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span></code></pre></div>
 <p>Join egg predation data to total predator data.</p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="session-11-1.html#cb159-1" aria-hidden="true" tabindex="-1"></a>nest_pred <span class="ot">&lt;-</span> <span class="fu">left_join</span>(nests_species, pred_total, <span class="at">by =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="session-11-1.html#cb161-1" aria-hidden="true" tabindex="-1"></a>nest_pred <span class="ot">&lt;-</span> <span class="fu">left_join</span>(nests_species, pred_total, <span class="at">by =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
 <p>Plot the number of eggs predated by total predators, faceted over species.</p>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="session-11-1.html#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(nest_pred, <span class="fu">aes</span>(<span class="at">x =</span> pred_count, <span class="at">y =</span> total_predated)) <span class="sc">+</span></span>
-<span id="cb160-2"><a href="session-11-1.html#cb160-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb160-3"><a href="session-11-1.html#cb160-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb160-4"><a href="session-11-1.html#cb160-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Number of Predators&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Number of Eggs Predated&quot;</span>) <span class="sc">+</span></span>
-<span id="cb160-5"><a href="session-11-1.html#cb160-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code></pre></div>
-<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-115-1.png" width="480" /></p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="session-11-1.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(nest_pred, <span class="fu">aes</span>(<span class="at">x =</span> pred_count, <span class="at">y =</span> total_predated)) <span class="sc">+</span></span>
+<span id="cb162-2"><a href="session-11-1.html#cb162-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb162-3"><a href="session-11-1.html#cb162-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>common_name, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb162-4"><a href="session-11-1.html#cb162-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Number of Predators&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Number of Eggs Predated&quot;</span>) <span class="sc">+</span></span>
+<span id="cb162-5"><a href="session-11-1.html#cb162-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="reproducible-research-short-course_files/figure-html/unnamed-chunk-117-1.png" width="480" /></p>
 
 </div>
 </div>
