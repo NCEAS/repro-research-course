@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>9 Cleaning and Manipulating Data | Fundamentals in Data Management for Qualitative and Quantitative Arctic Research</title>
   <meta name="description" content="9 Cleaning and Manipulating Data | Fundamentals in Data Management for Qualitative and Quantitative Arctic Research" />
-  <meta name="generator" content="bookdown 0.25.6 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="9 Cleaning and Manipulating Data | Fundamentals in Data Management for Qualitative and Quantitative Arctic Research" />
   <meta property="og:type" content="book" />
@@ -990,8 +990,9 @@ no change
 </div>
 <div id="changing-shape-pivot_longer-and-pivot_wider" class="section level4 unnumbered hasAnchor">
 <h4>Changing shape: <code>pivot_longer()</code> and <code>pivot_wider()</code><a href="cleaning-and-manipulating-data.html#changing-shape-pivot_longer-and-pivot_wider" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>Although the format of this table is tidy, we have have good reasons to change shape to where the question is in one column, and the response in another. This may make certain types of plots or tables easier to make.</p>
+<p>Although the format of this table is tidy, we may have good reasons to change shape to where the question is in one column, and the response in another. This may make certain types of plots or tables easier to make.</p>
 <p>To change from a wide format to a long format, we use <code>pivot_longer</code>. The key arguments to this function are: <code>cols</code>, the columns you are pivoting over, <code>names_to</code>, the column name you are creating from the column names covered by <code>cols</code>, and <code>values_to</code>, the column name you are creating from the values in those columns. Note in the <code>cols</code> argument, we use a little helper function called <code>starts_with</code> to select the columns starting with “Q” (Q1, Q2, Q3, Q4) as our pivoting columns.</p>
+<p>Our new column of old column names will be called “id” to indicate that it represents the question id. The new column of values within those columns we will call “answer.”</p>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="cleaning-and-manipulating-data.html#cb83-1" aria-hidden="true" tabindex="-1"></a>survey_long <span class="ot">&lt;-</span> survey_clean <span class="sc">%&gt;%</span> </span>
 <span id="cb83-2"><a href="cleaning-and-manipulating-data.html#cb83-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;Q&quot;</span>), <span class="at">names_to =</span> <span class="st">&quot;id&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;answer&quot;</span>)</span></code></pre></div>
 <p>This kind of pivoting allows us to quickly create a table with responses to both question 1 and question 2, summarized. First we use the <code>filter</code> function to filter for those questions, then the <code>group_by</code> and <code>summarize</code> we have been using.</p>
@@ -1133,19 +1134,49 @@ no change
 <p>Notice that I have deviated from our usual pipe syntax (although it does work here!) because I prefer to see the <code>data.frames</code> that I am joining side by side in the syntax.</p>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="cleaning-and-manipulating-data.html#cb87-1" aria-hidden="true" tabindex="-1"></a>survey_joined <span class="ot">&lt;-</span> <span class="fu">left_join</span>(survey_long, events, <span class="at">by =</span> <span class="st">&quot;StartDate&quot;</span>)</span></code></pre></div>
 <p>Now we have a joined data frame!</p>
+<div id="review" class="section level4 aside hasAnchor" number="9.1.5.1">
+<h4><span class="header-section-number">9.1.5.1</span> Review<a href="cleaning-and-manipulating-data.html#review" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>That was a lot of exposition for very little code. Here is a summary of the main data cleaning steps we used:</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="cleaning-and-manipulating-data.html#cb88-1" aria-hidden="true" tabindex="-1"></a>survey_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://dev.nceas.ucsb.edu/knb/d1/mn/v2/object/urn%3Auuid%3A71cb8d0d-70d5-4752-abcd-e3bcf7f14783&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb88-2"><a href="cleaning-and-manipulating-data.html#cb88-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-3"><a href="cleaning-and-manipulating-data.html#cb88-3" aria-hidden="true" tabindex="-1"></a>survey_clean <span class="ot">&lt;-</span> survey_raw <span class="sc">%&gt;%</span> </span>
+<span id="cb88-4"><a href="cleaning-and-manipulating-data.html#cb88-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>notes) <span class="sc">%&gt;%</span> </span>
+<span id="cb88-5"><a href="cleaning-and-manipulating-data.html#cb88-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Q1 =</span> <span class="fu">if_else</span>(Q1 <span class="sc">==</span> <span class="st">&quot;1&quot;</span>, <span class="st">&quot;below expectations&quot;</span>, Q1)) <span class="sc">%&gt;%</span> </span>
+<span id="cb88-6"><a href="cleaning-and-manipulating-data.html#cb88-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Q2 =</span> <span class="fu">tolower</span>(Q2))</span>
+<span id="cb88-7"><a href="cleaning-and-manipulating-data.html#cb88-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-8"><a href="cleaning-and-manipulating-data.html#cb88-8" aria-hidden="true" tabindex="-1"></a>events <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://dev.nceas.ucsb.edu/knb/d1/mn/v2/object/urn%3Auuid%3A0a1dd2d8-e8db-4089-a176-1b557d6e2786&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb88-9"><a href="cleaning-and-manipulating-data.html#cb88-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-10"><a href="cleaning-and-manipulating-data.html#cb88-10" aria-hidden="true" tabindex="-1"></a>survey_joined <span class="ot">&lt;-</span> <span class="fu">left_join</span>(survey_clean, events, <span class="at">by =</span> <span class="st">&quot;StartDate&quot;</span>)</span></code></pre></div>
+<p>As well as the split-apply-combine for questions 1 and 2:</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="cleaning-and-manipulating-data.html#cb89-1" aria-hidden="true" tabindex="-1"></a>q1_response <span class="ot">&lt;-</span> survey_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb89-2"><a href="cleaning-and-manipulating-data.html#cb89-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Q1) <span class="sc">%&gt;%</span> </span>
+<span id="cb89-3"><a href="cleaning-and-manipulating-data.html#cb89-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb89-4"><a href="cleaning-and-manipulating-data.html#cb89-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="sc">-</span>n)</span>
+<span id="cb89-5"><a href="cleaning-and-manipulating-data.html#cb89-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-6"><a href="cleaning-and-manipulating-data.html#cb89-6" aria-hidden="true" tabindex="-1"></a>q2_response <span class="ot">&lt;-</span> survey_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb89-7"><a href="cleaning-and-manipulating-data.html#cb89-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Q2) <span class="sc">%&gt;%</span> </span>
+<span id="cb89-8"><a href="cleaning-and-manipulating-data.html#cb89-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb89-9"><a href="cleaning-and-manipulating-data.html#cb89-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="sc">-</span>n)</span></code></pre></div>
+<p>And finally the pivot long:</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="cleaning-and-manipulating-data.html#cb90-1" aria-hidden="true" tabindex="-1"></a>survey_long <span class="ot">&lt;-</span> survey_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb90-2"><a href="cleaning-and-manipulating-data.html#cb90-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;Q&quot;</span>), <span class="at">names_to =</span> <span class="st">&quot;id&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;answer&quot;</span>)</span></code></pre></div>
+</div>
+<div id="section-6" class="section level4 unnumbered">
+<h4 class="unnumbered"></h4>
+</div>
 <div id="separate-and-unite" class="section level4 unnumbered hasAnchor">
 <h4><code>separate()</code> and <code>unite()</code><a href="cleaning-and-manipulating-data.html#separate-and-unite" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><code>separate()</code> and its complement, <code>unite()</code> allow us to easily split a single column into numerous (or numerous into a single).</p>
 <p>This can come in really handle when we need to split a column into two pieces by a consistent separator (like a dash).</p>
 <p>Let’s make a new <code>data.frame</code> with fake data to illustrate this. Here we have a set of site identification codes. with information about the island where the site is (the first 3 letters) and a site number (the 3 numbers). If we want to group and summarize by island, we need a column with just the island information.</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="cleaning-and-manipulating-data.html#cb88-1" aria-hidden="true" tabindex="-1"></a>sites_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">site =</span> <span class="fu">c</span>(<span class="st">&quot;HAW-101&quot;</span>,</span>
-<span id="cb88-2"><a href="cleaning-and-manipulating-data.html#cb88-2" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;HAW-103&quot;</span>,</span>
-<span id="cb88-3"><a href="cleaning-and-manipulating-data.html#cb88-3" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;OAH-320&quot;</span>,</span>
-<span id="cb88-4"><a href="cleaning-and-manipulating-data.html#cb88-4" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;OAH-219&quot;</span>,</span>
-<span id="cb88-5"><a href="cleaning-and-manipulating-data.html#cb88-5" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;MAI-039&quot;</span>))</span>
-<span id="cb88-6"><a href="cleaning-and-manipulating-data.html#cb88-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb88-7"><a href="cleaning-and-manipulating-data.html#cb88-7" aria-hidden="true" tabindex="-1"></a>sites_df <span class="sc">%&gt;%</span> </span>
-<span id="cb88-8"><a href="cleaning-and-manipulating-data.html#cb88-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(site, <span class="fu">c</span>(<span class="st">&quot;island&quot;</span>, <span class="st">&quot;site_number&quot;</span>), <span class="st">&quot;-&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="cleaning-and-manipulating-data.html#cb91-1" aria-hidden="true" tabindex="-1"></a>sites_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">site =</span> <span class="fu">c</span>(<span class="st">&quot;HAW-101&quot;</span>,</span>
+<span id="cb91-2"><a href="cleaning-and-manipulating-data.html#cb91-2" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;HAW-103&quot;</span>,</span>
+<span id="cb91-3"><a href="cleaning-and-manipulating-data.html#cb91-3" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;OAH-320&quot;</span>,</span>
+<span id="cb91-4"><a href="cleaning-and-manipulating-data.html#cb91-4" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;OAH-219&quot;</span>,</span>
+<span id="cb91-5"><a href="cleaning-and-manipulating-data.html#cb91-5" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;MAI-039&quot;</span>))</span>
+<span id="cb91-6"><a href="cleaning-and-manipulating-data.html#cb91-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-7"><a href="cleaning-and-manipulating-data.html#cb91-7" aria-hidden="true" tabindex="-1"></a>sites_df <span class="sc">%&gt;%</span> </span>
+<span id="cb91-8"><a href="cleaning-and-manipulating-data.html#cb91-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(site, <span class="fu">c</span>(<span class="st">&quot;island&quot;</span>, <span class="st">&quot;site_number&quot;</span>), <span class="st">&quot;-&quot;</span>)</span></code></pre></div>
 <pre><code>##   island site_number
 ## 1    HAW         101
 ## 2    HAW         103
@@ -1155,24 +1186,24 @@ no change
 <ul>
 <li><strong>Exercise:</strong> Split the <code>city</code> column in the following <code>data.frame</code> into <code>city</code> and <code>state_code</code> columns:</li>
 </ul>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="cleaning-and-manipulating-data.html#cb90-1" aria-hidden="true" tabindex="-1"></a>cities_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">city =</span> <span class="fu">c</span>(<span class="st">&quot;Juneau AK&quot;</span>, </span>
-<span id="cb90-2"><a href="cleaning-and-manipulating-data.html#cb90-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Sitka AK&quot;</span>, </span>
-<span id="cb90-3"><a href="cleaning-and-manipulating-data.html#cb90-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Anchorage AK&quot;</span>))</span>
-<span id="cb90-4"><a href="cleaning-and-manipulating-data.html#cb90-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb90-5"><a href="cleaning-and-manipulating-data.html#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="cleaning-and-manipulating-data.html#cb93-1" aria-hidden="true" tabindex="-1"></a>cities_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">city =</span> <span class="fu">c</span>(<span class="st">&quot;Juneau AK&quot;</span>, </span>
+<span id="cb93-2"><a href="cleaning-and-manipulating-data.html#cb93-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Sitka AK&quot;</span>, </span>
+<span id="cb93-3"><a href="cleaning-and-manipulating-data.html#cb93-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Anchorage AK&quot;</span>))</span>
+<span id="cb93-4"><a href="cleaning-and-manipulating-data.html#cb93-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-5"><a href="cleaning-and-manipulating-data.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span></code></pre></div>
 <p><code>unite()</code> does just the reverse of <code>separate()</code>. If we have a data.frame that contains columns for year, month, and day, we might want to unite these into a single date column.</p>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="cleaning-and-manipulating-data.html#cb91-1" aria-hidden="true" tabindex="-1"></a>dates_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> <span class="fu">c</span>(<span class="st">&quot;1930&quot;</span>,</span>
-<span id="cb91-2"><a href="cleaning-and-manipulating-data.html#cb91-2" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;1930&quot;</span>,</span>
-<span id="cb91-3"><a href="cleaning-and-manipulating-data.html#cb91-3" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;1930&quot;</span>),</span>
-<span id="cb91-4"><a href="cleaning-and-manipulating-data.html#cb91-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">month =</span> <span class="fu">c</span>(<span class="st">&quot;12&quot;</span>,</span>
-<span id="cb91-5"><a href="cleaning-and-manipulating-data.html#cb91-5" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;12&quot;</span>,</span>
-<span id="cb91-6"><a href="cleaning-and-manipulating-data.html#cb91-6" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;12&quot;</span>),</span>
-<span id="cb91-7"><a href="cleaning-and-manipulating-data.html#cb91-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">day =</span> <span class="fu">c</span>(<span class="st">&quot;14&quot;</span>,</span>
-<span id="cb91-8"><a href="cleaning-and-manipulating-data.html#cb91-8" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;15&quot;</span>,</span>
-<span id="cb91-9"><a href="cleaning-and-manipulating-data.html#cb91-9" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;16&quot;</span>))</span>
-<span id="cb91-10"><a href="cleaning-and-manipulating-data.html#cb91-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb91-11"><a href="cleaning-and-manipulating-data.html#cb91-11" aria-hidden="true" tabindex="-1"></a>dates_df <span class="sc">%&gt;%</span> </span>
-<span id="cb91-12"><a href="cleaning-and-manipulating-data.html#cb91-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(date, year, month, day, <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="cleaning-and-manipulating-data.html#cb94-1" aria-hidden="true" tabindex="-1"></a>dates_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> <span class="fu">c</span>(<span class="st">&quot;1930&quot;</span>,</span>
+<span id="cb94-2"><a href="cleaning-and-manipulating-data.html#cb94-2" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;1930&quot;</span>,</span>
+<span id="cb94-3"><a href="cleaning-and-manipulating-data.html#cb94-3" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;1930&quot;</span>),</span>
+<span id="cb94-4"><a href="cleaning-and-manipulating-data.html#cb94-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">month =</span> <span class="fu">c</span>(<span class="st">&quot;12&quot;</span>,</span>
+<span id="cb94-5"><a href="cleaning-and-manipulating-data.html#cb94-5" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;12&quot;</span>,</span>
+<span id="cb94-6"><a href="cleaning-and-manipulating-data.html#cb94-6" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;12&quot;</span>),</span>
+<span id="cb94-7"><a href="cleaning-and-manipulating-data.html#cb94-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">day =</span> <span class="fu">c</span>(<span class="st">&quot;14&quot;</span>,</span>
+<span id="cb94-8"><a href="cleaning-and-manipulating-data.html#cb94-8" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;15&quot;</span>,</span>
+<span id="cb94-9"><a href="cleaning-and-manipulating-data.html#cb94-9" aria-hidden="true" tabindex="-1"></a>                               <span class="st">&quot;16&quot;</span>))</span>
+<span id="cb94-10"><a href="cleaning-and-manipulating-data.html#cb94-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-11"><a href="cleaning-and-manipulating-data.html#cb94-11" aria-hidden="true" tabindex="-1"></a>dates_df <span class="sc">%&gt;%</span> </span>
+<span id="cb94-12"><a href="cleaning-and-manipulating-data.html#cb94-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(date, year, month, day, <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>)</span></code></pre></div>
 <pre><code>##         date
 ## 1 1930-12-14
 ## 2 1930-12-15
@@ -1180,7 +1211,7 @@ no change
 <ul>
 <li><strong>Exercise:</strong> Use <code>unite()</code> on your solution above to combine the <code>cities_df</code> back to its original form with just one column, <code>city</code>:</li>
 </ul>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="cleaning-and-manipulating-data.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="cleaning-and-manipulating-data.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span></code></pre></div>
 
 </div>
 </div>
