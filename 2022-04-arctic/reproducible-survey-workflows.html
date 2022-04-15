@@ -456,24 +456,43 @@ div.csl-indent {
 <h3><span class="header-section-number">13.1.4</span> Building workflows: Options for data integration<a href="reproducible-survey-workflows.html#building-workflows-options-for-data-integration" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="qualtrics-and-qualtrics" class="section level4 hasAnchor" number="13.1.4.1">
 <h4><span class="header-section-number">13.1.4.1</span> Qualtrics and qualtRics<a href="reproducible-survey-workflows.html#qualtrics-and-qualtrics" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p><a href="https://cran.r-project.org/web/packages/qualtRics/vignettes/qualtRics.html">qualtRics</a> (note the capital R) is an R package that enables retrieval of Qualtrics data directly from the Qualtrics platform and into R, reducing pre-processing time associated with data manipulation and import. Although Qualtics is propritary software, the qualtRics R packacke is open source and community developed.</p>
+<p><a href="https://github.com/ropensci/qualtRics"><code>qualtRics</code></a> (note the capital R) is an R package that enables retrieval of Qualtrics data directly from the Qualtrics platform and into R, reducing pre-processing time associated with data manipulation and import. Although Qualtrics is proprietary software, the <code>qualtRics</code> R package is open source and community developed. The only limitation to this package is that your institution must support Qualtrics API access and it must be enabled in your account to use it.</p>
 <p>The package currently contains three core functions:</p>
 <ol style="list-style-type: decimal">
-<li>all_surveys() fetches a list of all surveys that you own or have access to from Qualtrics.</li>
-<li>fetch_survey() downloads a survey from Qualtrics and loads it into R.</li>
-<li>read_survey() allows you to read CSV files you download manually from Qualtrics.</li>
+<li><code>all_surveys()</code> fetches a list of all surveys that you own or have access to from Qualtrics.</li>
+<li><code>fetch_survey()</code> downloads a survey from Qualtrics and loads it into R.</li>
+<li><code>read_survey()</code> allows you to read CSV files you download manually from Qualtrics.</li>
 </ol>
 <p>Also contained within the package are the following helper functions:</p>
 <ol style="list-style-type: decimal">
-<li>qualtrics_api_credentials() stores your API key and base url in environment variables.</li>
-<li>survey_questions() retrieves a data frame containing questions and question IDs for a survey; extract_colmap() retrieves a similar data frame with more detailed mapping from columns to labels.</li>
-<li>metadata() retrieves metadata about your survey, such as questions, survey flow, number of responses etc.</li>
+<li><code>qualtrics_api_credentials()</code> stores your API key and base url in environment variables.</li>
+<li><code>survey_questions()</code> retrieves a data frame containing questions and question IDs for a survey; <code>extract_colmap()</code> retrieves a similar data frame with more detailed mapping from columns to labels.</li>
+<li><code>metadata()</code> retrieves metadata about your survey, such as questions, survey flow, number of responses etc.</li>
 </ol>
 </div>
 </div>
 <div id="google-forms" class="section level3 hasAnchor" number="13.1.5">
 <h3><span class="header-section-number">13.1.5</span> Google forms<a href="reproducible-survey-workflows.html#google-forms" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Google forms can be a great way to set up surveys, and it is very easy to interact with the results using R. The benefits of using google forms are a simple interface and easy sharing between collaborators, especially when writing the survey instrument.</p>
+<p>The downside is that google forms has far fewer features than Qualtrics in terms of survey flow and appearance.</p>
+<p>To show how we can link R into our survey workflows, I’ve set up a simple example survey <a href="https://docs.google.com/forms/d/1Yh3IxygzuLXzJvTHl-lskMy7YrQgmeWgr2bEw5gwdIM/edit?usp=sharing">here</a>.</p>
+<p>I’ve set up the results so that they are in a new spreadsheet <a href="https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?resourcekey#gid=1527662370">here:</a>. To access them, we will use the <code>googlesheets4</code> package.</p>
+<p>First, open up a new R script and load the <code>googlesheets4</code> library:</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="reproducible-survey-workflows.html#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googlesheets4)</span></code></pre></div>
+<p>Next, we can read the sheet in using the same URL that you would use to share the sheet with someone else. Right now, this sheet is public</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="reproducible-survey-workflows.html#cb99-1" aria-hidden="true" tabindex="-1"></a>responses <span class="ot">&lt;-</span> <span class="fu">read_sheet</span>(<span class="st">&quot;https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?usp=sharing&quot;</span>)</span></code></pre></div>
+<pre><code>## ✔ Reading from &quot;Example Survey Form (Responses)&quot;.</code></pre>
+<pre><code>## ✔ Range &#39;Form Responses 1&#39;.</code></pre>
+<p>The first time you run this, you should get a popup window in your web browser asking you to confirm that you want to provide access to your google sheets via the tidyverse (googlesheets) package.</p>
+<p>My dialog box looked like this:</p>
+<p><img src="images/gsheets-access.png" /></p>
+<p>Make sure you click the third check box enabling the Tidyverse API to see, edit, create, and delete your sheets. Note that you will have to tell it to do any of these actions via the R code you write.</p>
+<p>When you come back to your R environment, you should have a data frame containing the data in your sheet!</p>
+<div id="bypassing-authentication-for-public-sheets" class="section level4 unnumbered hasAnchor">
+<h4>Bypassing authentication for public sheets<a href="reproducible-survey-workflows.html#bypassing-authentication-for-public-sheets" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>If you don’t want to go through a little interactive dialog every time you read in a sheet, and your sheet is public, you can run the function <code>gs4_deauth()</code> to access the sheet as a public user. This is helpful for cases when you want to run your code non-interactively. This is actually how I set it up for this book to build!</p>
 
+</div>
 </div>
 </div>
 </div>
