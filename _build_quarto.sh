@@ -13,11 +13,12 @@ if [ ! -d public/$BRANCH ]; then
 fi
 
 # Clone the lesson materials from the lessons repo
-rm -rf materials
 git clone https://github.com/NCEAS/scalable-computing-course.git --branch ${BRANCH} --single-branch
 
 # Build the book
 echo "Building book"
+
+cd scalable-computing-course/
 quarto render
 
 mv _book $BRANCH
