@@ -12,7 +12,6 @@ name: renderbook
 
 jobs:
   blogdown:
-    name: Build-Site
     runs-on: macOS-latest
 
     env:
@@ -47,11 +46,22 @@ jobs:
               touch public/.nojekyll
               cp CNAME public/CNAME
 
+      - name: Archive website artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: site
+          path: public/
+
   quarto:
     if: github.event_name == 'quarto'
     runs-on: macOS-latest
     needs: blogdown
     steps:
+    
+      - uses: actions/download-artifact@v2
+        with:
+          name: site
+
       - name: "Install Quarto"
         uses: quarto-dev/quarto-actions/install-quarto@v1
 
@@ -61,19 +71,41 @@ jobs:
       - name: Build training materials
         run: sh _build_quarto.sh
         
+      - name: Archive quarto artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: site
+          path: public/
+        
   bookdown:
     if: github.event_name == 'bookdown'
     runs-on: macOS-latest
     needs: blogdown
     steps:
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: site
+
       - name: Build training site
         run: sh _build_bookdown.sh
+        
+      - name: Archive bookdown artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: site
+          path: public/
         
   deploy:
     if: always()
     runs-on: ubuntu-latest
     needs: [blogdown, bookdown, quarto]
-    steps:       
+    steps:
+    
+      - uses: actions/download-artifact@v2
+        with:
+          name: site
+    
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
