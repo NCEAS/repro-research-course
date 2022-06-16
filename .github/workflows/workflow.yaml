@@ -6,13 +6,13 @@ on:
     branches:
       - master
   repository_dispatch:
-    types: bookdown
+    types: [quarto, bookdown]
 
 name: renderbook
 
 jobs:
-  bookdown:
-    name: Render-Book
+  blogdown:
+    name: Build-Site
     runs-on: macOS-latest
 
     env:
@@ -27,15 +27,9 @@ jobs:
       - name: Setup R
         uses: r-lib/actions/setup-r@v1
 
-      - name: Install pandoc and jags
+      - name: Install pandoc
         run: |
           brew install pandoc
-          
-      - name: Install sf libraries on macOS
-        run: | 
-          brew install proj
-          brew install geos
-          brew install gdal
           
       - name: Install dependencies
         run: |
@@ -46,13 +40,37 @@ jobs:
       - name: Install hugo
         run: |
           Rscript -e 'blogdown::install_hugo(version = "0.59.0")'
-      - name: Build training site
+          
+      - name: Build blogdown site
         run: |
               Rscript -e 'blogdown::build_site()'
-              sh _build_bookdown.sh
               touch public/.nojekyll
               cp CNAME public/CNAME
-              
+
+  quarto:
+      if: github.event_name == "quarto"
+      steps:
+      runs-on: ubuntu-latest
+      - name: "Install Quarto"
+
+        uses: quarto-dev/quarto-actions/install-quarto@v1
+
+      - name: "Install tinytex"
+        run: quarto install tool tinytex
+        
+      - name: Build training materials
+        run: sh _build_quarto.sh
+        
+  bookdown:
+    if: github.event_name == "bookdown"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build training site
+        run: sh _build_bookdown.sh
+        
+  deploy:
+    runs-on: ubuntu-latest
+    steps:       
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
