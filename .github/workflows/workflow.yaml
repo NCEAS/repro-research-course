@@ -6,14 +6,13 @@ on:
     branches:
       - master
   repository_dispatch:
-    inputs:
-      type: [quarto, bookdown]
+    types: [quarto, bookdown]
 
 name: renderbook
 
 jobs:
   quarto:
-    if: inputs.type == 'quarto' #|| github.event_name == 'push'
+    if: github.event.types == 'quarto' #|| github.event_name == 'push'
     runs-on: macOS-latest
     
     env:
@@ -64,7 +63,7 @@ jobs:
           folder: public/ # The folder the action should deploy.        
         
   bookdown:
-    if: inputs.type == 'bookdown'
+    if: github.event.types == 'bookdown'
     runs-on: macOS-latest
     
     env:
