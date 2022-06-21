@@ -18,10 +18,10 @@ git clone https://github.com/NCEAS/scalable-computing-course.git --branch ${BRAN
 # Build the book
 echo "Building book"
 
+cd scalable-computing-course/
 # Install deps
 python3 -m pip install -r requirements.txt
 
-cd scalable-computing-course/
 quarto render
 
 mv _book $BRANCH
