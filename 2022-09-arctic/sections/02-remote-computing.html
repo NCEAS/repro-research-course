@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.607">
+<meta name="generator" content="quarto-0.9.613">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -140,6 +140,12 @@ ul.task-list{list-style: none;}
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">2.1</span> Learning Objectives</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">2.2</span> Introduction</a></li>
+  <li><a href="#servers-networking" id="toc-servers-networking" class="nav-link" data-scroll-target="#servers-networking"> <span class="header-section-number">2.3</span> Servers &amp; Networking</a></li>
+  <li><a href="#ip-addressing" id="toc-ip-addressing" class="nav-link" data-scroll-target="#ip-addressing"> <span class="header-section-number">2.4</span> IP addressing</a></li>
+  <li><a href="#bash-shell-programming" id="toc-bash-shell-programming" class="nav-link" data-scroll-target="#bash-shell-programming"> <span class="header-section-number">2.5</span> Bash Shell Programming</a></li>
+  <li><a href="#some-group-exercise" id="toc-some-group-exercise" class="nav-link" data-scroll-target="#some-group-exercise"> <span class="header-section-number">2.6</span> Some group exercise:</a></li>
+  <li><a href="#connecting-to-a-remote-computer-via-a-shell" id="toc-connecting-to-a-remote-computer-via-a-shell" class="nav-link" data-scroll-target="#connecting-to-a-remote-computer-via-a-shell"> <span class="header-section-number">2.7</span> Connecting to a remote computer via a shell</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"> <span class="header-section-number">2.8</span> Exercise:</a></li>
   </ul>
 </nav>
     </div>
@@ -168,11 +174,127 @@ ul.task-list{list-style: none;}
 
 </header>
 
+<p><strong>Notes from Google Sheet (DELETE LATER)</strong><br>
+- Servers &amp; Networking<br>
+- IP addressing<br>
+- Bash shell programming<br>
+- SSH<br>
+- Remote session in VS Code</p>
 <section id="learning-objectives" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">2.1</span> Learning Objectives</h2>
+<ul>
+<li><p>Understand the basic architecture of computer networks</p></li>
+<li><p>Become familiarized with Bash Shell programming to navigate your computer’s file system <strong>(??)</strong></p></li>
+<li><p>Learn how to connect to a remote computer via a shell</p></li>
+</ul>
 </section>
 <section id="introduction" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.2</span> Introduction</h2>
+<ul>
+<li><p>Scientific synthesis and our ability to effectively and efficiently work with big data depends on the use of computers &amp; the internet</p></li>
+<li><p>VS Code + remote development on a cluster is easy and way faster than your local machine</p></li>
+</ul>
+</section>
+<section id="servers-networking" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="servers-networking"><span class="header-section-number">2.3</span> Servers &amp; Networking</h2>
+<ul>
+<li><p>Host computers connect via networking equipment and can send messages to each other over communication protocols (aka internet protocols)</p>
+<ul>
+<li><p><strong>Client:</strong> the host <em>initiating</em> the request</p></li>
+<li><p><strong>Server:</strong> the host <em>responding</em> to a request</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="ip-addressing" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="ip-addressing"><span class="header-section-number">2.4</span> IP addressing</h2>
+<ul>
+<li><p>Hosts are assigned a <strong>unique numerical address</strong> used for all communication and routing called an <a href="https://en.wikipedia.org/wiki/IP_address">Internet Protocol Address (IP Address)</a>. They look something like this: 128.111.220.7</p></li>
+<li><p>Each IP Address can be used to communicate over various “ports”, which allows multiple applications to communicate with a host without mixing up traffic</p></li>
+<li><p>IP addresses can be difficult to remember, so they are also assigned <strong>hostnames</strong></p>
+<ul>
+<li><p>Hostnames are handled through the global <a href="https://en.wikipedia.org/wiki/Domain_Name_System">Domain Name System (DNS)</a></p></li>
+<li><p>Clients first look up a hostname in DNS to find the IP address, then they open a connection the the IP address</p>
+<ul>
+<li>aurora.nceas.ucsb.edu == 128.111.220.46 <strong>(UPDATE THIS WITH SERVER USED FOR COURSE?)</strong></li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="bash-shell-programming" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="bash-shell-programming"><span class="header-section-number">2.5</span> Bash Shell Programming</h2>
+<ul>
+<li><em>What is a shell?</em> From <a href="https://en.wikipedia.org/wiki/Shell_(computing)">Wikipedia</a></li>
+</ul>
+<blockquote class="blockquote">
+<p>“a computer program which exposes an operating system’s services to a human user or other programs. In general, operating system shells use either a command-line interface (CLI) or graphical user interface (GUI), depending on a computer’s role and particular operation.”</p>
+</blockquote>
+<ul>
+<li><p><em>What is Bash Shell?</em> A command line tool (language) commonly used to manipulate files and directories</p>
+<ul>
+<li><p><strong>Mac:</strong> bash via the <a href="https://support.apple.com/guide/terminal/welcome/mac">Terminal</a> <strong>(QUESTION: Mac users may have to switch from zsh to bash? <code>exec bash</code>? or <code>exec zsh</code> to switch back)</strong></p></li>
+<li><p><strong>Windows:</strong> bash via <a href="https://gitforwindows.org/">Git Bash</a></p></li>
+</ul></li>
+</ul>
+</section>
+<section id="some-group-exercise" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="some-group-exercise"><span class="header-section-number">2.6</span> Some group exercise:</h2>
+<ul>
+<li><p>Navigate file system (show that this is equivalent to using Finder/Windows version), create a file, edit file, etc.</p>
+<ul>
+<li><code>pwd</code></li>
+<li><code>cd</code></li>
+<li><code>ls</code></li>
+<li><code>touch</code></li>
+<li><code>mkdir</code></li>
+<li>(<strong>Queston:</strong> Do we want/need to show all of these? Missing any important ones?)</li>
+</ul></li>
+</ul>
+</section>
+<section id="connecting-to-a-remote-computer-via-a-shell" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="connecting-to-a-remote-computer-via-a-shell"><span class="header-section-number">2.7</span> Connecting to a remote computer via a shell</h2>
+<ul>
+<li><p>You can use a shell to gain accesss to and remotely control (manage/transfer files/etc) other computers. To do so, you’ll need the following:</p>
+<ul>
+<li><p>remote computer (e.g.&nbsp;server) turned on</p></li>
+<li><p>IP address or name of remote computer</p></li>
+<li><p>necessary permissions to access the remote computer</p></li>
+</ul></li>
+<li><p>Secure Shell, or SSH, is often used for securely connecting to and running shell commands on a remote host</p>
+<ul>
+<li><p>Tremendously simplifies remote computing</p></li>
+<li><p>Supported out-of-the-box on Linux and Macs</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="exercise" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="exercise"><span class="header-section-number">2.8</span> Exercise:</h2>
+<ol type="1">
+<li><p>Launch your Terimal program:</p>
+<ul>
+<li><p><strong>MacOS:</strong> navigate to <code>Applications | Utilities</code> and open <code>Terminal</code></p></li>
+<li><p><strong>Windows:</strong> Navigate to <code>Windows Start | Git</code> and open <code>Git Bash</code></p></li>
+<li><p><strong>ALTERNATIVELY, from VS Code:</strong> Two options to open a terminal program</p>
+<ol type="a">
+<li><p>Click on <code>Terminal | New Terminal</code> in top menu bar</p></li>
+<li><p>Click on the <code>+ (dropdown menu) | bash</code> in the bottom right corner <strong>(QUESTION: Not sure that is always open/available depending on user configurations??)</strong></p></li>
+</ol></li>
+</ul></li>
+<li><p>Connect to a remote server <strong>(UPDATE THIS SECTION)</strong></p></li>
+</ol>
+<pre><code>jones@powder:~$ ssh jones@aurora.nceas.ucsb.edu
+jones@aurora.nceas.ucsb.edu's password: 
+jones@aurora:~$ </code></pre>
+<ol start="3" type="1">
+<li>Change your password <strong>(UPDATE THIS SECTION)</strong></li>
+</ol>
+<pre><code>jones@aurora:~$ passwd
+Changing password for jones.
+(current) UNIX password: 
+Enter new UNIX password: 
+Retype new UNIX password: </code></pre>
+<ol start="4" type="1">
+<li><strong>create python script on server | write/execute some code | etc</strong></li>
+</ol>
 
 
 </section>
