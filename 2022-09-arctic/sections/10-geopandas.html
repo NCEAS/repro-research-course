@@ -204,7 +204,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">6.1</span> Learning Objectives</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">6.2</span> Introduction</a></li>
   <li><a href="#pre-processing-raster-data" id="toc-pre-processing-raster-data" class="nav-link" data-scroll-target="#pre-processing-raster-data"> <span class="header-section-number">6.3</span> Pre-processing raster data</a></li>
-  <li><a href="#distance-per-commercial-area" id="toc-distance-per-commercial-area" class="nav-link" data-scroll-target="#distance-per-commercial-area"> <span class="header-section-number">6.4</span> Distance per commercial area</a></li>
+  <li><a href="#distance-per-commercial-area" id="toc-distance-per-commercial-area" class="nav-link" data-scroll-target="#distance-per-commercial-area"> <span class="header-section-number">6.4</span> Distance per commercial area</a>
+  <ul class="collapse">
+  <li><a href="#read-in-fishing-districts" id="toc-read-in-fishing-districts" class="nav-link" data-scroll-target="#read-in-fishing-districts"> <span class="header-section-number">6.4.1</span> Read in fishing districts</a></li>
+  </ul></li>
+  <li><a href="#calculate-total-distance-per-fishing-area" id="toc-calculate-total-distance-per-fishing-area" class="nav-link" data-scroll-target="#calculate-total-distance-per-fishing-area"> <span class="header-section-number">6.5</span> Calculate total distance per fishing area</a></li>
   </ul>
 </nav>
     </div>
@@ -236,8 +240,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="learning-objectives" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">6.1</span> Learning Objectives</h2>
 <ul>
-<li>Reading raster data with rasterio</li>
-<li>Using geopandas and rasterio to process raster data</li>
+<li>Reading raster data with rasterasterio</li>
+<li>Using geopandas and rasterasterio to process raster data</li>
 <li>Working with raster and vector data together</li>
 </ul>
 </section>
@@ -256,25 +260,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 data-number="6.3" class="anchored" data-anchor-id="pre-processing-raster-data"><span class="header-section-number">6.3</span> Pre-processing raster data</h2>
 <p>This is a test to make sure we can run some code in this notebook.</p>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio <span class="im">as</span> rio</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio.mask</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rasterstats <span class="im">import</span> zonal_stats</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shapely.geometry <span class="im">import</span> Polygon</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://cn.dataone.org/cn/v2/resolve/urn:uuid:dd61089d-f50e-4d87-9b75-6b4e2bd24776'</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url_sf <span class="op">=</span> <span class="st">'https://cn.dataone.org/cn/v2/resolve/urn:uuid:dd61089d-f50e-4d87-9b75-6b4e2bd24776'</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"Coastal_2020_12.tif"</span>, <span class="st">"wb"</span>).write(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>response_sf <span class="op">=</span> requests.get(url_sf)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"Coastal_2020_12.tif"</span>, <span class="st">"wb"</span>).write(response_sf.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>1132748</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rio.<span class="bu">open</span>(<span class="st">"Coastal_2020_12.tif"</span>) <span class="im">as</span> dem_src:</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    dtm_pre_arr <span class="op">=</span> dem_src.read(<span class="dv">1</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(dtm_pre_arr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>&lt;matplotlib.image.AxesImage at 0x119590d90&gt;</code></pre>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">"Coastal_2020_12.tif"</span>) <span class="im">as</span> dem_src:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ships <span class="op">=</span> dem_src.read(<span class="dv">1</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    ships_meta <span class="op">=</span> dem_src.profile</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.imshow(ships)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ships_meta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'driver': 'GTiff', 'dtype': 'float32', 'nodata': -3.3999999521443642e+38, 'width': 3087, 'height': 2308, 'count': 1, 'crs': CRS.from_epsg(3338), 'transform': Affine(999.7994153462766, 0.0, -2550153.29233849,
+       0.0, -999.9687691991521, 2711703.104608573), 'tiled': False, 'compress': 'lzw', 'interleave': 'band'}</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="10-geopandas_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
@@ -287,10 +298,74 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="distance-per-commercial-area" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="distance-per-commercial-area"><span class="header-section-number">6.4</span> Distance per commercial area</h2>
-<ul>
-<li>read in fishery area vector file</li>
-<li>take one of the two approaches described <a href="https://eo-box.readthedocs.io/en/develop/examples/raster/extract_raster_values_with_vector_data.html">here</a></li>
-</ul>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A7c942c45-1539-4d47-b429-205499f0f3e4'</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"Alaska_Commercial_Salmon_Boundaries.gpkg"</span>, <span class="st">"wb"</span>).write(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>36544512</code></pre>
+</div>
+</div>
+<section id="read-in-fishing-districts" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="read-in-fishing-districts"><span class="header-section-number">6.4.1</span> Read in fishing districts</h3>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>comm <span class="op">=</span> gpd.read_file(<span class="st">"Alaska_Commercial_Salmon_Boundaries.gpkg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Reproject the data</p>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>comm.crs</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>comm_3338 <span class="op">=</span> comm.to_crs(<span class="st">"EPSG:3338"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Get the bounding box as it’s own GeoDataFrame</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to return polygon</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bbox(long0, lat0, lat1, long1):</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Polygon([[long0, lat0], [long1,lat0], [long1,lat1], [long0, lat1]])</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> bbox(comm_3338.total_bounds[<span class="dv">0</span>], comm_3338.total_bounds[<span class="dv">1</span>], comm_3338.total_bounds[<span class="dv">2</span>], comm_3338.total_bounds[<span class="dv">3</span>])</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>bbox_crop <span class="op">=</span> gpd.GeoDataFrame(pd.DataFrame([<span class="st">'p1'</span>], columns <span class="op">=</span> [<span class="st">'geom'</span>]),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    crs <span class="op">=</span> {<span class="st">'init'</span>:<span class="st">'epsg:4326'</span>},</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    geometry <span class="op">=</span> [test])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/usr/local/lib/python3.9/site-packages/pyproj/crs/crs.py:130: FutureWarning: '+init=&lt;authority&gt;:&lt;code&gt;' syntax is deprecated. '&lt;authority&gt;:&lt;code&gt;' is the preferred initialization method. When making the change, be mindful of axis order changes: https://pyproj4.github.io/pyproj/stable/gotchas.html#axis-order-changes-in-proj-6
+  in_crs_string = _prepare_from_proj_string(in_crs_string)</code></pre>
+</div>
+</div>
+<p>Read in raster again cropped to bounding box - bounding box doesn’t quite match what I expected</p>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">"Coastal_2020_12.tif"</span>) <span class="im">as</span> src:</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    out_image, out_transform <span class="op">=</span> rasterio.mask.mask(src, bbox_crop[<span class="st">"geometry"</span>], crop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    out_meta <span class="op">=</span> src.meta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(out_image[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>&lt;matplotlib.image.AxesImage at 0x11de1d370&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="10-geopandas_files/figure-html/cell-10-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="calculate-total-distance-per-fishing-area" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="calculate-total-distance-per-fishing-area"><span class="header-section-number">6.5</span> Calculate total distance per fishing area</h2>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>zs <span class="op">=</span> zonal_stats(comm_3338, <span class="st">'Coastal_2020_12.tif'</span>, stats <span class="op">=</span> <span class="st">"sum"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Wrangle the data and reattach distances to the original polygons</p>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> [d[<span class="st">'sum'</span>] <span class="cf">for</span> d <span class="kw">in</span> zs]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> pd.DataFrame({<span class="st">'STAT_AREA'</span> : comm_3338[<span class="st">"STAT_AREA"</span>],</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'distance'</span> : dist})</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>res_summary <span class="op">=</span> res.dropna(thresh <span class="op">=</span> <span class="dv">0</span>).query(<span class="st">"distance &gt; 0"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>res_full <span class="op">=</span> comm_3338.merge(res_summary, on <span class="op">=</span> <span class="st">"STAT_AREA"</span>, how <span class="op">=</span> <span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>res_full.plot(column <span class="op">=</span> <span class="st">"distance"</span>, legend <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>&lt;AxesSubplot:&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="10-geopandas_files/figure-html/cell-13-output-2.png" class="img-fluid"></p>
+</div>
+</div>
 
 
 </section>

@@ -137,7 +137,7 @@
     "href": "sections/10-geopandas.html",
     "title": "6  Spatial and Image Data Using GeoPandas",
     "section": "",
-    "text": "Reading raster data with rasterio\nUsing geopandas and rasterio to process raster data\nWorking with raster and vector data together"
+    "text": "Reading raster data with rasterasterio\nUsing geopandas and rasterasterio to process raster data\nWorking with raster and vector data together"
   },
   {
     "objectID": "sections/10-geopandas.html#introduction",
@@ -151,13 +151,20 @@
     "href": "sections/10-geopandas.html#pre-processing-raster-data",
     "title": "6  Spatial and Image Data Using GeoPandas",
     "section": "6.3 Pre-processing raster data",
-    "text": "6.3 Pre-processing raster data\nThis is a test to make sure we can run some code in this notebook.\nimport geopandas as gpd\nimport rasterio as rio\nimport requests\nimport matplotlib.pyplot as plt\n\nurl = 'https://cn.dataone.org/cn/v2/resolve/urn:uuid:dd61089d-f50e-4d87-9b75-6b4e2bd24776'\n\nresponse = requests.get(url)\nopen(\"Coastal_2020_12.tif\", \"wb\").write(response.content)\n\n1132748\n\n\n\nwith rio.open(\"Coastal_2020_12.tif\") as dem_src:\n    dtm_pre_arr = dem_src.read(1)\n\nplt.imshow(dtm_pre_arr)\n\n<matplotlib.image.AxesImage at 0x119590d90>\n\n\n\n\n\n\nread in the data\nclip to an extent that runs roughly from Bristol Bay to Prince William Sound"
+    "text": "6.3 Pre-processing raster data\nThis is a test to make sure we can run some code in this notebook.\nimport geopandas as gpd\nimport rasterio\nimport rasterio.mask\nfrom rasterstats import zonal_stats\nfrom shapely.geometry import Polygon\nimport requests\nimport matplotlib.pyplot as plt\nimport pandas as pd\n\nurl_sf = 'https://cn.dataone.org/cn/v2/resolve/urn:uuid:dd61089d-f50e-4d87-9b75-6b4e2bd24776'\n\nresponse_sf = requests.get(url_sf)\nopen(\"Coastal_2020_12.tif\", \"wb\").write(response_sf.content)\n\n1132748\n\n\n\nwith rasterio.open(\"Coastal_2020_12.tif\") as dem_src:\n    ships = dem_src.read(1)\n    ships_meta = dem_src.profile\n\nplt.imshow(ships)\nprint(ships_meta)\n\n{'driver': 'GTiff', 'dtype': 'float32', 'nodata': -3.3999999521443642e+38, 'width': 3087, 'height': 2308, 'count': 1, 'crs': CRS.from_epsg(3338), 'transform': Affine(999.7994153462766, 0.0, -2550153.29233849,\n       0.0, -999.9687691991521, 2711703.104608573), 'tiled': False, 'compress': 'lzw', 'interleave': 'band'}\n\n\n\n\n\n\nread in the data\nclip to an extent that runs roughly from Bristol Bay to Prince William Sound"
   },
   {
     "objectID": "sections/10-geopandas.html#distance-per-commercial-area",
     "href": "sections/10-geopandas.html#distance-per-commercial-area",
     "title": "6  Spatial and Image Data Using GeoPandas",
     "section": "6.4 Distance per commercial area",
-    "text": "6.4 Distance per commercial area\n\nread in fishery area vector file\ntake one of the two approaches described here"
+    "text": "6.4 Distance per commercial area\n\nurl = 'https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A7c942c45-1539-4d47-b429-205499f0f3e4'\n\nresponse = requests.get(url)\nopen(\"Alaska_Commercial_Salmon_Boundaries.gpkg\", \"wb\").write(response.content)\n\n36544512\n\n\n\n6.4.1 Read in fishing districts\ncomm = gpd.read_file(\"Alaska_Commercial_Salmon_Boundaries.gpkg\")\nReproject the data\ncomm.crs\ncomm_3338 = comm.to_crs(\"EPSG:3338\")\nGet the bounding box as it’s own GeoDataFrame\n\n# function to return polygon\ndef bbox(long0, lat0, lat1, long1):\n  return Polygon([[long0, lat0], [long1,lat0], [long1,lat1], [long0, lat1]])\n\n\ntest = bbox(comm_3338.total_bounds[0], comm_3338.total_bounds[1], comm_3338.total_bounds[2], comm_3338.total_bounds[3])\n\nbbox_crop = gpd.GeoDataFrame(pd.DataFrame(['p1'], columns = ['geom']),\n    crs = {'init':'epsg:4326'},\n    geometry = [test])\n\n/usr/local/lib/python3.9/site-packages/pyproj/crs/crs.py:130: FutureWarning: '+init=<authority>:<code>' syntax is deprecated. '<authority>:<code>' is the preferred initialization method. When making the change, be mindful of axis order changes: https://pyproj4.github.io/pyproj/stable/gotchas.html#axis-order-changes-in-proj-6\n  in_crs_string = _prepare_from_proj_string(in_crs_string)\n\n\nRead in raster again cropped to bounding box - bounding box doesn’t quite match what I expected\nwith rasterio.open(\"Coastal_2020_12.tif\") as src:\n    out_image, out_transform = rasterio.mask.mask(src, bbox_crop[\"geometry\"], crop=True)\n    out_meta = src.meta\n\nplt.imshow(out_image[0])\n\n<matplotlib.image.AxesImage at 0x11de1d370>"
+  },
+  {
+    "objectID": "sections/10-geopandas.html#calculate-total-distance-per-fishing-area",
+    "href": "sections/10-geopandas.html#calculate-total-distance-per-fishing-area",
+    "title": "6  Spatial and Image Data Using GeoPandas",
+    "section": "6.5 Calculate total distance per fishing area",
+    "text": "6.5 Calculate total distance per fishing area\nzs = zonal_stats(comm_3338, 'Coastal_2020_12.tif', stats = \"sum\")\nWrangle the data and reattach distances to the original polygons\ndist = [d['sum'] for d in zs]\n\nres = pd.DataFrame({'STAT_AREA' : comm_3338[\"STAT_AREA\"],\n                    'distance' : dist})\n\nres_summary = res.dropna(thresh = 0).query(\"distance > 0\")\n\nres_full = comm_3338.merge(res_summary, on = \"STAT_AREA\", how = 'left')\n\nres_full.plot(column = \"distance\", legend = True)\n\n<AxesSubplot:>"
   }
 ]
