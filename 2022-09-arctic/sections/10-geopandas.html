@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.617">
+<meta name="generator" content="quarto-0.9.618">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -204,10 +204,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">6.1</span> Learning Objectives</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">6.2</span> Introduction</a></li>
   <li><a href="#pre-processing-raster-data" id="toc-pre-processing-raster-data" class="nav-link" data-scroll-target="#pre-processing-raster-data"> <span class="header-section-number">6.3</span> Pre-processing raster data</a></li>
-  <li><a href="#distance-per-commercial-area" id="toc-distance-per-commercial-area" class="nav-link" data-scroll-target="#distance-per-commercial-area"> <span class="header-section-number">6.4</span> Distance per commercial area</a>
-  <ul class="collapse">
-  <li><a href="#read-in-fishing-districts" id="toc-read-in-fishing-districts" class="nav-link" data-scroll-target="#read-in-fishing-districts"> <span class="header-section-number">6.4.1</span> Read in fishing districts</a></li>
-  </ul></li>
+  <li><a href="#distance-per-commercial-area" id="toc-distance-per-commercial-area" class="nav-link" data-scroll-target="#distance-per-commercial-area"> <span class="header-section-number">6.4</span> Distance per commercial area</a></li>
   <li><a href="#calculate-total-distance-per-fishing-area" id="toc-calculate-total-distance-per-fishing-area" class="nav-link" data-scroll-target="#calculate-total-distance-per-fishing-area"> <span class="header-section-number">6.5</span> Calculate total distance per fishing area</a></li>
   </ul>
 </nav>
@@ -267,6 +264,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Download the ship traffic raster from <a href="https://doi.org/10.18739/A2SQ8QJ9S">Kapsar et al.</a>. We grab a one month slice from December, 2020 of a coastal subset of data with 1km resolution.</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url_sf <span class="op">=</span> <span class="st">'https://cn.dataone.org/cn/v2/resolve/urn:uuid:dd61089d-f50e-4d87-9b75-6b4e2bd24776'</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -276,6 +274,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>1132748</code></pre>
 </div>
 </div>
+<p>Open the raster file, plot it, and look at the metadata.</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">"Coastal_2020_12.tif"</span>) <span class="im">as</span> dem_src:</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ships <span class="op">=</span> dem_src.read(<span class="dv">1</span>)</span>
@@ -291,13 +290,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="10-geopandas_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<ul>
-<li>read in the data</li>
-<li>clip to an extent that runs roughly from Bristol Bay to Prince William Sound</li>
-</ul>
 </section>
 <section id="distance-per-commercial-area" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="distance-per-commercial-area"><span class="header-section-number">6.4</span> Distance per commercial area</h2>
+<p>Now download a vector shapefile of commercial fishing districts in Alaska.</p>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A7c942c45-1539-4d47-b429-205499f0f3e4'</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -307,45 +303,54 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>36544512</code></pre>
 </div>
 </div>
-<section id="read-in-fishing-districts" class="level3" data-number="6.4.1">
-<h3 data-number="6.4.1" class="anchored" data-anchor-id="read-in-fishing-districts"><span class="header-section-number">6.4.1</span> Read in fishing districts</h3>
+<p>Read in the data</p>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>comm <span class="op">=</span> gpd.read_file(<span class="st">"Alaska_Commercial_Salmon_Boundaries.gpkg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Reproject the data</p>
+<p>The raster data is in 3338, so we need to reproject this.</p>
+<div class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>comm.crs</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>comm_3338 <span class="op">=</span> comm.to_crs(<span class="st">"EPSG:3338"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Get the bounding box as it’s own GeoDataFrame</p>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to return polygon</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bbox(long0, lat0, lat1, long1):</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Polygon([[long0, lat0], [long1,lat0], [long1,lat1], [long0, lat1]])</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> bbox(comm_3338.total_bounds[<span class="dv">0</span>], comm_3338.total_bounds[<span class="dv">1</span>], comm_3338.total_bounds[<span class="dv">2</span>], comm_3338.total_bounds[<span class="dv">3</span>])</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>bbox_crop <span class="op">=</span> gpd.GeoDataFrame(pd.DataFrame([<span class="st">'p1'</span>], columns <span class="op">=</span> [<span class="st">'geom'</span>]),</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    crs <span class="op">=</span> <span class="st">'EPSG:3338'</span>,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    geometry <span class="op">=</span> [coords])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Read in raster again cropped to bounding box - bounding box doesn’t quite match what I expected</p>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">"Coastal_2020_12.tif"</span>) <span class="im">as</span> src:</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    out_image, out_transform <span class="op">=</span> rasterio.mask.mask(src, bbox_crop[<span class="st">"geometry"</span>], crop<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    out_meta <span class="op">=</span> src.meta</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>comm_3338 <span class="op">=</span> comm.to_crs(<span class="st">"EPSG:3338"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>comm_3338.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>&lt;AxesSubplot:&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="10-geopandas_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>To (maybe) make things more efficient, we can extract the bounding box for the shapefile data and use that to clip the original raster data to just the extent we need. A simple function creates a list of 4 coordinate pairs from the 4 lower left/upper right points. This is then converted into a <code>geoDataFrame</code> to use with <code>rasterio</code>.</p>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to return polygon</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bbox(long0, lat0, lat1, long1):</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Polygon([[long0, lat0], [long1,lat0], [long1,lat1], [long0, lat1]])</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>out_meta.update({<span class="st">"driver"</span>: <span class="st">"GTiff"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"height"</span>: out_image.shape[<span class="dv">1</span>],</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"width"</span>: out_image.shape[<span class="dv">2</span>],</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"transform"</span>: out_transform})</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">"Coastal_2020_12_masked.tif"</span>, <span class="st">"w"</span>, <span class="op">**</span>out_meta) <span class="im">as</span> dest:</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    dest.write(out_image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>sh_bounds <span class="op">=</span> comm_3338.total_bounds</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> bbox(sh_bounds[<span class="dv">0</span>], sh_bounds[<span class="dv">1</span>], sh_bounds[<span class="dv">2</span>], sh_bounds[<span class="dv">3</span>])</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>bbox_crop <span class="op">=</span> gpd.GeoDataFrame(pd.DataFrame([<span class="st">'p1'</span>], columns <span class="op">=</span> [<span class="st">'geom'</span>]),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    crs <span class="op">=</span> <span class="st">'EPSG:3338'</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    geometry <span class="op">=</span> [coords])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Read in raster again cropped to bounding box.</p>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">"Coastal_2020_12.tif"</span>) <span class="im">as</span> src:</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    out_image, out_transform <span class="op">=</span> rasterio.mask.mask(src, bbox_crop[<span class="st">"geometry"</span>], crop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    out_meta <span class="op">=</span> src.meta</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>out_meta.update({<span class="st">"driver"</span>: <span class="st">"GTiff"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"height"</span>: out_image.shape[<span class="dv">1</span>],</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"width"</span>: out_image.shape[<span class="dv">2</span>],</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"transform"</span>: out_transform})</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">"Coastal_2020_12_masked.tif"</span>, <span class="st">"w"</span>, <span class="op">**</span>out_meta) <span class="im">as</span> dest:</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    dest.write(out_image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(out_image[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(out_image[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>&lt;matplotlib.image.AxesImage at 0x122285970&gt;</code></pre>
+<pre><code>&lt;matplotlib.image.AxesImage at 0x11d23ed00&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="10-geopandas_files/figure-html/cell-10-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-</section>
 </section>
 <section id="calculate-total-distance-per-fishing-area" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="calculate-total-distance-per-fishing-area"><span class="header-section-number">6.5</span> Calculate total distance per fishing area</h2>
