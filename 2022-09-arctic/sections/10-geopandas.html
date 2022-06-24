@@ -262,7 +262,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio.mask</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rasterstats <span class="im">import</span> zonal_stats</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># from rasterstats import zonal_stats</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shapely.geometry <span class="im">import</span> Polygon</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -339,7 +339,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(out_image[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>&lt;matplotlib.image.AxesImage at 0x1273374f0&gt;</code></pre>
+<pre><code>&lt;matplotlib.image.AxesImage at 0x122285970&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="10-geopandas_files/figure-html/cell-10-output-2.png" class="img-fluid"></p>
@@ -349,26 +349,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="calculate-total-distance-per-fishing-area" class="level2" data-number="6.5">
 <h2 data-number="6.5" class="anchored" data-anchor-id="calculate-total-distance-per-fishing-area"><span class="header-section-number">6.5</span> Calculate total distance per fishing area</h2>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>zs <span class="op">=</span> zonal_stats(comm_3338, <span class="st">"Coastal_2020_12_masked.tif"</span>, stats <span class="op">=</span> <span class="st">"sum"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>zs = zonal_stats(comm_3338, "Coastal_2020_12_masked.tif", stats = "sum")</code></pre>
 <p>Wrangle the data and reattach distances to the original polygons</p>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> [d[<span class="st">'sum'</span>] <span class="cf">for</span> d <span class="kw">in</span> zs]</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> pd.DataFrame({<span class="st">'STAT_AREA'</span> : comm_3338[<span class="st">"STAT_AREA"</span>],</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'distance'</span> : dist})</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>res_summary <span class="op">=</span> res.dropna(thresh <span class="op">=</span> <span class="dv">0</span>).query(<span class="st">"distance &gt; 0"</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>res_full <span class="op">=</span> comm_3338.merge(res_summary, on <span class="op">=</span> <span class="st">"STAT_AREA"</span>, how <span class="op">=</span> <span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>dist = [d['sum'] for d in zs]
+
+res = pd.DataFrame({'STAT_AREA' : comm_3338["STAT_AREA"],
+                    'distance' : dist})
+
+res_summary = res.dropna(thresh = 0).query("distance &gt; 0")
+
+res_full = comm_3338.merge(res_summary, on = "STAT_AREA", how = 'left')</code></pre>
 <p>Group by/summarize across another variable</p>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>res_full.plot(column <span class="op">=</span> <span class="st">"distance"</span>, legend <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<pre><code>&lt;AxesSubplot:&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="10-geopandas_files/figure-html/cell-13-output-2.png" class="img-fluid"></p>
-</div>
-</div>
+<pre><code>res_full.plot(column = "distance", legend = True)</code></pre>
 
 
 </section>
