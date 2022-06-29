@@ -89,7 +89,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../sections/references.html" rel="next">
+<link href="../sections/11-parquet-arrow.html" rel="next">
 <link href="../sections/05-adc-data-publishing.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -189,6 +189,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../sections/11-parquet-arrow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../sections/references.html" class="sidebar-item-text sidebar-link">References</a>
   </div>
 </li>
@@ -203,9 +208,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">6.1</span> Learning Objectives</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">6.2</span> Introduction</a></li>
-  <li><a href="#pre-processing-raster-data" id="toc-pre-processing-raster-data" class="nav-link" data-scroll-target="#pre-processing-raster-data"> <span class="header-section-number">6.3</span> Pre-processing raster data</a></li>
-  <li><a href="#distance-per-commercial-area" id="toc-distance-per-commercial-area" class="nav-link" data-scroll-target="#distance-per-commercial-area"> <span class="header-section-number">6.4</span> Distance per commercial area</a></li>
-  <li><a href="#calculate-total-distance-per-fishing-area" id="toc-calculate-total-distance-per-fishing-area" class="nav-link" data-scroll-target="#calculate-total-distance-per-fishing-area"> <span class="header-section-number">6.5</span> Calculate total distance per fishing area</a></li>
+  <li><a href="#pre-processing-raster-data" id="toc-pre-processing-raster-data" class="nav-link" data-scroll-target="#pre-processing-raster-data"> <span class="header-section-number">6.3</span> Pre-processing raster data</a>
+  <ul class="collapse">
+  <li><a href="#check-extents" id="toc-check-extents" class="nav-link" data-scroll-target="#check-extents"> <span class="header-section-number">6.3.1</span> Check extents</a></li>
+  </ul></li>
+  <li><a href="#calculate-total-distance-per-fishing-area" id="toc-calculate-total-distance-per-fishing-area" class="nav-link" data-scroll-target="#calculate-total-distance-per-fishing-area"> <span class="header-section-number">6.4</span> Calculate total distance per fishing area</a></li>
   </ul>
 </nav>
     </div>
@@ -295,9 +302,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="10-geopandas_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-</section>
-<section id="distance-per-commercial-area" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="distance-per-commercial-area"><span class="header-section-number">6.4</span> Distance per commercial area</h2>
 <p>Now download a vector shapefile of commercial fishing districts in Alaska.</p>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A7c942c45-1539-4d47-b429-205499f0f3e4'</span></span>
@@ -353,6 +357,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    dest.write(out_image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can also clip the shapefile data to the same bounding box</p>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>comm_clip <span class="op">=</span> comm_3338.clip(bbox_crop[<span class="st">'geometry'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="check-extents" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="check-extents"><span class="header-section-number">6.3.1</span> Check extents</h3>
 <p>Quick plot to ensure they are in the same extent, and look as expected.</p>
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">'Coastal_2020_12_masked.tif'</span>) <span class="im">as</span> src:</span>
@@ -377,8 +383,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="calculate-total-distance-per-fishing-area" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="calculate-total-distance-per-fishing-area"><span class="header-section-number">6.5</span> Calculate total distance per fishing area</h2>
+</section>
+<section id="calculate-total-distance-per-fishing-area" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="calculate-total-distance-per-fishing-area"><span class="header-section-number">6.4</span> Calculate total distance per fishing area</h2>
 <p>Rasterize each polygon in the shapefile that falls within the bounds of the raster data we are calculating statistics for.</p>
 <p>We return a dictionary of indexed arrays, where each item corresponds to one polygon (fishing area). The array contains the indices of the original raster that fall within that fishing area.</p>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">'Coastal_2020_12_masked.tif'</span>) <span class="im">as</span> src:</span>
@@ -434,7 +441,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Distance Traveled by Ships in Kilometers"</span>)</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/ipykernel_2979/3303410610.py:6: UserWarning: FixedFormatter should only be used together with FixedLocator
+<pre><code>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/ipykernel_15014/3303410610.py:6: UserWarning: FixedFormatter should only be used together with FixedLocator
   cb_ax.set_yticklabels(["0", "2,000", "4,000", "6,000", "8,000", "10,000", "12,000", "14,000", "16,000"])</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -532,8 +539,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../sections/references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../sections/11-parquet-arrow.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
