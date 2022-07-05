@@ -149,8 +149,13 @@ ul.task-list{list-style: none;}
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">7.1</span> Learning Objectives</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">7.2</span> Introduction</a></li>
-  <li><a href="#row-major-vs-column-major" id="toc-row-major-vs-column-major" class="nav-link" data-scroll-target="#row-major-vs-column-major"> <span class="header-section-number">7.3</span> Row major vs column major</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"> <span class="header-section-number">7.4</span> Example</a></li>
+  <li><a href="#row-major-vs-column-major" id="toc-row-major-vs-column-major" class="nav-link" data-scroll-target="#row-major-vs-column-major"> <span class="header-section-number">7.3</span> Row major vs column major</a>
+  <ul class="collapse">
+  <li><a href="#file-formats" id="toc-file-formats" class="nav-link" data-scroll-target="#file-formats"> <span class="header-section-number">7.3.1</span> File formats</a></li>
+  </ul></li>
+  <li><a href="#parquet" id="toc-parquet" class="nav-link" data-scroll-target="#parquet"> <span class="header-section-number">7.4</span> Parquet</a></li>
+  <li><a href="#arrow" id="toc-arrow" class="nav-link" data-scroll-target="#arrow"> <span class="header-section-number">7.5</span> Arrow</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"> <span class="header-section-number">7.6</span> Example</a></li>
   </ul>
 </nav>
     </div>
@@ -208,9 +213,66 @@ a21 a22 a23</code></pre>
 <p><code>a11, a21, a12, a22, a13, a33</code></p>
 <p>By default, C and SAS use row major order for arrays, and column major is used by Fortran, MATLAB, R, and Julia.</p>
 <p>Python uses neither, instead representing arrays as lists of lists, though <code>numpy</code> uses row-major order.</p>
+<section id="file-formats" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="file-formats"><span class="header-section-number">7.3.1</span> File formats</h3>
+<p>The same concept can be applied to file formats as the example with arrays above. In row-major file formats, the values (bytes) of each record are read sequentially.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Location</th>
+<th>Age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>John</td>
+<td>Washington</td>
+<td>40</td>
+</tr>
+<tr class="even">
+<td>Mariah</td>
+<td>Texas</td>
+<td>21</td>
+</tr>
+<tr class="odd">
+<td>Allison</td>
+<td>Oregon</td>
+<td>57</td>
+</tr>
+</tbody>
+</table>
+<p>In the above row major example, data are read in the order: <code>John, Washingon, 40, [new line], Mariah, Texas, 21</code>.</p>
+<p>This means that getting a subset of all columns would be easy; you can specify to read in only the first X rows. However, if we are only interested in Name and Location, we would still have to read in all of the rows before discarding the Age column.</p>
+<p>If these data were organized in a column major format, they might look like this:</p>
+<pre><code>Name: John, Mariah, Allison
+Location: Washington, Texas, Oregon
+Age: 40, 21, 57</code></pre>
+<p>And the read order would first be the names, then the locations, then the age. This means that selecting all values from a set of columns is quite easy (all of the Names and Ages, or all Names and Locations), but reading in only the first few records from each column would require reading in the entire dataset. Another advantage to column major formats is that compression is more efficient since compression can be done across each column, where the data type is uniform, as opposed to across rows with many data types.</p>
 </section>
-<section id="example" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="example"><span class="header-section-number">7.4</span> Example</h2>
+</section>
+<section id="parquet" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="parquet"><span class="header-section-number">7.4</span> Parquet</h2>
+<p>Parquet is an open-source file format that stores data in a column-major format. The format contains several key components:</p>
+<ul>
+<li>row group</li>
+<li>column</li>
+<li>page</li>
+<li>footer</li>
+</ul>
+<p><img src="../images/parquet-schematic.png" class="img-fluid"></p>
+<p>Row groups are blocks of data over a set number of rows that contain data from the same columns. Within each row group, data are organized in column-major format, and within each column are pages that are typically 1MB. The footer of the file contains metaata like the schema, encodings, unique values in each column, etc.</p>
+<p>The parquet format has many tricks to to increase storage efficiency, and is increasingly being used to handle large datasets.</p>
+</section>
+<section id="arrow" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="arrow"><span class="header-section-number">7.5</span> Arrow</h2>
+<p>So far, we have discussed the difference between organizing information in row-major and column-major format, how that applies to arrays, and how it applies to data storage on disk using Parquet.</p>
+<p>Arrow is a language-agnostic specification that enables representation of column-major information <strong>in memory</strong>. The Arrow project provides implementation of this specification in a number of languages, including Python.</p>
+<p>Let’s say that you have utilized the Parquet data format for more efficient storage of your data on disk. At some point, you’ll need to read that data into memory in order to do analysis on it. Arrow enables data transfer between the on disk Parquet files and in-memory Python computations, via the <code>PyArrow</code> library.</p>
+<p><code>PyArrow</code> is great, but relatively low level. It supports basic group by and aggregate functions, as well as table and dataset joins, but it does not support the full operations that <code>pandas</code> does.</p>
+</section>
+<section id="example" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="example"><span class="header-section-number">7.6</span> Example</h2>
 <ul>
 <li>show a read write example and benchmark maybe</li>
 </ul>
