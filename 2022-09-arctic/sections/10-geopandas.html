@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.653">
+<meta name="generator" content="quarto-1.0.3">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 6&nbsp; Spatial and Image Data Using GeoPandas</title>
+<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 8&nbsp; Spatial and Image Data Using GeoPandas</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -89,7 +89,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../sections/11-parquet-arrow.html" rel="next">
-<link href="../sections/05-adc-data-publishing.html" rel="prev">
+<link href="../sections/07-parallel-with-dask.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -183,22 +183,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/10-geopandas.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></a>
+  <a href="../sections/06-data-structures-netcdf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data Structures and Formats for Large Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/11-parquet-arrow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></a>
+  <a href="../sections/07-parallel-with-dask.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/15-google-earth-engine.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Google Earth Engine</span></a>
+  <a href="../sections/10-geopandas.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/18-arctic-data-staging.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Workflows for data staging and publishing</span></a>
+  <a href="../sections/11-parquet-arrow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/15-google-earth-engine.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Google Earth Engine</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/18-arctic-data-staging.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Workflows for data staging and publishing</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -215,13 +225,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">6.1</span> Learning Objectives</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">6.2</span> Introduction</a></li>
-  <li><a href="#pre-processing-raster-data" id="toc-pre-processing-raster-data" class="nav-link" data-scroll-target="#pre-processing-raster-data"> <span class="header-section-number">6.3</span> Pre-processing raster data</a>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">8.1</span> Learning Objectives</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">8.2</span> Introduction</a></li>
+  <li><a href="#pre-processing-raster-data" id="toc-pre-processing-raster-data" class="nav-link" data-scroll-target="#pre-processing-raster-data"> <span class="header-section-number">8.3</span> Pre-processing raster data</a>
   <ul class="collapse">
-  <li><a href="#check-extents" id="toc-check-extents" class="nav-link" data-scroll-target="#check-extents"> <span class="header-section-number">6.3.1</span> Check extents</a></li>
+  <li><a href="#check-extents" id="toc-check-extents" class="nav-link" data-scroll-target="#check-extents"> <span class="header-section-number">8.3.1</span> Check extents</a></li>
   </ul></li>
-  <li><a href="#calculate-total-distance-per-fishing-area" id="toc-calculate-total-distance-per-fishing-area" class="nav-link" data-scroll-target="#calculate-total-distance-per-fishing-area"> <span class="header-section-number">6.4</span> Calculate total distance per fishing area</a></li>
+  <li><a href="#calculate-total-distance-per-fishing-area" id="toc-calculate-total-distance-per-fishing-area" class="nav-link" data-scroll-target="#calculate-total-distance-per-fishing-area"> <span class="header-section-number">8.4</span> Calculate total distance per fishing area</a></li>
   </ul>
 </nav>
     </div>
@@ -230,7 +240,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></h1>
 </div>
 
 
@@ -244,16 +254,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="learning-objectives" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">6.1</span> Learning Objectives</h2>
+<section id="learning-objectives" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">8.1</span> Learning Objectives</h2>
 <ul>
 <li>Reading raster data with rasterasterio</li>
 <li>Using geopandas and rasterasterio to process raster data</li>
 <li>Working with raster and vector data together</li>
 </ul>
 </section>
-<section id="introduction" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">6.2</span> Introduction</h2>
+<section id="introduction" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">8.2</span> Introduction</h2>
 <ul>
 <li>Raster vs vector data</li>
 <li>What is a projection</li>
@@ -263,8 +273,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul>
 </section>
-<section id="pre-processing-raster-data" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="pre-processing-raster-data"><span class="header-section-number">6.3</span> Pre-processing raster data</h2>
+<section id="pre-processing-raster-data" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="pre-processing-raster-data"><span class="header-section-number">8.3</span> Pre-processing raster data</h2>
 <p>This is a test to make sure we can run some code in this notebook.</p>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio</span>
@@ -360,8 +370,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    dest.write(out_image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can also clip the shapefile data to the same bounding box</p>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>comm_clip <span class="op">=</span> comm_3338.clip(bbox_crop[<span class="st">'geometry'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="check-extents" class="level3" data-number="6.3.1">
-<h3 data-number="6.3.1" class="anchored" data-anchor-id="check-extents"><span class="header-section-number">6.3.1</span> Check extents</h3>
+<section id="check-extents" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="check-extents"><span class="header-section-number">8.3.1</span> Check extents</h3>
 <p>Quick plot to ensure they are in the same extent, and look as expected.</p>
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">'Coastal_2020_12_masked.tif'</span>) <span class="im">as</span> src:</span>
@@ -387,8 +397,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="calculate-total-distance-per-fishing-area" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="calculate-total-distance-per-fishing-area"><span class="header-section-number">6.4</span> Calculate total distance per fishing area</h2>
+<section id="calculate-total-distance-per-fishing-area" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="calculate-total-distance-per-fishing-area"><span class="header-section-number">8.4</span> Calculate total distance per fishing area</h2>
 <p>Rasterize each polygon in the shapefile that falls within the bounds of the raster data we are calculating statistics for.</p>
 <p>We return a dictionary of indexed arrays, where each item corresponds to one polygon (fishing area). The array contains the indices of the original raster that fall within that fishing area.</p>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">'Coastal_2020_12_masked.tif'</span>) <span class="im">as</span> src:</span>
@@ -444,7 +454,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Distance Traveled by Ships in Kilometers"</span>)</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_51464/3303410610.py:6: UserWarning: FixedFormatter should only be used together with FixedLocator
+<pre><code>/tmp/ipykernel_51369/3303410610.py:6: UserWarning: FixedFormatter should only be used together with FixedLocator
   cb_ax.set_yticklabels(["0", "2,000", "4,000", "6,000", "8,000", "10,000", "12,000", "14,000", "16,000"])</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -537,13 +547,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../sections/05-adc-data-publishing.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Documenting and Publishing Data</span></span>
+      <a href="../sections/07-parallel-with-dask.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../sections/11-parquet-arrow.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
