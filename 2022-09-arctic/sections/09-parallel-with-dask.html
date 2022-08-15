@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 13&nbsp; Group Project: Data Processing</title>
+<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 9&nbsp; Parallelization with Dask</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,8 +25,8 @@ ul.task-list{list-style: none;}
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../sections/14-data-ethics.html" rel="next">
-<link href="../sections/12-software-design-2.html" rel="prev">
+<link href="../sections/10-geopandas.html" rel="next">
+<link href="../sections/08-data-structures-netcdf.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -65,7 +65,7 @@ ul.task-list{list-style: none;}
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -135,7 +135,7 @@ ul.task-list{list-style: none;}
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/09-parallel-with-dask.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></a>
+  <a href="../sections/09-parallel-with-dask.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -155,7 +155,7 @@ ul.task-list{list-style: none;}
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/13-group-project-2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></a>
+  <a href="../sections/13-group-project-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -197,7 +197,13 @@ ul.task-list{list-style: none;}
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives"> <span class="header-section-number">13.1</span> Objectives</a></li>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">9.1</span> Learning Objectives</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">9.2</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes"> <span class="header-section-number">9.2.1</span> Notes</a></li>
+  </ul></li>
+  <li><a href="#dask-tutorial" id="toc-dask-tutorial" class="nav-link" data-scroll-target="#dask-tutorial"> <span class="header-section-number">9.3</span> Dask Tutorial</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"> <span class="header-section-number">9.4</span> Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -206,7 +212,7 @@ ul.task-list{list-style: none;}
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></h1>
 </div>
 
 
@@ -220,13 +226,55 @@ ul.task-list{list-style: none;}
 
 </header>
 
-<section id="objectives" class="level2" data-number="13.1">
-<h2 data-number="13.1" class="anchored" data-anchor-id="objectives"><span class="header-section-number">13.1</span> Objectives</h2>
-<p>Groups will start with the tiled output that they made from last session. The main objective in this lesson is to have them rasterize the tiled shapfiles, which we need to do for visualization (and would also be a useful thing to know how to do in an analysis workflow as well).</p>
-<p>The groups will need to:</p>
+<section id="learning-objectives" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">9.1</span> Learning Objectives</h2>
 <ul>
-<li>run the rasterizer method on one file</li>
-<li>write a parsl app that will run it on all of the files</li>
+<li>Learn about the map-reduce</li>
+<li>Learn how to use Dask</li>
+</ul>
+</section>
+<section id="introduction" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">9.2</span> Introduction</h2>
+<p>TODO</p>
+<section id="notes" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="notes"><span class="header-section-number">9.2.1</span> Notes</h3>
+<ul>
+<li><p>https://www.dask.org/</p></li>
+<li><p>https://docs.xarray.dev/en/stable/user-guide/dask.html#dask</p></li>
+<li><p>https://stephanhoyer.com/2015/06/11/xray-dask-out-of-core-labeled-arrays/</p></li>
+<li><p>https://examples.dask.org/xarray.html</p></li>
+<li><p>Good example to base exercise on: https://examples.dask.org/applications/image-processing.html</p></li>
+<li><p>Split-apply-combine</p></li>
+<li><p>Dask stuff</p>
+<ul>
+<li>Lazy eval (compute())
+<ul>
+<li>Grouping compute() calls versus calling compute() multiple times</li>
+</ul></li>
+<li>Dask Array</li>
+<li>Dask DataFrame</li>
+<li>Skip or just mention Bag, Delayed, Futures? Not sure yet.</li>
+<li>visualize()</li>
+<li>Choosing how many chunks to divide work into</li>
+<li>Task overhead</li>
+<li>Distributed dask?
+<ul>
+<li>Persist &gt; Dask is convenient on a laptop. It installs trivially with conda or pip and extends the size of convenient datasets from “fits in memory” to “fits on disk”.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>– From https://docs.dask.org/en/stable/</p>
+</section>
+</section>
+<section id="dask-tutorial" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="dask-tutorial"><span class="header-section-number">9.3</span> Dask Tutorial</h2>
+<p>TODO ## Exercise</p>
+<p>TODO (50min)</p>
+</section>
+<section id="conclusion" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">9.4</span> Conclusion</h2>
+<ul>
+<li>Comparison with other libraries Thread pools, process pools, distributed dask clusters</li>
 </ul>
 
 
@@ -332,13 +380,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../sections/12-software-design-2.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Software Design II</span></span>
+      <a href="../sections/08-data-structures-netcdf.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Structures and Formats for Large Data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../sections/14-data-ethics.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Data Ethics</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../sections/10-geopandas.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
