@@ -308,15 +308,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="introduction" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.2</span> Introduction</h2>
-<ul>
-<li>VS Code + remote development on a cluster is easy and way faster than your local machine</li>
-<li>Jupyter is a great way to do literate analysis</li>
-<li>Functions provide ways to reuse your code across notebooks/projects</li>
-</ul>
+<p>We’ve chosen to use VS Code in this training, in part, because it has great support for developing on remote machines. Hopefully, your VS Code setup went easily, and you were able to connect to our server <code>included-crab</code>. Once connected, the VS Code interface looks just like you were working locally, and connection to the server is seamless.</p>
+<p>Other aspects of VS Code that we like: it supports all languages thanks to the extensive free extension library, it has built in version control integration, and it is highly flexible/configurable.</p>
+<p>We will also be working quite a bit in Jupyter notebooks in this course. Notebooks are great ways to interleave rich text (markdown formatted text, equations, images, links) and code in a way that a ‘literate analysis’ is generated. Although Jupyter notebooks are not subsitutes for python scripts, they can be great communication tools, and can also be convenient for code development.</p>
 </section>
 <section id="starting-a-project" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="starting-a-project"><span class="header-section-number">3.3</span> Starting a project</h2>
-<p>First, let’s connect to the server again. If you were able to work through the setup for the lesson without difficulty, follow these steps to connect:</p>
+<p>To get set up for the course, let’s connect to the server again. If you were able to work through the setup for the lesson without difficulty, follow these steps to connect:</p>
 <ul>
 <li>open the command pallette (Cmd + Shift + P)</li>
 <li>enter “Remote SSH: Connect to Host”</li>
@@ -333,27 +331,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="virtual-environments" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="virtual-environments"><span class="header-section-number">3.4</span> Virtual Environments</h2>
-<p>Why virtual environments? We’ll answer this.</p>
+<p><img src="https://imgs.xkcd.com/comics/python_environment.png"></p>
+<p>When you install a python library, let’s say <code>pandas</code>, via <code>pip</code>, unless you specify otherwise, <code>pip</code> will go out and grab the most recent version of the library, and install it somewhere on your system path (where, exactly, depends highly on how you install python originally, and other factors). This is all great, untl you realize that as part of a new project, a new library you are starting to work with requires a older version of <code>pandas</code>, what do you do? You need both <code>pandas</code> versions for each of your projects. Virtual environments help to solve this issue without making the all to common situation in the comic above even more complicated.</p>
+<p>A virtual environment is a folder structure which creates a symlink (pointer) to all of the libraries that you need into the folder. The three main components will be: the python distribution itself, its configuration, and a site-packages directory (where your libraries like <code>pandas</code> live). So the folder is a self contained directory of all the version-specific python software you need for your project.</p>
+<p>Virtual environments are very helpful to create reproducible workflows, and we’ll talk more about this concept of reproducible environements later in the course. Perhaps most importantly though, virtual environments also help you maintain your sanity when python programming. Because they are just folders, you can create and delete new ones at will, without worrying about bungling your underlying python setup.</p>
+<p>In this course, we are going to use <code>virtualenv</code> as our tool to create and manage virtual environments. Other virtual environment tools used commonly are <code>conda</code> and <code>pipenv</code>. One reason we like using <code>virtualenv</code> is there is an extension to it called <code>virtualenvwrapper</code>, which provides easy to remember wrappers around common <code>virtualenv</code> operations that make creating, activating, and deactivating a virtual environment very easy.</p>
 <p>First we will create a <code>.bash_profile</code> file to create variables that point to the install locations of python and <code>virtualenvwrapper</code>. <code>.bash_profile</code> is just a text file that contains bash commands that are run every time you start up a new terminal. Although setting up this file is not required to use <code>virtualenvwrapper</code>, it is convenient because it allows you to set up some reasonable defaults to the commands (meaning less typing, overall), and it makes sure that the package is available every time you start a new terminal.</p>
-<p>To set up the <code>.bash_profile</code>. In VS Code, select ‘File &gt; New Text File’ then paste this into the file:</p>
+<section id="setup" class="level4" data-number="3.4.0.1">
+<h4 data-number="3.4.0.1" class="anchored" data-anchor-id="setup"><span class="header-section-number">3.4.0.1</span> Setup</h4>
+<ul>
+<li>In VS Code, select ‘File &gt; New Text File’</li>
+<li>Paste this text into the file:</li>
+</ul>
 <pre><code>export VIRTUALENVWRAPPER_VIRTUAWORKON_HOME=$HOME/.virtualenvs
 source /usr/share/virtualenvwrapper/virtualenvwrapper.sh</code></pre>
 <p>The first line points <code>virtualenvwrapper</code> to the directory where your virtual environments will be stored. We point it to a hidden directory (<code>.virtualenvs</code>) in your home directory. The last line sources a bash script that ships with <code>virtualenvwrapper</code>, which makes all of <code>virtualenvwrapper</code> commands available in your terminal session.</p>
-<p>Save the file in the top of your home directory as <code>.bash_profile</code>.</p>
-<p>Restart your terminal, then check to make sure it was installed and configured correctly</p>
+<ul>
+<li>Save the file in the top of your home directory as <code>.bash_profile</code>.</li>
+<li>Restart your terminal (Terminal &gt; New Terminal)</li>
+<li>Check to make sure it was installed and configured correctly by running this in the terminal:</li>
+</ul>
 <pre><code>mkvirtualenv --version</code></pre>
 <p>It should return some content that looks like this (with more output, potentially).</p>
 <pre><code>virtualenv 20.13.0+ds from /usr/lib/python3/dist-packages/virtualenv/__init__.py</code></pre>
-<p>Now we can create the virtual environment we will use for the course</p>
+</section>
+<section id="course-environment" class="level4" data-number="3.4.0.2">
+<h4 data-number="3.4.0.2" class="anchored" data-anchor-id="course-environment"><span class="header-section-number">3.4.0.2</span> Course environment</h4>
+<p>Now we can create the virtual environment we will use for the course. In the terminal run:</p>
 <pre><code>mkvirtualenv -p python3.9 scomp</code></pre>
-<p>Here, we’ve specified explicitly which python version to use by using the <code>-p</code> flag, and the path to the python 3.9 installation on the server. After making a virtual environment, it will automatically be activated. You’ll see the name of the env you are working in on the left side of your terminal prompt in parentheses. To deactivate your environment (like if you want to work on a different project), just run <code>deactivate</code>. To activate it again, run</p>
+<p>Here, we’ve specified explicitly which python version to use by using the <code>-p</code> flag, and the path to the python 3.9 installation on the server. After making a virtual environment, it will automatically be activated. You’ll see the name of the env you are working in on the left side of your terminal prompt in parentheses. To deactivate your environment (like if you want to work on a different project), just run <code>deactivate</code>. To activate it again, run:</p>
 <pre><code>workon scomp</code></pre>
 <p>You can get a list of all available environments by just running:</p>
 <pre><code>workon</code></pre>
 <p>Now let’s install the dependencies for this course into that environment. (Note: need to figure out how to get them this file)</p>
 <pre><code>python3 -m pip install -r requirements.txt</code></pre>
-<section id="installing-locally-optional" class="level4" data-number="3.4.0.1">
-<h4 data-number="3.4.0.1" class="anchored" data-anchor-id="installing-locally-optional"><span class="header-section-number">3.4.0.1</span> Installing locally (optional)</h4>
+</section>
+<section id="installing-locally-optional" class="level4" data-number="3.4.0.3">
+<h4 data-number="3.4.0.3" class="anchored" data-anchor-id="installing-locally-optional"><span class="header-section-number">3.4.0.3</span> Installing locally (optional)</h4>
 <p><code>virtualenvwrapper</code> was already installed on the server we are working on. To install on your local computer, run:</p>
 <pre><code>pip3 install virtualenvwrapper</code></pre>
 <p>And then follow the instructions as described above, making sure that you have the correct paths set when you edit your <code>.bash_profile</code>.</p>
