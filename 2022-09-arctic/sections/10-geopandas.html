@@ -354,7 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>1422727</code></pre>
 </div>
 </div>
-<p>Open the raster file, plot it, and look at the metadata.</p>
+<p>Open the raster file, plot it, and look at the metadata. We use the <code>with</code> here as a context manager. This ensures that the connection to the raster file is closed and cleaned up when we are done with it.</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> rasterio.<span class="bu">open</span>(<span class="st">"Coastal_2020_08.tif"</span>) <span class="im">as</span> dem_src:</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ships <span class="op">=</span> dem_src.read(<span class="dv">1</span>)</span>
@@ -474,51 +474,48 @@ Datum: World Geodetic System 1984 ensemble
 </section>
 <section id="calculate-total-distance-per-fishing-area" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="calculate-total-distance-per-fishing-area"><span class="header-section-number">10.4</span> Calculate total distance per fishing area</h2>
-<p>In this step, we rasterize each polygon in the shapefile that falls within the bounds of the raster data we are calculating statistics for.</p>
-<p>This process returns a dictionary of indexed arrays, where each item corresponds to one polygon (fishing area). The array contains the indices of the original raster that fall within that fishing area. In other words, we are creating a raster mask for each fishing district.</p>
-<p>First we’ll create an <code>id</code> column in the vector data frame. This will help us track unique fishing districts later.</p>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>comm_3338[<span class="st">'id'</span>] <span class="op">=</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(comm_3338))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>In this step, we rasterize each polygon in the shapefile, such that pixels in or touching the polygon get a value of 1, and pixels not touching it get a value of 0. Then, for each polygon, we extract the indices of the raster array that are equal to 1. We then extract the values of these indicies from the original ship traffic raster data, and calculate the sum of the values over all of those pixels.</p>
+<p>Here is a simplified diagram of the process:</p>
+<p><img src="../images/raster-mask.png" class="img-fluid"></p>
 <section id="zonal-statistics-over-one-polygon" class="level4" data-number="10.4.0.1">
 <h4 data-number="10.4.0.1" class="anchored" data-anchor-id="zonal-statistics-over-one-polygon"><span class="header-section-number">10.4.0.1</span> Zonal statistics over one polygon</h4>
-<p>Let’s look at how this works over just one fishing area first. We use the <code>rasterize</code> method from the <code>features</code> module in <code>rasterio</code>. This takes as arguments that data to rasterize (in this case the 40th row of our dataset), the shape and transformaion the output raster will take (these were extracted from our raster data when we read it in). We alo set the <code>all_touched</code> argument to true, which means any pixel that touches a boundary of our vector will be burned into the mask.</p>
-<div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>r40 <span class="op">=</span> features.rasterize(comm_3338[<span class="st">'geometry'</span>][<span class="dv">40</span>].geoms,</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                                    out_shape<span class="op">=</span>shape,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                                    transform<span class="op">=</span>transform,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                                    all_touched<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Let’s look at how this works over just one fishing area first. We use the <code>rasterize</code> method from the <code>features</code> module in <code>rasterio</code>. This takes as arguments the data to rasterize (in this case the 40th row of our dataset), the shape and transform the output raster will take (these were extracted from our raster data when we read it in). We alo set the <code>all_touched</code> argument to true, which means any pixel that touches a boundary of our vector will be burned into the mask.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>r40 <span class="op">=</span> features.rasterize(comm_3338[<span class="st">'geometry'</span>][<span class="dv">40</span>].geoms,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                                    out_shape<span class="op">=</span>shape,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                                    transform<span class="op">=</span>transform,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                                    all_touched<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If we have a look at a plot of our rasterized version of the single fishing district, we can see that instead of a vector, we now have a raster with the shape of the district.</p>
-<div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set up plot</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">15</span>))</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the raster</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>rasterio.plot.show(r40,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                   ax<span class="op">=</span>ax,</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                   vmin <span class="op">=</span> <span class="dv">0</span>,</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                   vmax <span class="op">=</span> <span class="dv">1</span>,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                   transform <span class="op">=</span> transform)</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the vector</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>comm_clip.plot(ax<span class="op">=</span>ax, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'red'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set up plot</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">15</span>))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the raster</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>rasterio.plot.show(r40,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                   ax<span class="op">=</span>ax,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                   vmin <span class="op">=</span> <span class="dv">0</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>                   vmax <span class="op">=</span> <span class="dv">1</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                   transform <span class="op">=</span> transform)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the vector</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>comm_clip.plot(ax<span class="op">=</span>ax, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'red'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>&lt;AxesSubplot:&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="10-geopandas_files/figure-html/cell-15-output-2.png" class="img-fluid"></p>
+<p><img src="10-geopandas_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>A quick call to <code>np.unique</code> shows our unique values are 0 or 1, which is what we expect.</p>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>np.unique(r40)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>np.unique(r40)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>array([0, 1], dtype=uint8)</code></pre>
 </div>
 </div>
 <p>Finally, we need to know is the indices of the original raster where the fishing district is. We can use <code>np.where</code> to extract this information</p>
-<div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>r40_index <span class="op">=</span> np.where(r40 <span class="op">==</span> <span class="dv">1</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r40_index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>r40_index <span class="op">=</span> np.where(r40 <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r40_index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(array([108, 108, 108, 108, 108, 109, 109, 109, 109, 109, 109, 109, 109,
        109, 109, 110, 110, 110, 110, 110, 110, 110, 110, 110, 110, 110,
@@ -536,25 +533,28 @@ Datum: World Geodetic System 1984 ensemble
 </div>
 </div>
 <p>In the last step, we’ll using these indices to extract the values of the data from the fishing raster, and sum them to get a total distance travelled.</p>
-<div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>np.nansum(ship_arr[r40_index])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>np.nansum(ship_arr[r40_index])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>8387952.0</code></pre>
 </div>
 </div>
-<p>Now that we know the individual steps, let’s run this over all of the districts. For each district (with <code>geometry</code> and <code>id</code>), we run the <code>features.rasterize</code> function. If any values equal 1 (some of the districts are outside the bounds of the raster), we calculate the sum of the values of the shipping raster <code>r_array</code> based on the indicies in the raster where the district is located.</p>
+<p>Now that we know the individual steps, let’s run this over all of the districts. First we’ll create an <code>id</code> column in the vector data frame. This will help us track unique fishing districts later.</p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>comm_3338[<span class="st">'id'</span>] <span class="op">=</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(comm_3338))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For each district (with <code>geometry</code> and <code>id</code>), we run the <code>features.rasterize</code> function. If any values equal 1 (some of the districts are outside the bounds of the raster), we calculate the sum of the values of the shipping raster <code>r_array</code> based on the indicies in the raster where the district is located.</p>
 <div class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>distance_dict <span class="op">=</span> {}</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> geom, idx <span class="kw">in</span> <span class="bu">zip</span>(comm_3338[<span class="st">'geometry'</span>], comm_3338[<span class="st">'id'</span>]):</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    rasterized <span class="op">=</span> features.rasterize(geom.geoms,</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                                    out_shape<span class="op">=</span>shape,</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                                    transform<span class="op">=</span>transform,</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                                    all_touched<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                                    fill<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># only save polygons that have a non-zero value</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">any</span>(np.unique(rasterized)) <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        r_index <span class="op">=</span> np.where(rasterized <span class="op">==</span> <span class="dv">1</span>)</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        distance_dict[idx] <span class="op">=</span> np.nansum(ship_arr[r_index])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                                    all_touched<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># only save polygons that have a non-zero value</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">any</span>(np.unique(rasterized)) <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>        r_index <span class="op">=</span> np.where(rasterized <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        distance_dict[idx] <span class="op">=</span> np.nansum(ship_arr[r_index])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we just create a data frame from that dictionary, and join it to the vector data using <code>pandas</code> operations.</p>
 <div class="cell" data-execution_count="19">
@@ -583,7 +583,7 @@ Datum: World Geodetic System 1984 ensemble
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Distance Traveled by Ships in Kilometers"</span>)</span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_52917/3303410610.py:6: UserWarning: FixedFormatter should only be used together with FixedLocator
+<pre><code>/tmp/ipykernel_52750/3303410610.py:6: UserWarning: FixedFormatter should only be used together with FixedLocator
   cb_ax.set_yticklabels(["0", "2,000", "4,000", "6,000", "8,000", "10,000", "12,000", "14,000", "16,000"])</code></pre>
 </div>
 <div class="cell-output cell-output-display">
