@@ -310,10 +310,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../images/mahecha_data_cube.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Mahecha et al.&nbsp;2020 . <em>Visualization of the implemented Earth system data cube. The figure shows from the top left to bottom right the variables sensible heat (H ), latent heat (LE), gross primary production (GPP), surface moisture (SM), land surface temperature (LST), air temperature (Tair ), cloudiness (C ), precipitation (P ), and water vapour (V ). The resolution in space is 0.25◦ and 8 d in time, and we are inspecting the time from May 2008 to May 2010; the spatial range is from 15◦ S to 60◦ N, and 10◦ E to 65◦ W.</em></figcaption><p></p>
+<p></p><figcaption class="figure-caption">Mahecha et al.&nbsp;2020 . <em>Visualization of the implemented Earth system data cube. The figure shows from the top left to bottom right the variables sensible heat (H), latent heat (LE), gross primary production (GPP), surface moisture (SM), land surface temperature (LST), air temperature (Tair), cloudiness (C), precipitation (P), and water vapour (V). The resolution in space is 0.25° and 8 d in time, and we are inspecting the time from May 2008 to May 2010; the spatial range is from 15° S to 60° N, and 10° E to 65° W.</em></figcaption><p></p>
 </figure>
 </div>
-<p>Keeping complex datasets in a format that facilitates access, processing, sharing, and archiving can be at least as important as how we parallelize the code we use to analyze them. In practice, it is common to convert our data from less efficient formats into more efficient ones before we parallelize any processing. In this lesson, we will familiarize ourselves with the NetCDF data format, which enables us to store large, complex, multi-dimensional data efficiently, and learn to use the <code>xarray</code> Python package to read, process, and create NetCDF files.</p>
+<p>Keeping complex datasets in a format that facilitates access, processing, sharing, and archiving can be at least as important as how we parallelize the code we use to analyze them. In practice, it is common to convert our data from less efficient formats into more efficient ones before we parallelize any processing. In this lesson, we will</p>
+<ol type="1">
+<li><p>familiarize ourselves with the NetCDF data format, which enables us to store large, complex, multi-dimensional data efficiently, and</p></li>
+<li><p>learn to use the <code>xarray</code> Python package to read, process, and create NetCDF files.</p></li>
+</ol>
 </section>
 <section id="objectives" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="objectives"><span class="header-section-number">8.2</span> Objectives</h2>
@@ -326,7 +330,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li>Learn how to use the <code>xarray</code> Python package to work with NetCDF files:
 <ul>
-<li>Describe the core <code>xarray</code> data structures, the <code>xarray.DataArray</code> and the <code>xarray.Dataset</code>, and their components, including: <em>data variables</em>, <em>dimensions</em>, <em>coordinates</em>, and <em>attributes</em></li>
+<li>Describe the core <code>xarray</code> data structures, the <code>xarray.DataArray</code> and the <code>xarray.Dataset</code>, and their components, including: data variables, dimensions, coordinates, and attributes</li>
 <li>Create <code>xarray.DataArrays</code> and <code>xarra.DataSets</code> out of raw <code>numpy</code> arrays and save them as netCDF files</li>
 <li>Load <code>xarray</code> datasets from netCDF and understand the attributes view</li>
 <li>Perform basic indexing, processing and reduction of <code>xarray.DataArrays</code></li>
@@ -335,11 +339,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="netcdf-data-format" class="level2" data-number="8.3">
 <h2 data-number="8.3" class="anchored" data-anchor-id="netcdf-data-format"><span class="header-section-number">8.3</span> NetCDF data format</h2>
-<p><a href="https://docs.unidata.ucar.edu/netcdf-c/current/index.html">NetCDF</a> (network Common Data Form) is a set of software libraries and self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data. NetCDF is supported on almost all platforms, and parsers exist for the vast majority of scientific programming languages. The netCDF software was developed at the Unidata Program Center in Boulder, Colorado.</p>
-<p>[REF: https://docs.unidata.ucar.edu/netcdf-c/current/faq.html#ncFAQGeneral]</p>
+<p><a href="https://docs.unidata.ucar.edu/netcdf-c/current/index.html">NetCDF</a> (network Common Data Form) is a set of software libraries and self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data. NetCDF was originaly developed at the Unidata Program Center and is supported on almost all platforms, and parsers exist for the vast majority of scientific programming languages.</p>
 <section id="characteristics" class="level3" data-number="8.3.1">
 <h3 data-number="8.3.1" class="anchored" data-anchor-id="characteristics"><span class="header-section-number">8.3.1</span> Characteristics</h3>
-<p>TO DO: maybe add a 5 word discussion of each point</p>
+<p>[REF: https://docs.unidata.ucar.edu/netcdf-c/current/faq.html#ncFAQGeneral] TO DO: maybe add a 5 word discussion of each point</p>
 <p>NetCDF files are designed to be:</p>
 <ol type="1">
 <li><p><strong>Self-describing:</strong> Information describing the data contents of the file are embedded within the data file itself. This means that there is a header which describes the layout of the rest of the file as well as arbitrary file metadata.</p></li>
@@ -360,6 +363,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p></p><figcaption class="figure-caption">Classic NetCDF Data Model (<a href="https://docs.unidata.ucar.edu/netcdf-c/current/netcdf_data_model.html#classic_model">NetCDF documentation</a>)</figcaption><p></p>
 </figure>
 </div>
+<p>The model consists of three key components:</p>
 <p><strong>Variables</strong> are N-dimensional arrays of data. Variables in netCDF files can be one of six types (char, byte, short, int, float, double). We can think of these as the varying/measured/dependent quantities.</p>
 <p><strong>Dimensions</strong> describe the axes of the data arrays. A dimension has a name and a length. An unlimited dimension has a length that can be expanded at any time, as more data are written to it. NetCDF files can contain at most one unlimited dimension. We can think of these as the constant/fixed/independent quantities at which we measure the variables.</p>
 <p><strong>Attributes</strong> are small notes or supplementary metadata to annotate either a variable or the file as a whole. Although there is no enforced limit, the user is expected to keep attributes small.</p>
@@ -380,11 +384,10 @@ Note
 <section id="exercise" class="level3" data-number="8.3.3">
 <h3 data-number="8.3.3" class="anchored" data-anchor-id="exercise"><span class="header-section-number">8.3.3</span> Exercise</h3>
 <p>[TO DO: check exercise setup]</p>
-<p>Imagine the following scenario: we have a a network of 25 weather stations. They are located in a square grid: starting at 30°0′N 60°0′E, there is a station every 10° North and every 10° East. Each station measures the air temperature at a set time for three days, starting on September 1st, 2022. The first day all stations record a temperature of 0°C, the second day all temperatures are 1°C, and the third day all temperatures are 3°C. What are the <em>variables</em>, <em>dimensions</em> and <em>attributes</em> for this data? A simple diagram of how we can visualize the data can be very useful:</p>
-<p>[TO DO: make diagram]</p>
+<p>Imagine the following scenario: we have a network of 25 weather stations. They are located in a square grid: starting at 30°0′N 60°0′E, there is a station every 10° North and every 10° East. Each station measures the air temperature at a set time for three days, starting on September 1st, 2022. The first day all stations record a temperature of 0°C, the second day all temperatures are 1°C, and the third day all temperatures are 3°C. What are the <em>variables</em>, <em>dimensions</em> and <em>attributes</em> for this data?</p>
 <p><strong>Variables</strong>: There is a single variable being measured: temperature. The variable values can be represented as a 3x5x5 array, with constant values for each day as seen in the diagram.</p>
-<p><strong>Dimensions</strong>: There are three dimensions in this dataset: time, latitude, and longitude. Time is measured in days and can have values 1, 2 or 3, assuming we have a reference time of September 1, 2022. The combinations of latitude and longitude values indicate the positions of the weather stations and. Latitude has values ****, longitude has values ****.</p>
-<p><strong>Attributes</strong>: Let’s divide this in attributes for the variable, the dimensions and the whole dataset:</p>
+<p><strong>Dimensions</strong>: There are three dimensions in this dataset: date, latitude, and longitude. Time indicates when the measurement happened, we can encode it as the dates 2022-09-1, 2022-09-02, and 2022-09-03. The pairs of latitude and longitude values indicate the positions of the weather stations. Latitude has values 30, 40, 50, 60, and 70, measured in degrees North, while longitude has values 60, 70, 80, 90, and 100, measured in degrees East.</p>
+<p><strong>Attributes</strong>: Let’s divide these in attributes for the variable, the dimensions, and the whole dataset:</p>
 <ul>
 <li>Temperature attributes:
 <ul>
@@ -392,21 +395,20 @@ Note
 </ul></li>
 <li>Time attributes:
 <ul>
-<li>units: “days since 1990-1-1 0:0:0”</li>
+<li>description: date of measurement</li>
 </ul></li>
-<li>latitude attributes:
+<li>Latitude attributes:
 <ul>
-<li>units: degrees north</li>
+<li>units: degrees North</li>
 </ul></li>
-<li>longitude attributes:
+<li>Longitude attributes:
 <ul>
-<li>units: degrees east</li>
+<li>units: degrees East</li>
 </ul></li>
 <li>Dataset attributes:
 <ul>
 <li>title: temperature at weather stations</li>
-<li>contact: Carmen GG</li>
-<li>comment: an example of NetCDF data format</li>
+<li>summary: an example of NetCDF data format</li>
 </ul></li>
 </ul>
 <p>Our next step is to see how we can translate all this information into something we can store and handle in our computer.</p>
@@ -418,14 +420,15 @@ Note
 <p>Multi-dimensional arrays or ND arrays are frequently encountered in geosciences. Consider, for example, how many variables can be measured with respect to space-time dimensions, making those datasets three or even four-dimensional (for instance, if we use latitude, longitude, height/depth, and time). In Python, the <a href="https://numpy.org"><code>NumPy</code></a> package provides the fundamental data structure and API for working with raw ND arrays. However, real-world datasets are usually more than just raw numbers; they have labels that encode information about how the array values correspond to locations in space, time, etc. <a href="https://docs.xarray.dev/en/stable/index.html"><code>xarray</code></a> is an answer to this necessity: an <code>xarray.DataArray</code> has labeled dimensions (e.g.&nbsp;“time”, “latitude”) that can be directly referenced for processing. It is easier to keep track of a dimension labeled “time” than to remember that time is the n-th dimension of the array. Moreover, <code>xarray</code> is based on the netCDF data model, making it the appropriate tool to open, process and create datasets in netCDF format.</p>
 <section id="creating-an-xarray.dataarray" class="level3" data-number="8.4.1">
 <h3 data-number="8.4.1" class="anchored" data-anchor-id="creating-an-xarray.dataarray"><span class="header-section-number">8.4.1</span> Creating an <code>xarray.DataArray</code></h3>
-<p>An <code>xarray.DataArray</code> is an N-dimensional array with labeled coordinates and dimensions. It is the primary data structure of the <code>xarray</code> package. We can think of it as representing a single variable in the NetCDF data format: it holds the variable’s values, dimensions, and attributes. Additionally, each dimension has at least one set of <em>coordinates</em>, which indicate the values the dimension takes. <em>In the usual one-dimensional case, the coordinate array’s values can loosely be thought of as tick labels along a dimension.</em> [https://docs.xarray.dev/en/stable/user-guide/terminology.html]</p>
-<p>As our first example, let’s suppose we want to make an <code>xarray.DataArray</code> that includes all the information from our previous exercise about measuring temperature across three days. First we import all our necessary libraries.</p>
+<p>An <code>xarray.DataArray</code> is an N-dimensional array with labeled coordinates and dimensions. It is the primary data structure of the <code>xarray</code> package. We can think of it as representing a single variable in the NetCDF data format: it holds the variable’s values, dimensions, and attributes. Additionally, each dimension has at least one set of <em>coordinates</em>, which indicate the values the dimension takes. We can thin of the coordinate’s values as the tick labels along a dimension. [REF https://docs.xarray.dev/en/stable/user-guide/terminology.html]</p>
+<p>As our first example, let’s suppose we want to make an <code>xarray.DataArray</code> that includes the information from our previous exercise about measuring temperature across three days. First, we import all our necessary libraries.</p>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os              </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr   <span class="co"># This is the package we'll explore</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The underlying data in the <code>xarray.DataArray</code> is a <code>numpy.ndarray</code> that holds the variable values. So we can start by making a <code>numpy.ndarray</code> with our mock temperature data:</p>
 <div class="cell" data-execution_count="2">
@@ -454,19 +457,25 @@ Note
         [2, 2, 2, 2, 2]]])</code></pre>
 </div>
 </div>
-<p>Next, we add information about the dimensions over which the variable is being measured and some attributes to create the <code>xarray.DataArray</code>:</p>
+<p>We could think that this is “all” we need to represent our data. But if we stopped at this point, we would need to</p>
+<ol type="1">
+<li><p>remember that the numbers in this array represent temperature in degrees Celsius (doesn’t seem too bad),</p></li>
+<li><p>remember that the first dimension of the array represents time, the second latitude and the third longitude (maybe ok), and</p></li>
+<li><p>keep track of the range of values that time, latitude and longitude take (not so good).</p></li>
+</ol>
+<p>Keeping track of all this information separately could quickly get messy and could make it challenging to share our data and analyses with others . This is what the netCDF data model and <code>xarray</code> aim to simplify. We can get data and its descriptors together in an <code>xarray.DataArray</code> by adding the dimensions over which the variable is being measured and including attributes that appropriately describe dimensions and variables.</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># names of the dimensions</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dims <span class="op">=</span> (<span class="st">'day'</span>, <span class="st">'lat'</span>, <span class="st">'lon'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dims <span class="op">=</span> (<span class="st">'time'</span>, <span class="st">'lat'</span>, <span class="st">'lon'</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># coordinates (tick labels) to use for indexing along each dimension </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> {<span class="st">'day'</span> : [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>],</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">'lat'</span> : np.arange(<span class="dv">10</span>,<span class="dv">60</span>,<span class="dv">10</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>          <span class="st">'lon'</span> : np.arange(<span class="dv">30</span>,<span class="dv">80</span>,<span class="dv">10</span>)}  </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>coords <span class="op">=</span> {<span class="st">'time'</span> : pd.date_range(<span class="st">"2022-09-01"</span>, <span class="st">"2022-09-03"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">'lat'</span> : np.arange(<span class="dv">30</span>,<span class="dv">80</span>,<span class="dv">10</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>          <span class="st">'lon'</span> : np.arange(<span class="dv">60</span>,<span class="dv">110</span>,<span class="dv">10</span>)}  </span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># attributes (metadata) of the data array </span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>attrs <span class="op">=</span> { <span class="st">'title'</span> : <span class="st">'temperature data across weather stations'</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>          <span class="st">'units'</span> : <span class="st">'degrees C'</span>}</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>attrs <span class="op">=</span> { <span class="st">'title'</span> : <span class="st">'temperature across weather stations'</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>          <span class="st">'units'</span> : <span class="st">'degrees_celsius'</span>}</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize xarray.DataArray</span></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> xr.DataArray(data <span class="op">=</span> temp_data, </span>
@@ -828,7 +837,7 @@ dl.xr-attrs {
   stroke: currentColor;
   fill: currentColor;
 }
-</style><pre class="xr-text-repr-fallback">&lt;xarray.DataArray (day: 3, lat: 5, lon: 5)&gt;
+</style><pre class="xr-text-repr-fallback">&lt;xarray.DataArray (time: 3, lat: 5, lon: 5)&gt;
 array([[[0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
@@ -847,12 +856,12 @@ array([[[0, 0, 0, 0, 0],
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2]]])
 Coordinates:
-  * day      (day) int64 1 2 3
-  * lat      (lat) int64 10 20 30 40 50
-  * lon      (lon) int64 30 40 50 60 70
+  * time     (time) datetime64[ns] 2022-09-01 2022-09-02 2022-09-03
+  * lat      (lat) int64 30 40 50 60 70
+  * lon      (lon) int64 60 70 80 90 100
 Attributes:
-    title:    temperature data across weather stations
-    units:    degrees C</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">day</span>: 3</li><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-2c269baa-1d45-4a00-9732-adaee1b67a2a" class="xr-array-in" type="checkbox" checked=""><label for="section-2c269baa-1d45-4a00-9732-adaee1b67a2a" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2</span></div><div class="xr-array-data"><pre>array([[[0, 0, 0, 0, 0],
+    title:    temperature across weather stations
+    units:    degrees_celsius</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">time</span>: 3</li><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-b76e6514-2e1e-49a8-9590-59ef33cb2ad0" class="xr-array-in" type="checkbox" checked=""><label for="section-b76e6514-2e1e-49a8-9590-59ef33cb2ad0" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2</span></div><div class="xr-array-data"><pre>array([[[0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
@@ -868,16 +877,17 @@ Attributes:
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2],
-        [2, 2, 2, 2, 2]]])</pre></div></div></li><li class="xr-section-item"><input id="section-c561aa85-74cd-456f-aa86-c4e5358741a0" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-c561aa85-74cd-456f-aa86-c4e5358741a0" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">day</span></div><div class="xr-var-dims">(day)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">1 2 3</div><input id="attrs-e4c6352e-7faf-42db-857f-3c89a54557b8" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-e4c6352e-7faf-42db-857f-3c89a54557b8" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-eb00ee5c-6c8f-4b7d-a718-b7393ec77d32" class="xr-var-data-in" type="checkbox"><label for="data-eb00ee5c-6c8f-4b7d-a718-b7393ec77d32" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([1, 2, 3])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">10 20 30 40 50</div><input id="attrs-6dd52424-9b3f-4b0d-bc5f-4b59915abc2a" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-6dd52424-9b3f-4b0d-bc5f-4b59915abc2a" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-84f2f971-6065-4718-acbb-e4cc422e0c95" class="xr-var-data-in" type="checkbox"><label for="data-84f2f971-6065-4718-acbb-e4cc422e0c95" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([10, 20, 30, 40, 50])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-7ffb2f19-128a-46f3-ad2c-c3dc8f9c2ab1" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-7ffb2f19-128a-46f3-ad2c-c3dc8f9c2ab1" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-38dff8b8-8286-44cf-bb15-a3ac886b780b" class="xr-var-data-in" type="checkbox"><label for="data-38dff8b8-8286-44cf-bb15-a3ac886b780b" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-65eaed9f-f5ae-4651-87b3-c2d49bfdc4a0" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-65eaed9f-f5ae-4651-87b3-c2d49bfdc4a0" class="xr-section-summary">Attributes: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature data across weather stations</dd><dt><span>units :</span></dt><dd>degrees C</dd></dl></div></li></ul></div></div>
+        [2, 2, 2, 2, 2]]])</pre></div></div></li><li class="xr-section-item"><input id="section-e9fe5518-6ff9-4143-8f08-07846ed61710" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-e9fe5518-6ff9-4143-8f08-07846ed61710" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">datetime64[ns]</div><div class="xr-var-preview xr-preview">2022-09-01 2022-09-02 2022-09-03</div><input id="attrs-95ad03a6-6e96-458b-8db4-cdd5152ccc3b" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-95ad03a6-6e96-458b-8db4-cdd5152ccc3b" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-4c9b4c51-c909-46df-aaec-61f492f05860" class="xr-var-data-in" type="checkbox"><label for="data-4c9b4c51-c909-46df-aaec-61f492f05860" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(['2022-09-01T00:00:00.000000000', '2022-09-02T00:00:00.000000000',
+       '2022-09-03T00:00:00.000000000'], dtype='datetime64[ns]')</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-87e0e6ad-d0bb-4c1e-b6be-df0c80013189" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-87e0e6ad-d0bb-4c1e-b6be-df0c80013189" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-372c062f-1750-4b17-9037-b83b8641b9a2" class="xr-var-data-in" type="checkbox"><label for="data-372c062f-1750-4b17-9037-b83b8641b9a2" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">60 70 80 90 100</div><input id="attrs-c14d675a-4e1e-46ca-a621-1ec8c1b2a41f" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-c14d675a-4e1e-46ca-a621-1ec8c1b2a41f" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-32ca946a-321c-42de-9984-9380638353f1" class="xr-var-data-in" type="checkbox"><label for="data-32ca946a-321c-42de-9984-9380638353f1" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([ 60,  70,  80,  90, 100])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-195edd85-3fae-42b6-8715-233ddc0cb833" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-195edd85-3fae-42b6-8715-233ddc0cb833" class="xr-section-summary">Attributes: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature across weather stations</dd><dt><span>units :</span></dt><dd>degrees_celsius</dd></dl></div></li></ul></div></div>
 </div>
 </div>
-<p>We can also update the variable’s attributes after creating the object. Notice too that each of the coordinates is also an <code>xarray.DataArray</code>, so we can add attributes to them.</p>
+<p>We can also update the variable’s attributes after creating the object. Notice that each of the coordinates is also an <code>xarray.DataArray</code>, so we can add attributes to them.</p>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># update attributes</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>temp.attrs[<span class="st">'description'</span>] <span class="op">=</span> <span class="st">'a small example of an xarray.DataArray'</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>temp.attrs[<span class="st">'description'</span>] <span class="op">=</span> <span class="st">'simple example of an xarray.DataArray'</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># add attributes to coordinates </span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>temp.day.attrs <span class="op">=</span> {<span class="st">'standard_name'</span>:<span class="st">'day of collection'</span>}</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>temp.time.attrs <span class="op">=</span> {<span class="st">'standard_name'</span>:<span class="st">'date of collection'</span>}</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>temp.lat.attrs[<span class="st">'standard_name'</span>]<span class="op">=</span> <span class="st">'latitude'</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>temp.lat.attrs[<span class="st">'units'</span>] <span class="op">=</span> <span class="st">'degrees_north'</span></span>
@@ -1239,7 +1249,7 @@ dl.xr-attrs {
   stroke: currentColor;
   fill: currentColor;
 }
-</style><pre class="xr-text-repr-fallback">&lt;xarray.DataArray (day: 3, lat: 5, lon: 5)&gt;
+</style><pre class="xr-text-repr-fallback">&lt;xarray.DataArray (time: 3, lat: 5, lon: 5)&gt;
 array([[[0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
@@ -1258,13 +1268,13 @@ array([[[0, 0, 0, 0, 0],
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2]]])
 Coordinates:
-  * day      (day) int64 1 2 3
-  * lat      (lat) int64 10 20 30 40 50
-  * lon      (lon) int64 30 40 50 60 70
+  * time     (time) datetime64[ns] 2022-09-01 2022-09-02 2022-09-03
+  * lat      (lat) int64 30 40 50 60 70
+  * lon      (lon) int64 60 70 80 90 100
 Attributes:
-    title:        temperature data across weather stations
-    units:        degrees C
-    description:  a small example of an xarray.DataArray</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">day</span>: 3</li><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-3d79c0be-f34f-4e5c-a614-e21fd23bc72b" class="xr-array-in" type="checkbox" checked=""><label for="section-3d79c0be-f34f-4e5c-a614-e21fd23bc72b" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2</span></div><div class="xr-array-data"><pre>array([[[0, 0, 0, 0, 0],
+    title:        temperature across weather stations
+    units:        degrees_celsius
+    description:  simple example of an xarray.DataArray</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">time</span>: 3</li><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-b94ae8a3-c39f-4930-bf09-0c34eac1431a" class="xr-array-in" type="checkbox" checked=""><label for="section-b94ae8a3-c39f-4930-bf09-0c34eac1431a" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2</span></div><div class="xr-array-data"><pre>array([[[0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
@@ -1280,23 +1290,766 @@ Attributes:
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2],
-        [2, 2, 2, 2, 2]]])</pre></div></div></li><li class="xr-section-item"><input id="section-3f0f4b4c-4cb9-41b3-b372-c0109c908584" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-3f0f4b4c-4cb9-41b3-b372-c0109c908584" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">day</span></div><div class="xr-var-dims">(day)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">1 2 3</div><input id="attrs-207f2235-1982-4236-93fc-958463e73f37" class="xr-var-attrs-in" type="checkbox"><label for="attrs-207f2235-1982-4236-93fc-958463e73f37" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-1bc64fb9-3bc7-4296-ad18-3fb1b3f22332" class="xr-var-data-in" type="checkbox"><label for="data-1bc64fb9-3bc7-4296-ad18-3fb1b3f22332" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>day of collection</dd></dl></div><div class="xr-var-data"><pre>array([1, 2, 3])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">10 20 30 40 50</div><input id="attrs-db6625e8-03b3-451a-b502-6ff92a5c2806" class="xr-var-attrs-in" type="checkbox"><label for="attrs-db6625e8-03b3-451a-b502-6ff92a5c2806" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-6e405ab5-5087-43fe-b109-c4940bf8b7ab" class="xr-var-data-in" type="checkbox"><label for="data-6e405ab5-5087-43fe-b109-c4940bf8b7ab" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([10, 20, 30, 40, 50])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-232ea073-067e-4861-a183-017cc9c018b3" class="xr-var-attrs-in" type="checkbox"><label for="attrs-232ea073-067e-4861-a183-017cc9c018b3" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-b9d0569d-96f3-4ca5-8c03-4e49a2ce0684" class="xr-var-data-in" type="checkbox"><label for="data-b9d0569d-96f3-4ca5-8c03-4e49a2ce0684" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-51096253-fa47-4388-a48c-5eb79d70fcb8" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-51096253-fa47-4388-a48c-5eb79d70fcb8" class="xr-section-summary">Attributes: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature data across weather stations</dd><dt><span>units :</span></dt><dd>degrees C</dd><dt><span>description :</span></dt><dd>a small example of an xarray.DataArray</dd></dl></div></li></ul></div></div>
+        [2, 2, 2, 2, 2]]])</pre></div></div></li><li class="xr-section-item"><input id="section-7f04ad3a-3e67-46ab-aa42-2c4f67ae2c20" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-7f04ad3a-3e67-46ab-aa42-2c4f67ae2c20" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">datetime64[ns]</div><div class="xr-var-preview xr-preview">2022-09-01 2022-09-02 2022-09-03</div><input id="attrs-10717040-70fb-494e-b276-00f34ded5501" class="xr-var-attrs-in" type="checkbox"><label for="attrs-10717040-70fb-494e-b276-00f34ded5501" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-2207ab67-c1ed-492a-8bb7-e6c2f26a36ac" class="xr-var-data-in" type="checkbox"><label for="data-2207ab67-c1ed-492a-8bb7-e6c2f26a36ac" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>date of collection</dd></dl></div><div class="xr-var-data"><pre>array(['2022-09-01T00:00:00.000000000', '2022-09-02T00:00:00.000000000',
+       '2022-09-03T00:00:00.000000000'], dtype='datetime64[ns]')</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-6d16b398-7617-4e02-af2c-f5fc78c0eb7e" class="xr-var-attrs-in" type="checkbox"><label for="attrs-6d16b398-7617-4e02-af2c-f5fc78c0eb7e" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c2a7ded5-6600-4a58-aac9-9605b1f3c9f3" class="xr-var-data-in" type="checkbox"><label for="data-c2a7ded5-6600-4a58-aac9-9605b1f3c9f3" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">60 70 80 90 100</div><input id="attrs-459f11bd-5f66-47ad-86af-d23462beeb53" class="xr-var-attrs-in" type="checkbox"><label for="attrs-459f11bd-5f66-47ad-86af-d23462beeb53" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c5069969-dd91-4d22-9290-f4bfa108fed5" class="xr-var-data-in" type="checkbox"><label for="data-c5069969-dd91-4d22-9290-f4bfa108fed5" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([ 60,  70,  80,  90, 100])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-c40238b5-2533-4ad1-93e6-0c8e312ebb5e" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-c40238b5-2533-4ad1-93e6-0c8e312ebb5e" class="xr-section-summary">Attributes: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature across weather stations</dd><dt><span>units :</span></dt><dd>degrees_celsius</dd><dt><span>description :</span></dt><dd>simple example of an xarray.DataArray</dd></dl></div></li></ul></div></div>
 </div>
 </div>
 <p>At this point, since we have a single variable, the dataset attributes and the variable attributes are the same.</p>
 </section>
 <section id="indexing" class="level3" data-number="8.4.2">
 <h3 data-number="8.4.2" class="anchored" data-anchor-id="indexing"><span class="header-section-number">8.4.2</span> Indexing</h3>
+<p>An <code>xarray.DataArray</code> allows both positional indexing (like <code>numpy</code>) and label-based indexing (like <code>pandas</code>). Positional indexing is the most basic and it’s done using Python’s <code>[]</code> syntax, as in <code>array[i,j]</code> with i and j both integers. Label-based indexing takes advantage of dimensions in the array having names and coordinate values that we can use to access data, instead of remembering the positional order of each dimension.</p>
+<p>As an example, suppose we want to know what was the temperature recorded by the weather station located at 40°0′N 80°0′E on September 1st, 2022. By recalling all the information about how the array is setup with respect to the dimensions and coordiantes, we can access this data positionally:</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>temp[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+
+<div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewbox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewbox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
+
+:root {
+  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
+  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
+  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
+  --xr-border-color: var(--jp-border-color2, #e0e0e0);
+  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
+  --xr-background-color: var(--jp-layout-color0, white);
+  --xr-background-color-row-even: var(--jp-layout-color1, white);
+  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
+}
+
+html[theme=dark],
+body[data-theme=dark],
+body.vscode-dark {
+  --xr-font-color0: rgba(255, 255, 255, 1);
+  --xr-font-color2: rgba(255, 255, 255, 0.54);
+  --xr-font-color3: rgba(255, 255, 255, 0.38);
+  --xr-border-color: #1F1F1F;
+  --xr-disabled-color: #515151;
+  --xr-background-color: #111111;
+  --xr-background-color-row-even: #111111;
+  --xr-background-color-row-odd: #313131;
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 20px 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: none;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: '►';
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: '▼';
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: '(';
+}
+
+.xr-dim-list:after {
+  content: ')';
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ',';
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  margin-bottom: 0;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data {
+  display: none;
+  background-color: var(--xr-background-color) !important;
+  padding-bottom: 5px !important;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+</style><pre class="xr-text-repr-fallback">&lt;xarray.DataArray ()&gt;
+array(0)
+Coordinates:
+    time     datetime64[ns] 2022-09-01
+    lat      int64 40
+    lon      int64 80
+Attributes:
+    title:        temperature across weather stations
+    units:        degrees_celsius
+    description:  simple example of an xarray.DataArray</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name"></div></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-4641ef0f-5750-41ea-802d-04e74f7255b5" class="xr-array-in" type="checkbox" checked=""><label for="section-4641ef0f-5750-41ea-802d-04e74f7255b5" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0</span></div><div class="xr-array-data"><pre>array(0)</pre></div></div></li><li class="xr-section-item"><input id="section-ec630898-d532-4112-9259-aea2015db34f" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-ec630898-d532-4112-9259-aea2015db34f" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>time</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">datetime64[ns]</div><div class="xr-var-preview xr-preview">2022-09-01</div><input id="attrs-5be53a33-4adb-4b26-9fc1-9437f979d7e7" class="xr-var-attrs-in" type="checkbox"><label for="attrs-5be53a33-4adb-4b26-9fc1-9437f979d7e7" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-955c4978-5ade-4d72-bfcb-8097788d9fa8" class="xr-var-data-in" type="checkbox"><label for="data-955c4978-5ade-4d72-bfcb-8097788d9fa8" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>date of collection</dd></dl></div><div class="xr-var-data"><pre>array('2022-09-01T00:00:00.000000000', dtype='datetime64[ns]')</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>lat</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">40</div><input id="attrs-efeff3c6-dd55-4bea-84dc-b1aa73b80ee5" class="xr-var-attrs-in" type="checkbox"><label for="attrs-efeff3c6-dd55-4bea-84dc-b1aa73b80ee5" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-81cd77b2-10f1-42f6-b17a-e7bec07c8939" class="xr-var-data-in" type="checkbox"><label for="data-81cd77b2-10f1-42f6-b17a-e7bec07c8939" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array(40)</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>lon</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">80</div><input id="attrs-952ced5b-473a-44a0-80df-0d8069244fe4" class="xr-var-attrs-in" type="checkbox"><label for="attrs-952ced5b-473a-44a0-80df-0d8069244fe4" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c5fd7322-3b00-4164-be25-521a9fdb99ac" class="xr-var-data-in" type="checkbox"><label for="data-c5fd7322-3b00-4164-be25-521a9fdb99ac" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array(80)</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-51d81193-cea0-4000-851e-a0552b8a4723" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-51d81193-cea0-4000-851e-a0552b8a4723" class="xr-section-summary">Attributes: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature across weather stations</dd><dt><span>units :</span></dt><dd>degrees_celsius</dd><dt><span>description :</span></dt><dd>simple example of an xarray.DataArray</dd></dl></div></li></ul></div></div>
+</div>
+</div>
+<p>Or, we can use the dimensions names and their coordinates to access the same value:</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>temp.sel(time<span class="op">=</span><span class="st">'2022-09-01'</span>, lat<span class="op">=</span><span class="dv">40</span>, lon<span class="op">=</span><span class="dv">80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+
+<div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewbox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewbox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
+
+:root {
+  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
+  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
+  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
+  --xr-border-color: var(--jp-border-color2, #e0e0e0);
+  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
+  --xr-background-color: var(--jp-layout-color0, white);
+  --xr-background-color-row-even: var(--jp-layout-color1, white);
+  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
+}
+
+html[theme=dark],
+body[data-theme=dark],
+body.vscode-dark {
+  --xr-font-color0: rgba(255, 255, 255, 1);
+  --xr-font-color2: rgba(255, 255, 255, 0.54);
+  --xr-font-color3: rgba(255, 255, 255, 0.38);
+  --xr-border-color: #1F1F1F;
+  --xr-disabled-color: #515151;
+  --xr-background-color: #111111;
+  --xr-background-color-row-even: #111111;
+  --xr-background-color-row-odd: #313131;
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 20px 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: none;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: '►';
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: '▼';
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: '(';
+}
+
+.xr-dim-list:after {
+  content: ')';
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ',';
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  margin-bottom: 0;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data {
+  display: none;
+  background-color: var(--xr-background-color) !important;
+  padding-bottom: 5px !important;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+</style><pre class="xr-text-repr-fallback">&lt;xarray.DataArray ()&gt;
+array(0)
+Coordinates:
+    time     datetime64[ns] 2022-09-01
+    lat      int64 40
+    lon      int64 80
+Attributes:
+    title:        temperature across weather stations
+    units:        degrees_celsius
+    description:  simple example of an xarray.DataArray</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name"></div></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-b148a648-9b6b-413e-8735-ddc88c11dddf" class="xr-array-in" type="checkbox" checked=""><label for="section-b148a648-9b6b-413e-8735-ddc88c11dddf" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>0</span></div><div class="xr-array-data"><pre>array(0)</pre></div></div></li><li class="xr-section-item"><input id="section-1c2b946c-f5d7-4625-b893-c9e292aec68b" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-1c2b946c-f5d7-4625-b893-c9e292aec68b" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>time</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">datetime64[ns]</div><div class="xr-var-preview xr-preview">2022-09-01</div><input id="attrs-8915ecbb-d1db-4c21-942a-78e8d84848d6" class="xr-var-attrs-in" type="checkbox"><label for="attrs-8915ecbb-d1db-4c21-942a-78e8d84848d6" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c0fd26e4-0797-4f5c-8f74-774a3ca08549" class="xr-var-data-in" type="checkbox"><label for="data-c0fd26e4-0797-4f5c-8f74-774a3ca08549" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>date of collection</dd></dl></div><div class="xr-var-data"><pre>array('2022-09-01T00:00:00.000000000', dtype='datetime64[ns]')</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>lat</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">40</div><input id="attrs-c46f4984-f283-426a-9014-ca0e6cdb9026" class="xr-var-attrs-in" type="checkbox"><label for="attrs-c46f4984-f283-426a-9014-ca0e6cdb9026" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-e079cc2d-5081-42c0-b1da-95b45bc5f5fe" class="xr-var-data-in" type="checkbox"><label for="data-e079cc2d-5081-42c0-b1da-95b45bc5f5fe" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array(40)</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>lon</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">80</div><input id="attrs-72821741-0336-458e-9413-55ad5c3d1306" class="xr-var-attrs-in" type="checkbox"><label for="attrs-72821741-0336-458e-9413-55ad5c3d1306" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-abe238f9-59de-4130-bd39-55aa639d9e6a" class="xr-var-data-in" type="checkbox"><label for="data-abe238f9-59de-4130-bd39-55aa639d9e6a" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array(80)</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-277890bd-f52c-4806-ba27-5f47548614a3" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-277890bd-f52c-4806-ba27-5f47548614a3" class="xr-section-summary">Attributes: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature across weather stations</dd><dt><span>units :</span></dt><dd>degrees_celsius</dd><dt><span>description :</span></dt><dd>simple example of an xarray.DataArray</dd></dl></div></li></ul></div></div>
+</div>
+</div>
+<p>Notice that the result of this indeixing is a 1x1 <code>xarray.DataArray</code>. This is because operations on a <code>xarray.DataArray</code>n(resp. <code>xarray.DataSet</code>) always return another<code>xarray.DataArray</code> (resp. <code>xarray.DataSet</code>) object. In particular, operations returning scalar values will also return an <code>xarray</code> objects, so we need to cast as numbers them manualy. See <a href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.item.html">xarray.DataArray.item</a>.</p>
+<p>More about <a href="https://docs.xarray.dev/en/stable/user-guide/indexing.html"><code>xarray</code> indexing</a>.</p>
 </section>
 <section id="reduction" class="level3" data-number="8.4.3">
 <h3 data-number="8.4.3" class="anchored" data-anchor-id="reduction"><span class="header-section-number">8.4.3</span> Reduction</h3>
-<p><code>xarray</code> has implemented a number of methods to reduce an <code>xarray.DataArray</code> along any number of dimensions. For example, we can calculate the average temperature at each subplot over time and obtain a new <code>xarray.DataArray</code>. One of the advantages of <code>xarray.DataArray</code> is that, if we chose to, it can carry over attributes when doing calculations.</p>
-<div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>avg_temp <span class="op">=</span> temp.mean(dim <span class="op">=</span> <span class="st">'day'</span>) <span class="co"># to keep attributes add keep_attrs = True</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>avg_temp.attrs <span class="op">=</span> {<span class="st">'title'</span>:<span class="st">'average temperature over three days'</span>}</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>avg_temp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<p><code>xarray</code> has implemented a number of methods to reduce an <code>xarray.DataArray</code> along any number of dimensions. One of the advantages of <code>xarray.DataArray</code> is that, if we chose to, it can carry over attributes when doing calculations. For example, we can calculate the average temperature at each weather station over time and obtain a new <code>xarray.DataArray</code>.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>avg_temp <span class="op">=</span> temp.mean(dim <span class="op">=</span> <span class="st">'time'</span>) </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to keep attributes add keep_attrs = True</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>avg_temp.attrs <span class="op">=</span> {<span class="st">'title'</span>:<span class="st">'average temperature over three days'</span>}</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>avg_temp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 
 <div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 <defs>
@@ -1657,28 +2410,35 @@ array([[1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.]])
 Coordinates:
-  * lat      (lat) int64 10 20 30 40 50
-  * lon      (lon) int64 30 40 50 60 70
+  * lat      (lat) int64 30 40 50 60 70
+  * lon      (lon) int64 60 70 80 90 100
 Attributes:
-    title:    average temperature over three days</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-c6ab3b35-0a10-4324-a8bb-735e2f0661ab" class="xr-array-in" type="checkbox" checked=""><label for="section-c6ab3b35-0a10-4324-a8bb-735e2f0661ab" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0</span></div><div class="xr-array-data"><pre>array([[1., 1., 1., 1., 1.],
+    title:    average temperature over three days</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name"></div><ul class="xr-dim-list"><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-2cc644ab-e403-4122-8c7b-1a96c3d3b0bb" class="xr-array-in" type="checkbox" checked=""><label for="section-2cc644ab-e403-4122-8c7b-1a96c3d3b0bb" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0</span></div><div class="xr-array-data"><pre>array([[1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
-       [1., 1., 1., 1., 1.]])</pre></div></div></li><li class="xr-section-item"><input id="section-4209ab8a-d17f-496b-ba81-ab0cb43c00ba" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-4209ab8a-d17f-496b-ba81-ab0cb43c00ba" class="xr-section-summary">Coordinates: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">10 20 30 40 50</div><input id="attrs-8d71b65c-72a0-4e4a-b600-519281dafd32" class="xr-var-attrs-in" type="checkbox"><label for="attrs-8d71b65c-72a0-4e4a-b600-519281dafd32" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-a588114c-c882-4f65-8501-35e9b60ce0db" class="xr-var-data-in" type="checkbox"><label for="data-a588114c-c882-4f65-8501-35e9b60ce0db" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([10, 20, 30, 40, 50])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-1232c86e-14e3-4f58-be67-0ad93cafde2b" class="xr-var-attrs-in" type="checkbox"><label for="attrs-1232c86e-14e3-4f58-be67-0ad93cafde2b" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c3b4eac7-1519-4f6c-97e6-6712a298f24b" class="xr-var-data-in" type="checkbox"><label for="data-c3b4eac7-1519-4f6c-97e6-6712a298f24b" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-863c326f-7995-4da4-8553-6cfd08a7b869" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-863c326f-7995-4da4-8553-6cfd08a7b869" class="xr-section-summary">Attributes: <span>(1)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>average temperature over three days</dd></dl></div></li></ul></div></div>
+       [1., 1., 1., 1., 1.]])</pre></div></div></li><li class="xr-section-item"><input id="section-b1e6cbe1-43cd-4864-a902-ac39d174d419" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-b1e6cbe1-43cd-4864-a902-ac39d174d419" class="xr-section-summary">Coordinates: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-9cd7ecd6-e021-45f6-9d3d-d7b0538eb382" class="xr-var-attrs-in" type="checkbox"><label for="attrs-9cd7ecd6-e021-45f6-9d3d-d7b0538eb382" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-f10a6640-8c10-467c-a513-8edfc5a183b5" class="xr-var-data-in" type="checkbox"><label for="data-f10a6640-8c10-467c-a513-8edfc5a183b5" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">60 70 80 90 100</div><input id="attrs-5441e5ec-0552-4fc8-aca5-d96ae3b30834" class="xr-var-attrs-in" type="checkbox"><label for="attrs-5441e5ec-0552-4fc8-aca5-d96ae3b30834" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-34d44518-80fe-43cc-81aa-aecdb3e7186d" class="xr-var-data-in" type="checkbox"><label for="data-34d44518-80fe-43cc-81aa-aecdb3e7186d" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([ 60,  70,  80,  90, 100])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-2ff23555-96ed-42c1-ae1b-1f1da0e7eb4c" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-2ff23555-96ed-42c1-ae1b-1f1da0e7eb4c" class="xr-section-summary">Attributes: <span>(1)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>average temperature over three days</dd></dl></div></li></ul></div></div>
 </div>
 </div>
+<p>More about <a href="https://docs.xarray.dev/en/stable/user-guide/computation.html"><code>xarray</code> computations</a>.</p>
 </section>
 <section id="creating-an-xarray.dataset" class="level3" data-number="8.4.4">
 <h3 data-number="8.4.4" class="anchored" data-anchor-id="creating-an-xarray.dataset"><span class="header-section-number">8.4.4</span> Creating an <code>xarray.DataSet</code></h3>
-<p>A dataset resembles an in-memory representation of a NetCDF file, and consists of multiple variables, with coordinates and attributes, which together form a self describing dataset.</p>
-<div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>temp_dataset <span class="op">=</span> xr.Dataset( data_vars <span class="op">=</span> {<span class="st">'avg_temp'</span>: avg_temp,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">'temp'</span>: temp},</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                        attrs <span class="op">=</span> {<span class="st">'creator_name'</span>:<span class="st">'Carmen GG'</span>, </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">'title'</span>:<span class="st">'temperature data'</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">'description'</span>:<span class="st">'a simple example of an xarray.Dataset'</span>})</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>temp_dataset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<p>An <code>xarray.DataSet</code> resembles an in-memory representation of a NetCDF file, and consists of <em>multiple</em> variables, with coordinates and attributes, which together form a self describing dataset. We can make create a <code>xarray.DataSet</code> by putting together the temperature data with the average temperature data. We also add some attributes that now describe the whole dataset, not only each variable. Take some time to click through the data viewer and notice how all the data and metadata is ordered within the dataset.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make dictionaries with variables and attributes</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>data_vars <span class="op">=</span> {<span class="st">'avg_temp'</span>: avg_temp,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">'temp'</span>: temp}</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>attrs <span class="op">=</span> {<span class="st">'creator_name'</span>:<span class="st">'CGG'</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'title'</span>:<span class="st">'temperature data at weather stations: daily and and average'</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'description'</span>:<span class="st">'simple example of an xarray.Dataset'</span>}</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># create xarray.Dataset</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>temp_dataset <span class="op">=</span> xr.Dataset( data_vars <span class="op">=</span> data_vars,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                        attrs <span class="op">=</span> attrs)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>temp_dataset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
 
 <div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 <defs>
@@ -2033,22 +2793,23 @@ dl.xr-attrs {
   fill: currentColor;
 }
 </style><pre class="xr-text-repr-fallback">&lt;xarray.Dataset&gt;
-Dimensions:   (lat: 5, lon: 5, day: 3)
+Dimensions:   (lat: 5, lon: 5, time: 3)
 Coordinates:
-  * lat       (lat) int64 10 20 30 40 50
-  * lon       (lon) int64 30 40 50 60 70
-  * day       (day) int64 1 2 3
+  * lat       (lat) int64 30 40 50 60 70
+  * lon       (lon) int64 60 70 80 90 100
+  * time      (time) datetime64[ns] 2022-09-01 2022-09-02 2022-09-03
 Data variables:
     avg_temp  (lat, lon) float64 1.0 1.0 1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0 1.0
-    temp      (day, lat, lon) int64 0 0 0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2 2 2
+    temp      (time, lat, lon) int64 0 0 0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2 2 2
 Attributes:
-    creator_name:  Carmen GG
-    title:         temperature data
-    description:   a simple example of an xarray.Dataset</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-69ed06ea-aa62-48fd-b422-e3294f61c18f" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-69ed06ea-aa62-48fd-b422-e3294f61c18f" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"><ul class="xr-dim-list"><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li><li><span class="xr-has-index">day</span>: 3</li></ul></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-7ae2eff2-9de2-4982-8f67-1f56226ab014" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-7ae2eff2-9de2-4982-8f67-1f56226ab014" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">10 20 30 40 50</div><input id="attrs-17b0a8d1-2cb9-45fd-8be6-80954e44e846" class="xr-var-attrs-in" type="checkbox"><label for="attrs-17b0a8d1-2cb9-45fd-8be6-80954e44e846" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c8f5ace4-6634-4ac7-be7c-9916a3729f80" class="xr-var-data-in" type="checkbox"><label for="data-c8f5ace4-6634-4ac7-be7c-9916a3729f80" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([10, 20, 30, 40, 50])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-1427a1cb-ec5c-4764-baa2-fdad0e4b4382" class="xr-var-attrs-in" type="checkbox"><label for="attrs-1427a1cb-ec5c-4764-baa2-fdad0e4b4382" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-b2b59b1a-9499-4666-8c8e-9e2148dc7786" class="xr-var-data-in" type="checkbox"><label for="data-b2b59b1a-9499-4666-8c8e-9e2148dc7786" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">day</span></div><div class="xr-var-dims">(day)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">1 2 3</div><input id="attrs-6c796c80-b00f-4ab2-a2fe-e554b71adc41" class="xr-var-attrs-in" type="checkbox"><label for="attrs-6c796c80-b00f-4ab2-a2fe-e554b71adc41" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-aa6a5596-da3f-47e6-aff0-43e09ffe49f5" class="xr-var-data-in" type="checkbox"><label for="data-aa6a5596-da3f-47e6-aff0-43e09ffe49f5" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>day of collection</dd></dl></div><div class="xr-var-data"><pre>array([1, 2, 3])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-8d066d2d-d8dd-47b8-9fc5-d50946bc420e" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-8d066d2d-d8dd-47b8-9fc5-d50946bc420e" class="xr-section-summary">Data variables: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>avg_temp</span></div><div class="xr-var-dims">(lat, lon)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0</div><input id="attrs-61df0cf2-2d91-4275-a8e7-7ef9452bd4f9" class="xr-var-attrs-in" type="checkbox"><label for="attrs-61df0cf2-2d91-4275-a8e7-7ef9452bd4f9" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-1b1a0d91-3c77-4e28-8483-416b07298e13" class="xr-var-data-in" type="checkbox"><label for="data-1b1a0d91-3c77-4e28-8483-416b07298e13" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>average temperature over three days</dd></dl></div><div class="xr-var-data"><pre>array([[1., 1., 1., 1., 1.],
+    creator_name:  CGG
+    title:         temperature data at weather stations: daily and and average
+    description:   simple example of an xarray.Dataset</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-68e019e0-4173-48eb-b105-f5fe6675b7ba" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-68e019e0-4173-48eb-b105-f5fe6675b7ba" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"><ul class="xr-dim-list"><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li><li><span class="xr-has-index">time</span>: 3</li></ul></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-7866e6b0-6192-4a71-8c7b-6d656f110bbc" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-7866e6b0-6192-4a71-8c7b-6d656f110bbc" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-b074737f-4531-4f17-b619-78af48658d09" class="xr-var-attrs-in" type="checkbox"><label for="attrs-b074737f-4531-4f17-b619-78af48658d09" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-9f02f10a-f412-4ca1-af25-2317412bc580" class="xr-var-data-in" type="checkbox"><label for="data-9f02f10a-f412-4ca1-af25-2317412bc580" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">60 70 80 90 100</div><input id="attrs-9ebc4571-d0cb-4999-821c-146892f23f92" class="xr-var-attrs-in" type="checkbox"><label for="attrs-9ebc4571-d0cb-4999-821c-146892f23f92" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-91d80d01-34ec-4750-aa00-0971e3a5355c" class="xr-var-data-in" type="checkbox"><label for="data-91d80d01-34ec-4750-aa00-0971e3a5355c" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([ 60,  70,  80,  90, 100])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">datetime64[ns]</div><div class="xr-var-preview xr-preview">2022-09-01 2022-09-02 2022-09-03</div><input id="attrs-53571bbf-2ce8-44a0-b95d-9a2df9dca165" class="xr-var-attrs-in" type="checkbox"><label for="attrs-53571bbf-2ce8-44a0-b95d-9a2df9dca165" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-7a1decfa-3af5-4a52-bbaa-8a1cab0f8639" class="xr-var-data-in" type="checkbox"><label for="data-7a1decfa-3af5-4a52-bbaa-8a1cab0f8639" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>date of collection</dd></dl></div><div class="xr-var-data"><pre>array(['2022-09-01T00:00:00.000000000', '2022-09-02T00:00:00.000000000',
+       '2022-09-03T00:00:00.000000000'], dtype='datetime64[ns]')</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-41279600-0b86-4f7e-84d7-a5c223015c00" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-41279600-0b86-4f7e-84d7-a5c223015c00" class="xr-section-summary">Data variables: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>avg_temp</span></div><div class="xr-var-dims">(lat, lon)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0</div><input id="attrs-57653853-84ff-44cd-b9d6-6b64c1cacc3e" class="xr-var-attrs-in" type="checkbox"><label for="attrs-57653853-84ff-44cd-b9d6-6b64c1cacc3e" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-95216f9b-a647-42ab-a7ac-b2636a482fa4" class="xr-var-data-in" type="checkbox"><label for="data-95216f9b-a647-42ab-a7ac-b2636a482fa4" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>average temperature over three days</dd></dl></div><div class="xr-var-data"><pre>array([[1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
-       [1., 1., 1., 1., 1.]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>temp</span></div><div class="xr-var-dims">(day, lat, lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2</div><input id="attrs-9872b57b-b066-4e8e-8f36-008a2b90e1ab" class="xr-var-attrs-in" type="checkbox"><label for="attrs-9872b57b-b066-4e8e-8f36-008a2b90e1ab" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-03ba42b4-d5c0-4adb-b4b7-e581213b8c75" class="xr-var-data-in" type="checkbox"><label for="data-03ba42b4-d5c0-4adb-b4b7-e581213b8c75" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature data across weather stations</dd><dt><span>units :</span></dt><dd>degrees C</dd><dt><span>description :</span></dt><dd>a small example of an xarray.DataArray</dd></dl></div><div class="xr-var-data"><pre>array([[[0, 0, 0, 0, 0],
+       [1., 1., 1., 1., 1.]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>temp</span></div><div class="xr-var-dims">(time, lat, lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2</div><input id="attrs-d97ec597-69cf-4e99-932e-995ecb8162f8" class="xr-var-attrs-in" type="checkbox"><label for="attrs-d97ec597-69cf-4e99-932e-995ecb8162f8" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-0fc095e2-adbd-4a25-ae96-4f9ec027f0f9" class="xr-var-data-in" type="checkbox"><label for="data-0fc095e2-adbd-4a25-ae96-4f9ec027f0f9" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature across weather stations</dd><dt><span>units :</span></dt><dd>degrees_celsius</dd><dt><span>description :</span></dt><dd>simple example of an xarray.DataArray</dd></dl></div><div class="xr-var-data"><pre>array([[[0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
@@ -2064,20 +2825,23 @@ Attributes:
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2],
-        [2, 2, 2, 2, 2]]])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-2acd04c7-cb11-4e29-973c-ead7cac0bd43" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-2acd04c7-cb11-4e29-973c-ead7cac0bd43" class="xr-section-summary">Attributes: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>creator_name :</span></dt><dd>Carmen GG</dd><dt><span>title :</span></dt><dd>temperature data</dd><dt><span>description :</span></dt><dd>a simple example of an xarray.Dataset</dd></dl></div></li></ul></div></div>
+        [2, 2, 2, 2, 2]]])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-db6da3da-8649-4e34-a7f5-030b55c9a30f" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-db6da3da-8649-4e34-a7f5-030b55c9a30f" class="xr-section-summary">Attributes: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>creator_name :</span></dt><dd>CGG</dd><dt><span>title :</span></dt><dd>temperature data at weather stations: daily and and average</dd><dt><span>description :</span></dt><dd>simple example of an xarray.Dataset</dd></dl></div></li></ul></div></div>
 </div>
 </div>
 </section>
 <section id="save-and-reopen" class="level3" data-number="8.4.5">
 <h3 data-number="8.4.5" class="anchored" data-anchor-id="save-and-reopen"><span class="header-section-number">8.4.5</span> Save and reopen</h3>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">'temp_dataset.nc'</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>temp_dataset.to_netcdf(fp)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># open to check:</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>check <span class="op">=</span> xr.open_dataset(fp)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>check</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<p>Finally, we want to save our dataset as a NetCDF file. To do this, first specify the file path and use the <em>.nc</em> extension for the file name. Then save the datset by using the <code>to_netcdf</code> method with your file path. Opening NetCDF is similarly straightforward using <code>xarray.open_dataset()</code>.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># specify file path: don't forget the .nc extension!</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">'temp_dataset.nc'</span>) </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># save file</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>temp_dataset.to_netcdf(fp)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># open to check:</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>check <span class="op">=</span> xr.open_dataset(fp)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>check</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
 
 <div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 <defs>
@@ -2432,22 +3196,23 @@ dl.xr-attrs {
   fill: currentColor;
 }
 </style><pre class="xr-text-repr-fallback">&lt;xarray.Dataset&gt;
-Dimensions:   (lat: 5, lon: 5, day: 3)
+Dimensions:   (lat: 5, lon: 5, time: 3)
 Coordinates:
-  * lat       (lat) int64 10 20 30 40 50
-  * lon       (lon) int64 30 40 50 60 70
-  * day       (day) int64 1 2 3
+  * lat       (lat) int64 30 40 50 60 70
+  * lon       (lon) int64 60 70 80 90 100
+  * time      (time) datetime64[ns] 2022-09-01 2022-09-02 2022-09-03
 Data variables:
     avg_temp  (lat, lon) float64 1.0 1.0 1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0 1.0
-    temp      (day, lat, lon) int64 0 0 0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2 2 2
+    temp      (time, lat, lon) int64 0 0 0 0 0 0 0 0 0 0 ... 2 2 2 2 2 2 2 2 2 2
 Attributes:
-    creator_name:  Carmen GG
-    title:         temperature data
-    description:   a simple example of an xarray.Dataset</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-1996a43e-1619-4312-884f-cfbc257439ba" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-1996a43e-1619-4312-884f-cfbc257439ba" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"><ul class="xr-dim-list"><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li><li><span class="xr-has-index">day</span>: 3</li></ul></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-2746205f-f216-4b3e-9127-b335a6e88972" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-2746205f-f216-4b3e-9127-b335a6e88972" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">10 20 30 40 50</div><input id="attrs-5af0bfe8-f6ba-4e69-accf-abf9b90760c1" class="xr-var-attrs-in" type="checkbox"><label for="attrs-5af0bfe8-f6ba-4e69-accf-abf9b90760c1" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-0f0eb652-c548-4e86-b81a-94b593abbcd7" class="xr-var-data-in" type="checkbox"><label for="data-0f0eb652-c548-4e86-b81a-94b593abbcd7" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([10, 20, 30, 40, 50])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-5e7982c8-39f7-4b9b-a82a-c114e3fc0e07" class="xr-var-attrs-in" type="checkbox"><label for="attrs-5e7982c8-39f7-4b9b-a82a-c114e3fc0e07" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-878c6352-91e3-406e-9ae8-8403c17c8b91" class="xr-var-data-in" type="checkbox"><label for="data-878c6352-91e3-406e-9ae8-8403c17c8b91" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">day</span></div><div class="xr-var-dims">(day)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">1 2 3</div><input id="attrs-eea1b5de-02d7-4680-baef-5dab2226ce58" class="xr-var-attrs-in" type="checkbox"><label for="attrs-eea1b5de-02d7-4680-baef-5dab2226ce58" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-824bf794-2f94-4808-aa26-61c835bedbdf" class="xr-var-data-in" type="checkbox"><label for="data-824bf794-2f94-4808-aa26-61c835bedbdf" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>day of collection</dd></dl></div><div class="xr-var-data"><pre>array([1, 2, 3])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-07e1f6e0-e302-49b2-9692-83ab9706fc7d" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-07e1f6e0-e302-49b2-9692-83ab9706fc7d" class="xr-section-summary">Data variables: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>avg_temp</span></div><div class="xr-var-dims">(lat, lon)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-56ab9b6a-4081-4bc3-ad46-56ed5d879e0e" class="xr-var-attrs-in" type="checkbox"><label for="attrs-56ab9b6a-4081-4bc3-ad46-56ed5d879e0e" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-5978221f-41a4-40bb-af09-03b4d1fa5fc9" class="xr-var-data-in" type="checkbox"><label for="data-5978221f-41a4-40bb-af09-03b4d1fa5fc9" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>average temperature over three days</dd></dl></div><div class="xr-var-data"><pre>array([[1., 1., 1., 1., 1.],
+    creator_name:  CGG
+    title:         temperature data at weather stations: daily and and average
+    description:   simple example of an xarray.Dataset</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-98e51924-ac4e-4814-a176-8365ab020c02" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-98e51924-ac4e-4814-a176-8365ab020c02" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"><ul class="xr-dim-list"><li><span class="xr-has-index">lat</span>: 5</li><li><span class="xr-has-index">lon</span>: 5</li><li><span class="xr-has-index">time</span>: 3</li></ul></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-532ff74c-8f96-4b72-b4a3-1466b8a608a8" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-532ff74c-8f96-4b72-b4a3-1466b8a608a8" class="xr-section-summary">Coordinates: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lat</span></div><div class="xr-var-dims">(lat)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">30 40 50 60 70</div><input id="attrs-82750faa-588e-4d1a-b411-d8bfa3e233a7" class="xr-var-attrs-in" type="checkbox"><label for="attrs-82750faa-588e-4d1a-b411-d8bfa3e233a7" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-910fb0a3-d491-4cdc-8258-23bdf8e2dcc3" class="xr-var-data-in" type="checkbox"><label for="data-910fb0a3-d491-4cdc-8258-23bdf8e2dcc3" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([30, 40, 50, 60, 70])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">lon</span></div><div class="xr-var-dims">(lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">60 70 80 90 100</div><input id="attrs-44bf9c79-7452-46eb-8b0b-24e4c8bd37f9" class="xr-var-attrs-in" type="checkbox"><label for="attrs-44bf9c79-7452-46eb-8b0b-24e4c8bd37f9" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-ef398e59-6850-434d-887d-d51d36aad62e" class="xr-var-data-in" type="checkbox"><label for="data-ef398e59-6850-434d-887d-d51d36aad62e" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([ 60,  70,  80,  90, 100])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">datetime64[ns]</div><div class="xr-var-preview xr-preview">2022-09-01 2022-09-02 2022-09-03</div><input id="attrs-abad584b-f3b6-4d01-9102-e4507e861f60" class="xr-var-attrs-in" type="checkbox"><label for="attrs-abad584b-f3b6-4d01-9102-e4507e861f60" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-12d56f18-16a1-47c2-9cfc-6cc750cd8760" class="xr-var-data-in" type="checkbox"><label for="data-12d56f18-16a1-47c2-9cfc-6cc750cd8760" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>standard_name :</span></dt><dd>date of collection</dd></dl></div><div class="xr-var-data"><pre>array(['2022-09-01T00:00:00.000000000', '2022-09-02T00:00:00.000000000',
+       '2022-09-03T00:00:00.000000000'], dtype='datetime64[ns]')</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-bf9982fd-db6d-4207-984b-6cb5093bdf31" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-bf9982fd-db6d-4207-984b-6cb5093bdf31" class="xr-section-summary">Data variables: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>avg_temp</span></div><div class="xr-var-dims">(lat, lon)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-86e2e09c-cdd8-4be2-a4e9-71ae19eb757e" class="xr-var-attrs-in" type="checkbox"><label for="attrs-86e2e09c-cdd8-4be2-a4e9-71ae19eb757e" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-8e81f10a-0930-415a-bdb7-8e6a86ca7c9c" class="xr-var-data-in" type="checkbox"><label for="data-8e81f10a-0930-415a-bdb7-8e6a86ca7c9c" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>average temperature over three days</dd></dl></div><div class="xr-var-data"><pre>array([[1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
        [1., 1., 1., 1., 1.],
-       [1., 1., 1., 1., 1.]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>temp</span></div><div class="xr-var-dims">(day, lat, lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-329c8eae-26fc-4dbb-8dcc-bb48168bc02a" class="xr-var-attrs-in" type="checkbox"><label for="attrs-329c8eae-26fc-4dbb-8dcc-bb48168bc02a" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-d7dc1f82-9ef8-4d3c-97df-b691dd6a1f02" class="xr-var-data-in" type="checkbox"><label for="data-d7dc1f82-9ef8-4d3c-97df-b691dd6a1f02" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature data across weather stations</dd><dt><span>units :</span></dt><dd>degrees C</dd><dt><span>description :</span></dt><dd>a small example of an xarray.DataArray</dd></dl></div><div class="xr-var-data"><pre>array([[[0, 0, 0, 0, 0],
+       [1., 1., 1., 1., 1.]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>temp</span></div><div class="xr-var-dims">(time, lat, lon)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-a9c91484-52f1-4aec-b644-014661249482" class="xr-var-attrs-in" type="checkbox"><label for="attrs-a9c91484-52f1-4aec-b644-014661249482" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-8fa8d84d-fb1c-4511-ab9d-5dc061bf934a" class="xr-var-data-in" type="checkbox"><label for="data-8fa8d84d-fb1c-4511-ab9d-5dc061bf934a" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>title :</span></dt><dd>temperature across weather stations</dd><dt><span>units :</span></dt><dd>degrees_celsius</dd><dt><span>description :</span></dt><dd>simple example of an xarray.DataArray</dd></dl></div><div class="xr-var-data"><pre>array([[[0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
@@ -2463,28 +3228,28 @@ Attributes:
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2],
         [2, 2, 2, 2, 2],
-        [2, 2, 2, 2, 2]]])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-de28d851-b8be-4cf4-963b-5b32e2b90135" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-de28d851-b8be-4cf4-963b-5b32e2b90135" class="xr-section-summary">Attributes: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>creator_name :</span></dt><dd>Carmen GG</dd><dt><span>title :</span></dt><dd>temperature data</dd><dt><span>description :</span></dt><dd>a simple example of an xarray.Dataset</dd></dl></div></li></ul></div></div>
+        [2, 2, 2, 2, 2]]])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-e508ffa9-136b-4899-88a6-b2a81ddaf11d" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-e508ffa9-136b-4899-88a6-b2a81ddaf11d" class="xr-section-summary">Attributes: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>creator_name :</span></dt><dd>CGG</dd><dt><span>title :</span></dt><dd>temperature data at weather stations: daily and and average</dd><dt><span>description :</span></dt><dd>simple example of an xarray.Dataset</dd></dl></div></li></ul></div></div>
 </div>
 </div>
 </section>
 <section id="exercise-1" class="level3" data-number="8.4.6">
 <h3 data-number="8.4.6" class="anchored" data-anchor-id="exercise-1"><span class="header-section-number">8.4.6</span> Exercise</h3>
 <p>https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2280504J</p>
-<div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A792bfc37-416e-409e-80b1-fdef8ab60033'</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"FW_data_CESM_LW_2006_2100.nc"</span>, <span class="st">"wb"</span>).write(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A792bfc37-416e-409e-80b1-fdef8ab60033'</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"FW_data_CESM_LW_2006_2100.nc"</span>, <span class="st">"wb"</span>).write(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>208086</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">'FW_data_CESM_LW_2006_2100.nc'</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fw_data <span class="op">=</span> xr.open_dataset(fp)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>fw_data</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#netPrec_annual</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">'FW_data_CESM_LW_2006_2100.nc'</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>fw_data <span class="op">=</span> xr.open_dataset(fp)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>fw_data</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#netPrec_annual</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
 
 <div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 <defs>
@@ -2862,7 +3627,7 @@ Attributes:
     author:          Alexandra Jahn, CU Boulder, alexandra.jahn@colorado.edu
     title:           Annual timeseries of freshwater data from the CESM Low W...
     description:     Annual mean Freshwater (FW) fluxes and storage relative ...
-    data_structure:  The data structure is |Ensemble member | Time (in years)...</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-45e1e5a5-161a-459b-9d32-7826f47b87a8" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-45e1e5a5-161a-459b-9d32-7826f47b87a8" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"><ul class="xr-dim-list"><li><span class="xr-has-index">time</span>: 95</li><li><span class="xr-has-index">member</span>: 11</li></ul></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-33e3b5b6-6818-4760-b905-b4f8d3a87eeb" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-33e3b5b6-6818-4760-b905-b4f8d3a87eeb" class="xr-section-summary">Coordinates: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">2.006e+03 2.007e+03 ... 2.1e+03</div><input id="attrs-388f012c-0802-4861-b257-5020ed4bda8a" class="xr-var-attrs-in" type="checkbox"><label for="attrs-388f012c-0802-4861-b257-5020ed4bda8a" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-725c9da1-20f4-4859-9e41-62c4ff96472a" class="xr-var-data-in" type="checkbox"><label for="data-725c9da1-20f4-4859-9e41-62c4ff96472a" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>long_name :</span></dt><dd>time in years, 1920-2100</dd></dl></div><div class="xr-var-data"><pre>array([2006., 2007., 2008., 2009., 2010., 2011., 2012., 2013., 2014., 2015.,
+    data_structure:  The data structure is |Ensemble member | Time (in years)...</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-ed5a8215-c79a-42cc-b1e1-740d954bdc29" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-ed5a8215-c79a-42cc-b1e1-740d954bdc29" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"><ul class="xr-dim-list"><li><span class="xr-has-index">time</span>: 95</li><li><span class="xr-has-index">member</span>: 11</li></ul></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-99c74e63-c93b-4620-9129-b3ca371fc13d" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-99c74e63-c93b-4620-9129-b3ca371fc13d" class="xr-section-summary">Coordinates: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">time</span></div><div class="xr-var-dims">(time)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">2.006e+03 2.007e+03 ... 2.1e+03</div><input id="attrs-1e440321-3339-418c-9209-5983f29f36e5" class="xr-var-attrs-in" type="checkbox"><label for="attrs-1e440321-3339-418c-9209-5983f29f36e5" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-0663f355-3878-41eb-9197-9610924ae905" class="xr-var-data-in" type="checkbox"><label for="data-0663f355-3878-41eb-9197-9610924ae905" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>long_name :</span></dt><dd>time in years, 1920-2100</dd></dl></div><div class="xr-var-data"><pre>array([2006., 2007., 2008., 2009., 2010., 2011., 2012., 2013., 2014., 2015.,
        2016., 2017., 2018., 2019., 2020., 2021., 2022., 2023., 2024., 2025.,
        2026., 2027., 2028., 2029., 2030., 2031., 2032., 2033., 2034., 2035.,
        2036., 2037., 2038., 2039., 2040., 2041., 2042., 2043., 2044., 2045.,
@@ -2871,7 +3636,7 @@ Attributes:
        2066., 2067., 2068., 2069., 2070., 2071., 2072., 2073., 2074., 2075.,
        2076., 2077., 2078., 2079., 2080., 2081., 2082., 2083., 2084., 2085.,
        2086., 2087., 2088., 2089., 2090., 2091., 2092., 2093., 2094., 2095.,
-       2096., 2097., 2098., 2099., 2100.])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">member</span></div><div class="xr-var-dims">(member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">1.0 2.0 3.0 4.0 ... 9.0 10.0 11.0</div><input id="attrs-92feaf77-9ef3-44de-9624-6461e25b3f60" class="xr-var-attrs-in" type="checkbox"><label for="attrs-92feaf77-9ef3-44de-9624-6461e25b3f60" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-e9fa3c2f-5721-4759-8952-3422bb33e767" class="xr-var-data-in" type="checkbox"><label for="data-e9fa3c2f-5721-4759-8952-3422bb33e767" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>long_name :</span></dt><dd>Ensemble member, 1-11</dd></dl></div><div class="xr-var-data"><pre>array([ 1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-dcd57c50-a60f-4a68-b68b-59d5cc2f1af5" class="xr-section-summary-in" type="checkbox"><label for="section-dcd57c50-a60f-4a68-b68b-59d5cc2f1af5" class="xr-section-summary">Data variables: <span>(16)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Fram_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-13fb6786-61cf-43d0-8188-879e5679bd87" class="xr-var-attrs-in" type="checkbox"><label for="attrs-13fb6786-61cf-43d0-8188-879e5679bd87" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-6521d696-c6dd-4bd6-b849-a9e73e04d73f" class="xr-var-data-in" type="checkbox"><label for="data-6521d696-c6dd-4bd6-b849-a9e73e04d73f" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Fram Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-1259.970567, -1264.007662, -1043.912842, ..., -1127.209397,
+       2096., 2097., 2098., 2099., 2100.])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">member</span></div><div class="xr-var-dims">(member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">1.0 2.0 3.0 4.0 ... 9.0 10.0 11.0</div><input id="attrs-6d6ecbc8-c52c-4fe3-82a3-bad0935ac8a7" class="xr-var-attrs-in" type="checkbox"><label for="attrs-6d6ecbc8-c52c-4fe3-82a3-bad0935ac8a7" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c716c795-f408-4192-b003-e44e1e152870" class="xr-var-data-in" type="checkbox"><label for="data-c716c795-f408-4192-b003-e44e1e152870" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>long_name :</span></dt><dd>Ensemble member, 1-11</dd></dl></div><div class="xr-var-data"><pre>array([ 1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-a59a0ac0-443f-48f3-855d-f8c1f45da9e5" class="xr-section-summary-in" type="checkbox"><label for="section-a59a0ac0-443f-48f3-855d-f8c1f45da9e5" class="xr-section-summary">Data variables: <span>(16)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Fram_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-d5c59eee-2ce8-4ab3-92ea-5159f44a8a71" class="xr-var-attrs-in" type="checkbox"><label for="attrs-d5c59eee-2ce8-4ab3-92ea-5159f44a8a71" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-19158ce2-ddba-4ec1-a4f9-eabb30866bb1" class="xr-var-data-in" type="checkbox"><label for="data-19158ce2-ddba-4ec1-a4f9-eabb30866bb1" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Fram Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-1259.970567, -1264.007662, -1043.912842, ..., -1127.209397,
         -1094.937548, -1068.404606],
        [-1211.286894, -1479.531102, -1018.166211, ..., -1243.711036,
         -1267.207286, -1114.552581],
@@ -2883,7 +3648,7 @@ Attributes:
        [-2312.975878, -1882.595866, -1626.129161, ..., -2050.419246,
         -2007.994165, -2369.86382 ],
        [-1869.903721, -1941.767155, -1944.454371, ..., -1797.444957,
-        -2291.658043, -2133.186992]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Barrow_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-970e662f-2c4e-4741-9c6b-1a567eef1d2a" class="xr-var-attrs-in" type="checkbox"><label for="attrs-970e662f-2c4e-4741-9c6b-1a567eef1d2a" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-1199b834-3a14-46cd-b391-638c58a8b61d" class="xr-var-data-in" type="checkbox"><label for="data-1199b834-3a14-46cd-b391-638c58a8b61d" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Barrow Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-600.656931, -591.794563, -623.46547 , ..., -530.954288, -557.466782,
+        -2291.658043, -2133.186992]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Barrow_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-5e742cf5-294d-4028-a2c9-a1ef8503ec54" class="xr-var-attrs-in" type="checkbox"><label for="attrs-5e742cf5-294d-4028-a2c9-a1ef8503ec54" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-e16e6857-14d9-42e9-9880-43b6216131f9" class="xr-var-data-in" type="checkbox"><label for="data-e16e6857-14d9-42e9-9880-43b6216131f9" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Barrow Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-600.656931, -591.794563, -623.46547 , ..., -530.954288, -557.466782,
         -540.397683],
        [-545.381073, -651.15272 , -647.759741, ..., -554.62912 , -614.254495,
         -681.241813],
@@ -2895,7 +3660,7 @@ Attributes:
        [-508.571693, -385.524045, -505.368339, ..., -560.393935, -432.867012,
         -501.710328],
        [-478.525844, -380.776262, -525.255738, ..., -418.526205, -514.73683 ,
-        -537.165685]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Nares_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-5c675bd8-cfac-4d74-bd28-d458a691cd46" class="xr-var-attrs-in" type="checkbox"><label for="attrs-5c675bd8-cfac-4d74-bd28-d458a691cd46" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-b84c2c6e-2003-42d4-aebd-5bbf097f82a9" class="xr-var-data-in" type="checkbox"><label for="data-b84c2c6e-2003-42d4-aebd-5bbf097f82a9" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Nares Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-1805.094645, -1750.974399, -1736.428853, ..., -1790.293088,
+        -537.165685]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Nares_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-51e9f3ed-be01-461f-a8e5-6ead3e7b7339" class="xr-var-attrs-in" type="checkbox"><label for="attrs-51e9f3ed-be01-461f-a8e5-6ead3e7b7339" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-6f343241-0266-4149-bf83-73951f5409d2" class="xr-var-data-in" type="checkbox"><label for="data-6f343241-0266-4149-bf83-73951f5409d2" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Nares Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-1805.094645, -1750.974399, -1736.428853, ..., -1790.293088,
         -1630.279788, -1698.111863],
        [-1661.738712, -1906.896808, -1756.856956, ..., -1846.616134,
         -1754.973196, -1978.856594],
@@ -2907,7 +3672,7 @@ Attributes:
        [-2767.255034, -2435.987932, -2852.725589, ..., -3132.779162,
         -2879.811506, -2758.960293],
        [-2801.006622, -2418.965807, -2907.765449, ..., -2699.143264,
-        -3153.186248, -2825.880317]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Davis_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-edea0dca-62ce-48a8-b438-e337ce115b54" class="xr-var-attrs-in" type="checkbox"><label for="attrs-edea0dca-62ce-48a8-b438-e337ce115b54" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-478c24ea-f8d8-40d7-8ba9-992acf7d0436" class="xr-var-data-in" type="checkbox"><label for="data-478c24ea-f8d8-40d7-8ba9-992acf7d0436" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Davis Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-2312.903562, -2206.193327, -2513.938315, ..., -2452.741479,
+        -3153.186248, -2825.880317]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Davis_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-7e73f9dd-e41a-4b46-abeb-3e3174f8af48" class="xr-var-attrs-in" type="checkbox"><label for="attrs-7e73f9dd-e41a-4b46-abeb-3e3174f8af48" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c73f83b1-19f0-48e1-b5d9-a10ac8fc5863" class="xr-var-data-in" type="checkbox"><label for="data-c73f83b1-19f0-48e1-b5d9-a10ac8fc5863" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Davis Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-2312.903562, -2206.193327, -2513.938315, ..., -2452.741479,
         -2178.565682, -2496.419307],
        [-2442.875007, -2302.612039, -2550.956543, ..., -2594.189567,
         -2411.537129, -2491.906155],
@@ -2919,7 +3684,7 @@ Attributes:
        [-3091.625499, -3293.624915, -3857.535966, ..., -3733.405415,
         -3404.497911, -3538.640386],
        [-3657.58114 , -3137.665787, -3346.385689, ..., -3778.231506,
-        -3182.004745, -3294.19718 ]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_BSO_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-b7292988-399f-44ca-a605-2881bcde867c" class="xr-var-attrs-in" type="checkbox"><label for="attrs-b7292988-399f-44ca-a605-2881bcde867c" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-0540fbaa-51d1-4393-85a9-f548457d19f4" class="xr-var-data-in" type="checkbox"><label for="data-0540fbaa-51d1-4393-85a9-f548457d19f4" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through the Barents Sea Opening, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[ -859.243059,  -942.211781,  -723.703298, ..., -1036.046746,
+        -3182.004745, -3294.19718 ]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_BSO_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-8a92ac0e-b8da-471f-b0ea-581f4f2c24f2" class="xr-var-attrs-in" type="checkbox"><label for="attrs-8a92ac0e-b8da-471f-b0ea-581f4f2c24f2" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-7a3313a5-37bd-4d46-b574-0e6ec50c2aab" class="xr-var-data-in" type="checkbox"><label for="data-7a3313a5-37bd-4d46-b574-0e6ec50c2aab" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through the Barents Sea Opening, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[ -859.243059,  -942.211781,  -723.703298, ..., -1036.046746,
         -1055.237416,  -736.846205],
        [ -878.919322,  -862.165165,  -760.842132, ...,  -981.459231,
         -1017.759096,  -719.537064],
@@ -2931,7 +3696,7 @@ Attributes:
        [-1175.496328,  -992.809814, -1042.238636, ..., -1027.30427 ,
         -1012.655464, -1161.633369],
        [-1108.045221, -1149.213528,  -974.059705, ...,  -944.651881,
-        -1351.228427,  -993.196776]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Bering_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-e87ce45f-09e0-409a-bcc6-fb8a11397b83" class="xr-var-attrs-in" type="checkbox"><label for="attrs-e87ce45f-09e0-409a-bcc6-fb8a11397b83" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-3168e67f-c369-4c32-ab82-8f1a9eab97ac" class="xr-var-data-in" type="checkbox"><label for="data-3168e67f-c369-4c32-ab82-8f1a9eab97ac" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Bering Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[2351.369668, 2345.677436, 2046.439566, ..., 2298.623674, 2036.719667,
+        -1351.228427,  -993.196776]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>FW_flux_Bering_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-ec84a743-667b-445e-b14f-b4c06c79af67" class="xr-var-attrs-in" type="checkbox"><label for="attrs-ec84a743-667b-445e-b14f-b4c06c79af67" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-82700726-4542-4f2c-bf06-dc56b65eddd7" class="xr-var-data-in" type="checkbox"><label for="data-82700726-4542-4f2c-bf06-dc56b65eddd7" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net liquid FW flux through Bering Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[2351.369668, 2345.677436, 2046.439566, ..., 2298.623674, 2036.719667,
         1907.280919],
        [2481.513182, 2178.085803, 2490.061059, ..., 2760.976043, 2139.010713,
         2320.373448],
@@ -2943,7 +3708,7 @@ Attributes:
        [2402.817047, 2871.272846, 2241.49669 , ..., 2899.779166, 2921.583788,
         3124.232717],
        [2553.009217, 2738.646198, 2402.378728, ..., 2832.505199, 2564.175895,
-        3110.720966]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Fram_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-ad8a4221-5346-499c-a744-ca8927f0bf29" class="xr-var-attrs-in" type="checkbox"><label for="attrs-ad8a4221-5346-499c-a744-ca8927f0bf29" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-fb661b77-1e73-4fca-b1d9-592c74662892" class="xr-var-data-in" type="checkbox"><label for="data-fb661b77-1e73-4fca-b1d9-592c74662892" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Fram Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-2355.201527, -3079.918585, -1900.235976, ..., -2379.143692,
+        3110.720966]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Fram_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-77b5b525-f9d7-4cf9-a866-0a430f456596" class="xr-var-attrs-in" type="checkbox"><label for="attrs-77b5b525-f9d7-4cf9-a866-0a430f456596" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-37990665-f624-4ec2-b3a5-4f06e8593ff6" class="xr-var-data-in" type="checkbox"><label for="data-37990665-f624-4ec2-b3a5-4f06e8593ff6" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Fram Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-2355.201527, -3079.918585, -1900.235976, ..., -2379.143692,
         -2263.860412, -1740.013499],
        [-2072.011081, -2483.281102, -2397.287222, ..., -2044.468084,
         -2757.085258, -2187.036132],
@@ -2955,7 +3720,7 @@ Attributes:
        [-1176.377381,  -715.543546,  -763.626743, ...,  -876.188872,
          -550.202924, -1673.306079],
        [ -842.80755 , -1236.592837,  -685.109519, ...,  -585.170298,
-        -1213.069558, -1393.501459]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Barrow_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-6ac34903-cc09-486e-ba41-a4baff30151e" class="xr-var-attrs-in" type="checkbox"><label for="attrs-6ac34903-cc09-486e-ba41-a4baff30151e" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-ac8fe5d4-0aed-4759-b84a-c6ee1c0f914d" class="xr-var-data-in" type="checkbox"><label for="data-ac8fe5d4-0aed-4759-b84a-c6ee1c0f914d" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Barrow Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[ -5.907839, -11.016486,   2.898278, ...,  -6.772   ,  -2.346885,
+        -1213.069558, -1393.501459]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Barrow_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-da9dc019-dcfe-4955-bc2a-9ab79085d676" class="xr-var-attrs-in" type="checkbox"><label for="attrs-da9dc019-dcfe-4955-bc2a-9ab79085d676" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-b8618843-7ad2-4f61-9174-09ff5ec39e69" class="xr-var-data-in" type="checkbox"><label for="data-b8618843-7ad2-4f61-9174-09ff5ec39e69" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Barrow Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[ -5.907839, -11.016486,   2.898278, ...,  -6.772   ,  -2.346885,
          -4.972206],
        [ -5.405102, -12.325443,  -2.837828, ...,  -1.54938 ,  -1.524433,
          -3.239178],
@@ -2967,7 +3732,7 @@ Attributes:
        [ -2.473455,  -2.43267 ,  -4.119768, ...,  -3.041222,  -0.642326,
          -3.151623],
        [ -4.023888,  -4.630743,  -6.034809, ...,  -3.946639,  -2.759937,
-         -3.67783 ]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Nares_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-e887f40d-c972-4233-a5a6-2e636f86fcdb" class="xr-var-attrs-in" type="checkbox"><label for="attrs-e887f40d-c972-4233-a5a6-2e636f86fcdb" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-082b8131-5c0c-493b-a384-93912f61b924" class="xr-var-data-in" type="checkbox"><label for="data-082b8131-5c0c-493b-a384-93912f61b924" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Nares Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-443.523805, -369.69004 , -319.816739, ..., -359.434137, -331.597514,
+         -3.67783 ]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Nares_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-2d33f157-256a-44a8-b656-a2b46e051a15" class="xr-var-attrs-in" type="checkbox"><label for="attrs-2d33f157-256a-44a8-b656-a2b46e051a15" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-b68f9618-fdff-4e63-aedd-6db084a35a6f" class="xr-var-data-in" type="checkbox"><label for="data-b68f9618-fdff-4e63-aedd-6db084a35a6f" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Nares Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-443.523805, -369.69004 , -319.816739, ..., -359.434137, -331.597514,
         -351.161639],
        [-402.060722, -365.66951 , -455.727733, ..., -359.163976, -398.079664,
         -312.769165],
@@ -2979,7 +3744,7 @@ Attributes:
        [-214.401449, -252.253729, -303.416623, ..., -295.322261, -282.239789,
         -357.222407],
        [-361.437905, -301.694338, -259.185245, ..., -248.62952 , -255.963657,
-        -396.696598]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Davis_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-b53e3e35-96c7-4976-975b-0d87acd2be72" class="xr-var-attrs-in" type="checkbox"><label for="attrs-b53e3e35-96c7-4976-975b-0d87acd2be72" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-8e913df6-361a-48b5-bfa2-ffe15cddebc0" class="xr-var-data-in" type="checkbox"><label for="data-8e913df6-361a-48b5-bfa2-ffe15cddebc0" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Davis Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-647.548166, -690.769077, -803.010762, ..., -637.388108, -669.678922,
+        -396.696598]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Davis_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-852d495b-656a-4f40-a5c1-6e5ab942b8cd" class="xr-var-attrs-in" type="checkbox"><label for="attrs-852d495b-656a-4f40-a5c1-6e5ab942b8cd" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c0a49a88-eace-4c40-b39a-375b55f37f0b" class="xr-var-data-in" type="checkbox"><label for="data-c0a49a88-eace-4c40-b39a-375b55f37f0b" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Davis Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-647.548166, -690.769077, -803.010762, ..., -637.388108, -669.678922,
         -636.923716],
        [-738.654959, -712.727442, -787.469841, ..., -741.271782, -734.0404  ,
         -652.683568],
@@ -2991,7 +3756,7 @@ Attributes:
        [-381.382969, -369.539971, -560.781192, ..., -423.884627, -600.9458  ,
         -596.006766],
        [-544.597115, -384.419366, -492.503528, ..., -482.520345, -479.724188,
-        -568.860609]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_BSO_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-b8493c85-6ea4-4b10-be4a-eca34f378009" class="xr-var-attrs-in" type="checkbox"><label for="attrs-b8493c85-6ea4-4b10-be4a-eca34f378009" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-0beca8dd-1e3e-4533-bb0a-830ea6758d9e" class="xr-var-data-in" type="checkbox"><label for="data-0beca8dd-1e3e-4533-bb0a-830ea6758d9e" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through the Barents Sea Opening, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-2.677222e+01, -2.198672e+02, -7.108708e+01, ..., -8.265375e+00,
+        -568.860609]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_BSO_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-bff4aa15-be31-4165-a04a-fa13bbb519b3" class="xr-var-attrs-in" type="checkbox"><label for="attrs-bff4aa15-be31-4165-a04a-fa13bbb519b3" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-8eae93f2-e949-4805-b0a4-db404700dc6c" class="xr-var-data-in" type="checkbox"><label for="data-8eae93f2-e949-4805-b0a4-db404700dc6c" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through the Barents Sea Opening, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[-2.677222e+01, -2.198672e+02, -7.108708e+01, ..., -8.265375e+00,
         -7.027574e+01, -2.478501e-01],
        [-1.119710e+00, -1.611613e+01, -9.113674e+01, ..., -7.502441e+01,
         -4.567288e+01, -8.217717e+01],
@@ -3003,7 +3768,7 @@ Attributes:
        [-1.129319e-01, -3.020100e+00, -9.972180e+00, ..., -6.321711e+00,
         -1.357067e-01, -5.525681e-01],
        [-1.324610e-02, -1.583726e+01, -2.125017e-01, ..., -2.465729e+00,
-        -3.163840e-01, -3.543094e+01]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Bering_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-44b1eb35-a637-4ead-8340-d239021d7092" class="xr-var-attrs-in" type="checkbox"><label for="attrs-44b1eb35-a637-4ead-8340-d239021d7092" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-71ad552f-24d6-4b53-8711-fe1b62e52b47" class="xr-var-data-in" type="checkbox"><label for="data-71ad552f-24d6-4b53-8711-fe1b62e52b47" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Bering Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[ 56.300783,  86.619422,  21.629406, ...,  45.369409, 120.205643,
+        -3.163840e-01, -3.543094e+01]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_flux_Bering_annual_net</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-eed3deec-6138-4c31-846c-3d894fe75ae5" class="xr-var-attrs-in" type="checkbox"><label for="attrs-eed3deec-6138-4c31-846c-3d894fe75ae5" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-7b618670-995d-4fa4-b52a-089076f461e2" class="xr-var-data-in" type="checkbox"><label for="data-7b618670-995d-4fa4-b52a-089076f461e2" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net Solid (ice+snow) FW flux through Bering Strait, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[ 56.300783,  86.619422,  21.629406, ...,  45.369409, 120.205643,
           6.023335],
        [ 52.854622,  68.339477, 139.181478, ...,  79.513795,  82.273825,
         216.946026],
@@ -3015,7 +3780,7 @@ Attributes:
        [ 46.223662,  44.331598,   9.747562, ...,  44.638335,  63.846993,
          49.628882],
        [  4.125923,  26.376146,  44.08245 , ...,  35.386517, 144.93525 ,
-         22.865989]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>runoff_annual</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-bb5a5153-e4c5-4a06-8dc3-9c2c17ddefa2" class="xr-var-attrs-in" type="checkbox"><label for="attrs-bb5a5153-e4c5-4a06-8dc3-9c2c17ddefa2" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-31309a0e-e43c-4097-8f2f-8bb0b482d6e6" class="xr-var-data-in" type="checkbox"><label for="data-31309a0e-e43c-4097-8f2f-8bb0b482d6e6" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>FW flux from river runoff into the Arctic Ocean domain, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[3389.793118, 3653.250059, 3255.904314, ..., 3484.324351, 3762.057224,
+         22.865989]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>runoff_annual</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-e85fff3a-7657-4dac-a217-268dd1a47037" class="xr-var-attrs-in" type="checkbox"><label for="attrs-e85fff3a-7657-4dac-a217-268dd1a47037" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-4cae8820-69d6-4ed1-9f19-5f2252029252" class="xr-var-data-in" type="checkbox"><label for="data-4cae8820-69d6-4ed1-9f19-5f2252029252" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>FW flux from river runoff into the Arctic Ocean domain, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[3389.793118, 3653.250059, 3255.904314, ..., 3484.324351, 3762.057224,
         3233.230548],
        [2991.152992, 3493.827835, 3384.707049, ..., 3571.643922, 3489.125416,
         3641.709685],
@@ -3027,7 +3792,7 @@ Attributes:
        [3743.83261 , 3378.368684, 3672.490382, ..., 3739.293615, 3739.029349,
         3973.012085],
        [3552.160713, 3480.78009 , 3710.884772, ..., 3580.675064, 4001.506981,
-        3973.911416]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>netPrec_annual</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-345f7d1b-bf86-4ead-9736-1becbebd2ee9" class="xr-var-attrs-in" type="checkbox"><label for="attrs-345f7d1b-bf86-4ead-9736-1becbebd2ee9" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-cd8193d8-bfb9-4a5a-9498-07e602e9e153" class="xr-var-data-in" type="checkbox"><label for="data-cd8193d8-bfb9-4a5a-9498-07e602e9e153" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net FW flux from precipitation minus evaporation over the Arctic Ocean domain, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[2019.436111, 2208.638737, 1936.136054, ..., 2049.989982, 1959.873063,
+        3973.911416]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>netPrec_annual</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-ea010cce-8ab3-4fa6-9969-625c01deefb5" class="xr-var-attrs-in" type="checkbox"><label for="attrs-ea010cce-8ab3-4fa6-9969-625c01deefb5" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-993e175c-6ad2-4627-99fb-e19049839e72" class="xr-var-data-in" type="checkbox"><label for="data-993e175c-6ad2-4627-99fb-e19049839e72" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3/yr</dd><dt><span>long_name :</span></dt><dd>Net FW flux from precipitation minus evaporation over the Arctic Ocean domain, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[2019.436111, 2208.638737, 1936.136054, ..., 2049.989982, 1959.873063,
         1750.749748],
        [1945.582104, 2039.416637, 2085.04094 , ..., 1870.845855, 1965.883031,
         2057.552438],
@@ -3039,7 +3804,7 @@ Attributes:
        [1915.662721, 1961.74668 , 1920.628415, ..., 1993.625762, 1744.708491,
         2245.915281],
        [1767.588737, 1904.765559, 1953.973994, ..., 1760.192971, 2384.175174,
-        2118.712754]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Liquid_FW_storage_Arctic_annual</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-69793c58-c84c-4730-8650-d154b2f01cc5" class="xr-var-attrs-in" type="checkbox"><label for="attrs-69793c58-c84c-4730-8650-d154b2f01cc5" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-4f5e3c17-4231-4b94-8a74-e94d6111b694" class="xr-var-data-in" type="checkbox"><label for="data-4f5e3c17-4231-4b94-8a74-e94d6111b694" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3</dd><dt><span>long_name :</span></dt><dd>FW storage in the Arctic Ocean domain, , relative to 34.8. Ignoring any negative FW (water above reference salinity)</dd></dl></div><div class="xr-var-data"><pre>array([[ 81250.414556,  85443.803218,  80863.782256, ...,  86120.03671 ,
+        2118.712754]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Liquid_FW_storage_Arctic_annual</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-2118d342-02fa-4518-9677-cf35a6b4a0ad" class="xr-var-attrs-in" type="checkbox"><label for="attrs-2118d342-02fa-4518-9677-cf35a6b4a0ad" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-d7f2820a-63d8-4b25-89e7-d27e8c04f9c5" class="xr-var-data-in" type="checkbox"><label for="data-d7f2820a-63d8-4b25-89e7-d27e8c04f9c5" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3</dd><dt><span>long_name :</span></dt><dd>FW storage in the Arctic Ocean domain, , relative to 34.8. Ignoring any negative FW (water above reference salinity)</dd></dl></div><div class="xr-var-data"><pre>array([[ 81250.414556,  85443.803218,  80863.782256, ...,  86120.03671 ,
          81999.322618,  87066.701325],
        [ 82567.489008,  85437.534745,  81016.233259, ...,  86801.295397,
          81720.408045,  85405.906043],
@@ -3051,7 +3816,7 @@ Attributes:
        [ 99022.701221, 100071.990872, 100428.151173, ..., 106023.385394,
         101243.934883,  97353.008726],
        [ 99884.660244, 101526.449779, 100904.197851, ..., 106283.670855,
-        101106.948969,  97309.828159]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_storage_Arctic_annual</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-39cc02f1-c221-4511-aa40-8629545ce7d1" class="xr-var-attrs-in" type="checkbox"><label for="attrs-39cc02f1-c221-4511-aa40-8629545ce7d1" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-09099c77-d09e-4cdf-bceb-7d7bcd4ade41" class="xr-var-data-in" type="checkbox"><label for="data-09099c77-d09e-4cdf-bceb-7d7bcd4ade41" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3</dd><dt><span>long_name :</span></dt><dd>FW storage in sea ice and snow in the Arctic Ocean domain, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[18283.302344, 16436.957815, 18942.480543, ..., 19105.369531,
+        101106.948969,  97309.828159]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>Solid_FW_storage_Arctic_annual</span></div><div class="xr-var-dims">(time, member)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">...</div><input id="attrs-2c87f859-4ce4-4991-bbad-a11882ee971c" class="xr-var-attrs-in" type="checkbox"><label for="attrs-2c87f859-4ce4-4991-bbad-a11882ee971c" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-0e2a9f81-0518-4550-ae34-95dc5cf0f39e" class="xr-var-data-in" type="checkbox"><label for="data-0e2a9f81-0518-4550-ae34-95dc5cf0f39e" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>units :</span></dt><dd>km3</dd><dt><span>long_name :</span></dt><dd>FW storage in sea ice and snow in the Arctic Ocean domain, relative to 34.8</dd></dl></div><div class="xr-var-data"><pre>array([[18283.302344, 16436.957815, 18942.480543, ..., 19105.369531,
         17193.142364, 16026.957959],
        [17228.15868 , 16184.248407, 19493.271233, ..., 18736.727461,
         17731.125586, 18033.048197],
@@ -3063,7 +3828,7 @@ Attributes:
        [ 7925.266   ,  8366.732533,  7583.306716, ...,  7247.856691,
          6969.390301,  7445.873087],
        [ 6850.743786,  7492.329279,  7275.546906, ...,  7656.442802,
-         7476.367423,  7656.280716]])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-ce9156c1-69d8-4d8c-9d6e-b198ec76c628" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-ce9156c1-69d8-4d8c-9d6e-b198ec76c628" class="xr-section-summary">Attributes: <span>(5)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>creation_date :</span></dt><dd>02-Jun-2020 15:38:31</dd><dt><span>author :</span></dt><dd>Alexandra Jahn, CU Boulder, alexandra.jahn@colorado.edu</dd><dt><span>title :</span></dt><dd>Annual timeseries of freshwater data from the CESM Low Warming Ensemble</dd><dt><span>description :</span></dt><dd>Annual mean Freshwater (FW) fluxes and storage relative to 34.8 shown in Jahn and Laiho, GRL, 2020, calculated from the 11-member Community Earth System Model (CESM) Low Warming Ensemble output (Sanderson et al., 2017, Earth Syst. Dynam., 8, 827-847. doi: 10.5194/esd-8-827-2017). These 11 ensemble members were branched from the first 11 ensemble members of the CESM Large Ensemble (companion data file) at the end of 2005. Convention for the fluxes is that positive fluxes signify a source of FW to the Arctic and negative fluxes are a sink/export of FW for the Arctic. FW fluxes are the net fluxes through a strait over the full ocean depth, adding up any positive and negative fluxes. Liquid FW storage is calculated over the full depth of the ocean but ignoring any negative FW (resulting from salinties over 34.8). Solid FW storage includes FW stored in sea ice and FW stored in snow on sea ice. Surface fluxes and FW storage is calculated over the Arctic domain bounded by Barrow Strait, Nares Strait, Bering Strait, Fram Strait, and the Barents Sea Opeing (BSO). Davis Strait fluxes are included for reference only and are outside of the Arctic domain. A map showing the domain and the location of the straits can be found in Jahn and Laiho, GRL, 2020.</dd><dt><span>data_structure :</span></dt><dd>The data structure is |Ensemble member | Time (in years)|. All data are annual means. The data covers 2006-2100. There are 11 ensemble members.</dd></dl></div></li></ul></div></div>
+         7476.367423,  7656.280716]])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-2fadda8f-571b-4740-bc18-2f151ebcff7f" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-2fadda8f-571b-4740-bc18-2f151ebcff7f" class="xr-section-summary">Attributes: <span>(5)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>creation_date :</span></dt><dd>02-Jun-2020 15:38:31</dd><dt><span>author :</span></dt><dd>Alexandra Jahn, CU Boulder, alexandra.jahn@colorado.edu</dd><dt><span>title :</span></dt><dd>Annual timeseries of freshwater data from the CESM Low Warming Ensemble</dd><dt><span>description :</span></dt><dd>Annual mean Freshwater (FW) fluxes and storage relative to 34.8 shown in Jahn and Laiho, GRL, 2020, calculated from the 11-member Community Earth System Model (CESM) Low Warming Ensemble output (Sanderson et al., 2017, Earth Syst. Dynam., 8, 827-847. doi: 10.5194/esd-8-827-2017). These 11 ensemble members were branched from the first 11 ensemble members of the CESM Large Ensemble (companion data file) at the end of 2005. Convention for the fluxes is that positive fluxes signify a source of FW to the Arctic and negative fluxes are a sink/export of FW for the Arctic. FW fluxes are the net fluxes through a strait over the full ocean depth, adding up any positive and negative fluxes. Liquid FW storage is calculated over the full depth of the ocean but ignoring any negative FW (resulting from salinties over 34.8). Solid FW storage includes FW stored in sea ice and FW stored in snow on sea ice. Surface fluxes and FW storage is calculated over the Arctic domain bounded by Barrow Strait, Nares Strait, Bering Strait, Fram Strait, and the Barents Sea Opeing (BSO). Davis Strait fluxes are included for reference only and are outside of the Arctic domain. A map showing the domain and the location of the straits can be found in Jahn and Laiho, GRL, 2020.</dd><dt><span>data_structure :</span></dt><dd>The data structure is |Ensemble member | Time (in years)|. All data are annual means. The data covers 2006-2100. There are 11 ensemble members.</dd></dl></div></li></ul></div></div>
 </div>
 </div>
 </section>
