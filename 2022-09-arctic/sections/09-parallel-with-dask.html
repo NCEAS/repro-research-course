@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.175">
+<meta name="generator" content="quarto-1.1.189">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -123,6 +123,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -268,12 +271,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">9.1</span>  Introduction</a></li>
   <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="toc-section-number">9.2</span>  Objectives</a></li>
   <li><a href="#possible-computing-examples" id="toc-possible-computing-examples" class="nav-link" data-scroll-target="#possible-computing-examples"><span class="toc-section-number">9.3</span>  Possible computing examples:</a></li>
-  <li><a href="#dask-data-frames" id="toc-dask-data-frames" class="nav-link" data-scroll-target="#dask-data-frames"><span class="toc-section-number">9.4</span>  Dask Data Frames</a></li>
-  <li><a href="#dask-arrays" id="toc-dask-arrays" class="nav-link" data-scroll-target="#dask-arrays"><span class="toc-section-number">9.5</span>  Dask Arrays</a></li>
-  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="toc-section-number">9.6</span>  Best Practices</a></li>
-  <li><a href="#todo" id="toc-todo" class="nav-link" data-scroll-target="#todo"><span class="toc-section-number">9.7</span>  TODO</a>
+  <li><a href="#dask-cluster" id="toc-dask-cluster" class="nav-link" data-scroll-target="#dask-cluster"><span class="toc-section-number">9.4</span>  Dask Cluster</a></li>
+  <li><a href="#dask-data-frames" id="toc-dask-data-frames" class="nav-link" data-scroll-target="#dask-data-frames"><span class="toc-section-number">9.5</span>  Dask Data Frames</a></li>
+  <li><a href="#dask-arrays" id="toc-dask-arrays" class="nav-link" data-scroll-target="#dask-arrays"><span class="toc-section-number">9.6</span>  Dask Arrays</a></li>
+  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="toc-section-number">9.7</span>  Best Practices</a></li>
+  <li><a href="#todo" id="toc-todo" class="nav-link" data-scroll-target="#todo"><span class="toc-section-number">9.8</span>  TODO</a>
   <ul class="collapse">
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes"><span class="toc-section-number">9.7.1</span>  Notes</a></li>
+  <li><a href="#bryces-notes" id="toc-bryces-notes" class="nav-link" data-scroll-target="#bryces-notes"><span class="toc-section-number">9.8.1</span>  Bryce’s Notes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -299,33 +303,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">9.1</span> Introduction</h2>
-<p>Dask is a library for parallel computing in Python. It can scale up code to use the full capacity of your personal computer or to use a cloud cluster. By mirroring APIs of other commonly used Python libraries such as Pandas, NumPy, and Scikit-learn, Dask provides a familiar interface that makes it easier to parallelize your code. In this lesson, we will get acquainted with some of Dask’s most commonly used objects and Dask’s way of distributing and evaluating computations.</p>
+<p>Dask is a library for parallel computing in Python. It can scale up code to use the full capacity of your personal computer or to distribute work in a cloud cluster. By mirroring APIs of other commonly used Python libraries such as Pandas, NumPy, and Scikit-learn, Dask provides a familiar interface that makes it easier to parallelize your code. In this lesson, we will get acquainted with some of Dask’s most commonly used objects and Dask’s way of distributing and evaluating computations.</p>
 <p><img src="../images/dask_logo.png" class="img-fluid"></p>
 </section>
 <section id="objectives" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="objectives"><span class="header-section-number">9.2</span> Objectives</h2>
 <ul>
+<li>Become familiar with Dask processing workflow:
+<ul>
+<li>What are the client, scheduler, workers, and cluster</li>
+<li>https://www.datarevenue.com/en-blog/understanding-dask-architecture-client-scheduler-workers</li>
+<li>Understand delayed computations and “lazy” evaluation</li>
+<li>Obtain information about computations via the Dask dashboard</li>
+<li>https://www.youtube.com/watch?v=N_GqzcuGLCY</li>
+</ul></li>
 <li>Learn basics of <code>dask.arrays</code> and <code>dask.dataframes</code>:
 <ul>
 <li>Load data and specifying chunk sizes</li>
-<li>Understand delayed computations and “lazy” evaluation</li>
 <li>https://saturncloud.io/blog/a-data-scientist-s-guide-to-lazy-evaluation-with-dask/</li>
 <li>Interpret a task graph</li>
 </ul></li>
 <li>Integrate <code>xarray</code> with Dask:
 <ul>
 <li>https://docs.xarray.dev/en/stable/user-guide/dask.html</li>
-</ul></li>
-<li>Become familiar with Dask’s distributed scheduler:
-<ul>
-<li>What are the client, scheduler, workers, and cluster</li>
-<li>https://www.datarevenue.com/en-blog/understanding-dask-architecture-client-scheduler-workers</li>
-</ul>
-https://tutorial.dask.org/04_distributed.html
-<ul>
-<li>Obtain information about computations via the Dask dashboard</li>
-<li>https://www.youtube.com/watch?v=N_GqzcuGLCY</li>
-<li>https://medium.com/<span class="citation" data-cites="kartikbhanot/dask-scheduler-dashboard-understanding-resource-and-task-allocation-in-local-machines-bc5aa60eca6e">(<a href="#ref-kartikbhanot/dask-scheduler-dashboard-understanding-resource-and-task-allocation-in-local-machines-bc5aa60eca6e" role="doc-biblioref"><strong>kartikbhanot/dask-scheduler-dashboard-understanding-resource-and-task-allocation-in-local-machines-bc5aa60eca6e?</strong></a>)</span></li>
 </ul></li>
 <li>Share best practices and resources for a deeper dive
 <ul>
@@ -338,34 +338,329 @@ https://tutorial.dask.org/04_distributed.html
 <h2 data-number="9.3" class="anchored" data-anchor-id="possible-computing-examples"><span class="header-section-number">9.3</span> Possible computing examples:</h2>
 <p>https://docs.dask.org/en/latest/10-minutes-to-dask.html</p>
 <p>https://tutorial.dask.org/00_overview.html</p>
-<p>Dask provides high-level Array, Bag, and DataFrame collections that mimic NumPy, lists, and pandas but can operate in parallel on datasets that don’t fit into memory.</p>
-<p>It is important to remember that, while APIs may be similar, some differences do exist. Additionally, the performance of some algorithms may differ from their in-memory counterparts due to the advantages and disadvantages of parallel programming.</p>
 </section>
-<section id="dask-data-frames" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="dask-data-frames"><span class="header-section-number">9.4</span> Dask Data Frames</h2>
-<p>When we analyze tabular data, we usually start our analysis by loading it into memory as a Pandas DataFrame. But, what if this data does not fit in memory? Or maybe our analyzes crash because we run out of memory? These scenarios are typical entry points into parallel computing. In such cases, Dask’s scalable alternative to a Pandas DataFrame is the Dask Dataframe. A <code>dask.DataFrame</code> is made up of many <code>pd.DataFrames</code>, each containing a subset of rows of the original dataset. We call each of these pandas pieces a <em>partition</em> of the <code>dask.DataFrame</code>.</p>
+<section id="dask-cluster" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="dask-cluster"><span class="header-section-number">9.4</span> Dask Cluster</h2>
+<p>Dask clusters have three main components for processing computations in parallel. These are the <em>client</em>, the <em>scheduler</em> and the <em>workers</em>.</p>
+<ul>
+<li><p>When we code, we communicate directly with the <strong>client</strong>, which is responsible for submitting tasks to be executed to the scheduler.</p></li>
+<li><p>After receiving the tasks from the client, the <strong>scheduler</strong> determines how tasks will be distributed among the workers and coordinates them to process tasks in parallel.</p></li>
+<li><p>Finally, the <strong>workers</strong> are threads, processes, or separate machines in a cluster. They compute tasks and store and return computations results.</p></li>
+</ul>
+<p>In order to interact with the client and generate tasks that can be processed in parallel we need to use Dasks’ objects to read our data. Here we will see examples of how to use <code>dask.dataframes</code> and <code>dask.arrays</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/dask_cluster.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">From: https://www.datarevenue.com/en-blog/understanding-dask-architecture-client-scheduler-workers Make this into a collored graph, add cluster envelope</figcaption><p></p>
+</figure>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>We can deploy a Dask cluster on a single machine or an actual cluster with multiple machines. Here we will use the Dask cluster instead of the default Dask scheduler to take advantage of the <em>cluster Dashboard</em>, which keeps track of the performance and progress of our computations. <a href="https://docs.dask.org/en/latest/deploying.html">Read more about Dask Clusters</a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="dask-data-frames" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="dask-data-frames"><span class="header-section-number">9.5</span> Dask Data Frames</h2>
+<p>When we analyze tabular data, we usually start our analysis by loading it into memory as a Pandas DataFrame. But, what if this data does not fit in memory? Or maybe our analyzes crash because we run out of memory. These scenarios are typical entry points into parallel computing. In such cases, Dask’s scalable alternative to a Pandas DataFrame is the <code>dask.dataframe</code>. A <code>dask.DataFrame</code> is made up of many <code>pd.DataFrames</code>, each containing a subset of rows of the original dataset. We call each of these pandas pieces a <em>partition</em> of the <code>dask.DataFrame</code>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../images/dask_dataframe.png" class="img-fluid figure-img"></p>
 <p></p><figcaption class="figure-caption">Dask Array design (<a href="https://docs.dask.org/en/latest/dataframe.html">dask documentation</a>)</figcaption><p></p>
 </figure>
 </div>
+<p>For this example we will use a dataset including weather and soil condition measurements at six forest stands in northeastern Siberia. The data has been collected since 2014 and is archived at the Arctic Data Center <a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA24B2X59C">Loranty &amp; Alexander, doi:10.18739/A24B2X59C.</a> Today we will use the soil mositure measurements from this dataset. Just as we did on the previous lesson, we download the data using the <code>requests</code> package and the link to the data obtained from the Arctic Data Center website.</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## THIS IS AN EXAMPLE OF LOADING A MASSIVE FILE OR CREATING A REALLY BIG DATAFRAME</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os              </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A27e4043d-75eb-4c4f-9427-0d442526c154'</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"dg_soil_moisture.csv"</span>, <span class="st">"wb"</span>).write(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>121002029</code></pre>
+</div>
+</div>
+<p>We can see the file is 115MB. Next we import the data as <code>dask.dataframe</code>.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.dataframe <span class="im">as</span> dd</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">'dg_soil_moisture.csv'</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> dd.read_csv(fp, blocksize <span class="op">=</span> <span class="st">'20MB'</span> , encoding<span class="op">=</span><span class="st">'ISO-8859-1'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+
+<div><strong>Dask DataFrame Structure:</strong></div>
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>timestamp</th>
+      <th>year</th>
+      <th>doy</th>
+      <th>hour</th>
+      <th>minute</th>
+      <th>site</th>
+      <th>logger</th>
+      <th>port</th>
+      <th>sensor</th>
+      <th>sensorZ</th>
+      <th>m_soil</th>
+      <th>unit</th>
+    </tr>
+    <tr>
+      <th>npartitions=6</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th></th>
+      <td>object</td>
+      <td>int64</td>
+      <td>int64</td>
+      <td>int64</td>
+      <td>int64</td>
+      <td>object</td>
+      <td>object</td>
+      <td>object</td>
+      <td>object</td>
+      <td>int64</td>
+      <td>float64</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div>Dask Name: read-csv, 1 graph layer</div>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>timestamp</th>
+      <th>year</th>
+      <th>doy</th>
+      <th>hour</th>
+      <th>minute</th>
+      <th>site</th>
+      <th>logger</th>
+      <th>port</th>
+      <th>sensor</th>
+      <th>sensorZ</th>
+      <th>m_soil</th>
+      <th>unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2014-07-07 16:30:00</td>
+      <td>2014</td>
+      <td>188</td>
+      <td>16</td>
+      <td>30</td>
+      <td>MDF1</td>
+      <td>MDF1met</td>
+      <td>Port 3</td>
+      <td>5TM Moisture/Temp</td>
+      <td>-6</td>
+      <td>0.273</td>
+      <td>m³/m³ VWC</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2014-07-07 16:30:00</td>
+      <td>2014</td>
+      <td>188</td>
+      <td>16</td>
+      <td>30</td>
+      <td>MDF1</td>
+      <td>MDF1met</td>
+      <td>Port 4</td>
+      <td>5TM Moisture/Temp</td>
+      <td>-11</td>
+      <td>0.345</td>
+      <td>m³/m³ VWC</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2014-07-07 17:00:00</td>
+      <td>2014</td>
+      <td>188</td>
+      <td>17</td>
+      <td>0</td>
+      <td>LDF2</td>
+      <td>LDF2met</td>
+      <td>Port 3</td>
+      <td>5TM Moisture/Temp</td>
+      <td>-8</td>
+      <td>0.308</td>
+      <td>m³/m³ VWC</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2014-07-07 17:00:00</td>
+      <td>2014</td>
+      <td>188</td>
+      <td>17</td>
+      <td>0</td>
+      <td>LDF2</td>
+      <td>LDF2met</td>
+      <td>Port 4</td>
+      <td>5TM Moisture/Temp</td>
+      <td>-13</td>
+      <td>0.325</td>
+      <td>m³/m³ VWC</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2014-07-07 17:00:00</td>
+      <td>2014</td>
+      <td>188</td>
+      <td>17</td>
+      <td>0</td>
+      <td>MDF1</td>
+      <td>MDF1met</td>
+      <td>Port 3</td>
+      <td>5TM Moisture/Temp</td>
+      <td>-6</td>
+      <td>0.283</td>
+      <td>m³/m³ VWC</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>UnicodeDecodeError: ‘utf-8’ codec can’t decode byte 0xb3 in position 192: invalid start byte</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import chardet</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># with open(fp, 'rb') as rawdata:</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     result = chardet.detect(rawdata.read(100000))</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </div>
 <p>The application programming interface (API) of a <code>dask.DataFrame</code> is a subset of the <code>pd.DataFrame</code> API. So if you are familiar with pandas, many of the core <code>pd.DataFrame</code> methods directly translate to <code>dask.DataFrames</code>.</p>
-<p>A major difference between both objects is that <code>dask.DataFrames</code> are <em>lazy</em>, meaning that they do not evaluate until we explicitly ask for a result using the <code>compute</code> method. This is the case with most Dask workloads.</p>
-<div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## THIS IS AN EXAMPLE OF LAZY COMPUTATION</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>A major difference between both objects is that <code>dask.DataFrames</code> are <em>lazy</em>, meaning that they do not evaluate until we explicitly ask for a result using the <code>compute</code> method. <strong>This is the case with most Dask workloads.</strong></p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">## THIS IS AN EXAMPLE OF LAZY COMPUTATION</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><em>This means that your framework will queue up sets of transformations or calculations so that they are ready to run later, in parallel. This is a concept you’ll find in lots of frameworks for parallel computing, including Dask. Your framework won’t evaluate the requested computations until explicitly told to. This differs from “eager” evaluation functions, which compute instantly upon being called.</em></p>
 <p>https://saturncloud.io/blog/a-data-scientist-s-guide-to-lazy-evaluation-with-dask/ Lead into task graphs.</p>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">### THIS IS AN EXAMPLE OF </span><span class="al">TASK</span><span class="co"> GRAPH</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">### THIS IS AN EXAMPLE OF </span><span class="al">TASK</span><span class="co"> GRAPH</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="dask-arrays" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="dask-arrays"><span class="header-section-number">9.5</span> Dask Arrays</h2>
+<section id="dask-arrays" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="dask-arrays"><span class="header-section-number">9.6</span> Dask Arrays</h2>
 <p>If you want scalable NumPy arrays, then start with Dask array</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -374,8 +669,8 @@ https://tutorial.dask.org/04_distributed.html
 </figure>
 </div>
 </section>
-<section id="best-practices" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">9.6</span> Best Practices</h2>
+<section id="best-practices" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">9.7</span> Best Practices</h2>
 <p>It is important to remember that, while APIs may be similar, some differences do exist. Additionally, the performance of some algorithms may differ from their in-memory counterparts due to the advantages and disadvantages of parallel programming. Some thought and attention is still required when using Dask. https://docs.dask.org/en/latest/user-interfaces.html</p>
 <div class="callout-warning callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center">
@@ -391,18 +686,17 @@ Warning
 </div>
 </div>
 </section>
-<section id="todo" class="level2" data-number="9.7">
-<h2 data-number="9.7" class="anchored" data-anchor-id="todo"><span class="header-section-number">9.7</span> TODO</h2>
+<section id="todo" class="level2" data-number="9.8">
+<h2 data-number="9.8" class="anchored" data-anchor-id="todo"><span class="header-section-number">9.8</span> TODO</h2>
 <ul>
 <li>Find dataset(s) to use:
 <ul>
 <li>https://arcticdata.io/catalog/view/doi%3A10.18739%2FA24B2X59C “Understory micrometorology across a larch forest density gradient in northeastern Siberia 2014-2020” ~50MB, has a few different axes to filter on</li>
 <li>https://arcticdata.io/catalog/view/doi%3A10.18739%2FA28W38388 “River and lake ice phenology data for Alaska and Northwest Canada from 1882 to 2021”</li>
-<li>Also check out candidats in the xarray lesson TODO section</li>
 </ul></li>
 </ul>
-<section id="notes" class="level3" data-number="9.7.1">
-<h3 data-number="9.7.1" class="anchored" data-anchor-id="notes"><span class="header-section-number">9.7.1</span> Notes</h3>
+<section id="bryces-notes" class="level3" data-number="9.8.1">
+<h3 data-number="9.8.1" class="anchored" data-anchor-id="bryces-notes"><span class="header-section-number">9.8.1</span> Bryce’s Notes</h3>
 <ul>
 <li><p>https://www.dask.org/</p></li>
 <li><p>https://docs.xarray.dev/en/stable/user-guide/dask.html#dask</p></li>
