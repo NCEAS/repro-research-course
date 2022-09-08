@@ -273,11 +273,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#dask-cluster" id="toc-dask-cluster" class="nav-link" data-scroll-target="#dask-cluster"><span class="toc-section-number">9.3</span>  Dask Cluster</a>
   <ul class="collapse">
   <li><a href="#setting-up-a-local-cluster" id="toc-setting-up-a-local-cluster" class="nav-link" data-scroll-target="#setting-up-a-local-cluster"><span class="toc-section-number">9.3.1</span>  Setting up a Local Cluster</a></li>
+  <li><a href="#dask-dashboard" id="toc-dask-dashboard" class="nav-link" data-scroll-target="#dask-dashboard"><span class="toc-section-number">9.3.2</span>  Dask Dashboard</a></li>
   </ul></li>
   <li><a href="#dask.dataframes" id="toc-dask.dataframes" class="nav-link" data-scroll-target="#dask.dataframes"><span class="toc-section-number">9.4</span>  <code>dask.dataframes</code></a>
   <ul class="collapse">
   <li><a href="#reading-a-csv" id="toc-reading-a-csv" class="nav-link" data-scroll-target="#reading-a-csv"><span class="toc-section-number">9.4.1</span>  Reading a csv</a></li>
-  <li><a href="#lazy-computations-task-graph" id="toc-lazy-computations-task-graph" class="nav-link" data-scroll-target="#lazy-computations-task-graph"><span class="toc-section-number">9.4.2</span>  Lazy Computations &amp; Task Graph</a></li>
+  <li><a href="#lazy-computations" id="toc-lazy-computations" class="nav-link" data-scroll-target="#lazy-computations"><span class="toc-section-number">9.4.2</span>  Lazy Computations</a></li>
+  <li><a href="#task-graph" id="toc-task-graph" class="nav-link" data-scroll-target="#task-graph"><span class="toc-section-number">9.4.3</span>  Task Graph</a></li>
   </ul></li>
   <li><a href="#dask.arrays" id="toc-dask.arrays" class="nav-link" data-scroll-target="#dask.arrays"><span class="toc-section-number">9.5</span>  <code>dask.arrays</code></a></li>
   <li><a href="#dask-and-xarray" id="toc-dask-and-xarray" class="nav-link" data-scroll-target="#dask-and-xarray"><span class="toc-section-number">9.6</span>  Dask and xarray</a>
@@ -321,19 +323,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>What are the client, scheduler, workers, and cluster</li>
 <li>Understand delayed computations and “lazy” evaluation</li>
 <li>Obtain information about computations via the Dask dashboard</li>
-<li>https://www.youtube.com/watch?v=N_GqzcuGLCY</li>
 </ul></li>
 <li><p>Learn basics of <code>dask.arrays</code> and <code>dask.dataframes</code>:</p>
 <ul>
-<li>Load data and specifying chunk sizes</li>
+<li>Load data and specifying partition/chunk sizes</li>
 <li>Interpret a task graph</li>
 </ul></li>
-<li><p>Integrate <code>xarray</code> with Dask:</p></li>
-<li><p>Share best practices and resources for a deeper dive</p>
-<ul>
-<li>https://docs.dask.org/en/stable/best-practices.html#load-data-with-dask</li>
-<li>https://coiled.io/blog/common-dask-mistakes/</li>
-</ul></li>
+<li><p>Integrate <code>xarray</code> with Dask for geospatial computations</p></li>
+<li><p>Share best practices and resources for a deeper dive</p></li>
 </ul>
 </section>
 <section id="dask-cluster" class="level2" data-number="9.3">
@@ -370,10 +367,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p><a href="https://docs.dask.org/en/latest/deploying.html">Read more about Dask clusters</a></p>
 </section>
+<section id="dask-dashboard" class="level3" data-number="9.3.2">
+<h3 data-number="9.3.2" class="anchored" data-anchor-id="dask-dashboard"><span class="header-section-number">9.3.2</span> Dask Dashboard</h3>
+<p>https://www.youtube.com/watch?v=N_GqzcuGLCY</p>
+</section>
 </section>
 <section id="dask.dataframes" class="level2" data-number="9.4">
 <h2 data-number="9.4" class="anchored" data-anchor-id="dask.dataframes"><span class="header-section-number">9.4</span> <code>dask.dataframes</code></h2>
-<p>When we analyze tabular data, we usually start our analysis by loading it into memory as a Pandas DataFrame. But, what if this data does not fit in memory? Or maybe our analyzes crash because we run out of memory. These scenarios are typical entry points into parallel computing. In such cases, Dask’s scalable alternative to a Pandas DataFrame is the <code>dask.dataframe</code>. A <code>dask.dataframe</code> is made up of many <code>pd.DataFrames</code>, each containing a subset of rows of the original dataset. We call each of these pandas pieces a <em>partition</em> of the <code>dask.dataframe</code>.</p>
+<p>When we analyze tabular data, we usually start our analysis by loading it into memory as a Pandas DataFrame. But, what if this data does not fit in memory? Or maybe our analyzes crash because we run out of memory. These scenarios are typical entry points into parallel computing. In such cases, Dask’s scalable alternative to a Pandas DataFrame is the <code>dask.dataframe</code>. A <code>dask.dataframe</code> is made up of many <code>pd.DataFrames</code>, each containing a subset of rows of the original dataset. We call each of these pandas pieces a <strong>partition</strong> of the <code>dask.dataframe</code>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../images/dask_dataframe.png" class="img-fluid figure-img"></p>
@@ -382,7 +383,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <section id="reading-a-csv" class="level3" data-number="9.4.1">
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="reading-a-csv"><span class="header-section-number">9.4.1</span> Reading a csv</h3>
-<p>To get familiar with <code>dask.dataframes</code> we will use tabular data of soil mositure measurements at six forest stands in northeastern Siberia. The data has been collected since 2014 and is archived at the Arctic Data Center (<a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA24B2X59C">Loranty &amp; Alexander, doi:10.18739/A24B2X59C</a>). Just as we did on the previous lesson, we download the data using the <code>requests</code> package and the url to the data obtained from the Arctic Data Center website.</p>
+<p>To get familiar with <code>dask.dataframes</code> we will use tabular data of soil mositure measurements at six forest stands in northeastern Siberia. The data has been collected since 2014 and is archived at the Arctic Data Center (<a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA24B2X59C">Loranty &amp; Alexander, doi:10.18739/A24B2X59C</a>). Just as we did on the previous lesson, we download the data using the <code>requests</code> package and the data’s url obtained from the Arctic Data Center.</p>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os              </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -396,7 +397,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>121002029</code></pre>
 </div>
 </div>
-<p>In the Arctic Data Center metadata we can see this file is 115MB. To import this data as <code>dask.dataframe</code> with more than one partition we need to specify the size of each partition with the <code>blocksize</code> parameter. In this example we will split the data frame into six partitions, which would mean a blocksize of approximately 20 MB.</p>
+<p>In the Arctic Data Center metadata we can see this file is 115MB. To import this file as <code>a dask.dataframe</code> with more than one partition we need to specify the size of each partition with the <code>blocksize</code> parameter. In this example we will split the data frame into six partitions, which would mean a blocksize of approximately 20 MB.</p>
 <div class="callout-note callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -534,24 +535,28 @@ If we try to import the file directly we will obtain the error <code>UnicodeDeco
 </div>
 </div>
 </section>
-<section id="lazy-computations-task-graph" class="level3" data-number="9.4.2">
-<h3 data-number="9.4.2" class="anchored" data-anchor-id="lazy-computations-task-graph"><span class="header-section-number">9.4.2</span> Lazy Computations &amp; Task Graph</h3>
-<p>The application programming interface (API) of a <code>dask.dataframe</code> is a subset of the <code>pd.DataFrame</code> API. So if you are familiar with pandas, many of the core <code>pd.DataFrame</code> methods directly translate to <code>dask.dataframes</code>.</p>
-<p>A major difference between both objects is that <code>dask.dataframes</code> are <em>lazy</em>, meaning that they do not evaluate until we explicitly ask for a result using the <code>compute</code> method. This is the case with most Dask workloads, they do <strong>lazy computations</strong>.</p>
-<p>*This means that your framework will queue up sets of transformations or calculations so that they are ready to run later, in parallel.</p>
-<p>This differs from “eager” evaluation functions, which compute instantly upon being called.* https://saturncloud.io/blog/a-data-scientist-s-guide-to-lazy-evaluation-with-dask/</p>
-<p>Lead into task graphs.</p>
+<section id="lazy-computations" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="lazy-computations"><span class="header-section-number">9.4.2</span> Lazy Computations</h3>
+<p>The application programming interface (API) of a <code>dask.dataframe</code> is a subset of the <code>pd.DataFrame</code> API. So if you are familiar with pandas, many of the core <code>pandas.DataFrame</code> methods directly translate to <code>dask.dataframes</code>.</p>
 <div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">### THIS IS AN EXAMPLE OF </span><span class="al">TASK</span><span class="co"> GRAPH</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">##!! cannot run graph after installing graphviz with</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#pip install graphviz</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Error:</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ExecutableNotFound: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># See:</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#https://stackoverflow.com/questions/42014458/dask-not-installing-graphviz-dependency</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># an example of a simple df transformation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Notice that XXXX. A major difference between <code>pandas.DataFrames</code> and <code>dask.dataframes</code>and is that <code>dask.dataframes</code> are <em>lazy</em>. This means that an object will queue transformations and calculations without executing them, up until we explicitly ask for the result of that chain of computations using the <code>compute</code> method. Once we run <code>compute</code>, the scheduler can allocate memory and workers to execute the computations in parallel. This kind of <strong>lazy computations</strong> is how most Dask workloads work. This varies from <strong>eager evaluation</strong> methods and functions, which start computing results right when they are executed.</p>
+</section>
+<section id="task-graph" class="level3" data-number="9.4.3">
+<h3 data-number="9.4.3" class="anchored" data-anchor-id="task-graph"><span class="header-section-number">9.4.3</span> Task Graph</h3>
+<p>Lead into task graphs: XXX</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">### THIS IS AN EXAMPLE OF </span><span class="al">TASK</span><span class="co"> GRAPH</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">##!! cannot run graph after installing graphviz with</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#pip install graphviz</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Error:</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ExecutableNotFound: failed to execute PosixPath('dot'), make sure the Graphviz executables are on your systems' PATH</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># See:</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#https://stackoverflow.com/questions/42014458/dask-not-installing-graphviz-dependency</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -564,24 +569,24 @@ If we try to import the file directly we will obtain the error <code>UnicodeDeco
 <p></p><figcaption class="figure-caption">Dask Array design (<a href="https://docs.dask.org/en/latest/array.html">dask documentation</a></figcaption><p></p>
 </figure>
 </div>
-<div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.arange(<span class="dv">100_000</span>).reshape(<span class="dv">200</span>, <span class="dv">500</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> da.from_array(data, chunks<span class="op">=</span>(<span class="dv">100</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.arange(<span class="dv">100_000</span>).reshape(<span class="dv">200</span>, <span class="dv">500</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> da.from_array(data, chunks<span class="op">=</span>(<span class="dv">100</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Indexing Dask collections feels just like slicing NumPy arrays:</p>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>a[:<span class="dv">2</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>a[:<span class="dv">2</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And computations also work lazily:</p>
-<div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>a.mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>a.mean().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>a.mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>a.mean().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="dask-and-xarray" class="level2" data-number="9.6">
@@ -589,77 +594,79 @@ If we try to import the file directly we will obtain the error <code>UnicodeDeco
 <p>Going forward, it might be more common having to read some big array-like dataset (like a high-resolution multiband raster) than creating one from scratch from a NumPy array. In this case it can be useful to use the <code>xarray</code> module together with Dask. It is simple to wrap Dask around <code>xarray</code> objetcs, we only need to specify the number of chunks argument as an argument when we are reading in a dataset (see also <a href="https://docs.xarray.dev/en/stable/user-guide/dask.html">[1]</a>).</p>
 <section id="open-.tif-file" class="level3" data-number="9.6.1">
 <h3 data-number="9.6.1" class="anchored" data-anchor-id="open-.tif-file"><span class="header-section-number">9.6.1</span> Open .tif file</h3>
-<p>As an example, let’s do an NDVI calculation using remote sensing imagery collected by aerial vehicles at a series of fire perimeters in larch forests in northeastern Siberia (Loranty, Forbath, Talucci, Alexander, DeMarco, et al.&nbsp;2020. Uncrewed aerial vehicle remote sensing imagery of postfire vegetation in Siberian larch forests 2018-2019. <a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2ZC7RV6H">Arctic Data Center. doi:10.18739/A2ZC7RV6H</a>.).</p>
+<p>As an example, let’s do an NDVI calculation using remote sensing imagery collected by aerial vehicles over northeastern Siberia (Loranty, Forbath, Talucci, Alexander, DeMarco, et al.&nbsp;2020. Uncrewed aerial vehicle remote sensing imagery of postfire vegetation in Siberian larch forests 2018-2019. <a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2ZC7RV6H">Arctic Data Center. doi:10.18739/A2ZC7RV6H</a>.).</p>
 <p>First we download the data for the near-infrared (NIR) and red bands:</p>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download red band</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Aac25a399-b174-41c1-b6d3-09974b161e5a'</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"RU_ANS_TR2_FL005M_red.tif"</span>, <span class="st">"wb"</span>).write(response.content)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># download nir band</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A1762205e-c505-450d-90ed-d4f3e4c302a7'</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"RU_ANS_TR2_FL005M_nir.tif"</span>, <span class="st">"wb"</span>).write(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download red band</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Aac25a399-b174-41c1-b6d3-09974b161e5a'</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"RU_ANS_TR2_FL005M_red.tif"</span>, <span class="st">"wb"</span>).write(response.content)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># download nir band</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A1762205e-c505-450d-90ed-d4f3e4c302a7'</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="bu">open</span>(<span class="st">"RU_ANS_TR2_FL005M_nir.tif"</span>, <span class="st">"wb"</span>).write(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>79182870</code></pre>
 </div>
 </div>
-<p>Because these are .tif files, we will use <code>xarray.open_rasterio</code> to read them. To indicate we will open these files with <code>dask.arrays</code> as the underlying object to the <code>xarray.DataArray</code> (instead of a <code>numpy.array</code>) we need to specify either a shape or the size in bytes for each chunk. Both files are 76 MB, so let us have chunks of 15 MB to have roughly 6 chunks.</p>
-<div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>Because these are .tif files and have geospatial metadata, we will use <code>xarray.open_rasterio</code> to read them. We need to specify either a shape or the size in bytes for each chunk to indicate we will open these files with <code>dask.arrays</code> as the underlying object to the <code>xarray.DataArray</code> (instead of a <code>numpy.array</code>). Both files are 76 MB, so let’s have chunks of 15 MB to have roughly six chunks.</p>
 <div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the file</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>fp_red <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_red.tif"</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> xr.open_rasterio(fp_red, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the file</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fp_red <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_red.tif"</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> xr.open_rasterio(fp_red, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_52977/1226644855.py:3: DeprecationWarning: open_rasterio is Deprecated in favor of rioxarray. For information about transitioning, see: https://corteva.github.io/rioxarray/stable/getting_started/getting_started.html
+<pre><code>/tmp/ipykernel_52922/1226644855.py:3: DeprecationWarning: open_rasterio is Deprecated in favor of rioxarray. For information about transitioning, see: https://corteva.github.io/rioxarray/stable/getting_started/getting_started.html
   red = xr.open_rasterio(fp_red, chunks = '15MB')</code></pre>
 </div>
 </div>
 <p>We can see a lot of useful information here:</p>
 <ul>
-<li>There are 8 chunks in the array. We were aiming for six, but this often happens with the way Dask distributes the memory (76MB is not exactly divisible by 6).</li>
-<li>Geospatial information (transformation, CRS, resolution) and no-data values.</li>
-<li>There is an unnecessary dimension because as a constant value for the band. So our next step is to squeeze the array to flatten it.</li>
+<li>There are eight chunks in the array. We were aiming for six, but this often happens with the way Dask distributes the memory (76MB is not divisible by 6).</li>
+<li>There is geospatial information (transformation, CRS, resolution) and no-data values.</li>
+<li>There is an unnecessary dimension: a constant value for the band. So our next step is to squeeze the array to flatten it.</li>
 </ul>
-<div class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># getting rid of unnecessary dimension</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> red.squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Next we read in the NIR band and do the same pre-processing:</p>
 <div class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fp_nir <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_nir.tif"</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>nir <span class="op">=</span> xr.open_rasterio(fp_nir, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape before squeeze:'</span>, nir.shape)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>nir <span class="op">=</span> nir.squeeze()</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape after squeeze:'</span>, nir.shape)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'chunks:'</span>, nir.chunks )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># getting rid of unnecessary dimension</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> red.squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next we read in the NIR band and do the same pre-processing.</p>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fp_nir <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_nir.tif"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>nir <span class="op">=</span> xr.open_rasterio(fp_nir, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape before squeeze:'</span>, nir.shape)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'chunks before squeeze:'</span>, nir.chunks )</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>nir <span class="op">=</span> nir.squeeze()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape after squeeze:'</span>, nir.shape)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'chunk after squeeze:'</span>, nir.chunks )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape before squeeze: (1, 3499, 7443)
+chunks before squeeze: ((1,), (1936, 1563), (1936, 1936, 1936, 1635))
 shape after squeeze: (3499, 7443)
-chunks: ((1936, 1563), (1936, 1936, 1936, 1635))</code></pre>
+chunk after squeeze: ((1936, 1563), (1936, 1936, 1936, 1635))</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_52977/3161961929.py:2: DeprecationWarning: open_rasterio is Deprecated in favor of rioxarray. For information about transitioning, see: https://corteva.github.io/rioxarray/stable/getting_started/getting_started.html
+<pre><code>/tmp/ipykernel_52922/1858536642.py:2: DeprecationWarning: open_rasterio is Deprecated in favor of rioxarray. For information about transitioning, see: https://corteva.github.io/rioxarray/stable/getting_started/getting_started.html
   nir = xr.open_rasterio(fp_nir, chunks = '15MB')</code></pre>
 </div>
 </div>
 </section>
 <section id="calculating-ndvi" class="level3" data-number="9.6.2">
 <h3 data-number="9.6.2" class="anchored" data-anchor-id="calculating-ndvi"><span class="header-section-number">9.6.2</span> Calculating NDVI</h3>
-<p>Next we set up the NDVI calculation, this step is ease because we can handle xarrays and dask arrays as numpy arrays for arithmetic operations. Also, both bandas have values of type float32, so we won’t have trouble with the division.</p>
-<div class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>ndvi <span class="op">=</span> (nir <span class="op">-</span> red) <span class="op">/</span> (nir <span class="op">+</span> red)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>When we look at the ndvi we can see the result is another <code>dask.array</code>, nothing has been computed yet. We need to call <code>compute()</code> to actually bring the results to memory.</p>
+<p>Next we set up the NDVI calculation. This step is easy because we can handle xarrays and Dask arrays as numpy arrays for arithmetic operations. Also, both bands have values of type float32, so we won’t have trouble with the division.</p>
 <div class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ndvi_values <span class="op">=</span> ndvi.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ndvi <span class="op">=</span> (nir <span class="op">-</span> red) <span class="op">/</span> (nir <span class="op">+</span> red)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>And finally we can see how these look like. Notice that <code>xarray</code> uses the value of the dimensions as labels along the x and y axes. We use <code>robust=True</code> to ignore the nodatavalues when plotting.</p>
+<p>When we look at the ndvi we can see the result is another <code>dask.array</code>, nothing has been computed yet. Remember Dask computations are lazy, so we need to call <code>compute()</code> to actually bring the results to memory.</p>
 <div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ndvi_values.plot(robust<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ndvi_values <span class="op">=</span> ndvi.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And finally we can see how these look like. Notice that <code>xarray</code> uses the value of the dimensions as labels along the x and y axes. We use <code>robust=True</code> to ignore the no-data values when plotting.</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ndvi_values.plot(robust<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -679,6 +686,8 @@ Warning
 <p>For data that fits into RAM, Pandas can often be faster and easier to use than Dask DataFrame. While “Big Data” tools can be exciting, they are almost always worse than normal data tools while those remain appropriate. https://docs.dask.org/en/stable/dataframe-best-practices.html</p>
 </div>
 </div>
+<pre><code>- https://docs.dask.org/en/stable/best-practices.html#load-data-with-dask
+- https://coiled.io/blog/common-dask-mistakes/</code></pre>
 <p>Overhead</p>
 <p>Choosing chunking</p>
 
