@@ -206,6 +206,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#nsf-policy-for-large-datasets" id="toc-nsf-policy-for-large-datasets" class="nav-link" data-scroll-target="#nsf-policy-for-large-datasets"><span class="toc-section-number">17.2</span>  NSF policy for large datasets</a></li>
   <li><a href="#data-transfer-tools" id="toc-data-transfer-tools" class="nav-link" data-scroll-target="#data-transfer-tools"><span class="toc-section-number">17.3</span>  Data transfer tools</a></li>
   <li><a href="#documenting-large-datasets" id="toc-documenting-large-datasets" class="nav-link" data-scroll-target="#documenting-large-datasets"><span class="toc-section-number">17.4</span>  Documenting large datasets</a></li>
+  <li><a href="#workflow-tools" id="toc-workflow-tools" class="nav-link" data-scroll-target="#workflow-tools"><span class="toc-section-number">17.5</span>  Workflow tools</a></li>
   </ul>
 </nav>
     </div>
@@ -233,8 +234,8 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>NSF archival policies for large datasets</li>
 <li>Data transfer tools</li>
-<li>How to manage co-locating data and code</li>
 <li>Uploading large datasets to the Arctic Data Center</li>
+<li>Workflow tools</li>
 </ul>
 </section>
 <section id="nsf-policy-for-large-datasets" class="level2" data-number="17.2">
@@ -255,15 +256,16 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="data-transfer-tools" class="level2" data-number="17.3">
 <h2 data-number="17.3" class="anchored" data-anchor-id="data-transfer-tools"><span class="header-section-number">17.3</span> Data transfer tools</h2>
-<p>Now that we’ve talked about what types of large datasets you might have that need to get published on the Arctic Data Center, let’s discuss how to actually get the data there. If you have even on the order of only 50GB, or more than 500 files, it will likely be more expedient for you to transfer your files via a command line tool than uploading them via our webform. As a scenario: after getting the credentials, you use <code>scp</code> to start the transfer. You know this transfer typically takes around 12 hours so you start it at 5pm right when you leave the office expecting it to be done when you get back. When you arrive, you see there was a short network outage in the middle of the night. The whole job failed so you have to start it again…only for another network outage to happen.</p>
-<p>There is a better way!</p>
+<p>Now that we’ve talked about what types of large datasets you might have that need to get published on the Arctic Data Center, let’s discuss how to actually get the data there. If you have even on the order of only 50GB, or more than 500 files, it will likely be more expedient for you to transfer your files via a command line tool than uploading them via our webform. So you know that you need to move a lot of data, how are you going to do it? More importantly, how can you do it in an efficient way?</p>
 <p>There are three key elements to data transfer efficiency:</p>
-<pre><code>- endpoints
-- network
-- transfer tool</code></pre>
+<ul>
+<li>endpoints</li>
+<li>network</li>
+<li>transfer tool</li>
+</ul>
 <section id="endpoints" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="endpoints">Endpoints</h4>
-<p>The from and to locations of the transfer, an endpoint is a remote computing device that can communicate back and forth with the network to which it is connected. The speed with which an endpoint can communicate with the network varies depending on how it is configured. Performance depends on the CPU, RAM, OS, and disk configuration. One key element to endpoints that affects data transfer speed is how quickly that machine can write data to disk. Slow write speeds will throttle a data transfer on even the fastest internet connection with the most streamlined transfer tool. Examples of endpoints could be:</p>
+<p>The from and to locations of the transfer, an endpoint is a remote computing device that can communicate back and forth with the network to which it is connected. The speed with which an endpoint can communicate with the network varies depending on how it is configured. Performance depends on the CPU, RAM, OS, and disk configuration. One key factor that affects data transfer speed is how quickly that machine can write data to disk. Slow write speeds will throttle a data transfer on even the fastest internet connection with the most streamlined transfer tool. Examples of endpoints could be:</p>
 <ul>
 <li>NCEAS <code>included-crab</code> server</li>
 <li>Your standard laptop</li>
@@ -276,13 +278,14 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="transfer-tools" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="transfer-tools">Transfer tools</h4>
+<p>Poll: what data transfer tools do you use regularly?</p>
 <p>Finally, the tool or software that you use to transfer data can also significantly affect your transfer speed. There are a lot of tools out there that can move data around, both GUI driven and command line. We’ll discuss a few here, and their pros and cons.</p>
 <section id="scp" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="scp"><code>scp</code></h5>
-<p><code>scp</code> or secure copy uses <code>ssh</code> for authentication and transfer, and it is included with both unix and linux. It requires no setup (unless you are on a Windows machine and need to install), and if you can <code>ssh</code> to a server, you can probably use <code>scp</code> to move files without any other setup. <code>scp</code> copies all files linearly and simply. if a transfer fails in the middle, it is difficult to know exactly what files didn’t make it, so you might have to start the whole thing over and re-transfer all the files. This, obviously, would not be ideal for large data transfers. For a file or two, <code>scp</code> is a fine tool to use.</p>
+<p><code>scp</code> or secure copy uses <code>ssh</code> for authentication and transfer, and it is included with both unix and linux. It requires no setup (unless you are on a Windows machine and need to install), and if you can <code>ssh</code> to a server, you can probably use <code>scp</code> to move files without any other setup. <code>scp</code> copies all files linearly and simply. If a transfer fails in the middle, it is difficult to know exactly what files didn’t make it, so you might have to start the whole thing over and re-transfer all the files. This, obviously, would not be ideal for large data transfers. For a file or two, <code>scp</code> is a fine tool to use.</p>
 </section>
 <section id="rsync" class="level5 unnumbered">
-<h5 class="unnumbered anchored" data-anchor-id="rsync">rsync</h5>
+<h5 class="unnumbered anchored" data-anchor-id="rsync"><code>rsync</code></h5>
 <p><code>rsync</code> is similar to <code>scp</code>, but syncs files/directories as opposed to copying. This means that <code>rsync</code> checks the destination to see if that file (with the same size and modified date) already exists. If it does, <code>rsync</code> will skip the file. This means that if an <code>rsync</code> transfer fails, it can be restarted again and will pick up where it left off, essentially. Neat!</p>
 </section>
 <section id="globus" class="level5 unnumbered">
@@ -294,11 +297,22 @@ ul.task-list li input[type="checkbox"] {
 <section id="documenting-large-datasets" class="level2" data-number="17.4">
 <h2 data-number="17.4" class="anchored" data-anchor-id="documenting-large-datasets"><span class="header-section-number">17.4</span> Documenting large datasets</h2>
 <p>The Arctic Data Center works hard to support datasets regardless of size, but we have performance considerations as well, and large datasets sometimes need special handling and require more processing time from our curation team. To help streamline a large dataset submission we have the following reccommendations:</p>
-<pre><code>- use self documenting file formats, for metadata efficiency
-    - netcdf
-    - geotiff, geopackage
-- regular, parseable filenames and consistent file formatting
-- communicate early and often with the Arctic Data Center staff, preferably before you start a submission and well before your final report is due</code></pre>
+<ul>
+<li>use self documenting file formats, for metadata efficiency
+<ul>
+<li>netcdf</li>
+<li>geotiff, geopackage</li>
+</ul></li>
+<li>regular, parseable filenames and consistent file formatting</li>
+<li>communicate early and often with the Arctic Data Center staff, preferably before you start a submission and well before your final report is due</li>
+</ul>
+</section>
+<section id="workflow-tools" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="workflow-tools"><span class="header-section-number">17.5</span> Workflow tools</h2>
+<p>Why use a workflow tool? Answer this here</p>
+<p>What is snakemake?</p>
+<p>The simplest workflow</p>
+<p>A more realistic workflow: https://github.com/NCEAS/scalable-computing-examples/tree/main/workflows</p>
 
 
 </section>
