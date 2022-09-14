@@ -124,6 +124,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -315,7 +316,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Understand delayed computations and “lazy” evaluation</li>
 <li>Obtain information about computations via the Dask dashboard</li>
 </ul></li>
-<li><p>Learn to load data and specify partition/chunk sizes of <code>dask.arrays</code>/<code>dask.dataframes</code>. <!--
+<li><p>Learn to load data and specify partition/chunk sizes of <code>dask.arrays</code>/<code>dask.dataframes</code> <!--
     - Interpret a task graph
 --></p></li>
 <li><p>Integrate <code>xarray</code> and <code>rioxarray</code> with Dask for geospatial computations</p></li>
@@ -333,13 +334,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><p>When we code, we communicate directly with the <strong>client</strong>, which is responsible for submitting tasks to be executed to the scheduler.</p></li>
 <li><p>After receiving the tasks from the client, the <strong>scheduler</strong> determines how tasks will be distributed among the workers and coordinates them to process tasks in parallel.</p></li>
-<li><p>Finally, the <strong>workers</strong> are threads, processes, or separate machines in a cluster. They compute tasks and store and return computations results. You can read more about <a href="https://towardsdatascience.com/which-is-faster-python-threads-or-processes-some-insightful-examples-26074e90848f">threads and processes here</a>.</p></li>
+<li><p>Finally, the <strong>workers</strong> compute tasks and store and return computations results. Workers can be threads, processes, or separate machines in a cluster. We won’t go into how to choose between threads and processes, but there are best practices to select the right one. You can read more about <a href="https://towardsdatascience.com/which-is-faster-python-threads-or-processes-some-insightful-examples-26074e90848f">threads and processes here</a>.</p></li>
 </ul>
 <p>To interact with the client and generate tasks that can be processed in parallel we need to use Dasks’ objects to read our data. In this lesson, we will see examples of how to use <code>dask.dataframes</code> and <code>dask.arrays</code>. Apart from data frames and arrays, <a href="https://docs.dask.org/en/stable/api.html">other Dask objects</a> can be used to parallelize your workflow.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../images/dask_cluster.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">From: https://www.datarevenue.com/en-blog/understanding-dask-architecture-client-scheduler-workers Make this into a collored graph, add cluster envelope</figcaption><p></p>
+<p></p><figcaption class="figure-caption"><a href="https://www.datarevenue.com/en-blog/understanding-dask-architecture-client-scheduler-workers">M. Schmitt, <em>Understanding Dask Architecture: The Client, Scheduler and Workers</em></a></figcaption><p></p>
 </figure>
 </div>
 <section id="setting-up-a-local-cluster" class="level3" data-number="9.3.1">
@@ -483,10 +484,13 @@ Note
 </section>
 <section id="dask-and-xarray" class="level2" data-number="9.6">
 <h2 data-number="9.6" class="anchored" data-anchor-id="dask-and-xarray"><span class="header-section-number">9.6</span> Dask and <code>xarray</code></h2>
-<p>In the future, it might be more common having to read some big array-like dataset (like a high-resolution multiband raster) than creating one from scratch using NumPy. In this case, it can be useful to use the <code>xarray</code> module together with Dask. It is simple to wrap Dask around <code>xarray</code> objects. We only need to specify the number of chunks as an argument when we are reading in a dataset (see also <a href="https://docs.xarray.dev/en/stable/user-guide/dask.html">[1]</a>).</p>
+<p>In the future, it might be more common having to read some big array-like dataset (like a high-resolution multiband raster) than creating one from scratch using <code>NumPy</code>. In this case, it can be useful to use the <code>xarray</code> module and its extender <code>rioxarray</code> together with Dask. In the previous lesson, <em>Data Structures and Formats for Large Data</em>, we explore how to use the <code>xarray</code> package to work with labelled arrays. <code>rioxarray</code> extends <code>xarray</code> with the <em>rio</em> accessor, which stands for “raster input and output”.</p>
+<p>It is simple to wrap Dask around <code>xarray</code> objects. We only need to specify the number of chunks as an argument when we are reading in a dataset (see also <a href="https://docs.xarray.dev/en/stable/user-guide/dask.html">[1]</a>).</p>
 <section id="open-.tif-file" class="level3" data-number="9.6.1">
 <h3 data-number="9.6.1" class="anchored" data-anchor-id="open-.tif-file"><span class="header-section-number">9.6.1</span> Open .tif file</h3>
-<p>As an example, let’s do an NDVI calculation using remote sensing imagery collected by aerial vehicles over northeastern Siberia (<a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2ZC7RV6H">Loranty, Forbath, Talucci, Alexander, DeMarco, et al.&nbsp;2020. doi:10.18739/A2ZC7RV6H</a>.).</p>
+<p>As an example, let’s do a Normalized Difference Vegetation Index (NDVI) calculation using remote sensing imagery collected by aerial vehicles over northeastern Siberia (<a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2ZC7RV6H">Loranty, Forbath, Talucci, Alexander, DeMarco, et al.&nbsp;2020. doi:10.18739/A2ZC7RV6H</a>.). The NDVI is an index commonly used to check if an area has live green vegetation or not. It can also show the difference between water, plants, bare soil, and human-made structures, among other things.</p>
+<p>The NDVI is calculated using the near-infrared and red bands of the satellite image. The formula is</p>
+<p><span class="math display">\[NDVI = \frac{NIR - Red}{NIR + Red}.\]</span></p>
 <p>First, we download the data for the near-infrared (NIR) and red bands from the Arctic Data Center:</p>
 <div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download red band</span></span>
@@ -502,17 +506,15 @@ Note
 <pre><code>79182870</code></pre>
 </div>
 </div>
-<p>Because these are .tif files and have geospatial metadata, we will use <code>rioxarray</code> to read them. <code>rioxarray</code> extends <code>xarray</code> with the <em>rio</em> accessor, which stands for “raster input and output”. You can find more information about <code>rioxarray</code> <a href="https://corteva.github.io/rioxarray/stable/getting_started/getting_started.html">here</a>.</p>
+<p>Because these are .tif files and have geospatial metadata, we will use <code>rioxarray</code> to read them. You can find more information about <code>rioxarray</code> <a href="https://corteva.github.io/rioxarray/stable/getting_started/getting_started.html">here</a>.</p>
 <p>To indicate we will open these .tif files with <code>dask.arrays</code> as the underlying object to the <code>xarray.DataArray</code> (instead of a <code>numpy.array</code>), we need to specify either a shape or the size in bytes for each chunk. Both files are 76 MB, so let’s have chunks of 15 MB to have roughly six chunks.</p>
 <div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rioxarray <span class="im">as</span> rioxr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#raster = rioxr.open_rasterio(href, chunks={"x": int(x_n/workers_sqrt), "y":int(y_n/workers_sqrt)})       </span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the file</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>fp_red <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_red.tif"</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> rioxr.open_rasterio(fp_red, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the file</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>fp_red <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_red.tif"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> rioxr.open_rasterio(fp_red, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can see a lot of useful information here:</p>
 <ul>
@@ -530,37 +532,23 @@ Note
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fp_nir <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_nir.tif"</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>nir <span class="op">=</span> rioxr.open_rasterio(fp_nir, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># print current shape</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape before squeeze:'</span>, nir.shape)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'chunks before squeeze:'</span>, nir.chunks )</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#squeeze</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>nir <span class="op">=</span> nir.squeeze()</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># print squeezed shape</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape after squeeze:'</span>, nir.shape)</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'chunk after squeeze:'</span>, nir.chunks )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>shape before squeeze: (1, 3499, 7443)
-chunks before squeeze: ((1,), (1936, 1563), (1936, 1936, 1936, 1635))
-shape after squeeze: (3499, 7443)
-chunk after squeeze: ((1936, 1563), (1936, 1936, 1936, 1635))</code></pre>
-</div>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#squeeze</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>nir <span class="op">=</span> nir.squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="calculating-ndvi" class="level3" data-number="9.6.2">
 <h3 data-number="9.6.2" class="anchored" data-anchor-id="calculating-ndvi"><span class="header-section-number">9.6.2</span> Calculating NDVI</h3>
 <p>Now we set up the NDVI calculation. This step is easy because we can handle xarrays and Dask arrays as NumPy arrays for arithmetic operations. Also, both bands have values of type float32, so we won’t have trouble with the division.</p>
 <div class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ndvi <span class="op">=</span> (nir <span class="op">-</span> red) <span class="op">/</span> (nir <span class="op">+</span> red)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ndvi <span class="op">=</span> (nir <span class="op">-</span> red) <span class="op">/</span> (nir <span class="op">+</span> red)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>When we look at the NDVI we can see the result is another <code>dask.array</code>, nothing has been computed yet. Remember, Dask computations are lazy, so we need to call <code>compute()</code> to bring the results to memory.</p>
 <div class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ndvi_values <span class="op">=</span> ndvi.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ndvi_values <span class="op">=</span> ndvi.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And finally, we can see what these look like. Notice that <code>xarray</code> uses the value of the dimensions as labels along the x and y axes. We use <code>robust=True</code> to ignore the no-data values when plotting.</p>
 <div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ndvi_values.plot(robust<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ndvi_values.plot(robust<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
