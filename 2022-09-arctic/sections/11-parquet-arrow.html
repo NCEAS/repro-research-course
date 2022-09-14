@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 11&nbsp; Data Futures: Parquet and Arrow</title>
+<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 11&nbsp; Parquet and Arrow</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -133,7 +133,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -213,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/11-parquet-arrow.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></a>
+  <a href="../sections/11-parquet-arrow.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -228,7 +228,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/14-data-ethics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Data Ethics</span></a>
+  <a href="../sections/14-data-ethics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Data Ethics for Scalable Computing</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -282,7 +282,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></h1>
 </div>
 
 
@@ -312,7 +312,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="row-major-vs-column-major" class="level2" data-number="11.3">
 <h2 data-number="11.3" class="anchored" data-anchor-id="row-major-vs-column-major"><span class="header-section-number">11.3</span> Row major vs column major</h2>
-<p>The difference between row major and column major is in the ordering of items in the array.</p>
+<p>The difference between row major and column major is in the ordering of items in the array when they are read into memory.</p>
 <p>Take the array:</p>
 <pre><code>a11 a12 a13
 
@@ -353,7 +353,7 @@ a21 a22 a23</code></pre>
 </tbody>
 </table>
 <p>In the above row major example, data are read in the order: <code>John, Washingon, 40, [new line], Mariah, Texas, 21</code>.</p>
-<p>This means that getting a subset of all columns would be easy; you can specify to read in only the first X rows. However, if we are only interested in <code>Name</code> and <code>Location</code>, we would still have to read in all of the rows before discarding the Age column.</p>
+<p>This means that getting a subset of rows with all the columns would be easy; you can specify to read in only the first X rows. However, if we are only interested in <code>Name</code> and <code>Location</code>, we would still have to read in all of the rows before discarding the Age column.</p>
 <p>If these data were organized in a column major format, they might look like this:</p>
 <pre><code>Name: John, Mariah, Allison
 Location: Washington, Texas, Oregon
@@ -371,7 +371,7 @@ Age: 40, 21, 57</code></pre>
 <li>footer</li>
 </ul>
 <p><img src="../images/parquet-schematic.png" class="img-fluid"></p>
-<p>Row groups are blocks of data over a set number of rows that contain data from the same columns. Within each row group, data are organized in column-major format, and within each column are pages that are typically 1MB. The footer of the file contains metaata like the schema, encodings, unique values in each column, etc.</p>
+<p>Row groups are blocks of data over a set number of rows that contain data from the same columns. Within each row group, data are organized in column-major format, and within each column are pages that are typically 1MB. The footer of the file contains metadata like the schema, encodings, unique values in each column, etc.</p>
 <p>The parquet format has many tricks to to increase storage efficiency, and is increasingly being used to handle large datasets.</p>
 </section>
 <section id="arrow" class="level2" data-number="11.5">
@@ -392,7 +392,7 @@ Age: 40, 21, 57</code></pre>
 </div>
 <p>Next we can read in the data using <code>ds.dataset()</code>, passing it the path to the parquet directory and how the data are partitioned.</p>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>deltafish <span class="op">=</span> ds.dataset(<span class="st">"/home/shares/deltafish/fish"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>, partitioning<span class="op">=</span>[<span class="st">"Species"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>deltafish <span class="op">=</span> ds.dataset(<span class="st">"/home/shares/deltafish/fish"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>, partitioning<span class="op">=</span><span class="st">'hive'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can check out a file listing using the <code>files</code> method. Another great feature of parquet files is that they allow you to partition the data accross variables of the dataset. These partitions mean that, in this case, data from each species of fish is written to it’s own file. This allows for even faster operations down the road, since we know that users will commonly need to filter on the species variable. Even though the data are partitioned into different files, <code>pyarrow</code> knows that this is a single dataset, and you still work with it by referencing just the directory in which all of the partitioned files live.</p>
 <div class="cell" data-execution_count="3">
@@ -413,24 +413,28 @@ Notes_catch: string
 Species: string</code></pre>
 <p>If we are only interested in a few species, we can do a filter:</p>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>expr <span class="op">=</span> ((ds.field(<span class="st">"Species"</span>)<span class="op">==</span><span class="st">"Dorosoma petenense"</span>)<span class="op">|</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Species"</span>)<span class="op">==</span><span class="st">"Morone saxatilis"</span>) <span class="op">|</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Species"</span>)<span class="op">==</span> <span class="st">"Spirinchus thaleichthys"</span>))</span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>expr <span class="op">=</span> ((ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span><span class="st">"Dorosoma petenense"</span>)<span class="op">|</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span><span class="st">"Morone saxatilis"</span>) <span class="op">|</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span> <span class="st">"Spirinchus thaleichthys"</span>))</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>fishf <span class="op">=</span> deltafish.to_table(<span class="bu">filter</span> <span class="op">=</span> expr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>fishf <span class="op">=</span> deltafish.to_table(<span class="bu">filter</span> <span class="op">=</span> expr, columns <span class="op">=</span>[<span class="st">'SampleID'</span>, <span class="st">'Length'</span>, <span class="st">'Count'</span>, <span class="st">'Taxa'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>There is another dataset included, the survey information. To do a join, we can just use the <code>join</code> method on the <code>arrow</code> dataset.</p>
 <p>First read in the survey dataset.</p>
 <div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>survey <span class="op">=</span> ds.dataset(<span class="st">"/home/jclark/deltafish/survey"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>, partitioning<span class="op">=</span>[<span class="st">"Source"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>survey <span class="op">=</span> ds.dataset(<span class="st">"/home/jclark/deltafish/survey"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>, partitioning<span class="op">=</span><span class="st">'hive'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Take a look at the columns again:</p>
 <div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>survey.schema.to_string()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then do the join, and convert to a pandas <code>data.frame</code>.</p>
+<p>Let’s pick out only the ones we are interested in.</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fish_j <span class="op">=</span> fishf.join(survey, <span class="st">"SampleID"</span>).to_pandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>survey_s <span class="op">=</span> survey.to_table(columns<span class="op">=</span>[<span class="st">'SampleID'</span>,<span class="st">'Datetime'</span>, <span class="st">'Station'</span>, <span class="st">'Longitude'</span>, <span class="st">'Latitude'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then do the join, and convert to a pandas <code>data.frame</code>.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fish_j <span class="op">=</span> fishf.join(survey_s, <span class="st">"SampleID"</span>).to_pandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that when we did our first manipulation of this dataset, we went from working with a <code>FileSystemDataset</code>, which is a representation of a dataset on disk without reading it into memory, to a <code>Table</code>, which is read into memory. <code>pyarrow</code> has a <a href="https://arrow.apache.org/docs/python/compute.html">number of functions</a> that do computations on datasets without reading them into memory. However these are evaluated “eagerly,” as opposed to “lazily.” These are useful in some cases, like above, where we want to take a larger than memory dataset and generate a smaller dataset (via filter, or group by/summarize), but are not as useful if we need to do a join before our summarization/filter.</p>
 <p>More functionality for lazy evaluation is on the horizon for <code>pyarrow</code> though, by leveraging <a href="https://ibis-project.org/docs/3.0.2/tutorial/01-Introduction-to-Ibis/">Ibis</a>.</p>

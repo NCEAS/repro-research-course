@@ -150,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/11-parquet-arrow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Data Futures: Parquet and Arrow</span></a>
+  <a href="../sections/11-parquet-arrow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -165,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/14-data-ethics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Data Ethics</span></a>
+  <a href="../sections/14-data-ethics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Data Ethics for Scalable Computing</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -206,7 +206,11 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#nsf-policy-for-large-datasets" id="toc-nsf-policy-for-large-datasets" class="nav-link" data-scroll-target="#nsf-policy-for-large-datasets"><span class="toc-section-number">17.2</span>  NSF policy for large datasets</a></li>
   <li><a href="#data-transfer-tools" id="toc-data-transfer-tools" class="nav-link" data-scroll-target="#data-transfer-tools"><span class="toc-section-number">17.3</span>  Data transfer tools</a></li>
   <li><a href="#documenting-large-datasets" id="toc-documenting-large-datasets" class="nav-link" data-scroll-target="#documenting-large-datasets"><span class="toc-section-number">17.4</span>  Documenting large datasets</a></li>
-  <li><a href="#workflow-tools" id="toc-workflow-tools" class="nav-link" data-scroll-target="#workflow-tools"><span class="toc-section-number">17.5</span>  Workflow tools</a></li>
+  <li><a href="#workflow-tools" id="toc-workflow-tools" class="nav-link" data-scroll-target="#workflow-tools"><span class="toc-section-number">17.5</span>  Workflow tools</a>
+  <ul class="collapse">
+  <li><a href="#workflow-dependencies-and-encapsulation" id="toc-workflow-dependencies-and-encapsulation" class="nav-link" data-scroll-target="#workflow-dependencies-and-encapsulation"><span class="toc-section-number">17.5.1</span>  Workflow dependencies and encapsulation</a></li>
+  <li><a href="#dags" id="toc-dags" class="nav-link" data-scroll-target="#dags"><span class="toc-section-number">17.5.2</span>  DAGs</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -293,6 +297,14 @@ ul.task-list li input[type="checkbox"] {
 <p>Globus is a software that uses multiple network sockets simultaneously on endpoints, such that data transfers can run in parallel. As you can imagine, that parallelization can dramatically speed up data transfers. Globus, like <code>rsync</code> can also fail gracefully, and even restart itself. Globus does require that each endpoint be configured as a Globus node, which is more setup than is required of either <code>scp</code> or <code>rsync</code>. Many instituions computing resources may have endpoints already configured as Globus endpoints, so it is always worth checking in with any existing resources that might already be set up before setting up your own. Although Globus is a free software, there are <a href="https://www.globus.org/subscriptions">paid options</a> which provide support for configuring your local workstation as a Globus node. Globus is a fantastic tool, but remember the other two factors controlling data transfer, it can only help so much in overcoming slow network or write speeds.</p>
 </section>
 </section>
+<section id="aws-sync" class="level4" data-number="17.3.0.1">
+<h4 data-number="17.3.0.1" class="anchored" data-anchor-id="aws-sync"><span class="header-section-number">17.3.0.1</span> AWS <code>sync</code></h4>
+<p>Amazon Web Services (AWS) has a Command Line Interface (CLI) that includes a <code>sync</code> utility. This works much like <code>rsync</code> does in that it only copies new or updated files to the destination. The difference, of course, is that AWS <code>sync</code> is specifically built to work with interacting with the AWS cloud, and is compatible with S3 buckets.</p>
+</section>
+<section id="nc" class="level4" data-number="17.3.0.2">
+<h4 data-number="17.3.0.2" class="anchored" data-anchor-id="nc"><span class="header-section-number">17.3.0.2</span> <code>nc</code></h4>
+<p><code>nc</code> (or netcat) is a low level file transfer utility that is extremely efficient when moving files around on nodes in a cluster. It is not the easiest of these tools to use, however, in certain situations it might be the best option because it has the least overhead, and therefore can run extremely efficiently.</p>
+</section>
 </section>
 <section id="documenting-large-datasets" class="level2" data-number="17.4">
 <h2 data-number="17.4" class="anchored" data-anchor-id="documenting-large-datasets"><span class="header-section-number">17.4</span> Documenting large datasets</h2>
@@ -309,12 +321,33 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="workflow-tools" class="level2" data-number="17.5">
 <h2 data-number="17.5" class="anchored" data-anchor-id="workflow-tools"><span class="header-section-number">17.5</span> Workflow tools</h2>
-<p>Why use a workflow tool? Answer this here</p>
-<p>What is snakemake?</p>
-<p>The simplest workflow</p>
+<p>Preparing data for running analysis, models, and visualization processes can be complex, with many dependencies among datasets, as well as complex needs for data cleaning, munging, and integration that need to occur before “analysis” can begin.</p>
+<p>Many research projects would benefit from a structured approach to organizing these processes into workflows. A research workflow is an ordered sequence of steps in which the outputs of one process are connected to the inputs of the next in a formal way. Steps are then chained together to typically create a directed, acyclic graph that represents the entire data processing pipeline.</p>
+<p>This hypothetical workflow shows three processing stages for downloading, integrating, and mapping the data, along with the outputs of each step. This is a simplified rendition of what is normally a much more complex process.</p>
+<p><img src="../images/workflow.png" class="img-fluid"></p>
+<p>Whether simple or complex, it is helpful to conceptualize your entire workflow as a directed graph, which helps to identify the explicit and implicit dependencies, and to plan work collaboratively.</p>
+<section id="workflow-dependencies-and-encapsulation" class="level3" data-number="17.5.1">
+<h3 data-number="17.5.1" class="anchored" data-anchor-id="workflow-dependencies-and-encapsulation"><span class="header-section-number">17.5.1</span> Workflow dependencies and encapsulation</h3>
+<p>While there are many thousands of details in any given analysis, the reason to create a workflow is to structure all of those details so that they are understandable and traceable. Being explicit about dependencies and building a hierarchical workflow that encapsulates the steps of the work as independent modules. So the idea is to focus the workflow on the major steps in the pipeline, and to articulate each of their dependencies.</p>
+<p>Workflows can be implemented in many ways, with various benefits:</p>
+<ul>
+<li>as a conceptual diagram</li>
+<li>as a series of functions that perform each step through a controlling script</li>
+<li>as a series functions managed by a workflow tool like <code>parsl</code>, <code>snakemake</code>, or <code>ray</code></li>
+<li>many others…</li>
+</ul>
+</section>
+<section id="dags" class="level3" data-number="17.5.2">
+<h3 data-number="17.5.2" class="anchored" data-anchor-id="dags"><span class="header-section-number">17.5.2</span> DAGs</h3>
+<p>While managing workflows solely as linked functions works, the presence of side-effects in a workflow can make it more difficult to efficiently run only the parts of the workflow where items have changed. Many workflow systems have been created to provide a structured way to specify, analyze, and track dependencies, and to execute only the parts of the workflow that are needed.</p>
+<p>A Directed Acyclic Graph (DAG) is a diagram that shows the dependencies of a workflow, whether they are data dependencies or process dependencies. Below is an example of a simplified DAG of the first step of the group project:</p>
+<p><img src="../images/group-project-dag.png" class="img-fluid"></p>
+<p>This graph only shows data dependencies, but process dependencies can also exist.</p>
+<p>In your groups, draw out a simplified version of the rest of the workflow. What dependencies, both data and process based, exist?</p>
 <p>A more realistic workflow: https://github.com/NCEAS/scalable-computing-examples/tree/main/workflows</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
