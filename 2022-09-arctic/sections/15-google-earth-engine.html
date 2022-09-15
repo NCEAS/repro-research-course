@@ -309,10 +309,9 @@ TODO
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>need to make sure that .ipynb that student’s will work out of are running in same virutal enviroment as everything else</li>
-<li>get color palette code working and print final map</li>
+<li>create jupyter notebook outline for scalable-computing-examples(?)</li>
 <li>incporporate Ingmar’s stuff (or keep it separate in scalable-computing-examples)?</li>
-<li>way to print different versions of the map (rather than update all each time a new layer is added)?</li>
+<li>ADD REF TO CHOOSING GOOD COLORS</li>
 </ul>
 </div>
 </div>
@@ -334,6 +333,7 @@ TODO
 <span style="font-size: 85%; color: #6e6d6d;">Image Source: <a href="https://developers.google.com/earth-engine/datasets">Earth Engine Data Catalog</a></span>
 </center>
 <p><br> So what’s so exciting about platforms like GEE? <a href="https://scholar.google.com/citations?user=t1lmjVkAAAAJ&amp;hl=en">Ryan Abernathey</a> frames this nicely in his blogpost <a href="https://medium.com/pangeo/closed-platforms-vs-open-architectures-for-cloud-native-earth-system-analytics-1ad88708ebb6">Closed Platform vs.&nbsp;Open Architectures for Cloud-Native Earth System Analytics</a>…</p>
+<p>TODO: GEE is one of many. Microsoft Planetary Computer, Pangeo, Amazon Web Services (Amazon Enviromental SOmething)</p>
 <ul>
 <li>as Earth System data have gotten larger, the typical download-data-work-locally workflow is no longer always feasible</li>
 <li>those data are also produced and distributed by lots of different organizations (e.g.&nbsp;<a href="https://www.nasa.gov/">NASA</a>, <a href="https://www.noaa.gov/">NOAA</a>, <a href="copernicus.eu/en">Copernicus</a>)</li>
@@ -428,7 +428,10 @@ TODO
 <ul>
 <li>Next, we need to tell GEE what data to layer on top of our basemap. We’ll be using the ERA5 daily aggregates reanalysis dataset, produced by the <a href="https://www.ecmwf.int/">European Centre for Medium-Range Weather Forecasts</a> (ECMWF), found <a href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_DAILY">here</a>, which models atmospheric weather observations. We’ll load the <code>total_precipitation</code> field (check out the metadata on <a href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_DAILY#bands">here</a>).</li>
 </ul>
-<div class="callout-note callout callout-style-default callout-captioned">
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Reanalysis combines observation data with model data to provide the most complete picture of past weather and climate. To read more about reanalyses, check out the <a href="https://www.ecmwf.int/en/about/media-centre/focus/2020/fact-sheet-reanalysis#:~:text=What%20is%20reanalysis%3F,with%20modern%20weather%20forecasting%20models.">EWCMWF website</a>.</p>
+</div></div><div class="callout-note callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
@@ -439,12 +442,10 @@ TODO: GEE makes working with these <em>very</em> large data a breeze
 </div>
 <div class="callout-body-container callout-body">
 <p>The Arctic Data Center has worked with ERA5 data – took three weeks to download. The <code>ee.ImageCollection()</code> method is all you need to load and analyze large image collection data (more on that below!).</p>
+<p>ADC is using ERA5 (hourly) data; reaggregating to weekly statistical summaries</p>
 </div>
 </div>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Reanalysis combines observation data with model data to provide the most complete picture of past weather and climate. To read more about reanalyses, check out the <a href="https://www.ecmwf.int/en/about/media-centre/focus/2020/fact-sheet-reanalysis#:~:text=What%20is%20reanalysis%3F,with%20modern%20weather%20forecasting%20models.">EWCMWF website</a></p>
-</div></div><ul>
+<ul>
 <li>The <code>ImageCollection</code> method extracts a set of individual images that satisfies some criterion that you pass to GEE through the <code>ee</code> package. This is stored as an <strong>ImageCollection</strong> object which can be filtered and processed in various ways. We can pass the <code>ImageCollction</code> method agruments to tell GEE which data we want to retrieve. Below, we retrieve all daily ERA5 data (so we can see individual rain events).</li>
 </ul>
 <div class="callout-tip callout callout-style-default callout-captioned">
@@ -476,6 +477,7 @@ Earth Engine Snippets make importing ImageCollections easy!
 <ul>
 <li>We can look at our <code>precip</code> object using the <code>print</code> method to see that it’s still an “ImageCollection” which contains daily information from 1979 to 2020.</li>
 </ul>
+<p>TODO: this is a surrogate for the data (metadata)</p>
 <div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precip)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -518,7 +520,7 @@ Note
 <li>We can first use the <code>setCenter</code> method to tell the map where to center itself (here, we center it over Cook Inlet, Alaska). It takes the longitude and latitude as the first two coordinates, followed by the zoom level.</li>
 </ul>
 <div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>myMap.setCenter(lat <span class="op">=</span> <span class="fl">60.335998656</span>, lon <span class="op">=</span> <span class="op">-</span><span class="fl">151.87166318</span>, zoom <span class="op">=</span> <span class="dv">4</span>)</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>myMap.setCenter(lat <span class="op">=</span> <span class="dv">60</span>, lon <span class="op">=</span> <span class="op">-</span><span class="dv">151</span>, zoom <span class="op">=</span> <span class="dv">4</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>myMap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
@@ -527,12 +529,12 @@ Note
 <div class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>precip_palette <span class="op">=</span> {</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'min'</span>:<span class="dv">0</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max'</span>:<span class="fl">0.1</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max'</span>:<span class="fl">0.01</span>,</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'palette'</span>: [<span class="st">'#FFFFFF'</span>, <span class="st">'#00FFFF'</span>, <span class="st">'#0080FF'</span>, <span class="st">'#DA00FF'</span>, <span class="st">'#FFA400'</span>, <span class="st">'#FF0000'</span>]</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>Finally, plot our filtered data, <code>precip_filtered</code> on top of our basemap using the <code>.addLayer</code> method. We’ll aslo pass it our visualization parameters (colors and ranges stored in <code>precip_palette</code>, the name of the data field <code>total precipitation</code>, and opacity so that we can see the basemap underneath)</li>
+<li>Finally, plot our filtered data, <code>precip_filtered</code> on top of our basemap using the <code>.addLayer</code> method. We’ll also pass it our visualization parameters (colors and ranges stored in <code>precip_palette</code>, the name of the data field <code>total precipitation</code>, and opacity so that we can see the basemap underneath)</li>
 </ul>
 <div class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>myMap.addLayer(precip_filtered, precip_palette, <span class="st">'total precipitation'</span>, opacity <span class="op">=</span> <span class="fl">0.3</span>)</span>
@@ -554,6 +556,18 @@ TODO
 <div class="callout-body-container callout-body">
 <p>Add content here</p>
 </div>
+</div>
+<ol type="1">
+<li>Import libraries</li>
+</ol>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geemap</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> eemont</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="conclusionsummary" class="level2" data-number="15.5">
