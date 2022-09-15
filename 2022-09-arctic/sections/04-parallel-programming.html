@@ -385,20 +385,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="modes-of-parallelization" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="modes-of-parallelization"><span class="header-section-number">4.5</span> Modes of parallelization</h2>
 <ul>
-<li>TODO: develop diagram(s) showing
-<ul>
-<li>Single memory image task parallelization</li>
-</ul></li>
+<li>TODO: describe these modes</li>
 </ul>
-<p>Serial <code>Launch tasks --&gt; Task 1 --&gt; Task 2 --&gt; Task 3 --&gt; Task 4 --&gt; Task 5 --&gt; Finish</code></p>
-<p>Parallel <code>Launch tasks --&gt;                     Task 1 --\                    Task 2 ---\                    Task 3 -----&gt; Finish                      Task 4 ---/                     Task 5 --/</code></p>
-<ul>
-<li>Cluster task parallelization</li>
-</ul>
-<p>Cluster parallel <code>Show dispatch to cluster nodes and reassembly of data   Launch tasks --&gt;                     Marshal --&gt; Task 1 --&gt; Unmarshal --\                    Marshal --&gt; Task 2 --&gt; Unmarshal ---\                    Marshal --&gt; Task 3 --&gt; Unmarshal -----&gt; Finish                      Marshal --&gt; Task 4 --&gt; Unmarshal ---/                     Marshal --&gt; Task 5 --&gt; Unmarshal --/</code></p>
-<ul>
-<li>TODO: Should we also include figure with data or functional dependencies?</li>
-</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/serial-parallel-exec.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Serial and parallel execution of tasks on using thre4ads and cluster processes.</figcaption><p></p>
+</figure>
+</div>
 </section>
 <section id="simple-task-parallelization" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="simple-task-parallelization"><span class="header-section-number">4.6</span> Simple task parallelization</h2>
@@ -418,7 +412,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>run_tasks_s(np.arange(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>run_tasks_s: 100956.05421066284 ms</code></pre>
+<pre><code>run_tasks_s: 112406.86678886414 ms</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>[0,
@@ -541,7 +535,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_list: 76245.38254737854 ms
+<pre><code>download_list: 50969.21420097351 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']</code></pre>
 </div>
 </div>
@@ -570,7 +564,7 @@ Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_list: 22092.491149902344 ms
+<pre><code>download_list: 23213.08183670044 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -590,19 +584,19 @@ SWI_2001.tif</code></pre>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2019.tif</code></pre>
+<pre><code>Downloading: SWI_2021.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2020.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2001.tif</code></pre>
+<pre><code>Downloading: SWI_2019.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2007.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2021.tif</code></pre>
+<pre><code>Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code></code></pre>
@@ -620,7 +614,7 @@ SWI_2001.tif</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_list: 18974.81918334961 ms
+<pre><code>download_list: 13908.52665901184 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -687,11 +681,11 @@ SWI_2001.tif</code></pre>
 <span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a>htex_local.executors[<span class="dv">0</span>].shutdown()</span>
 <span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_list: 226.1486053466797 ms</code></pre>
+<pre><code>download_list: 150.61140060424805 ms</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']
-wait_for_futures: 61331.040143966675 ms</code></pre>
+wait_for_futures: 43285.70461273193 ms</code></pre>
 </div>
 </div>
 </section>
