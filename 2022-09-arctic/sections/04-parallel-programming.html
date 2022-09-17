@@ -271,7 +271,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="toc-section-number">4.1</span>  Learning Objectives</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="toc-section-number">4.2</span>  Introduction</a></li>
   <li><a href="#why-parallelism" id="toc-why-parallelism" class="nav-link" data-scroll-target="#why-parallelism"><span class="toc-section-number">4.3</span>  Why parallelism?</a></li>
-  <li><a href="#processors-cpus-and-cores" id="toc-processors-cpus-and-cores" class="nav-link" data-scroll-target="#processors-cpus-and-cores"><span class="toc-section-number">4.4</span>  Processors (CPUs) and Cores</a></li>
+  <li><a href="#processors-cpus-cores-anf-threads" id="toc-processors-cpus-cores-anf-threads" class="nav-link" data-scroll-target="#processors-cpus-cores-anf-threads"><span class="toc-section-number">4.4</span>  Processors (CPUs), Cores, anf Threads</a></li>
   <li><a href="#modes-of-parallelization" id="toc-modes-of-parallelization" class="nav-link" data-scroll-target="#modes-of-parallelization"><span class="toc-section-number">4.5</span>  Modes of parallelization</a></li>
   <li><a href="#simple-task-parallelization" id="toc-simple-task-parallelization" class="nav-link" data-scroll-target="#simple-task-parallelization"><span class="toc-section-number">4.6</span>  Simple task parallelization</a></li>
   <li><a href="#setup-downloading-data-for-staging" id="toc-setup-downloading-data-for-staging" class="nav-link" data-scroll-target="#setup-downloading-data-for-staging"><span class="toc-section-number">4.7</span>  Setup – downloading data for staging</a></li>
@@ -344,17 +344,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><strong>I/O-bound</strong>: Take too much time to read/write from disk</li>
 <li><strong>network-bound</strong>: Take too much time to transfer</li>
 </ul>
-<p>To help with <strong>cpu-bound</strong> computations, one can take advantage of modern processor architectures that provide multiple cores on a single processor, and thereby enable multiple computations to take place at the same time. In addition, some machines ship with multiple processors, allowing large computations to occur across the entire cluster of those computers. Plus, these machines also have large amounts of memory to avoid <strong>memory-bound</strong> computing jobs.</p>
+<p>To help with <strong>cpu-bound</strong> computations, one can take advantage of modern processor architectures that provide multiple cores on a single processor, and thereby enable multiple computations to take place at the same time. In addition, some machines ship with multiple processors, allowing large computations to occur across the entire set of those processors. Plus, these machines also have large amounts of memory to avoid <strong>memory-bound</strong> computing jobs.</p>
 </section>
-<section id="processors-cpus-and-cores" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="processors-cpus-and-cores"><span class="header-section-number">4.4</span> Processors (CPUs) and Cores</h2>
-<p>A modern CPU (Central Processing Unit) is at the heart of every computer. While traditional computers had a single CPU, modern computers can ship with mutliple processors, which in turn can each contain multiple cores. These processors and cores are available to perform computations.</p>
-<p>A computer with one processor may still have 4 cores (quad-core), allowing 4 computations to be executed at the same time.</p>
+<section id="processors-cpus-cores-anf-threads" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="processors-cpus-cores-anf-threads"><span class="header-section-number">4.4</span> Processors (CPUs), Cores, anf Threads</h2>
+<p>A modern CPU (Central Processing Unit) is at the heart of every computer. While traditional computers had a single CPU, modern computers can ship with mutliple processors, each of which in turn can contain multiple cores. These processors and cores are available to perform computations. But, just what’s the difference between processors and cores? A computer with one processor may still have 4 cores (quad-core), allowing 4 (or possibly more) computations to be executed at the same time.</p>
 <p><img src="../images/processor.png" class="img-fluid"></p>
+<ul>
+<li><p><a href="https://en.wikipedia.org/wiki/Microprocessor"><strong>Microprocessor</strong></a>: an integrated circuit that contains the data processing logic and control for a computer.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Multi-core_processor"><strong>Multi-core processor</strong></a>: a microprocessor containing multiple processing units (cores) on a single integrated circuit. Each core in a multi-core processor can execute program instructions at the same time.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Process_(computing)"><strong>Process</strong></a>: an instance of a computer program (including instructions, memory, and other resources) that is executed on a microprocessor.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Thread_(computing)"><strong>Thread</strong></a>: a thread of execution is the smallest sequence of program instructions that can be executed independently, and is typically a component of a process. The threads in a process can be executed concurrently and typically share the same memory space. They are faster to create than a process.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Computer_cluster"><strong>Cluster</strong></a>: a set of multiple, physically distinct computing systems, each with its own microprocessors, memory, and storage resources, connected together by a (fast) network that allows the nodes to be viewed as a single system.</p></li>
+</ul>
 <p>A typical modern computer has multiple cores, ranging from one or two in laptops to thousands in high performance compute clusters. Here we show four quad-core processors for a total of 16 cores in this machine.</p>
 <p><img src="../images/processors.png" class="img-fluid"></p>
 <p>You can think of this as allowing 16 computations to happen at the same time. Theroetically, your computation would take 1/16 of the time (but only theoretically, more on that later).</p>
-<p>Historically, R has only utilized one processor, which makes it single-threaded. Which is a shame, because the 2017 MacBook Pro that I am writing this on is much more powerful than that:</p>
+<p>Historically, many languages only utilized one processor, which makes them single-threaded. Which is a shame, because the 2019 MacBook Pro that I am writing this on is much more powerful than that, and has mutliple cores that would support concurrent execution of multiple threads:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@powder:~$</span> sysctl hw.ncpu hw.physicalcpu</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.ncpu:</span> 12</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.physicalcpu:</span> 6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -366,7 +372,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Core</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> socket:              1</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node0 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>               0-87</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now that’s more compute power! <code>included-crab</code> has 384 GB of RAM, and ample storage. All still under the control of a single operating system.</p>
-<p>However, maybe one of these NSF-sponsored high performance computing clusters (HPC) is looking attractive about now:</p>
+<p>Finally, maybe one of these NSF-sponsored high performance computing clusters (HPC) is looking attractive about now:</p>
 <ul>
 <li><a href="https://jetstream-cloud.org/">JetStream</a>
 <ul>
@@ -377,22 +383,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>4200 KNL nodes: 285,600 cores</li>
 <li>1736 SKX nodes: 83,328 cores</li>
 <li>224 ICX nodes: 17,920 cores</li>
-<li>TOTAL: 386,848 cores</li>
+<li>TOTAL: <strong>386,848</strong> cores</li>
 </ul></li>
 </ul>
 <p>Note that these clusters have multiple nodes (hosts), and each host has multiple cores. So this is really multiple computers clustered together to act in a coordinated fashion, but each node runs its own copy of the operating system, and is in many ways independent of the other nodes in the cluster. One way to use such a cluster would be to use just one of the nodes, and use a multi-core approach to parallelization to use all of the cores on that single machine. But to truly make use of the whole cluster, one must use parallelization tools that let us spread out our computations across multiple host nodes in the cluster.</p>
 </section>
 <section id="modes-of-parallelization" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="modes-of-parallelization"><span class="header-section-number">4.5</span> Modes of parallelization</h2>
-<ul>
-<li>TODO: describe these modes</li>
-</ul>
+<p>Several different approaches can be taken to structuring a computer program to take advantage of the hardware capabilities of multi-core processors. In the typical, and simplest, case, each task in a computation is executed serially in order of first to last. The total computation time is the sum of the time of all of the subtasks that are executed. In the next figure, a single core of the processor is used to sequentially execute each of the five tasks, with time flowing from left to right.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../images/serial-parallel-exec.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Serial and parallel execution of tasks on using thre4ads and cluster processes.</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Serial and parallel execution of tasks on using threads and cluster processes.</figcaption><p></p>
 </figure>
 </div>
+<p>In comparison, the middle panel shows two approaches to parallelization on a single computer. With <strong>multi-threaded</strong> execution, a separate thread of execution is created for each of the 5 tasks, and these are executed concurrently on 5 of the cores of the processor. All of the threads are in the same process and share the same memory and resources, so one must take care that they do not interfere with each other.</p>
+<p>With <strong>multi-process</strong> execution, a separate process is created for each of the 5 tasks, and these are executed concurrently on the cores of the processor. The difference is that each process has it’s own copy of the program memory, and changes are merged when each child process completes. Because each child process must be created and resources for that process must be marshaled and unmarshaled, there is more overhead in creating a process than a thread.</p>
+<p>Finally, <strong>cluster parallel</strong> execution is shown in the last panel, in which a cluster with multiple computers is used to execute multiple processes for each task. Again, there is a setup task associated with creating and mashaling resources for the task, which now can include overhead of moving data from one machine to the others in the cluster over the network. This further increases the cost of creating and executing multiple processes, but can still be advantageous because it can provide access to exceedingly large numbers of processing cores.</p>
 </section>
 <section id="simple-task-parallelization" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="simple-task-parallelization"><span class="header-section-number">4.6</span> Simple task parallelization</h2>
@@ -412,7 +419,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>run_tasks_s(np.arange(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>run_tasks_s: 153655.17115592957 ms</code></pre>
+<pre><code>run_tasks_s: 164896.94595336914 ms</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>[0,
@@ -535,7 +542,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_list: 732639.6775245667 ms
+<pre><code>download_list: 66379.13727760315 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']</code></pre>
 </div>
 </div>
@@ -564,7 +571,7 @@ Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_list: 172462.17727661133 ms
+<pre><code>download_list: 34274.2223739624 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -584,25 +591,19 @@ SWI_2001.tif</code></pre>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2019.tif</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2001.tif</code></pre>
+<pre><code>Downloading: SWI_2007.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2020.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2007.tif</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2021.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code></code></pre>
+<pre><code>Downloading: SWI_2001.tif</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Downloading: SWI_2019.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code></code></pre>
@@ -614,7 +615,13 @@ SWI_2001.tif</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_list: 169821.66576385498 ms
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>download_list: 16722.98765182495 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -681,11 +688,11 @@ SWI_2001.tif</code></pre>
 <span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a>htex_local.executors[<span class="dv">0</span>].shutdown()</span>
 <span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_list: 174.9715805053711 ms</code></pre>
+<pre><code>download_list: 200.97041130065918 ms</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']
-wait_for_futures: 494883.4059238434 ms</code></pre>
+wait_for_futures: 51921.67067527771 ms</code></pre>
 </div>
 </div>
 </section>
