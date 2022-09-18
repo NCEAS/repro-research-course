@@ -283,11 +283,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#parallel-processing-with-parsl" id="toc-parallel-processing-with-parsl" class="nav-link" data-scroll-target="#parallel-processing-with-parsl"><span class="toc-section-number">4.9</span>  Parallel processing with <code>parsl</code></a></li>
   <li><a href="#when-to-parallelize" id="toc-when-to-parallelize" class="nav-link" data-scroll-target="#when-to-parallelize"><span class="toc-section-number">4.10</span>  When to parallelize</a></li>
-  <li><a href="#parallel-pitfalls" id="toc-parallel-pitfalls" class="nav-link" data-scroll-target="#parallel-pitfalls"><span class="toc-section-number">5</span>  Parallel Pitfalls</a>
-  <ul class="collapse">
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">5.1</span>  Summary</a></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="toc-section-number">5.2</span>  Further Reading</a></li>
-  </ul></li>
+  <li><a href="#parallel-pitfalls" id="toc-parallel-pitfalls" class="nav-link" data-scroll-target="#parallel-pitfalls"><span class="toc-section-number">4.11</span>  Parallel Pitfalls</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">4.12</span>  Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="toc-section-number">4.13</span>  Further Reading</a></li>
   </ul>
 </nav>
     </div>
@@ -448,7 +446,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>run_serial(np.arange(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>run_serial: 127525.66075325012 ms</code></pre>
+<pre><code>run_serial: 95750.3924369812 ms</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>[0,
@@ -586,7 +584,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_serial: 49863.51752281189 ms
+<pre><code>download_serial: 81311.89250946045 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']</code></pre>
 </div>
 </div>
@@ -616,7 +614,7 @@ Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_threaded: 27617.578506469727 ms
+<pre><code>download_threaded: 21296.900033950806 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -642,13 +640,13 @@ SWI_2001.tif</code></pre>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2019.tif</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2007.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2020.tif</code></pre>
+<pre><code>Downloading: SWI_2001.tif</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Downloading: SWI_2019.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2021.tif</code></pre>
@@ -657,7 +655,10 @@ SWI_2001.tif</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2001.tif</code></pre>
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Downloading: SWI_2020.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code></code></pre>
@@ -669,10 +670,7 @@ SWI_2001.tif</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>download_process: 14344.188451766968 ms
+<pre><code>download_process: 16806.001901626587 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -680,7 +678,7 @@ SWI_2020.tif
 SWI_2001.tif</code></pre>
 </div>
 </div>
-<p>Again, the output messages print almost immediately, but then later the proesses finish and report that it took between <em>10 to 15 seconds</em> to run. Your mileage may vary. When I increase the number of files being downloaded to 10 or even to 20, I notice it is actually about the same, around <em>10-15 seconds</em>. So, part of our time now is the overhead of setting up multiple processes. But once we have that infrastructure in place, we can make effective euse of the pool of processes to handle many downloads.</p>
+<p>Again, the output messages print almost immediately, but then later the processes finish and report that it took between <em>10 to 15 seconds</em> to run. Your mileage may vary. When I increase the number of files being downloaded to 10 or even to 20, I notice it is actually about the same, around <em>10-15 seconds</em>. So, part of our time now is the overhead of setting up multiple processes. But once we have that infrastructure in place, we can make effective euse of the pool of processes to handle many downloads.</p>
 </section>
 </section>
 <section id="parallel-processing-with-parsl" class="level2" data-number="4.9">
@@ -711,7 +709,7 @@ SWI_2001.tif</code></pre>
 <span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span>
 <span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>parsl.load(htex_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7f39d45e43a0&gt;</code></pre>
+<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7f47e06a5550&gt;</code></pre>
 </div>
 </div>
 <p>We now have a live parsl executor (<code>htex_local</code>) that is waiting to execute processes. We tell it to execute processes by annotating functions with decorators that indicate which tasks should be parallelized. Parsl then handles the scheduling and execution of those tasks based on the dependencies between them. In the simplest case, we’ll decorate our previous function for downloading a file with the <code>@python_app</code> decorator, which tells parsl that any function calls with this function should be run on the default executor (in this case, <code>htex_local</code>).</p>
@@ -755,25 +753,23 @@ SWI_2001.tif</code></pre>
 <span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>wait_for_futures(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Define our download_futures function</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;AppFuture at 0x7f39dc90de20 state=pending&gt;
-&lt;AppFuture at 0x7f39d43bf3a0 state=pending&gt;
-&lt;AppFuture at 0x7f39d43bf910 state=pending&gt;
-&lt;AppFuture at 0x7f39d43bfe50 state=pending&gt;
-&lt;AppFuture at 0x7f39d43c63d0 state=pending&gt;
-download_futures: 144.79970932006836 ms</code></pre>
+<pre><code>Define our download_futures function
+&lt;AppFuture at 0x7f47e0686bb0 state=pending&gt;
+&lt;AppFuture at 0x7f47e047f4c0 state=pending&gt;
+&lt;AppFuture at 0x7f47e047fa00 state=pending&gt;
+&lt;AppFuture at 0x7f47e047ff40 state=pending&gt;
+&lt;AppFuture at 0x7f47e04864c0 state=pending&gt;
+download_futures: 93.27888488769531 ms</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']
-wait_for_futures: 43804.70967292786 ms</code></pre>
+wait_for_futures: 57352.61082649231 ms</code></pre>
 </div>
 </div>
 <p>When we’re done, be sure to clean up and shutdown the <code>htex_local</code> executor, or it will continue to persist in your environment and utilize resources. Generally, an executor should be created when setting up your environment, and then it can be used repeatedly for many different tasks.</p>
 <div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>htex_local.executors[<span class="dv">0</span>].shutdown()</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>htex_local.executors[<span class="dv">0</span>].shutdown()</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="when-to-parallelize" class="level2" data-number="4.10">
@@ -788,8 +784,8 @@ wait_for_futures: 43804.70967292786 ms</code></pre>
 </div>
 <p>So, it is important to evaluate the computational efficiency of requests, and work to ensure that additional compute resources brought to bear will pay off in terms of increased work being done.</p>
 </section>
-<section id="parallel-pitfalls" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Parallel Pitfalls</h1>
+<section id="parallel-pitfalls" class="level2" data-number="4.11">
+<h2 data-number="4.11" class="anchored" data-anchor-id="parallel-pitfalls"><span class="header-section-number">4.11</span> Parallel Pitfalls</h2>
 <p>A set of tasks is considered ‘pleasingly parallel’ when large portions of the code can be executed indpendently of the other portions and have few or no dependencies on other parts of the execution. This situation is common, and we can frequently execute parallel tasks on independent subsets of our data. Nevertheless, dependencies among different parts of your computation can definitely create bottlenecks and slow down computations. Some of the challenges you may need to work around include:</p>
 <ul>
 <li><p><strong>Task dependencies</strong>: occur when one task in the code depends on the results of another task or computation in the code.</p></li>
@@ -797,16 +793,16 @@ wait_for_futures: 43804.70967292786 ms</code></pre>
 <li><p><strong>Deadlocks</strong>: occur when two concurrent tasks block on the output of the other. Deadlocks cause parallel programs to lock up indefinitely, and can be difficult to track down.</p></li>
 </ul>
 <p>Even when tasks exhibit strong dependencies, it is frequently possible to still optimize that code by parallelizing explicit code sections, sometimes bringing other concurrency tools into the mix, such as the Message Passing Interface (MPI). But simply improving the efficiency of pleasingly parallel tasks can be liberating.</p>
-<section id="summary" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.1</span> Summary</h2>
+</section>
+<section id="summary" class="level2" data-number="4.12">
+<h2 data-number="4.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.12</span> Summary</h2>
 <p>In this lesson, we showed examples of computing tasks that are likely limited by the number of CPU cores that can be applied, and we reviewed the architecture of computers to understand the relationship between CPU processors and cores. Next, we reviewed the way in which traditional sequential loops can be rewritten as functions that are applied to a list of inputs both serially and in parallel to utilize multiple cores to speed up computations. We reviewed the challenges of optimizing code, where one must constantly examine the bottlenecks that arise as we improve cpu-bound, I/O bound,and memory bound computations.</p>
 </section>
-<section id="further-reading" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">5.2</span> Further Reading</h2>
+<section id="further-reading" class="level2" data-number="4.13">
+<h2 data-number="4.13" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">4.13</span> Further Reading</h2>
 <p>Ryan Abernathey &amp; Joe Hamman. 2020. <a href="https://medium.com/pangeo/closed-platforms-vs-open-architectures-for-cloud-native-earth-system-analytics-1ad88708ebb6">Closed Platforms vs.&nbsp;Open Architectures for Cloud-Native Earth System Analytics.</a> Medium.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
