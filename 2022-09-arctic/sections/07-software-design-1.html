@@ -274,12 +274,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#global-variables" id="toc-global-variables" class="nav-link" data-scroll-target="#global-variables"><span class="toc-section-number">7.4</span>  Global variables</a></li>
   <li><a href="#pure-functions" id="toc-pure-functions" class="nav-link" data-scroll-target="#pure-functions"><span class="toc-section-number">7.5</span>  Pure functions</a></li>
   <li><a href="#task-dependencies" id="toc-task-dependencies" class="nav-link" data-scroll-target="#task-dependencies"><span class="toc-section-number">7.6</span>  Task dependencies</a></li>
-  <li><a href="#locks" id="toc-locks" class="nav-link" data-scroll-target="#locks"><span class="toc-section-number">8</span>  Locks</a>
-  <ul class="collapse">
-  <li><a href="#race-conditions" id="toc-race-conditions" class="nav-link" data-scroll-target="#race-conditions"><span class="toc-section-number">8.1</span>  Race conditions</a></li>
-  <li><a href="#deadlocks" id="toc-deadlocks" class="nav-link" data-scroll-target="#deadlocks"><span class="toc-section-number">8.2</span>  Deadlocks</a></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="toc-section-number">8.3</span>  Further reading</a></li>
-  </ul></li>
+  <li><a href="#locks" id="toc-locks" class="nav-link" data-scroll-target="#locks"><span class="toc-section-number">7.7</span>  Locks</a></li>
+  <li><a href="#race-conditions" id="toc-race-conditions" class="nav-link" data-scroll-target="#race-conditions"><span class="toc-section-number">7.8</span>  Race conditions</a></li>
+  <li><a href="#deadlocks" id="toc-deadlocks" class="nav-link" data-scroll-target="#deadlocks"><span class="toc-section-number">7.9</span>  Deadlocks</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="toc-section-number">7.10</span>  Further reading</a></li>
   </ul>
 </nav>
     </div>
@@ -473,8 +471,8 @@ Important
 <h2 data-number="7.6" class="anchored" data-anchor-id="task-dependencies"><span class="header-section-number">7.6</span> Task dependencies</h2>
 <p>Task dependencies occur when one task in the code depends on the results of another task or computation in the code.</p>
 </section>
-<section id="locks" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Locks</h1>
+<section id="locks" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="locks"><span class="header-section-number">7.7</span> Locks</h2>
 <p>Locks are a mechanism to manage access to a resource so that multiple threads can access the resource. By adding locks to an otherwise parallel process, we introduce a degree of serial execution to the locked portion of the process. Basically, each thread can only access the resource when it has the lock, and only one lock is given out at a time. Take this example of what happens without locking:</p>
 <div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ProcessPoolExecutor</span>
@@ -492,10 +490,10 @@ Important
 <pre><code>0</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code> </code></pre>
+<pre><code>1</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1</code></pre>
+<pre><code> </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code> </code></pre>
@@ -507,10 +505,13 @@ Important
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1</code></pre>
+<pre><code>Hello</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Hello</code></pre>
+<pre><code>0</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code> </code></pre>
@@ -519,13 +520,13 @@ Important
 <pre><code>world</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0</code></pre>
+<pre><code>1</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2</code></pre>
@@ -538,9 +539,6 @@ Important
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code> </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Hello</code></pre>
@@ -664,22 +662,22 @@ Warning
 <p>Synchronizing with a Lock turns a parallel process back into a serial process, at least while the lock is in use. So use with care lest you lose all benefits of concurrency.</p>
 </div>
 </div>
-<section id="race-conditions" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="race-conditions"><span class="header-section-number">8.1</span> Race conditions</h2>
+</section>
+<section id="race-conditions" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="race-conditions"><span class="header-section-number">7.8</span> Race conditions</h2>
 <p>Race conditions occur when two tasks execute in parallel, but produce different results based on which task finishes first. Ensuring that results are correct under different timing situations requires careful testing.</p>
 </section>
-<section id="deadlocks" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="deadlocks"><span class="header-section-number">8.2</span> Deadlocks</h2>
+<section id="deadlocks" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="deadlocks"><span class="header-section-number">7.9</span> Deadlocks</h2>
 <p>Deadlocks occur when two concurrent tasks block on the output of the other. Deadlocks cause parallel programs to lock up indefinitely, can be difficult to track down, and will often require the program to be killed.</p>
 </section>
-<section id="further-reading" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">8.3</span> Further reading</h2>
+<section id="further-reading" class="level2" data-number="7.10">
+<h2 data-number="7.10" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">7.10</span> Further reading</h2>
 <ul>
 <li><a href="https://docs.python.org/3/reference/datamodel.html#context-managers">With Statement Context Managers</a></li>
 </ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
