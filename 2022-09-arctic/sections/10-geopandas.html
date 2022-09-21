@@ -615,7 +615,7 @@ Datum: World Geodetic System 1984 ensemble
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"transform"</span>: shipc_transform,</span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"compress"</span>: <span class="st">"lzw"</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Next, we’ll use a spatial inner join for the vector data to select polygons that are within the bounding box.</p>
+<p>Now we’ll do a similar task with the vector data. Tin this case, we use a spatial join. The join will be an inner join, and select only rows from the left side (our fishing districts) that are <strong>within</strong> the right side (our bounding box). I chose this method as opposed to a clipping type operation because it ensures that we don’t end up with any open polygons at the boundaries of our box, which could cause problems for us down the road.</p>
 <div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>comm_clip <span class="op">=</span> gpd.sjoin(comm_3338,</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                      coord_box_df,</span>
