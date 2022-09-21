@@ -310,7 +310,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>Understand what Google Earth Engine provides and its applications</li>
 <li>Learn how to search for, import, manipulate, and visualize Google Earth Engine Data</li>
-<li>Learn about some real-world applications of Google Earth Engine in the geosciences ## Introduction</li>
+<li>Learn about some real-world applications of Google Earth Engine in the geosciences</li>
 </ul>
 </section>
 <section id="introduction" class="level2 page-columns page-full" data-number="15.2">
@@ -457,7 +457,7 @@ Earth Engine Snippets make importing ImageCollections easy!
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>precip <span class="op">=</span> weatherData.select(<span class="st">"total_precipitation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>We can look at our <code>precip</code> object metadata using the <code>print</code> method to see that it’s still an <em>ImageCollection</em>.</li>
+<li>We can look at our <code>precip</code> object metadata using the <code>print</code> method to see that we’ve isolated the <code>total_precipitation</code> band, but it’s still an <em>ImageCollection</em>.</li>
 </ul>
 <div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precip)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -472,11 +472,11 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>You may see a message in the VS Code Interactive pane that says, <strong>“Output exceeds the size limit. Open the full output data in a text editor”</strong> when printing your image object. Click here to see the entire output, which includes date range information.</p>
+<p>You may see a message in that says, <strong>“Output exceeds the size limit. Open the full output data in a text editor”</strong> when printing your image object metadata. Click here to see the entire output, which includes date range information.</p>
 </div>
 </div>
 <ul>
-<li>Let’s say that we want to look at data for a particular time of interest – e.g.&nbsp;January 1, 2019 - December 31, 2019. We can apply the <code>filterDate</code> method to our selected <code>total_precipitation</code> parameter to filter for data from our chosen date range. We can also apply the <code>mean</code> method, which takes whatever precedes it and calculates the average.</li>
+<li>Let’s say that we want to look at data for a particular time of interest – e.g.&nbsp;January 1, 2019 - December 31, 2019. We can apply the <code>filterDate</code> method to our selected <code>total_precipitation</code> parameter to filter for data from our chosen date range. We can also apply the <code>mean</code> method, which takes whatever precedes it and calculates the average – this step reduces our <code>ImageCollection</code> to a single <code>Image</code>.</li>
 </ul>
 <div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initial date of interest (inclusive)</span></span>
@@ -485,11 +485,11 @@ Note
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># final data of interest (exclusive)</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>f_date <span class="op">=</span> <span class="st">'2020-01-01'</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># select apporpriate bands (total_preciptation), dates, and calculate mean precipitation across that date range</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># select desired bands (total_preciptation), dates, and calculate mean precipitation across that date range</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>precip <span class="op">=</span> weatherData.select(<span class="st">"total_precipitation"</span>).filterDate(i_date, f_date).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>Use the <code>print</code> method again to check out your new <code>precip</code> object – notice that it’s now an <code>ee.Image</code> (rather than <code>ee.ImageCollection</code>) and the start and end date values are as we specified.</li>
+<li>Use the <code>print</code> method again to check out your new <code>precip</code> object – notice that it’s now an <code>ee.Image</code> (rather than <code>ee.ImageCollection</code>) and the start and end date values over which the average is taken are as we specified.</li>
 </ul>
 <div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precip)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -498,7 +498,7 @@ Note
 <li>Add the precipitation Image to the basemap</li>
 </ol>
 <ul>
-<li>We can first use the <code>setCenter</code> method to tell the map where to center itself (here, we center it over Cook Inlet, Alaska). It takes the longitude and latitude as the first two arguments, followed by the zoom level.</li>
+<li>We can use the <code>setCenter</code> method again to center our map, <code>myMap</code> over an area of interest – here, we’ve chosen coordinates for Cook Inlet, Alaska. <code>setCenter</code> takes the longitude and latitude as the first two arguments, followed by the zoom level.</li>
 </ul>
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>myMap.setCenter(lat <span class="op">=</span> <span class="dv">60</span>, lon <span class="op">=</span> <span class="op">-</span><span class="dv">151</span>, zoom <span class="op">=</span> <span class="dv">4</span>)</span>
