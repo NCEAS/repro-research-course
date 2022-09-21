@@ -280,7 +280,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#data-organization" id="toc-data-organization" class="nav-link" data-scroll-target="#data-organization"><span class="toc-section-number">5.6.1</span>  Data Organization</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">5.7</span>  Summary</a></li>
+  <li><a href="#data-transfer-tools" id="toc-data-transfer-tools" class="nav-link" data-scroll-target="#data-transfer-tools"><span class="toc-section-number">5.7</span>  Data transfer tools</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">5.8</span>  Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -536,8 +537,56 @@ Tip
 </div>
 </section>
 </section>
-<section id="summary" class="level2" data-number="5.7">
-<h2 data-number="5.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.7</span> Summary</h2>
+<section id="data-transfer-tools" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="data-transfer-tools"><span class="header-section-number">5.7</span> Data transfer tools</h2>
+<p>Now that we’ve talked about what types of large datasets you might have that need to get published on the Arctic Data Center, let’s discuss how to actually get the data there. If you have even on the order of only 50GB, or more than 500 files, it will likely be more expedient for you to transfer your files via a command line tool than uploading them via our webform. So you know that you need to move a lot of data, how are you going to do it? More importantly, how can you do it in an efficient way?</p>
+<p>There are three key elements to data transfer efficiency:</p>
+<ul>
+<li>endpoints</li>
+<li>network</li>
+<li>transfer tool</li>
+</ul>
+<section id="endpoints" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="endpoints">Endpoints</h4>
+<p>The from and to locations of the transfer, an endpoint is a remote computing device that can communicate back and forth with the network to which it is connected. The speed with which an endpoint can communicate with the network varies depending on how it is configured. Performance depends on the CPU, RAM, OS, and disk configuration. One key factor that affects data transfer speed is how quickly that machine can write data to disk. Slow write speeds will throttle a data transfer on even the fastest internet connection with the most streamlined transfer tool. Examples of endpoints could be:</p>
+<ul>
+<li>NCEAS <code>included-crab</code> server</li>
+<li>Your standard laptop</li>
+<li>A cloud service like AWS</li>
+</ul>
+</section>
+<section id="network-speed" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="network-speed">Network speed</h4>
+<p>Network speed determines how quickly information can be sent between endpoints. It is largely, but not enitrely, dependent on what you pay for. Importantly, not all networks are created equal, even if they nominally have the same speed capability. Wired networks get significantly more speed than wireless. Networks with lots of “stuff” along the pipe (like switches or firewalls) can perform worse than those that don’t. Even the length and type of network cabling used can matter.</p>
+</section>
+<section id="transfer-tools" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="transfer-tools">Transfer tools</h4>
+<p>Poll: what data transfer tools do you use regularly?</p>
+<p>Finally, the tool or software that you use to transfer data can also significantly affect your transfer speed. There are a lot of tools out there that can move data around, both GUI driven and command line. We’ll discuss a few here, and their pros and cons.</p>
+<section id="scp" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="scp"><code>scp</code></h5>
+<p><code>scp</code> or secure copy uses <code>ssh</code> for authentication and transfer, and it is included with both unix and linux. It requires no setup (unless you are on a Windows machine and need to install), and if you can <code>ssh</code> to a server, you can probably use <code>scp</code> to move files without any other setup. <code>scp</code> copies all files linearly and simply. If a transfer fails in the middle, it is difficult to know exactly what files didn’t make it, so you might have to start the whole thing over and re-transfer all the files. This, obviously, would not be ideal for large data transfers. For a file or two, <code>scp</code> is a fine tool to use.</p>
+</section>
+<section id="rsync" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="rsync"><code>rsync</code></h5>
+<p><code>rsync</code> is similar to <code>scp</code>, but syncs files/directories as opposed to copying. This means that <code>rsync</code> checks the destination to see if that file (with the same size and modified date) already exists. If it does, <code>rsync</code> will skip the file. This means that if an <code>rsync</code> transfer fails, it can be restarted again and will pick up where it left off, essentially. Neat!</p>
+</section>
+<section id="globus" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="globus">Globus</h5>
+<p>Globus is a software that uses multiple network sockets simultaneously on endpoints, such that data transfers can run in parallel. As you can imagine, that parallelization can dramatically speed up data transfers. Globus, like <code>rsync</code> can also fail gracefully, and even restart itself. Globus does require that each endpoint be configured as a Globus node, which is more setup than is required of either <code>scp</code> or <code>rsync</code>. Many instituions computing resources may have endpoints already configured as Globus endpoints, so it is always worth checking in with any existing resources that might already be set up before setting up your own. Although Globus is a free software, there are <a href="https://www.globus.org/subscriptions">paid options</a> which provide support for configuring your local workstation as a Globus node. Globus is a fantastic tool, but remember the other two factors controlling data transfer, it can only help so much in overcoming slow network or write speeds.</p>
+</section>
+</section>
+<section id="aws-sync" class="level4" data-number="5.7.0.1">
+<h4 data-number="5.7.0.1" class="anchored" data-anchor-id="aws-sync"><span class="header-section-number">5.7.0.1</span> AWS <code>sync</code></h4>
+<p>Amazon Web Services (AWS) has a Command Line Interface (CLI) that includes a <code>sync</code> utility. This works much like <code>rsync</code> does in that it only copies new or updated files to the destination. The difference, of course, is that AWS <code>sync</code> is specifically built to work with interacting with the AWS cloud, and is compatible with S3 buckets.</p>
+</section>
+<section id="nc" class="level4" data-number="5.7.0.2">
+<h4 data-number="5.7.0.2" class="anchored" data-anchor-id="nc"><span class="header-section-number">5.7.0.2</span> <code>nc</code></h4>
+<p><code>nc</code> (or netcat) is a low level file transfer utility that is extremely efficient when moving files around on nodes in a cluster. It is not the easiest of these tools to use, however, in certain situations it might be the best option because it has the least overhead, and therefore can run extremely efficiently.</p>
+</section>
+</section>
+<section id="summary" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.8</span> Summary</h2>
 <p>In this lesson we learned about metadata and the structure of a data package; how to submit narrative metadata; how to upload data and when to use different services; how to document file and attribute-level metadata; and best practices for data organization and management. As mentioned earlier, more in-depth information on uploading data to our servers using Globus and RSync can be found in <a href="https://learning.nceas.ucsb.edu/2022-09-arctic/sections/18-arctic-data-staging.html">Session 18</a>.</p>
 
 
