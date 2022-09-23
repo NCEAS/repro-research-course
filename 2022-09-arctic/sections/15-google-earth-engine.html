@@ -286,7 +286,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#part-ii.-visualize-ndvi-and-nbf-spectral-indices" id="toc-part-ii.-visualize-ndvi-and-nbf-spectral-indices" class="nav-link" data-scroll-target="#part-ii.-visualize-ndvi-and-nbf-spectral-indices"><span class="toc-section-number">15.4.2</span>  <strong>Part ii.</strong> Visualize NDVI and NBF spectral indices</a></li>
   <li><a href="#part-iii.-load-more-than-one-image-i.e.-an-imagecollection-to-analyze" id="toc-part-iii.-load-more-than-one-image-i.e.-an-imagecollection-to-analyze" class="nav-link" data-scroll-target="#part-iii.-load-more-than-one-image-i.e.-an-imagecollection-to-analyze"><span class="toc-section-number">15.4.3</span>  <strong>Part iii.</strong> Load more than one image (i.e.&nbsp;an ImageCollection) to analyze</a></li>
   <li><a href="#part-iv.-make-a-timeseries" id="toc-part-iv.-make-a-timeseries" class="nav-link" data-scroll-target="#part-iv.-make-a-timeseries"><span class="toc-section-number">15.4.4</span>  <strong>Part iv.</strong> Make a timeseries</a></li>
-  <li><a href="#part-v.-clustering" id="toc-part-v.-clustering" class="nav-link" data-scroll-target="#part-v.-clustering"><span class="toc-section-number">15.4.5</span>  <strong>Part v.</strong> Clustering</a></li>
+  <li><a href="#part-v.-annual-composite" id="toc-part-v.-annual-composite" class="nav-link" data-scroll-target="#part-v.-annual-composite"><span class="toc-section-number">15.4.5</span>  <strong>Part v.</strong> Annual Composite</a></li>
+  <li><a href="#part-vi.-calculate-trend" id="toc-part-vi.-calculate-trend" class="nav-link" data-scroll-target="#part-vi.-calculate-trend"><span class="toc-section-number">15.4.6</span>  <strong>Part vi.</strong> Calculate trend</a></li>
+  <li><a href="#part-v.-clustering" id="toc-part-v.-clustering" class="nav-link" data-scroll-target="#part-v.-clustering"><span class="toc-section-number">15.4.7</span>  <strong>Part v.</strong> Clustering</a></li>
   </ul></li>
   <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources"><span class="toc-section-number">15.5</span>  Additional Resources</a></li>
   </ul>
@@ -595,34 +597,36 @@ Note
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
-<li>Authenticate &amp; Initialize</li>
+<li>Authenticate &amp; Initialize (if you haven’t done so already in your work session)</li>
 </ol>
 <div class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ee.Authenticate()</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ee.Initialize() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ol start="2" type="1">
+<ol start="3" type="1">
 <li>Create basemap displaying the Batagay region</li>
 </ol>
 <div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># site coordinates</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>xy <span class="op">=</span> [<span class="fl">134.6</span>, <span class="fl">67.66</span>]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>poi <span class="op">=</span> ee.Geometry.Point(xy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>poi <span class="op">=</span> ee.Geometry.Point(xy) <span class="co"># Point</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>bbox <span class="op">=</span> ee.Geometry.BBox(<span class="fl">134.45</span>, <span class="fl">67.7</span>, <span class="fl">134.8</span>, <span class="fl">67.5970</span>) <span class="co"># Polygon</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create map</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Map <span class="op">=</span> geemap.Map()</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Map.addLayer(poi)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Map.addLayer(bbox, {}, <span class="st">'AOI'</span>)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>Map.centerObject(poi, zoom<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>Map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="part-ii.-visualize-ndvi-and-nbf-spectral-indices" class="level3" data-number="15.4.2">
 <h3 data-number="15.4.2" class="anchored" data-anchor-id="part-ii.-visualize-ndvi-and-nbf-spectral-indices"><span class="header-section-number">15.4.2</span> <strong>Part ii.</strong> Visualize NDVI and NBF spectral indices</h3>
-<p>We’ll plot <em>Image</em> data using two different multispectral indices: (1) <strong>Normalized Difference Vegetation Index (NDVI)</strong> for visualizing vegegation, using RGB (Red - Green - Blue), and (2) <strong>Normalized Burn Ratio (NBF)</strong> for visualizing burned areas, using Color-Infrared (NIR - Red - Green).</p>
+<p>We’ll plot <em>Image</em> data from the <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR#description">Sentinel-2 MSI</a> dataset using two different multispectral indices: (1) <strong>Normalized Difference Vegetation Index (NDVI)</strong> for visualizing vegegation, using RGB (Red - Green - Blue), and (2) <strong>Normalized Burn Ratio (NBF)</strong> for visualizing burned areas, using Color-Infrared (NIR - Red - Green).</p>
 <ol type="1">
 <li>Instantiate map</li>
 </ol>
@@ -638,7 +642,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-TODO: code below this point erroring out
+TODO: errors out at <code>.spectralIndices()</code> line
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -653,26 +657,24 @@ TODO: code below this point erroring out
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>           )</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Show</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>Map.addLayer(S2_Image, <span class="bu">dict</span>(<span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">0.15</span>, gamma<span class="op">=</span><span class="fl">1.5</span>, bands<span class="op">=</span>[<span class="st">'B2'</span>, <span class="st">'B3'</span>, <span class="st">'B2'</span>]), <span class="st">'RGB'</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>Map.addLayer(S2_Image, <span class="bu">dict</span>(<span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">0.1</span>, gamma<span class="op">=</span><span class="fl">1.5</span>, bands<span class="op">=</span>[<span class="st">'B4'</span>, <span class="st">'B3'</span>, <span class="st">'B2'</span>]), <span class="st">'RGB'</span>)</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>Map.addLayer(S2_Image, <span class="bu">dict</span>(<span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">0.3</span>, gamma<span class="op">=</span><span class="fl">1.5</span>, bands<span class="op">=</span>[<span class="st">'B8'</span>, <span class="st">'B4'</span>, <span class="st">'B3'</span>]), <span class="st">'Color-Infrared'</span>, <span class="va">False</span>)</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>RdYlGn <span class="op">=</span> [<span class="st">'#d7191c'</span>,<span class="st">'#fdae61'</span>,<span class="st">'#ffffbf'</span>,<span class="st">'#a6d96a'</span>,<span class="st">'#1a9641'</span>]</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>Map.addLayer(S2_Image, <span class="bu">dict</span>(<span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">0.8</span>, bands<span class="op">=</span>[<span class="st">'NDVI'</span>], palette<span class="op">=</span>RdYlGn), <span class="st">'NDVI'</span>)</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>Map.addLayer(S2_Image, <span class="bu">dict</span>(<span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">0.8</span>, bands<span class="op">=</span>[<span class="st">'NBR'</span>], palette<span class="op">=</span>RdYlGn), <span class="st">'NBR'</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>Map.addLayer(S2_Image, <span class="bu">dict</span>(<span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">0.8</span>, bands<span class="op">=</span>[<span class="st">'NDVI'</span>], palette<span class="op">=</span>RdYlGn), <span class="st">'NDVI'</span>, <span class="va">False</span>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>Map.addLayer(S2_Image, <span class="bu">dict</span>(<span class="bu">min</span><span class="op">=</span><span class="fl">0.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">0.8</span>, bands<span class="op">=</span>[<span class="st">'NBR'</span>], palette<span class="op">=</span>RdYlGn), <span class="st">'NBR'</span>, <span class="va">False</span>)</span>
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>Map.centerObject(S2_Image, zoom<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>Map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>Map.centerObject(S2_Image, zoom<span class="op">=</span><span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
 <li>Select point on the map above and pull location as an <code>ee.Feature</code></li>
 </ol>
 <div class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>point_selected <span class="op">=</span> Map.draw_last_feature</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>point_selected</span>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>point_fire <span class="op">=</span> Map.draw_last_feature</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>point_fire</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># or alternatively, use this code:</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>point_fire <span class="op">=</span> ee.Geometry.Point([<span class="fl">134.6339</span>, <span class="fl">68.0397</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># point_fire = ee.Geometry.Point([134.6339, 68.0397])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="part-iii.-load-more-than-one-image-i.e.-an-imagecollection-to-analyze" class="level3" data-number="15.4.3">
@@ -697,11 +699,12 @@ TODO: code below this point erroring out
 <span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>      .maskClouds()</span>
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>      .sort(<span class="st">'CLOUDY_PIXEL_PERCENTAGE'</span>)</span>
 <span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>     )<span class="co">#.first()</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate indices (e.g. NDVI, NBR)</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Number of images </span><span class="sc">{</span>S2<span class="sc">.</span>size()<span class="sc">.</span>getInfo()<span class="sc">}</span><span class="ss">'</span>) <span class="co"># Print number of images</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate indices (e.g. NDVI, NBR)</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Number of images </span><span class="sc">{</span>S2<span class="sc">.</span>size()<span class="sc">.</span>getInfo()<span class="sc">}</span><span class="ss">'</span>) <span class="co"># Print number of images</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
-<li>Visualize satellite data</li>
+<li>Visualize satellite data - GET RID OF THIS</li>
 </ol>
 <div class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Map = geemap.Map()</span></span>
@@ -724,26 +727,28 @@ TODO: code below this point erroring out
 <li>Create timeseries &amp; clean data</li>
 </ol>
 <div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_and_prepare_Landsat(collection_name):</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    collection <span class="op">=</span> (ee.ImageCollection(collection_name)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>      <span class="co">### Filters </span><span class="al">###</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>      .filterBounds(poi) <span class="co"># only images, which intersect our point/region</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>      .<span class="bu">filter</span>(ee.Filter.calendarRange(<span class="dv">7</span>,<span class="dv">8</span>,<span class="st">'month'</span>)) <span class="co"># only June through September, Summer only</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>      .<span class="bu">filter</span>(ee.Filter.lt(<span class="st">'CLOUD_COVER_LAND'</span>, <span class="dv">10</span>)) <span class="co"># only images with less that 10 % clouds</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>      <span class="co">#.filterDate('2022-07-01','2022-12-31')</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>      <span class="co">### PreProcessing </span><span class="al">###</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>      .scaleAndOffset()</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>      .spectralIndices([<span class="st">'NDVI'</span>, <span class="st">'NBR'</span>])</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>      .maskClouds()</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>     )</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> collection</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to load and prepare landsat data</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_and_prepare_Landsat(collection_name):</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    collection <span class="op">=</span> (ee.ImageCollection(collection_name)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>      <span class="co">### Filters </span><span class="al">###</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>      .filterBounds(bbox) <span class="co"># only images, which intersect our point/region</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>      .<span class="bu">filter</span>(ee.Filter.calendarRange(<span class="dv">7</span>,<span class="dv">8</span>,<span class="st">'month'</span>)) <span class="co"># only June through September, Summer only</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>      .<span class="bu">filter</span>(ee.Filter.lt(<span class="st">'CLOUD_COVER_LAND'</span>, <span class="dv">10</span>)) <span class="co"># only images with less that 10 % clouds</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>      <span class="co">#.filterDate('2022-07-01','2022-12-31')</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>      <span class="co">### PreProcessing </span><span class="al">###</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>      .scaleAndOffset()</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>      .spectralIndices([<span class="st">'NDVI'</span>, <span class="st">'NBR'</span>])</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>      .maskClouds()</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>     )</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> collection</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>L9 <span class="op">=</span> load_and_prepare_Landsat(<span class="st">"LANDSAT/LC09/C02/T1_L2"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>L8 <span class="op">=</span> load_and_prepare_Landsat(<span class="st">"LANDSAT/LC08/C02/T1_L2"</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>L7 <span class="op">=</span> load_and_prepare_Landsat(<span class="st">"LANDSAT/LE07/C02/T1_L2"</span>)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>L5 <span class="op">=</span> load_and_prepare_Landsat(<span class="st">"LANDSAT/LT05/C02/T1_L2"</span>)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>LS <span class="op">=</span> L9.merge(L8).merge(L7).merge(L5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data and merge </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>L9 <span class="op">=</span> load_and_prepare_Landsat(<span class="st">"LANDSAT/LC09/C02/T1_L2"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>L8 <span class="op">=</span> load_and_prepare_Landsat(<span class="st">"LANDSAT/LC08/C02/T1_L2"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>L7 <span class="op">=</span> load_and_prepare_Landsat(<span class="st">"LANDSAT/LE07/C02/T1_L2"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>L5 <span class="op">=</span> load_and_prepare_Landsat(<span class="st">"LANDSAT/LT05/C02/T1_L2"</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>LS <span class="op">=</span> L9.merge(L8).merge(L7).merge(L5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ts <span class="op">=</span> LS.getTimeSeriesByRegion(reducer <span class="op">=</span> ee.Reducer.mean(),</span>
@@ -761,8 +766,7 @@ TODO: code below this point erroring out
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>tsPandas[<span class="st">'date'</span>] <span class="op">=</span> pd.to_datetime(tsPandas[<span class="st">'date'</span>],infer_datetime_format <span class="op">=</span> <span class="va">True</span>)</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>tsPandas <span class="op">=</span> tsPandas.sort_values(by<span class="op">=</span><span class="st">'date'</span>).dropna(axis<span class="op">=</span><span class="dv">0</span>).reset_index()</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>tsPandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>tsPandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>Visualize output (example using plotly, but can use library of your choice e.g.&nbsp;matplotlib, seaborn, etc.)</li>
@@ -776,55 +780,111 @@ TODO: code below this point erroring out
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>px.line(tsPandas, x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span>[<span class="st">'NDVI'</span>, <span class="st">'NBR'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="part-v.-clustering" class="level3" data-number="15.4.5">
-<h3 data-number="15.4.5" class="anchored" data-anchor-id="part-v.-clustering"><span class="header-section-number">15.4.5</span> <strong>Part v.</strong> Clustering</h3>
+<section id="part-v.-annual-composite" class="level3" data-number="15.4.5">
+<h3 data-number="15.4.5" class="anchored" data-anchor-id="part-v.-annual-composite"><span class="header-section-number">15.4.5</span> <strong>Part v.</strong> Annual Composite</h3>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>LS_2020 <span class="op">=</span> LS.filterDate(<span class="st">'2020-01-01'</span>, <span class="st">'2020-12-31'</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>LS_2019 <span class="op">=</span> LS.filterDate(<span class="st">'2019-01-01'</span>, <span class="st">'2019-12-31'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li></li>
+</ul>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>LS_2020_reduced <span class="op">=</span> LS_2020.<span class="bu">reduce</span>(ee.Reducer.median())</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>LS_2019_reduced <span class="op">=</span> LS_2019.<span class="bu">reduce</span>(ee.Reducer.median())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>Map <span class="op">=</span> geemap.Map()</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>Map.addLayer(LS_2020_reduced,<span class="bu">dict</span>(<span class="bu">min</span><span class="op">=-</span><span class="dv">1</span>, <span class="bu">max</span><span class="op">=</span><span class="dv">1</span>, bands<span class="op">=</span>[<span class="st">'NDVI_median'</span>]), <span class="st">'Median NDVI 2020'</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>Map.addLayer(LS_2019_reduced,<span class="bu">dict</span>(<span class="bu">min</span><span class="op">=-</span><span class="dv">1</span>, <span class="bu">max</span><span class="op">=</span><span class="dv">1</span>, bands<span class="op">=</span>[<span class="st">'NDVI_median'</span>]), <span class="st">'Median NDVI 2019'</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Map.centerObject(LS_2020_reduced, 9)</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>Map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="part-vi.-calculate-trend" class="level3" data-number="15.4.6">
+<h3 data-number="15.4.6" class="anchored" data-anchor-id="part-vi.-calculate-trend"><span class="header-section-number">15.4.6</span> <strong>Part vi.</strong> Calculate trend</h3>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_dateband(image):</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  factor <span class="op">=</span> ee.Number(<span class="dv">864000000000</span>) <span class="co"># seconds to years</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  time <span class="op">=</span> ee.Number(image.get(<span class="st">"system:time_start"</span>))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  time2 <span class="op">=</span> time.toDouble().divide(factor)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  date_image <span class="op">=</span> ee.Image.constant(time2).toFloat().select([<span class="dv">0</span>], [<span class="st">'Date'</span>])</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#TODO: rename to 'Date'</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> image.addBands(date_image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>LS <span class="op">=</span> LS.<span class="bu">map</span>(make_dateband)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>index <span class="op">=</span> <span class="st">'NDVI'</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>trend_image <span class="op">=</span> ee.Image()</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>trend <span class="op">=</span> ee.ImageCollection(LS.select([<span class="st">'Date'</span>, index])).<span class="bu">reduce</span>(ee.Reducer.linearFit().unweighted())</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>trend_image <span class="op">=</span> trend_image.addBands(trend)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>palette <span class="op">=</span> geemap.get_palette_colors(cmap_name<span class="op">=</span><span class="st">'RdYlGn'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>Map <span class="op">=</span> geemap.Map()</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>Map.addLayer(trend_image.clip(bbox), <span class="bu">dict</span>(<span class="bu">min</span><span class="op">=-</span><span class="fl">0.3</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">0.3</span>, palette<span class="op">=</span>palette, bands<span class="op">=</span>[<span class="st">'scale'</span>]))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Map.centerObject(trend_image, 8)</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>Map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add some nice temporal data</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Tasseled Cap Trends: 2001-2020</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>TCVIS <span class="op">=</span> ee.ImageCollection(<span class="st">'users/ingmarnitze/TCTrend_SR_2001-2020_TCVIS'</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>Map.addLayer(TCVIS, {}, <span class="st">'TCVIS'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="part-v.-clustering" class="level3" data-number="15.4.7">
+<h3 data-number="15.4.7" class="anchored" data-anchor-id="part-v.-clustering"><span class="header-section-number">15.4.7</span> <strong>Part v.</strong> Clustering</h3>
 <p><em>Example taken from <a href="https://geemap.org/notebooks/31_unsupervised_classification/#make-training-dataset" class="uri">https://geemap.org/notebooks/31_unsupervised_classification/#make-training-dataset</a></em>.</p>
 <ol type="1">
 <li>Group individual images into several “similar” objects</li>
 </ol>
-<div class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>image <span class="op">=</span> S2_Image</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>image <span class="op">=</span> S2_Image</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the training dataset.</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>training <span class="op">=</span> image.sample(</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>{</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">#     'region': region,</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'scale'</span>: <span class="dv">10</span>,</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'numPixels'</span>: <span class="dv">5000</span>,</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'seed'</span>: <span class="dv">0</span>,</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'geometries'</span>: <span class="va">True</span>,  <span class="co"># Set this to False to ignore geometries</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the training dataset.</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>training <span class="op">=</span> image.sample(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>{</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">#     'region': region,</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'scale'</span>: <span class="dv">10</span>,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'numPixels'</span>: <span class="dv">5000</span>,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'seed'</span>: <span class="dv">0</span>,</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'geometries'</span>: <span class="va">True</span>,  <span class="co"># Set this to False to ignore geometries</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instantiate the clusterer and train it.</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>clusterer <span class="op">=</span> ee.Clusterer.wekaKMeans(n_clusters).train(training)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instantiate the clusterer and train it.</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>clusterer <span class="op">=</span> ee.Clusterer.wekaKMeans(n_clusters).train(training)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster the input using the trained clusterer.</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> image.cluster(clusterer)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># # Display the clusters with random colors.</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>Map.addLayer(result.randomVisualizer(), {}, <span class="st">'clusters'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster the input using the trained clusterer.</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> image.cluster(clusterer)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># # Display the clusters with random colors.</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>Map.addLayer(result.randomVisualizer(), {}, <span class="st">'clusters'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>legend_keys <span class="op">=</span> [<span class="st">'One'</span>, <span class="st">'Two'</span>, <span class="st">'Three'</span>, <span class="st">'Four'</span>, <span class="st">'ect'</span>]</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>legend_colors <span class="op">=</span> [<span class="st">'#8DD3C7'</span>, <span class="st">'#FFFFB3'</span>, <span class="st">'#BEBADA'</span>, <span class="st">'#FB8072'</span>, <span class="st">'#80B1D3'</span>]</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reclassify the map</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> result.remap([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>])</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>Map.addLayer(</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    result, {<span class="st">'min'</span>: <span class="dv">1</span>, <span class="st">'max'</span>: <span class="dv">5</span>, <span class="st">'palette'</span>: legend_colors}, <span class="st">'Labelled clusters'</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>Map.add_legend(</span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    legend_keys<span class="op">=</span>legend_keys, legend_colors<span class="op">=</span>legend_colors, position<span class="op">=</span><span class="st">'bottomright'</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>legend_keys <span class="op">=</span> [<span class="st">'One'</span>, <span class="st">'Two'</span>, <span class="st">'Three'</span>, <span class="st">'Four'</span>, <span class="st">'ect'</span>]</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>legend_colors <span class="op">=</span> [<span class="st">'#8DD3C7'</span>, <span class="st">'#FFFFB3'</span>, <span class="st">'#BEBADA'</span>, <span class="st">'#FB8072'</span>, <span class="st">'#80B1D3'</span>]</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Reclassify the map</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> result.remap([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>])</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>Map.addLayer(</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    result, {<span class="st">'min'</span>: <span class="dv">1</span>, <span class="st">'max'</span>: <span class="dv">5</span>, <span class="st">'palette'</span>: legend_colors}, <span class="st">'Labelled clusters'</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>Map.add_legend(</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    legend_keys<span class="op">=</span>legend_keys, legend_colors<span class="op">=</span>legend_colors, position<span class="op">=</span><span class="st">'bottomright'</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>Map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
