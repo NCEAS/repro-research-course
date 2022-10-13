@@ -331,7 +331,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="introduction" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">9.2</span> Introduction</h2>
-<p>Dask is a library for parallel computing in Python. It can scale up code to use your personal computer’s full capacity or distribute work in a cloud cluster. By mirroring APIs of other commonly used Python libraries, such as Pandas and NumPy, Dask provides a familiar interface that makes it easier to parallelize your code. In this lesson, we will get acquainted with some of Dask’s most commonly used objects and Dask’s way of distributing and evaluating computations.</p>
+<p>Dask is a library for parallel computing in Python. It can scale up code to use your personal computer’s full capacity or distribute work in a cloud cluster. By mirroring APIs of other commonly used Python libraries, such as Pandas and NumPy, Dask provides a familiar interface that makes it easier to parallelize your code. In this lesson, we will get acquainted with Dask’s way of distributing and evaluating computations and some of its most commonly used objects.</p>
 <p><img src="../images/dask_logo.png" class="img-fluid"></p>
 </section>
 <section id="dask-cluster" class="level2" data-number="9.3">
@@ -340,9 +340,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><p>When we code, we communicate directly with the <strong>client</strong>, which is responsible for submitting tasks to be executed to the scheduler.</p></li>
 <li><p>After receiving the tasks from the client, the <strong>scheduler</strong> determines how tasks will be distributed among the workers and coordinates them to process tasks in parallel.</p></li>
-<li><p>Finally, the <strong>workers</strong> compute tasks and store and return computations results. Workers can be threads, processes, or separate machines in a cluster. We won’t go into how to choose between threads and processes, but there are best practices to select the right one. You can read more about <a href="https://towardsdatascience.com/which-is-faster-python-threads-or-processes-some-insightful-examples-26074e90848f">threads and processes here</a>.</p></li>
+<li><p>Finally, the <strong>workers</strong> compute tasks and store and return computations results. Workers can be threads, processes, or separate machines in a cluster. Here you can read more about what are <a href="https://towardsdatascience.com/which-is-faster-python-threads-or-processes-some-insightful-examples-26074e90848f">threads and processes</a> and some <a href="https://docs.dask.org/en/latest/scheduling.html">best practices for selecting one or the other</a>.</p></li>
 </ul>
-<p>To interact with the client and generate tasks that can be processed in parallel we need to use Dasks’ objects to read our data. In this lesson, we will see examples of how to use <code>dask.dataframes</code> and <code>dask.arrays</code>. Apart from data frames and arrays, <a href="https://docs.dask.org/en/stable/api.html">other Dask objects</a> can be used to parallelize your workflow.</p>
+<p>To interact with the client and generate tasks that can be processed in parallel we need to use <a href="https://docs.dask.org/en/stable/api.html">Dask objects</a> to read and process our data. <!--
+In this lesson, we will see examples of how to use `dask.dataframes` and `dask.arrays`. Apart from data frames and arrays,  can be used to parallelize your workflow.
+--></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../images/dask_cluster.png" class="img-fluid figure-img"></p>
@@ -366,18 +368,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>client</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="../images/dask_client.png" class="img-fluid"></p>
-<p>This is a good place to learn more about different <a href="https://docs.dask.org/en/latest/deploying.html">Dask clusters</a>.</p>
 </section>
 <section id="dask-dashboard" class="level3" data-number="9.3.2">
 <h3 data-number="9.3.2" class="anchored" data-anchor-id="dask-dashboard"><span class="header-section-number">9.3.2</span> Dask Dashboard</h3>
-<p>We chose to use the Dask cluster in this lesson instead of the default Dask scheduler to take advantage of the <strong>cluster dashboard</strong>, which offers live monitoring of the performance and progress of our computations. When we set up a cluster, we can see the dashboard’s address by looking at either the client or the cluster. The dashboard’s main page shows diagnostics about:</p>
+<p>We chose to use the Dask cluster in this lesson instead of the default Dask scheduler to take advantage of the <strong>cluster dashboard</strong>, which offers live monitoring of the performance and progress of our computations. You can learn more about different <a href="https://docs.dask.org/en/latest/deploying.html">Dask clusters here</a>.</p>
+<p>As seen in the images above, when we set up a cluster we can see the cluster dashboard address by looking at either the client or the cluster. In this example the dashboard address is <code>http://128.111.85.28:8787/status</code>. When we go that address in a web browser we can see the dashboard’s main page. This page shows diagnostics about:</p>
 <ul>
 <li><p>the cluster’s and individual worker’s memory usage,</p></li>
 <li><p>number of tasks being processed by each worker,</p></li>
 <li><p>individual tasks being processed across workers, and</p></li>
 <li><p>progress towards completion of individual tasks.</p></li>
 </ul>
-<p>There’s much to talk about interpreting the Dask dashboard’s diagnostics. We recommend this documentation to understand the <a href="https://docs.dask.org/en/latest/dashboard.html#dashboard-memory">basics of the dashboard diagnostics</a> and <a href="https://www.youtube.com/watch?v=N_GqzcuGLCY">this video</a> as a deeper dive into the dashboard’s functions.</p>
+<p>There’s much to say about interpreting the Dask dashboard’s diagnostics. We recommend this documentation to understand the <a href="https://docs.dask.org/en/latest/dashboard.html#dashboard-memory">basics of the dashboard diagnostics</a> and <a href="https://www.youtube.com/watch?v=N_GqzcuGLCY">this video</a> as a deeper dive into the dashboard’s functions.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../images/dask_dashboard.png" class="img-fluid figure-img"></p>
@@ -438,14 +440,15 @@ Encoding?
 </div>
 </div>
 </div>
-<p>Notice that we cannot see any values in the data frame. This is because Dask has not really loaded the data. It will wait until we explicitly ask it to print or compute something to do so. However, we can still do <code>df.head()</code>. It’s not costly for memory to access a few data frame rows.</p>
+<p>Notice that we cannot see any values in the data frame. This is because Dask has not really loaded the data. It will wait until we explicitly ask it to print or compute something to do so.</p>
+<p>However, we can still do <code>df.head()</code>. It’s not costly for memory to access a few data frame rows.</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="lazy-computations" class="level3" data-number="9.4.2">
 <h3 data-number="9.4.2" class="anchored" data-anchor-id="lazy-computations"><span class="header-section-number">9.4.2</span> Lazy Computations</h3>
-<p>The application programming interface (API) of a <code>dask.dataframe</code> is a subset of the <code>pandas.DataFrame</code> API. So if you are familiar with pandas, many of the core <code>pandas.DataFrame</code> methods directly translate to <code>dask.dataframes</code>.</p>
+<p>The application programming interface (API) of a <code>dask.dataframe</code> is a subset of the <code>pandas.DataFrame</code> API. So if you are familiar with pandas, many of the core <code>pandas.DataFrame</code> methods directly translate to <code>dask.dataframes</code>. For example:</p>
 <div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>averages <span class="op">=</span> df.groupby(<span class="st">'year'</span>).mean()</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>averages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -455,9 +458,6 @@ Encoding?
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>averages.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<!--
-![](../images/dask_mean_df.png)
--->
 </section>
 </section>
 <section id="dask.arrays" class="level2" data-number="9.5">
