@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 3&nbsp; Python Programming on Clusters</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../sections/04-parallel-programming.html" rel="next">
+<link href="../sections/02-remote-computing.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Programming on Clusters</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Course Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://arcticdata.io" title="" class="sidebar-tool px-1"><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/arcticdatactr" title="" class="sidebar-tool px-1"><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/scalable-computing-course" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/01-adc-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome and Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/02-remote-computing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Remote Computing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/03-python-intro.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Programming on Clusters</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/04-parallel-programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pleasingly Parallel Programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/05-adc-data-publishing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Documenting and Publishing Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/06-group-project-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Group Project: Staging and Preprocessing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/07-software-design-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Software Design I: Functions and Concurrency</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/08-data-structures-netcdf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Structures and Formats for Large Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/09-parallel-with-dask.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/10-geopandas.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/11-parquet-arrow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/12-software-design-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/13-group-project-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/14-data-ethics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Data Ethics for Scalable Computing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/15-google-earth-engine.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Google Earth Engine</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/16-ice-wedge-polygons.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Billions of Ice Wedge Polygons</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/17-group-project-3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Group Project: Visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/18-arctic-data-staging.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Workflows for data staging and publishing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/19-cloud-computing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">What is Cloud Computing Anyways?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/20-reproducibility-containers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Reproducibility and Containers</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">3.1</span> Learning Objectives</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">3.2</span> Introduction</a></li>
+  <li><a href="#connect-to-the-server-if-you-arent-already-connected" id="toc-connect-to-the-server-if-you-arent-already-connected" class="nav-link" data-scroll-target="#connect-to-the-server-if-you-arent-already-connected"> <span class="header-section-number">3.3</span> Connect to the server (if you aren’t already connected)</a></li>
+  <li><a href="#virtual-environments" id="toc-virtual-environments" class="nav-link" data-scroll-target="#virtual-environments"> <span class="header-section-number">3.4</span> Virtual Environments</a></li>
+  <li><a href="#brief-overview-of-python-syntax" id="toc-brief-overview-of-python-syntax" class="nav-link" data-scroll-target="#brief-overview-of-python-syntax"> <span class="header-section-number">3.5</span> Brief overview of python syntax</a></li>
+  <li><a href="#jupyter-notebooks" id="toc-jupyter-notebooks" class="nav-link" data-scroll-target="#jupyter-notebooks"> <span class="header-section-number">3.6</span> Jupyter notebooks</a>
+  <ul class="collapse">
+  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries"> <span class="header-section-number">3.6.1</span> Load libraries</a></li>
+  <li><a href="#read-in-a-csv" id="toc-read-in-a-csv" class="nav-link" data-scroll-target="#read-in-a-csv"> <span class="header-section-number">3.6.2</span> Read in a csv</a></li>
+  </ul></li>
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions"> <span class="header-section-number">3.7</span> Functions</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"> <span class="header-section-number">3.8</span> Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Programming on Clusters</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="learning-objectives" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">3.1</span> Learning Objectives</h2>
+<ul>
+<li>Basic Python review</li>
+<li>Using virtual environments</li>
+<li>Writing in Jupyter notebooks</li>
+<li>Writing functions in Python</li>
+</ul>
+</section>
+<section id="introduction" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3.2</span> Introduction</h2>
+<p>We’ve chosen to use VS Code in this training, in part, because it has great support for developing on remote machines. Hopefully, your VS Code setup went easily, and you were able to connect to our server <code>included-crab</code>. Once connected, the VS Code interface looks just like you were working locally, and connection to the server is seamless.</p>
+<p>Other aspects of VS Code that we like: it supports all languages thanks to the extensive free extension library, it has built in version control integration, and it is highly flexible/configurable.</p>
+<p>We will also be working quite a bit in Jupyter notebooks in this course. Notebooks are great ways to interleave rich text (markdown formatted text, equations, images, links) and code in a way that a ‘literate analysis’ is generated. Although Jupyter notebooks are not subsitutes for python scripts, they can be great communication tools, and can also be convenient for code development.</p>
+</section>
+<section id="connect-to-the-server-if-you-arent-already-connected" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="connect-to-the-server-if-you-arent-already-connected"><span class="header-section-number">3.3</span> Connect to the server (if you aren’t already connected)</h2>
+<p>To get set up for the course, let’s connect to the server again. If you were able to work through the setup for the lesson without difficulty, follow these steps to connect:</p>
+<ul>
+<li>open VS Code</li>
+<li>open the command pallette (Cmd + Shift + P)</li>
+<li>enter “Remote SSH: Connect to Host”</li>
+<li>select <code>included-crab</code></li>
+<li>enter your password in the dialog box that pops up</li>
+</ul>
+<p>Alternatively, you may see a popup window that says <strong>“Cannot reconnect. Please reload the window”</strong>. Choose the blue <strong>Reload Window</strong> button and enter your password, if prompted.</p>
+<p>To open the <code>scalable-computing-examples</code> workspace, select File &gt; Open Workspace from File. Then navigate to and select <code>~/scalable-computing-examples/scalable-computing-examples.code-workspace</code>. If you cannot find the <code>scalable-computing-examples</code> directory, in a terminal you can use the <code>ls</code> command to list out the contents of your home directory and ensure that you have a clone of the respository. If not, follow the instructions in <a href="http://localhost:6226/sections/02-remote-computing.html#exercise-3-clone-a-github-repository-to-the-server">Exercise 3</a> in the <a href="http://localhost:6226/sections/02-remote-computing.html">Remote Computing</a> session).</p>
+<p>Once connected and in the workslace, use the <code>pwd</code> command in the terminal to make sure you’re in your project directory (<code>/home/yourusername/scalable-computing-examples</code>).</p>
+</section>
+<section id="virtual-environments" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="virtual-environments"><span class="header-section-number">3.4</span> Virtual Environments</h2>
+<p><img src="https://imgs.xkcd.com/comics/python_environment.png"></p>
+<p>When you install a python library, let’s say <code>pandas</code>, via <code>pip</code>, unless you specify otherwise, <code>pip</code> will go out and grab the most recent version of the library, and install it somewhere on your system path (where, exactly, depends highly on how you install python originally, and other factors). That library is going to sit alongside every other python library you have ever installed (probably a lot of them) in your <code>site-packages</code> directory. This might work okay, until you start a new project, have no idea what version of <code>pandas</code> you had installed, realize that version conflicts with a new library that you need, and then instead of writing code you are spending days trying to untangle the sphaghetti mess of your python install, libraries and their versions. Sound familiar? Virtual environments help to solve this issue without making the all to common situation in the comic above even more complicated.</p>
+<p>A virtual environment is a folder structure which creates a symlink (pointer) to all of the libraries that you specify into the folder. The three main components will be: the python distribution itself, its configuration, and a site-packages directory (where your libraries like <code>pandas</code> live). So the folder is a self contained directory of all the version-specific python software you need for your project.</p>
+<p>Virtual environments are very helpful to create reproducible workflows, and we’ll talk more about this concept of reproducible environements later in the course. Perhaps most importantly though, virtual environments also help you maintain your sanity when python programming. Because they are just folders, you can create and delete new ones at will, without worrying about bungling your underlying python setup.</p>
+<p>In this course, we are going to use <code>virtualenv</code> as our tool to create and manage virtual environments. Other virtual environment tools used commonly are <code>conda</code> and <code>pipenv</code>. One reason we like using <code>virtualenv</code> is there is an extension to it called <code>virtualenvwrapper</code>, which provides easy to remember wrappers around common <code>virtualenv</code> operations that make creating, activating, and deactivating a virtual environment very easy.</p>
+<p>First we will create a <code>.bash_profile</code> file to create variables that point to the install locations of python and <code>virtualenvwrapper</code>. <code>.bash_profile</code> is just a text file that contains bash commands that are run every time you start up a new terminal. Although setting up this file is not required to use <code>virtualenvwrapper</code>, it is convenient because it allows you to set up some reasonable defaults to the commands (meaning less typing, overall), and it makes sure that the package is available every time you start a new terminal.</p>
+<section id="setup" class="level4" data-number="3.4.0.1">
+<h4 data-number="3.4.0.1" class="anchored" data-anchor-id="setup"><span class="header-section-number">3.4.0.1</span> Setup</h4>
+<ul>
+<li>In VS Code, select ‘File &gt; New Text File’</li>
+<li>Paste this text into the file:</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">VIRTUALENVWRAPPER_VIRTUAWORKON_HOME</span><span class="op">=</span><span class="va">$HOME</span>/.virtualenvs</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> /usr/share/virtualenvwrapper/virtualenvwrapper.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The first line points <code>virtualenvwrapper</code> to the directory where your virtual environments will be stored. We point it to a hidden directory (<code>.virtualenvs</code>) in your home directory. The last line sources a bash script that ships with <code>virtualenvwrapper</code>, which makes all of <code>virtualenvwrapper</code> commands available in your terminal session.</p>
+<ul>
+<li>Save the file in the top of your home directory as <code>.bash_profile</code>.</li>
+<li>Restart your terminal (Terminal &gt; New Terminal)</li>
+<li>Check to make sure it was installed and configured correctly by running this in the terminal:</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mkvirtualenv</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>It should return some content that looks like this (with more output, potentially).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">virtualenv</span> 20.13.0+ds from /usr/lib/python3/dist-packages/virtualenv/__init__.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="course-environment" class="level4" data-number="3.4.0.2">
+<h4 data-number="3.4.0.2" class="anchored" data-anchor-id="course-environment"><span class="header-section-number">3.4.0.2</span> Course environment</h4>
+<p>Now we can create the virtual environment we will use for the course. In the terminal run:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mkvirtualenv</span> <span class="at">-p</span> python3.9 scomp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here, we’ve specified explicitly which python version to use by using the <code>-p</code> flag, and the path to the python 3.9 installation on the server. After making a virtual environment, it will automatically be activated. You’ll see the name of the env you are working in on the left side of your terminal prompt in parentheses. To deactivate your environment (like if you want to work on a different project), just run <code>deactivate</code>. To activate it again, run:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">workon</span> scomp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can get a list of all available environments by just running:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">workon</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now let’s install the dependencies for this course into that environment. To install our libraries we’ll use <code>pip</code>. As of Python 3.4, <code>pip</code> is automatically included with your python installation. <code>pip</code> is a package manager for python, and you might have used it already to install common python libraries like <code>pandas</code> or <code>numpy</code>. <code>pip</code> goes out to <a href="https://pypi.org/">PyPI</a>, the Python Package Index, to download the code and put it in your <code>site-packages</code> directory. Note that on this shared server, your user directory will ahve a <code>site-packages</code> directory, in addition to one that our systems administrator manages as the root of the system.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="installing-locally-optional" class="level4" data-number="3.4.0.3">
+<h4 data-number="3.4.0.3" class="anchored" data-anchor-id="installing-locally-optional"><span class="header-section-number">3.4.0.3</span> Installing locally (optional)</h4>
+<p><code>virtualenvwrapper</code> was already installed on the server we are working on. To install on your local computer, run:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip3</span> install virtualenvwrapper</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And then follow the instructions as described above, making sure that you have the correct paths set when you edit your <code>.bash_profile</code>.</p>
+</section>
+</section>
+<section id="brief-overview-of-python-syntax" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="brief-overview-of-python-syntax"><span class="header-section-number">3.5</span> Brief overview of python syntax</h2>
+<p>We’ll very briefly go over some basic python syntax and the base variable types. First, open a python script. From the File menu, select New File, type “python”, then save it as ‘python-intro.py’ in the top level of your directory.</p>
+<p>In your file, assign a value to a variable using <code>=</code> and print the result.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>4</code></pre>
+</div>
+</div>
+<p>To run this code in python we can:</p>
+<ul>
+<li>execute <code>python python-intro.py</code> in the terminal</li>
+<li>click the Play button in the upper right hand corner of the file editor</li>
+<li>right click any line and select: “Run to line in interactive terminal”</li>
+</ul>
+<p>In that interactive window you can then run python code interactively, which is what we’ll use for the next bit of exploring data types.</p>
+<p>There are 5 standard data types in python</p>
+<ul>
+<li>Number (int, long, float, complex)</li>
+<li>String</li>
+<li>List</li>
+<li>Tuple</li>
+<li>Dictionary</li>
+</ul>
+<p>We already saw a number type, here is a string:</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">str</span> <span class="op">=</span> <span class="st">'Hello World!'</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hello World!</code></pre>
+</div>
+</div>
+<p>Lists in python are very versatile, and are created using square brackets <code>[]</code>. Items in a list can be of different data types.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span> <span class="op">=</span> [<span class="dv">100</span>, <span class="dv">50</span>, <span class="op">-</span><span class="dv">20</span>, <span class="st">'text'</span>]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[100, 50, -20, 'text']</code></pre>
+</div>
+</div>
+<p>You can access items in a list by index using the square brackets. Note indexing starts with 0 in python. The slice operator enables you to easily access a portion of the list without needing to specify every index.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>[<span class="dv">0</span>] <span class="co"># print first element</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>[<span class="dv">1</span>:<span class="dv">3</span>] <span class="co"># print 2nd until 4th elements</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>[:<span class="dv">2</span>] <span class="co"># print first until the 3rd</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>[<span class="dv">2</span>:] <span class="co"># print last elements from 3rd</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>100</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>[50, -20]</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>[100, 50]</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>[-20, 'text']</code></pre>
+</div>
+</div>
+<p>The <code>+</code> and <code>*</code> operators work on lists by creating a new list using either concatenation (<code>+</code>) or repetition (<code>*</code>).</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>list2 <span class="op">=</span> [<span class="st">'more'</span>, <span class="st">'things'</span>]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span> <span class="op">+</span> list2</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span> <span class="op">*</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>[100, 50, -20, 'text', 'more', 'things']</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>[100, 50, -20, 'text', 100, 50, -20, 'text', 100, 50, -20, 'text']</code></pre>
+</div>
+</div>
+<p>Tuples are similar to lists, except the values cannot be changed in place. They are constructed with parentheses.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">tuple</span> <span class="op">=</span> (<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'d'</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">tuple</span>[<span class="dv">0</span>]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">tuple</span> <span class="op">*</span> <span class="dv">3</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="bu">tuple</span> <span class="op">+</span> <span class="bu">tuple</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>'a'</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>('a', 'b', 'c', 'd', 'a', 'b', 'c', 'd', 'a', 'b', 'c', 'd')</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>('a', 'b', 'c', 'd', 'a', 'b', 'c', 'd')</code></pre>
+</div>
+</div>
+<p>Observe the difference when we try to change the first value. It works for a list:</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>[<span class="dv">0</span>] <span class="op">=</span> <span class="st">'new value'</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>['new value', 50, -20, 'text']</code></pre>
+</div>
+</div>
+<p>…and errors for a tuple.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">tuple</span>[<span class="dv">0</span>] <span class="op">=</span> <span class="st">'new value'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>TypeError: 'tuple' object does not support item assignment</code></pre>
+<p>Dictionaries consist of key-value pairs, and are created using the syntax <code>{key: value}</code>. Keys are usually numbers or strings, and values can be any data type.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">dict</span> <span class="op">=</span> {<span class="st">'name'</span>: [<span class="st">'Jeanette'</span>, <span class="st">'Matt'</span>],</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>        <span class="st">'location'</span>: [<span class="st">'Tucson'</span>, <span class="st">'Juneau'</span>]}</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="bu">dict</span>[<span class="st">'name'</span>]</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="bu">dict</span>.keys()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>['Jeanette', 'Matt']</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>dict_keys(['name', 'location'])</code></pre>
+</div>
+</div>
+<p>To determine the type of an object, you can use the <code>type()</code> method.</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(<span class="bu">list</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(<span class="bu">tuple</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(<span class="bu">dict</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>list</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>tuple</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>dict</code></pre>
+</div>
+</div>
+</section>
+<section id="jupyter-notebooks" class="level2 page-columns page-full" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="jupyter-notebooks"><span class="header-section-number">3.6</span> Jupyter notebooks</h2>
+<p>To create a new notebook, from the file menu select File &gt; New File &gt; Jupyter Notebook. Go ahead and save this notebook at the top level of your <code>scalable-computing-examples</code> directory.</p>
+<p>At the top of your notebook, add a first level header using a single hash. Practice some markdown text by creating:</p>
+<ul>
+<li>a list</li>
+<li><strong>bold</strong> text</li>
+<li>a link</li>
+</ul>
+<p>Use the <a href="https://www.markdownguide.org/cheat-sheet/">Markdown cheat sheet</a> if needed.</p>
+<p>You can click the plus button below any chunk to add a chunk of either markdown or python.</p>
+<section id="load-libraries" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="load-libraries"><span class="header-section-number">3.6.1</span> Load libraries</h3>
+<p>In your first code chunk, lets load in some modules. We’ll use <code>pandas</code>, <code>numpy</code>, <code>matplotlib.pyplot</code>, <code>requests</code>, <code>skimpy</code>, and <code>exists</code> from <code>os.path</code>.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skimpy</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A note on style: There are a few ways to construct import statements. The above code uses three of the most common:</p>
+<pre><code>import module
+import module as m
+from module import function</code></pre>
+<p>The first way of importing will make the module a function comes from more explicitly clear, and is the simplest. However for very long module names, or ones that are used very frequently (like <code>pandas</code>, <code>numpy</code>, and <code>matplotlib.plot</code>), the code in the notebook will be more cluttered with constant calls to longer module names. So <code>module.function()</code> instead is written as <code>m.function()</code></p>
+<p>The second way of importing a module is a good style to use in cases where modules are used frequently, or have extremely long names. If you import every single module with a short name, however, you might have a hard time remembering which modules are named what, and it might be more confusing for others trying to read your code. Many of the most commonly used libraries for python data science have community-driven styling for how they are abbreviated in import statements, and these community norms are generally best followed.</p>
+<p>Finally, the last way to import a single object from a module can be helpful if you only need that one piece from a larger module, but again, like the first case, results in less explicit code and therefore runs the risk of your or someone else misremembering the usage and source.</p>
+</section>
+<section id="read-in-a-csv" class="level3 page-columns page-full" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="read-in-a-csv"><span class="header-section-number">3.6.2</span> Read in a csv</h3>
+<p>Create a new code chunk that will download the csv that we are going to use for this tutorial.</p>
+<ul>
+<li>Navigate to <a href="https://doi.org/10.18739/A2XW47X5F">Rohi Muthyala, Åsa Rennermalm, Sasha Leidman, Matthew Cooper, Sarah Cooley, et al.&nbsp;2022. 62 days of Supraglacial streamflow from June-August, 2016 over southwest Greenland. Arctic Data Center. doi:10.18739/A2XW47X5F.</a></li>
+<li>Right click the download button for ‘Discharge_timeseries.csv’</li>
+<li>Click ‘copy link address’</li>
+</ul>
+<p>Create a variable called URL and assign it the link copied to your clipboard. Then use <code>urllib.request.urlretrieve</code> to download the file, and <code>open</code> to write it to disk, to a directory called <code>data/</code>. We’ll write this bundled in an <code>if</code> statement so that we only download the file if it doesn’t yet exist. First, we create the directory if it doesn’t exist:</p>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists (<span class="st">'data/'</span>):</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>        os.mkdir(<span class="st">'data/'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists(<span class="st">'data/discharge_timeseries.csv'</span>):</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>        url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Ae248467d-e1f9-4a32-9e38-a9b4fb17cefb'</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>        msg <span class="op">=</span> urllib.request.urlretrieve(url, <span class="st">'data/discharge_timeseries.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can read in the data from the file.</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/discharge_timeseries.csv'</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Date</th>
+      <th>Total Pressure [m]</th>
+      <th>Air Pressure [m]</th>
+      <th>Stage [m]</th>
+      <th>Discharge [m3/s]</th>
+      <th>temperature [degrees C]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>6/13/2016 0:00</td>
+      <td>9.816</td>
+      <td>9.609775</td>
+      <td>0.206225</td>
+      <td>0.083531</td>
+      <td>-0.1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>6/13/2016 0:05</td>
+      <td>9.810</td>
+      <td>9.609715</td>
+      <td>0.200285</td>
+      <td>0.077785</td>
+      <td>-0.1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6/13/2016 0:10</td>
+      <td>9.804</td>
+      <td>9.609656</td>
+      <td>0.194344</td>
+      <td>0.072278</td>
+      <td>-0.1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>6/13/2016 0:15</td>
+      <td>9.800</td>
+      <td>9.609596</td>
+      <td>0.190404</td>
+      <td>0.068756</td>
+      <td>-0.1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>6/13/2016 0:20</td>
+      <td>9.793</td>
+      <td>9.609537</td>
+      <td>0.183463</td>
+      <td>0.062804</td>
+      <td>-0.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The column names are a bit messy so we can use <code>clean_columns</code> from <code>skimpy</code> to make them cleaner for programming very quickly. We can also use the <code>skim</code> function to get a quick summary of the data.</p>
+<div class="column-page">
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>clean_df <span class="op">=</span> skimpy.clean_columns(df)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>skimpy.skim(clean_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">╭───────────────────────────────────── skimpy summary ──────────────────────────────────────╮
+│ <span style="font-style: italic">         Data Summary         </span> <span style="font-style: italic">      Data Types       </span>                                    │
+│ ┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓ ┏━━━━━━━━━━━━━┳━━━━━━━┓                                    │
+│ ┃<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> dataframe         </span>┃<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Values </span>┃ ┃<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Column Type </span>┃<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Count </span>┃                                    │
+│ ┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩ ┡━━━━━━━━━━━━━╇━━━━━━━┩                                    │
+│ │ Number of rows    │ 17856  │ │ float64     │ 5     │                                    │
+│ │ Number of columns │ 6      │ │ object      │ 1     │                                    │
+│ └───────────────────┴────────┘ └─────────────┴───────┘                                    │
+│ <span style="font-style: italic">                                         number                                         </span>  │
+│ ┏━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━━━┓  │
+│ ┃<span style="font-weight: bold">         </span>┃<span style="font-weight: bold"> missing </span>┃<span style="font-weight: bold"> complet </span>┃<span style="font-weight: bold"> mean   </span>┃<span style="font-weight: bold"> sd    </span>┃<span style="font-weight: bold"> p0     </span>┃<span style="font-weight: bold"> p25   </span>┃<span style="font-weight: bold"> p75  </span>┃<span style="font-weight: bold"> p100 </span>┃<span style="font-weight: bold"> hist   </span>┃  │
+│ ┃         ┃         ┃<span style="font-weight: bold"> e rate  </span>┃        ┃       ┃        ┃       ┃      ┃      ┃        ┃  │
+│ ┡━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━━━┩  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">total_p</span> │ <span style="color: #008080; text-decoration-color: #008080">      0</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">   9.9</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.12</span> │ <span style="color: #008080; text-decoration-color: #008080">   9.6</span> │ <span style="color: #008080; text-decoration-color: #008080">  9.8</span> │ <span style="color: #008080; text-decoration-color: #008080">  10</span> │ <span style="color: #008080; text-decoration-color: #008080">  10</span> │ <span style="color: #008000; text-decoration-color: #008000">▁▅█▇▅▂</span> │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">ressure</span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">_m     </span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">air_pre</span> │ <span style="color: #008080; text-decoration-color: #008080">      0</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">   9.6</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.06</span> │ <span style="color: #008080; text-decoration-color: #008080">   9.5</span> │ <span style="color: #008080; text-decoration-color: #008080">  9.6</span> │ <span style="color: #008080; text-decoration-color: #008080"> 9.7</span> │ <span style="color: #008080; text-decoration-color: #008080"> 9.7</span> │ <span style="color: #008000; text-decoration-color: #008000">▂▅▄▆█▃</span> │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">ssure_m</span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">stage_m</span> │ <span style="color: #008080; text-decoration-color: #008080">      0</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">  0.28</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.12</span> │ <span style="color: #008080; text-decoration-color: #008080">0.0005</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.17</span> │ <span style="color: #008080; text-decoration-color: #008080">0.37</span> │ <span style="color: #008080; text-decoration-color: #008080">0.56</span> │ <span style="color: #008000; text-decoration-color: #008000">▁█▇▇▆▁</span> │  │
+│ │         │         │         │        │       │ <span style="color: #008080; text-decoration-color: #008080">     6</span> │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">dischar</span> │ <span style="color: #008080; text-decoration-color: #008080">      0</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">  0.22</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.19</span> │ <span style="color: #008080; text-decoration-color: #008080">4.7e-0</span> │ <span style="color: #008080; text-decoration-color: #008080">0.055</span> │ <span style="color: #008080; text-decoration-color: #008080">0.35</span> │ <span style="color: #008080; text-decoration-color: #008080">0.96</span> │ <span style="color: #008000; text-decoration-color: #008000"> █▄▃▁ </span> │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">ge_m_3_</span> │         │         │        │       │ <span style="color: #008080; text-decoration-color: #008080">     8</span> │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">s      </span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">tempera</span> │ <span style="color: #008080; text-decoration-color: #008080">      8</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">-0.034</span> │ <span style="color: #008080; text-decoration-color: #008080">0.053</span> │ <span style="color: #008080; text-decoration-color: #008080">  -0.1</span> │ <span style="color: #008080; text-decoration-color: #008080"> -0.1</span> │ <span style="color: #008080; text-decoration-color: #008080">   0</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.2</span> │ <span style="color: #008000; text-decoration-color: #008000">  ▅█  </span> │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">ture_de</span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">grees_ </span> │         │         │        │       │        │       │      │      │        │  │
+│ └─────────┴─────────┴─────────┴────────┴───────┴────────┴───────┴──────┴──────┴────────┘  │
+╰─────────────────────────────────────────── End ───────────────────────────────────────────╯
+</pre>
+</div>
+</div>
+</div>
+<p>We can see that the <code>date</code> column is classed as a string, and not a date, so let’s fix that.</p>
+<div class="column-page">
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>clean_df[<span class="st">'date'</span>] <span class="op">=</span> pd.to_datetime(clean_df[<span class="st">'date'</span>])</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>skimpy.skim(clean_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">╭───────────────────────────────────── skimpy summary ──────────────────────────────────────╮
+│ <span style="font-style: italic">         Data Summary         </span> <span style="font-style: italic">      Data Types       </span>                                    │
+│ ┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓ ┏━━━━━━━━━━━━━┳━━━━━━━┓                                    │
+│ ┃<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> dataframe         </span>┃<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Values </span>┃ ┃<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Column Type </span>┃<span style="color: #008080; text-decoration-color: #008080; font-weight: bold"> Count </span>┃                                    │
+│ ┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩ ┡━━━━━━━━━━━━━╇━━━━━━━┩                                    │
+│ │ Number of rows    │ 17856  │ │ float64     │ 5     │                                    │
+│ │ Number of columns │ 6      │ │ datetime64  │ 1     │                                    │
+│ └───────────────────┴────────┘ └─────────────┴───────┘                                    │
+│ <span style="font-style: italic">                                         number                                         </span>  │
+│ ┏━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━┳━━━━━━┳━━━━━━━━┓  │
+│ ┃<span style="font-weight: bold">         </span>┃<span style="font-weight: bold"> missing </span>┃<span style="font-weight: bold"> complet </span>┃<span style="font-weight: bold"> mean   </span>┃<span style="font-weight: bold"> sd    </span>┃<span style="font-weight: bold"> p0     </span>┃<span style="font-weight: bold"> p25   </span>┃<span style="font-weight: bold"> p75  </span>┃<span style="font-weight: bold"> p100 </span>┃<span style="font-weight: bold"> hist   </span>┃  │
+│ ┃         ┃         ┃<span style="font-weight: bold"> e rate  </span>┃        ┃       ┃        ┃       ┃      ┃      ┃        ┃  │
+│ ┡━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━╇━━━━━━╇━━━━━━━━┩  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">total_p</span> │ <span style="color: #008080; text-decoration-color: #008080">      0</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">   9.9</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.12</span> │ <span style="color: #008080; text-decoration-color: #008080">   9.6</span> │ <span style="color: #008080; text-decoration-color: #008080">  9.8</span> │ <span style="color: #008080; text-decoration-color: #008080">  10</span> │ <span style="color: #008080; text-decoration-color: #008080">  10</span> │ <span style="color: #008000; text-decoration-color: #008000">▁▅█▇▅▂</span> │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">ressure</span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">_m     </span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">air_pre</span> │ <span style="color: #008080; text-decoration-color: #008080">      0</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">   9.6</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.06</span> │ <span style="color: #008080; text-decoration-color: #008080">   9.5</span> │ <span style="color: #008080; text-decoration-color: #008080">  9.6</span> │ <span style="color: #008080; text-decoration-color: #008080"> 9.7</span> │ <span style="color: #008080; text-decoration-color: #008080"> 9.7</span> │ <span style="color: #008000; text-decoration-color: #008000">▂▅▄▆█▃</span> │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">ssure_m</span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">stage_m</span> │ <span style="color: #008080; text-decoration-color: #008080">      0</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">  0.28</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.12</span> │ <span style="color: #008080; text-decoration-color: #008080">0.0005</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.17</span> │ <span style="color: #008080; text-decoration-color: #008080">0.37</span> │ <span style="color: #008080; text-decoration-color: #008080">0.56</span> │ <span style="color: #008000; text-decoration-color: #008000">▁█▇▇▆▁</span> │  │
+│ │         │         │         │        │       │ <span style="color: #008080; text-decoration-color: #008080">     6</span> │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">dischar</span> │ <span style="color: #008080; text-decoration-color: #008080">      0</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">  0.22</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.19</span> │ <span style="color: #008080; text-decoration-color: #008080">4.7e-0</span> │ <span style="color: #008080; text-decoration-color: #008080">0.055</span> │ <span style="color: #008080; text-decoration-color: #008080">0.35</span> │ <span style="color: #008080; text-decoration-color: #008080">0.96</span> │ <span style="color: #008000; text-decoration-color: #008000"> █▄▃▁ </span> │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">ge_m_3_</span> │         │         │        │       │ <span style="color: #008080; text-decoration-color: #008080">     8</span> │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">s      </span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">tempera</span> │ <span style="color: #008080; text-decoration-color: #008080">      8</span> │ <span style="color: #008080; text-decoration-color: #008080">      1</span> │ <span style="color: #008080; text-decoration-color: #008080">-0.034</span> │ <span style="color: #008080; text-decoration-color: #008080">0.053</span> │ <span style="color: #008080; text-decoration-color: #008080">  -0.1</span> │ <span style="color: #008080; text-decoration-color: #008080"> -0.1</span> │ <span style="color: #008080; text-decoration-color: #008080">   0</span> │ <span style="color: #008080; text-decoration-color: #008080"> 0.2</span> │ <span style="color: #008000; text-decoration-color: #008000">  ▅█  </span> │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">ture_de</span> │         │         │        │       │        │       │      │      │        │  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">grees_ </span> │         │         │        │       │        │       │      │      │        │  │
+│ └─────────┴─────────┴─────────┴────────┴───────┴────────┴───────┴──────┴──────┴────────┘  │
+│ <span style="font-style: italic">                                        datetime                                        </span>  │
+│ ┏━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┓  │
+│ ┃<span style="font-weight: bold">       </span>┃<span style="font-weight: bold"> missing  </span>┃<span style="font-weight: bold"> complete rate   </span>┃<span style="font-weight: bold"> first       </span>┃<span style="font-weight: bold"> last                  </span>┃<span style="font-weight: bold"> frequency </span>┃  │
+│ ┡━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━┩  │
+│ │ <span style="color: #af87ff; text-decoration-color: #af87ff">date </span> │ <span style="color: #008080; text-decoration-color: #008080">       0</span> │ <span style="color: #008080; text-decoration-color: #008080">              1</span> │ <span style="color: #800000; text-decoration-color: #800000">2016-06-13 </span> │ <span style="color: #800000; text-decoration-color: #800000"> 2016-08-13 23:55:00 </span> │ <span style="color: #af87ff; text-decoration-color: #af87ff">5T       </span> │  │
+│ └───────┴──────────┴─────────────────┴─────────────┴───────────────────────┴───────────┘  │
+╰─────────────────────────────────────────── End ───────────────────────────────────────────╯
+</pre>
+</div>
+</div>
+</div>
+<p>If we wanted to calculate the daily mean flow (as opposed to the flow every 5 minutes), we need to:</p>
+<ul>
+<li>create a new column with only the date</li>
+<li>group by that variable</li>
+<li>summarize over it by taking the mean</li>
+</ul>
+<p>First we should probably rename our existing date/time column to prevent from getting confused.</p>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>clean_df <span class="op">=</span> clean_df.rename(columns <span class="op">=</span> {<span class="st">'date'</span>: <span class="st">'datetime'</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now create the new date column</p>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>clean_df[<span class="st">'date'</span>] <span class="op">=</span> clean_df[<span class="st">'datetime'</span>].dt.date</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we use group by to split the data into groups according to the date. We can then apply the <code>mean</code> method to calculate the mean value across all of the columns. Note that there are other methods you can use to calculate different statistics across different columns (eg: <code>clean_df.groupby('date').agg({'discharge_m_3_s': 'max'})</code>).</p>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>daily_flow <span class="op">=</span> clean_df.groupby(<span class="st">'date'</span>, as_index <span class="op">=</span> <span class="va">False</span>).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>create a simple plot</li>
+</ul>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>var <span class="op">=</span> <span class="st">'discharge_m_3_s'</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>var_labs <span class="op">=</span> {<span class="st">'discharge_m_3_s'</span>: <span class="st">'Total Discharge'</span>}</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>plt.plot(daily_flow[<span class="st">'date'</span>], daily_flow[var])</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation <span class="op">=</span> <span class="dv">45</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(var_labs.get(<span class="st">'discharge_m_3_s'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>(array([16967., 16974., 16983., 16990., 16997., 17004., 17014., 17021.,
+        17028.]),
+ [Text(0, 0, ''),
+  Text(0, 0, ''),
+  Text(0, 0, ''),
+  Text(0, 0, ''),
+  Text(0, 0, ''),
+  Text(0, 0, ''),
+  Text(0, 0, ''),
+  Text(0, 0, ''),
+  Text(0, 0, '')])</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>Text(0, 0.5, 'Total Discharge')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="03-python-intro_files/figure-html/cell-22-output-3.png" width="613" height="610"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="functions" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="functions"><span class="header-section-number">3.7</span> Functions</h2>
+<p>The plot we made above is great, but what if we wanted to make it for each variable? We could copy paste it and replace some things, but this violates a core tenet of programming: Don’t Repeat Yourself! Instead, we’ll create a function called <code>myplot</code> that accepts the data frame and variable as arguments.</p>
+<ul>
+<li>create <code>myplot.py</code></li>
+</ul>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> myplot(df, var):</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>        var_labs <span class="op">=</span> {<span class="st">'discharge_m_3_s'</span>: <span class="st">'Total Discharge (m^3/s)'</span>,</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'total_pressure_m'</span>: <span class="st">'Total Pressure (m)'</span>,</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'air_pressure_m'</span>: <span class="st">'Air Pressure (m)'</span>,</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'stage_m'</span>: <span class="st">'Stage (m)'</span>,</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'temperature_degrees_c'</span>: <span class="st">'Temperature (C)'</span>}</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>        fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>        plt.plot(df[<span class="st">'date'</span>], df[var])</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>        plt.xticks(rotation <span class="op">=</span> <span class="dv">45</span>)</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(var_labs.get(var))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>load myplot into jupyter notebook (<code>from myplot import myplot</code>)</li>
+<li>add libraries</li>
+<li>replace old plot method with new function</li>
+</ul>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>myplot(daily_flow, <span class="st">'temperature_degrees_c'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="03-python-intro_files/figure-html/cell-24-output-1.png" width="632" height="610"></p>
+</div>
+</div>
+<p>We’ll have more on functions in the software design sections.</p>
+</section>
+<section id="summary" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.8</span> Summary</h2>
+<p>In this lesson we learned all about virtual environments, how to use them, and why. We got our environments set up for the course, did a brief python syntax review, and then jumped into Jupyter notebooks, pandas, and writing functions.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../sections/02-remote-computing.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Remote Computing</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../sections/04-parallel-programming.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pleasingly Parallel Programming</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
