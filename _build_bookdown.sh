@@ -20,6 +20,7 @@ cd materials/
 git filter-branch --subdirectory-filter materials -- --all
 
 # Build all books in the books subdir
+echo $BRANCH
 echo "Building book"
 Rscript -e "devtools::install_deps('.')" # Installs book-specific R deps
                                          # defined in DESCRIPTION file
