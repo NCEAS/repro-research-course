@@ -426,7 +426,7 @@ div.csl-indent {
 <li><a href="introduction-to-git.html#section-13" id="toc-section-13"></a></li>
 <li class="chapter" data-level="" data-path="introduction-to-git.html"><a href="introduction-to-git.html#challenge-10"><i class="fa fa-check"></i>Challenge</a></li>
 <li><a href="introduction-to-git.html#section-14" id="toc-section-14"></a></li>
-<li class="chapter" data-level="" data-path="introduction-to-git.html"><a href="introduction-to-git.html#aside-4"><i class="fa fa-check"></i>Aside</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-git.html"><a href="introduction-to-git.html#aside-5"><i class="fa fa-check"></i>Aside</a></li>
 <li class="chapter" data-level="" data-path="introduction-to-git.html"><a href="introduction-to-git.html#collaboration-and-conflict-free-workflows"><i class="fa fa-check"></i>Collaboration and conflict free workflows</a></li>
 </ul></li>
 <li class="chapter" data-level="19.5" data-path="introduction-to-git.html"><a href="introduction-to-git.html#setting-up-git-on-an-existing-project"><i class="fa fa-check"></i><b>19.5</b> Setting up git on an existing project</a>
@@ -531,8 +531,13 @@ div.csl-indent {
 <span id="cb119-3"><a href="reproducible-survey-workflows.html#cb119-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
 <span id="cb119-4"><a href="reproducible-survey-workflows.html#cb119-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
 <span id="cb119-5"><a href="reproducible-survey-workflows.html#cb119-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
-<p>Next, we need to set the API credentials.</p>
+<p>Next, we need to set the API credentials. This function modifies the <code>.Renviron</code> file to set your API key and base URL so that you can access Qualtrics programmatically.</p>
+<p>The API key is as good as a password, so care should be taken to not share it publicly. For example, you would never want to save it in a script. The function below is the rare exception of code that should be run in the console and not saved. It works in a way that you only need to run it once, unless you are working on a new computer or your credentials changed. Note that in this book, we have not shared the actual API key, for the reasons outlined above.</p>
 <div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="reproducible-survey-workflows.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qualtrics_api_credentials</span>(<span class="at">api_key =</span> <span class="st">&quot;&quot;</span>, <span class="at">base_url =</span> <span class="st">&quot;ucsb.co1.qualtrics.com&quot;</span>, <span class="at">install =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div id="aside-4" class="section level4 aside unnumbered hasAnchor">
+<h4>Aside<a href="reproducible-survey-workflows.html#aside-4" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The .Renviron file is a special user controlled file that can create environment variables. Every time you open Rstudio, the variables in your environment file are loaded as…environment variables! Environment variables are named values that are accessible by your R process. They will not show up in your environment pane, but you can get a list of all of them using <code>Sys.getenv()</code>. Many are system defaults.</p>
+<p>To view or edit your <code>.Renviron</code> file, you can use <code>usethis::edit_r_environ()</code>.</p>
 <p>To get a list of all the surveys in your Qualtrics instance, use the <code>all_surveys</code> function.</p>
 <div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="reproducible-survey-workflows.html#cb121-1" aria-hidden="true" tabindex="-1"></a>surveys <span class="ot">&lt;-</span> <span class="fu">all_surveys</span>()</span></code></pre></div>
 <p>This function returns a list of surveys, in this case only one, and information about each, including an identifier and it’s name. We’ll need that identifier later, so let’s go ahead and extract it using base R from the data frame.</p>
@@ -544,6 +549,7 @@ div.csl-indent {
 <p>To get the full survey results, run <code>fetch_survey</code> with the survey id.</p>
 <div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="reproducible-survey-workflows.html#cb124-1" aria-hidden="true" tabindex="-1"></a>survey_results <span class="ot">&lt;-</span> <span class="fu">fetch_survey</span>(id)</span></code></pre></div>
 <p>The survey results table has tons of information in it, not all of which will be relevant depending on your survey. The table has identifying information for the respondents (eg: <code>ResponseID</code>, <code>IPaddress</code>, <code>RecipientEmail</code>, <code>RecipientFirstName</code>, etc), much of which will be empty for this survey since it is anonymous. It also has information about the process of taking the survey, such as the <code>StartDate</code>, <code>EndDate</code>, <code>Progress</code>, and <code>Duration</code>. Finally, there are the answers to the questions asked, with columns labeled according to the <code>qname</code> column in the questions table (eg: Q1, Q2, Q3). Depending on the type of question, some questions might have multiple columns associated with them. We’ll have a look at this more closely in a later example.</p>
+</div>
 <div id="question-2" class="section level4 unnumbered hasAnchor">
 <h4>Question 2<a href="reproducible-survey-workflows.html#question-2" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Let’s look at the responses to the second question in the survey, “How long have you been programming?” Remember, the first question was the consent question.</p>
