@@ -27,11 +27,14 @@ This 5-day in-person workshop will provide researchers with an overview of repro
 
 |Name         | Email              |
 |-------------|--------------------|
-|Amber Budden | budden@nceas.ucsb.edu|
 |Jeanette Clark | jclark@nceas.ucsb.edu |
+|Halina Do-linh | dolinh@nceas.ucsb.edu|
 |Natasha Haycock-Chavez | haycock-chavez@nceas.ucsb.edu|
 |Matt Jones | jones@nceas.ucsb.edu |
-|Noor Johnson| noor.johnson@colorado.edu |
+|Camila Vargas Poulsen |vargas-poulsen@nceas.ucsb.edu|
+|Daphne Virlar-Knight |virlar-knight@nceas.ucsb.edu|
+
+
 
 ## Acknowledgements
 
