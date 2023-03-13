@@ -32,7 +32,7 @@ For more detailed information on how to prepare for the workshop, see preparing 
 
 ## Materials
 
-[Link to course materials](https://learning.nceas.ucsb.edu/2022-03-arctic/)
+[Link to course materials](https://learning.nceas.ucsb.edu/2023-02-arctic/)
 
 
 ## Organizers
