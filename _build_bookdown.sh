@@ -23,7 +23,7 @@ echo "Building book"
 cd nceas-training/materials
 # Install deps
 Rscript -e "install.packages('devtools')"
-Rscript -e "devtools::install_deps('materials')" # Installs book-specific R deps
+Rscript -e "devtools::install_deps()" # Installs book-specific R deps
                                          # defined in DESCRIPTION file
 
 quarto render
