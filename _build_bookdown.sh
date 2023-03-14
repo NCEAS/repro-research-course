@@ -1,9 +1,11 @@
 #!/bin/sh
 
+# this isn't really a bookdown build anymore, it builds the
+# nceas-training quarto book. more changes to come soon...
 set -e
 
 BRANCH=$1
-BRANCH='2023-02-arctic'
+BRANCH='2023-04-coreR'
 
 export TOP
 TOP=$(pwd)
@@ -13,19 +15,18 @@ if [ ! -d public/$BRANCH ]; then
 fi
 
 # Clone the lesson materials from the lessons repo
-rm -rf materials
-git clone https://github.com/NCEAS/nceas-training.git --branch ${BRANCH} --single-branch materials
-#git clone ~/development/nceas-training --branch ${BRANCH} --single-branch materials
-cd materials/
-git filter-branch --subdirectory-filter materials -- --all
+git clone https://github.com/NCEAS/nceas-training.git --branch ${BRANCH} --single-branch
 
-# Build all books in the books subdir
-echo $BRANCH
+# Build the book
 echo "Building book"
-Rscript -e "devtools::install_deps('.')" # Installs book-specific R deps
+
+cd nceas-training/materials
+# Install deps
+Rscript -e "devtools::install_deps('materials')" # Installs book-specific R deps
                                          # defined in DESCRIPTION file
-Rscript -e "bookdown::render_book('index.Rmd', c('bookdown::gitbook'))"
-cp -R files _book
+
+quarto render
+
 mv _book $BRANCH
 cp -R $BRANCH "$TOP/public"
 cd "$TOP"
