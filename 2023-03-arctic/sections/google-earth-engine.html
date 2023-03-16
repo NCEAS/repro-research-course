@@ -273,7 +273,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#part-i.-setup" id="toc-part-i.-setup" class="nav-link" data-scroll-target="#part-i.-setup"><span class="toc-section-number">13.3.1</span>  <strong>Part i.</strong> Setup</a></li>
   <li><a href="#part-ii.-explore-the-era5-daily-aggregates-data" id="toc-part-ii.-explore-the-era5-daily-aggregates-data" class="nav-link" data-scroll-target="#part-ii.-explore-the-era5-daily-aggregates-data"><span class="toc-section-number">13.3.2</span>  <strong>Part ii.</strong> Explore the ERA5 Daily Aggregates Data</a></li>
   <li><a href="#part-iii.-visualize-global-precipitation-using-era5-daily-aggregate-data" id="toc-part-iii.-visualize-global-precipitation-using-era5-daily-aggregate-data" class="nav-link" data-scroll-target="#part-iii.-visualize-global-precipitation-using-era5-daily-aggregate-data"><span class="toc-section-number">13.3.3</span>  <strong>Part iii.</strong> Visualize global precipitation using ERA5 Daily Aggregate data</a></li>
-  <li><a href="#part-iv.-takeaways" id="toc-part-iv.-takeaways" class="nav-link" data-scroll-target="#part-iv.-takeaways"><span class="toc-section-number">13.3.4</span>  <strong>Part iv.</strong> Takeaways</a></li>
+  <li><a href="#part-iv.-extract-annual-sum-of-precipitation-data-from-points" id="toc-part-iv.-extract-annual-sum-of-precipitation-data-from-points" class="nav-link" data-scroll-target="#part-iv.-extract-annual-sum-of-precipitation-data-from-points"><span class="toc-section-number">13.3.4</span>  <strong>Part iv.</strong> Extract annual sum of precipitation data from points</a></li>
+  <li><a href="#part-v.-takeaways" id="toc-part-v.-takeaways" class="nav-link" data-scroll-target="#part-v.-takeaways"><span class="toc-section-number">13.3.5</span>  <strong>Part v.</strong> Takeaways</a></li>
   </ul></li>
   <li><a href="#exercise-2-visualize-fire-dynamics-in-the-arctic-using-gee" id="toc-exercise-2-visualize-fire-dynamics-in-the-arctic-using-gee" class="nav-link" data-scroll-target="#exercise-2-visualize-fire-dynamics-in-the-arctic-using-gee"><span class="toc-section-number">13.4</span>  <strong>Exercise 2:</strong> Visualize fire dynamics in the Arctic using GEE</a></li>
   <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources"><span class="toc-section-number">13.5</span>  Additional Resources</a></li>
@@ -344,7 +345,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geemap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geemap</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
 <li>Authenticate your GEE account</li>
@@ -480,8 +482,8 @@ Note
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># final data of interest (exclusive)</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>f_date <span class="op">=</span> <span class="st">'2020-01-01'</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># select desired bands (total_preciptation), dates, and calculate mean precipitation across that date range</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>precip <span class="op">=</span> weatherData.select(<span class="st">"total_precipitation"</span>).filterDate(i_date, f_date).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># select desired bands (total_preciptation), dates, and calculate total precipitation across that date range</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>precip <span class="op">=</span> weatherData.select(<span class="st">"total_precipitation"</span>).filterDate(i_date, f_date).<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Use the <code>print</code> method again to check out your new <code>precip</code> object – notice that it’s now an <code>ee.Image</code> (rather than <code>ee.ImageCollection</code>) and the start and end date values over which the average is taken are as we specified.</li>
@@ -501,7 +503,7 @@ Note
 </div></div><div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>precip_palette <span class="op">=</span> {</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'min'</span>:<span class="dv">0</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max'</span>:<span class="fl">0.01</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max'</span>:<span class="dv">5</span>,</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'palette'</span>: [<span class="st">'#FFFFFF'</span>, <span class="st">'#00FFFF'</span>, <span class="st">'#0080FF'</span>, <span class="st">'#DA00FF'</span>, <span class="st">'#FFA400'</span>, <span class="st">'#FF0000'</span>]</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -522,7 +524,7 @@ Note
 <li>Finally, plot our filtered data, <code>precip</code>, on top of our basemap using the <a href="https://developers.google.com/earth-engine/apidocs/map-addlayer"><code>addLayer</code></a> method. We’ll also pass it our visualization parameters (colors and ranges stored in <code>precip_palette</code>, the name of the data field, <code>total precipitation</code>, and opacity (so that we can see the basemap underneath).</li>
 </ul>
 <div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>myMap.addLayer(precip, precip_palette, <span class="st">'total precipitation'</span>, opacity <span class="op">=</span> <span class="fl">0.3</span>)</span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>myMap.addLayer(precip, precip_palette, <span class="st">'total precipitation'</span>, opacity <span class="op">=</span> <span class="fl">0.7</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>myMap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <center>
@@ -530,8 +532,51 @@ Note
 </iframe>
 </center>
 </section>
-<section id="part-iv.-takeaways" class="level3" data-number="13.3.4">
-<h3 data-number="13.3.4" class="anchored" data-anchor-id="part-iv.-takeaways"><span class="header-section-number">13.3.4</span> <strong>Part iv.</strong> Takeaways</h3>
+<section id="part-iv.-extract-annual-sum-of-precipitation-data-from-points" class="level3" data-number="13.3.4">
+<h3 data-number="13.3.4" class="anchored" data-anchor-id="part-iv.-extract-annual-sum-of-precipitation-data-from-points"><span class="header-section-number">13.3.4</span> <strong>Part iv.</strong> Extract annual sum of precipitation data from points</h3>
+<p>We probably don’t want to just plot the data, extracting it at points of interest to use in analysis would be helpful too. I’ll show a simple example here of how to extract raster values from a set of point geometries.</p>
+<p>First, we’ll create a <code>pandas</code> data frame with some locations in Alaska.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize data frame of points</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [[<span class="st">'anc'</span>, <span class="fl">61.2</span>, <span class="op">-</span><span class="fl">150.1</span> ], [<span class="st">'fai'</span>, <span class="fl">64.8</span>, <span class="op">-</span><span class="fl">147.6</span>], [<span class="st">'jun'</span>, <span class="fl">58.3</span>, <span class="op">-</span><span class="fl">134.4</span>]]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the pandas DataFrame</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data, columns<span class="op">=</span>[<span class="st">'loc'</span>, <span class="st">'lat'</span>, <span class="st">'lon'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next we need to convert the rows in the data frame to a GEE <code>FeatureCollection</code>. To do this, we will run a loop over every row in the data frame which:</p>
+<ol type="1">
+<li>creates a point geometry from the lat/lon coordinates</li>
+<li>creates an attribute dictionary from the row</li>
+<li>uses the attribute dictionary and geom in the <code>Feature</code> function</li>
+</ol>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert data frame to list of GEE features</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>features<span class="op">=</span>[]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, row <span class="kw">in</span> df.iterrows():</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    p_geom <span class="op">=</span> ee.Geometry.Point([row[<span class="st">'lon'</span>], row[<span class="st">'lat'</span>]])</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># construct attributes for each row</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    p_props <span class="op">=</span> <span class="bu">dict</span>(row)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    p_feature <span class="op">=</span> ee.Feature(p_geom, p_props)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    features.append(p_feature)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We then pass that features list into the <code>FeatureCollection</code> function</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ee_fc <span class="op">=</span> ee.FeatureCollection(features)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we can use the <code>sampleRegions</code> method on our <code>precip</code> image, passing the feature collection we just created to the collection argument.</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> precip.sampleRegions(collection <span class="op">=</span> ee_fc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This returns another feature collection, which we can convert back to a <code>pandas</code> data frame with just one function call.</p>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> geemap.ee_to_pandas(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Of note, by default GEE data is in maps mercator (EPSG:3857). <a href="https://developers.google.com/earth-engine/guides/projections">The documentation</a> has many more details on how to handle projections, but in this case it is okay for us to use the default value since our input data were also in EPSG:3857.</p>
+<p>This was a simple example but you can do much more with these methods, including extracing timeseries data, extracting data from regions with polygon geometries (as opposed to point geometries), buffering features, and more. The GEE documentation is excellent, and examples abound.</p>
+</section>
+<section id="part-v.-takeaways" class="level3" data-number="13.3.5">
+<h3 data-number="13.3.5" class="anchored" data-anchor-id="part-v.-takeaways"><span class="header-section-number">13.3.5</span> <strong>Part v.</strong> Takeaways</h3>
 <p>In just about five lines of code (and mere seconds of execution time), we’ve applied and visualized a global precipitation model (that’s pretty cool, right??). We can zoom in/out across our interactive map while Google Earth Engine recalculates and revisualizes our model in near real-time.</p>
 <p>GEE does have some limitations. To name a few:</p>
 <ul>
@@ -547,34 +592,34 @@ Note
 <p>In this exercise, use the <a href="https://developers.google.com/earth-engine/datasets/">Google Earth Engine datasets listing</a> to find a dataset showing burn areas, that includes a day burned layer.</p>
 <p>Create a map of your dataset using methods similar to above. Look to the dataset landing page on GEE for palette help, or create your own!</p>
 <p>Below is one solution. Don’t peek unless you are stuck!</p>
-<div class="cell" data-execution_count="12">
+<div class="cell" data-execution_count="17">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>burn <span class="op">=</span> ee.ImageCollection(<span class="st">"ESA/CCI/FireCCI/5_1"</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>burn_2020 <span class="op">=</span> burn.select(<span class="st">'BurnDate'</span>).filterDate(<span class="st">'2019-01-01'</span>, <span class="st">'2019-12-31'</span>).<span class="bu">max</span>()</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>fire_pal <span class="op">=</span> {</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'min'</span>: <span class="dv">1</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">'max'</span>: <span class="dv">366</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">'palette'</span>: [</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ff0000'</span>, <span class="st">'fd4100'</span>, <span class="st">'fb8200'</span>, <span class="st">'f9c400'</span>, <span class="st">'f2ff00'</span>, <span class="st">'b6ff05'</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'7aff0a'</span>, <span class="st">'3eff0f'</span>, <span class="st">'02ff15'</span>, <span class="st">'00ff55'</span>, <span class="st">'00ff99'</span>, <span class="st">'00ffdd'</span>,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'00ddff'</span>, <span class="st">'0098ff'</span>, <span class="st">'0052ff'</span>, <span class="st">'0210ff'</span>, <span class="st">'3a0dfb'</span>, <span class="st">'7209f6'</span>,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'a905f1'</span>, <span class="st">'e102ed'</span>, <span class="st">'ff00cc'</span>, <span class="st">'ff0089'</span>, <span class="st">'ff0047'</span>, <span class="st">'ff0004'</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>myMap2 <span class="op">=</span> geemap.Map(center <span class="op">=</span> [<span class="dv">66</span>,<span class="op">-</span><span class="dv">145</span>], zoom <span class="op">=</span> <span class="dv">7</span>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>myMap2.addLayer(burn_2020, fire_pal, <span class="st">"Burned area with date burned"</span>, opacity <span class="op">=</span> <span class="dv">1</span>)</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>legend_dict <span class="op">=</span> {</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"January 1"</span> : <span class="st">'#ff0000'</span>,</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"March 1"</span> : <span class="st">'#7aff0a'</span>,</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"June 1"</span> : <span class="st">'#00ddff'</span>,</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Sept 1"</span> : <span class="st">'#a905f1'</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>myMap2.add_legend(legend_title<span class="op">=</span><span class="st">"Burn Day"</span>, legend_dict<span class="op">=</span>legend_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>burn <span class="op">=</span> ee.ImageCollection(<span class="st">"ESA/CCI/FireCCI/5_1"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>burn_2020 <span class="op">=</span> burn.select(<span class="st">'BurnDate'</span>).filterDate(<span class="st">'2019-01-01'</span>, <span class="st">'2019-12-31'</span>).<span class="bu">max</span>()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>fire_pal <span class="op">=</span> {</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'min'</span>: <span class="dv">1</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">'max'</span>: <span class="dv">366</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">'palette'</span>: [</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ff0000'</span>, <span class="st">'fd4100'</span>, <span class="st">'fb8200'</span>, <span class="st">'f9c400'</span>, <span class="st">'f2ff00'</span>, <span class="st">'b6ff05'</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'7aff0a'</span>, <span class="st">'3eff0f'</span>, <span class="st">'02ff15'</span>, <span class="st">'00ff55'</span>, <span class="st">'00ff99'</span>, <span class="st">'00ffdd'</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'00ddff'</span>, <span class="st">'0098ff'</span>, <span class="st">'0052ff'</span>, <span class="st">'0210ff'</span>, <span class="st">'3a0dfb'</span>, <span class="st">'7209f6'</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'a905f1'</span>, <span class="st">'e102ed'</span>, <span class="st">'ff00cc'</span>, <span class="st">'ff0089'</span>, <span class="st">'ff0047'</span>, <span class="st">'ff0004'</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>myMap2 <span class="op">=</span> geemap.Map(center <span class="op">=</span> [<span class="dv">66</span>,<span class="op">-</span><span class="dv">145</span>], zoom <span class="op">=</span> <span class="dv">7</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>myMap2.addLayer(burn_2020, fire_pal, <span class="st">"Burned area with date burned"</span>, opacity <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>legend_dict <span class="op">=</span> {</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"January 1"</span> : <span class="st">'#ff0000'</span>,</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"March 1"</span> : <span class="st">'#7aff0a'</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"June 1"</span> : <span class="st">'#00ddff'</span>,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Sept 1"</span> : <span class="st">'#a905f1'</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>myMap2.add_legend(legend_title<span class="op">=</span><span class="st">"Burn Day"</span>, legend_dict<span class="op">=</span>legend_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
