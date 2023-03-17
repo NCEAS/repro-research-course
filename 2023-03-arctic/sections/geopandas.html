@@ -792,21 +792,27 @@ Datum: World Geodetic System 1984 ensemble
 <div class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>reg_area <span class="op">=</span> res_full.dissolve(by <span class="op">=</span> <span class="st">"REGISTRATION_AREA_NAME"</span>, </span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                             aggfunc <span class="op">=</span> <span class="st">'sum'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/geopandas/geodataframe.py:1686: FutureWarning:
+
+The default value of numeric_only in DataFrameGroupBy.sum is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+</code></pre>
+</div>
 </div>
 <p>Let’s have a look at the same plot as before, but this time over our aggregated data.</p>
 <div class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> reg_area.plot(column <span class="op">=</span> <span class="st">"distance"</span>, legend <span class="op">=</span> <span class="va">True</span>, ax <span class="op">=</span> ax)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ax.figure</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>label_format <span class="op">=</span> <span class="st">'{:,.0f}'</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>cb_ax <span class="op">=</span> fig.axes[<span class="dv">1</span>]</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>ticks_loc <span class="op">=</span> cb_ax.get_yticks().tolist()</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>cb_ax.yaxis.set_major_locator(matplotlib.ticker.FixedLocator(ticks_loc))</span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>cb_ax.set_yticklabels([label_format.<span class="bu">format</span>(x) <span class="cf">for</span> x <span class="kw">in</span> ticks_loc])</span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Distance Traveled by Ships in Kilometers"</span>)</span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> reg_area.plot(column <span class="op">=</span> <span class="st">"distance"</span>, legend <span class="op">=</span> <span class="va">True</span>, ax <span class="op">=</span> ax)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> ax.figure</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>label_format <span class="op">=</span> <span class="st">'{:,.0f}'</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>cb_ax <span class="op">=</span> fig.axes[<span class="dv">1</span>]</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>ticks_loc <span class="op">=</span> cb_ax.get_yticks().tolist()</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>cb_ax.yaxis.set_major_locator(matplotlib.ticker.FixedLocator(ticks_loc))</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>cb_ax.set_yticklabels([label_format.<span class="bu">format</span>(x) <span class="cf">for</span> x <span class="kw">in</span> ticks_loc])</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Distance Traveled by Ships in Kilometers"</span>)</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="geopandas_files/figure-html/cell-30-output-1.png" width="552" height="537"></p>
 </div>
