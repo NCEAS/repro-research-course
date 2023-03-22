@@ -675,12 +675,6 @@ from module import function</code></pre>
 <div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>clean_df[<span class="st">'date'</span>] <span class="op">=</span> pd.to_datetime(clean_df[<span class="st">'date'</span>])</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>skimpy.skim(clean_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/skimpy/__init__.py:91: FutureWarning:
-
-Passing unit-less datetime64 dtype to .astype is deprecated and will raise in a future version. Pass 'datetime64[ns]' instead
-</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">╭──────────────────────────────────────────────── skimpy summary ─────────────────────────────────────────────────╮
 │ <span style="font-style: italic">         Data Summary         </span> <span style="font-style: italic">      Data Types       </span>                                                          │
@@ -719,33 +713,27 @@ Passing unit-less datetime64 dtype to .astype is deprecated and will raise in a 
 </ul>
 <p>First we should probably rename our existing date/time column to prevent from getting confused.</p>
 <div class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>clean_df <span class="op">=</span> clean_df.rename(columns <span class="op">=</span> {<span class="st">'date'</span>: <span class="st">'datetime'</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>clean_df <span class="op">=</span> clean_df.rename(columns <span class="op">=</span> {<span class="st">'date'</span>: <span class="st">'datetime'</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now create the new date column</p>
 <div class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>clean_df[<span class="st">'date'</span>] <span class="op">=</span> clean_df[<span class="st">'datetime'</span>].dt.date</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>clean_df[<span class="st">'date'</span>] <span class="op">=</span> clean_df[<span class="st">'datetime'</span>].dt.date</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, we use group by to split the data into groups according to the date. We can then apply the <code>mean</code> method to calculate the mean value across all of the columns. Note that there are other methods you can use to calculate different statistics across different columns (eg: <code>clean_df.groupby('date').agg({'discharge_m_3_s': 'max'})</code>).</p>
 <div class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>daily_flow <span class="op">=</span> clean_df.groupby(<span class="st">'date'</span>, as_index <span class="op">=</span> <span class="va">False</span>).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/tmp/ipykernel_7497/403953665.py:1: FutureWarning:
-
-The default value of numeric_only in DataFrameGroupBy.mean is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
-</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>daily_flow <span class="op">=</span> clean_df.groupby(<span class="st">'date'</span>, as_index <span class="op">=</span> <span class="va">False</span>).mean(numeric_only <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>create a simple plot</li>
 </ul>
 <div class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>var <span class="op">=</span> <span class="st">'discharge_m_3_s'</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>var_labs <span class="op">=</span> {<span class="st">'discharge_m_3_s'</span>: <span class="st">'Total Discharge'</span>}</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>plt.plot(daily_flow[<span class="st">'date'</span>], daily_flow[var])</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation <span class="op">=</span> <span class="dv">45</span>)</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(var_labs.get(<span class="st">'discharge_m_3_s'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>var <span class="op">=</span> <span class="st">'discharge_m_3_s'</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>var_labs <span class="op">=</span> {<span class="st">'discharge_m_3_s'</span>: <span class="st">'Total Discharge'</span>}</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>plt.plot(daily_flow[<span class="st">'date'</span>], daily_flow[var])</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation <span class="op">=</span> <span class="dv">45</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(var_labs.get(<span class="st">'discharge_m_3_s'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>(array([16967., 16974., 16983., 16990., 16997., 17004., 17014., 17021.,
         17028.]),
@@ -775,20 +763,20 @@ The default value of numeric_only in DataFrameGroupBy.mean is deprecated. In a f
 <li>create <code>myplot.py</code></li>
 </ul>
 <div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> myplot(df, var):</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>        var_labs <span class="op">=</span> {<span class="st">'discharge_m_3_s'</span>: <span class="st">'Total Discharge (m^3/s)'</span>,</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'total_pressure_m'</span>: <span class="st">'Total Pressure (m)'</span>,</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'air_pressure_m'</span>: <span class="st">'Air Pressure (m)'</span>,</span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'stage_m'</span>: <span class="st">'Stage (m)'</span>,</span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'temperature_degrees_c'</span>: <span class="st">'Temperature (C)'</span>}</span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>        fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>        plt.plot(df[<span class="st">'date'</span>], df[var])</span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>        plt.xticks(rotation <span class="op">=</span> <span class="dv">45</span>)</span>
-<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(var_labs.get(var))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> myplot(df, var):</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>        var_labs <span class="op">=</span> {<span class="st">'discharge_m_3_s'</span>: <span class="st">'Total Discharge (m^3/s)'</span>,</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'total_pressure_m'</span>: <span class="st">'Total Pressure (m)'</span>,</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'air_pressure_m'</span>: <span class="st">'Air Pressure (m)'</span>,</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'stage_m'</span>: <span class="st">'Stage (m)'</span>,</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'temperature_degrees_c'</span>: <span class="st">'Temperature (C)'</span>}</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>        fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>        plt.plot(df[<span class="st">'date'</span>], df[var])</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>        plt.xticks(rotation <span class="op">=</span> <span class="dv">45</span>)</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(var_labs.get(var))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>load myplot into jupyter notebook (<code>from myplot import myplot</code>)</li>
@@ -796,7 +784,7 @@ The default value of numeric_only in DataFrameGroupBy.mean is deprecated. In a f
 <li>replace old plot method with new function</li>
 </ul>
 <div class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>myplot(daily_flow, <span class="st">'temperature_degrees_c'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>myplot(daily_flow, <span class="st">'temperature_degrees_c'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="python-intro_files/figure-html/cell-24-output-1.png" width="632" height="610"></p>
 </div>
