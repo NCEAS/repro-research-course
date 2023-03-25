@@ -376,12 +376,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Core</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> socket:              1</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node0 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>               0-87</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now that’s more compute power! <code>included-crab</code> has 384 GB of RAM, and ample storage. All still under the control of a single operating system.</p>
-<p>Finally, maybe one of these NSF-sponsored high performance computing clusters (HPC) is looking attractive about now:</p>
+<p>Finally, maybe one of these <a href="https://allocations.access-ci.org/resources">NSF-sponsored high performance computing clusters (HPC)</a> is looking attractive about now:</p>
+<div class="grid">
+<div class="g-col-6">
 <ul>
-<li><a href="https://jetstream-cloud.org/">JetStream</a>
-<ul>
-<li>640 nodes, 15,360 cores, 80TB RAM</li>
-</ul></li>
 <li><a href="https://www.tacc.utexas.edu/systems/stampede2">Stampede2</a> at TACC
 <ul>
 <li>4200 KNL nodes: 285,600 cores</li>
@@ -389,7 +387,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>224 ICX nodes: 17,920 cores</li>
 <li>TOTAL: <strong>386,848</strong> cores</li>
 </ul></li>
+<li><a href="https://www.ncsa.illinois.edu/research/project-highlights/delta/">Delta</a> at NCSA
+<ul>
+<li>124 CPU Milan nodes (15,872 cores)</li>
+<li>100 quad A100 GPU nodes (6400 cores + 400 GPUs)</li>
+<li>100 quad A40 GPU nodes (6400 cores + 400 GPUs)</li>
+<li>5 eight-way A100 GPU nodes (640 cores + 40 GPUs):</li>
+<li>1 MI100 GPU node (128 cores + 8 GPUs)</li>
+<li>7 PB of disk-based Lustre storage</li>
+<li>3 PB of flash based storage</li>
+<li>TOTAL: <strong>29,440</strong> cores, <strong>848</strong> gpus</li>
+</ul></li>
 </ul>
+</div>
+<div class="g-col-6">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://access-ci.org/wp-content/uploads/2022/10/Delta_System.jpg" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Delta Supercomputer</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
 <p>Note that these clusters have multiple nodes (hosts), and each host has multiple cores. So this is really multiple computers clustered together to act in a coordinated fashion, but each node runs its own copy of the operating system, and is in many ways independent of the other nodes in the cluster. One way to use such a cluster would be to use just one of the nodes, and use a multi-core approach to parallelization to use all of the cores on that single machine. But to truly make use of the whole cluster, one must use parallelization tools that let us spread out our computations across multiple host nodes in the cluster.</p>
 </section>
 <section id="parallel-processing-in-the-shell" class="level2" data-number="4.5">
@@ -448,7 +467,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>run_serial(np.arange(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>run_serial: 100406.14533424377 ms</code></pre>
+<pre><code>run_serial: 102727.91075706482 ms</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>[0,
@@ -586,7 +605,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_serial: 68561.64169311523 ms
+<pre><code>download_serial: 74743.0260181427 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']</code></pre>
 </div>
 </div>
@@ -616,7 +635,7 @@ Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_threaded: 27876.861333847046 ms
+<pre><code>download_threaded: 30201.045274734497 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -642,22 +661,22 @@ SWI_2001.tif</code></pre>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2019.tif</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2007.tif</code></pre>
+<pre><code>Downloading: SWI_2020.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2020.tif</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2021.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
+<pre><code>Downloading: SWI_2019.tif</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
 <pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Downloading: SWI_2007.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code></code></pre>
@@ -672,7 +691,7 @@ SWI_2001.tif</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_process: 16423.052072525024 ms
+<pre><code>download_process: 25774.0478515625 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -711,7 +730,7 @@ SWI_2001.tif</code></pre>
 <span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span>
 <span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>parsl.load(htex_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7f66cc22bf70&gt;</code></pre>
+<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7efd1fbf0040&gt;</code></pre>
 </div>
 </div>
 <p>We now have a live parsl executor (<code>htex_local</code>) that is waiting to execute processes. We tell it to execute processes by annotating functions with decorators that indicate which tasks should be parallelized. Parsl then handles the scheduling and execution of those tasks based on the dependencies between them. In the simplest case, we’ll decorate our previous function for downloading a file with the <code>@python_app</code> decorator, which tells parsl that any function calls with this function should be run on the default executor (in this case, <code>htex_local</code>).</p>
@@ -756,16 +775,16 @@ SWI_2001.tif</code></pre>
 <span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>wait_for_futures(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Define our download_futures function
-&lt;AppFuture at 0x7f66cc68ef10 state=pending&gt;
-&lt;AppFuture at 0x7f66bef932e0 state=pending&gt;
-&lt;AppFuture at 0x7f66bef93790 state=pending&gt;
-&lt;AppFuture at 0x7f66bef93ca0 state=pending&gt;
-&lt;AppFuture at 0x7f66bef951f0 state=pending&gt;
-download_futures: 15.532255172729492 ms</code></pre>
+&lt;AppFuture at 0x7efd6040e1c0 state=pending&gt;
+&lt;AppFuture at 0x7efd1c392310 state=pending&gt;
+&lt;AppFuture at 0x7efd1c392820 state=pending&gt;
+&lt;AppFuture at 0x7efd1c392d30 state=pending&gt;
+&lt;AppFuture at 0x7efd1c394280 state=pending&gt;
+download_futures: 14.080524444580078 ms</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']
-wait_for_futures: 45044.2259311676 ms</code></pre>
+wait_for_futures: 48224.825859069824 ms</code></pre>
 </div>
 </div>
 <p>When we’re done, be sure to clean up and shutdown the <code>htex_local</code> executor, or it will continue to persist in your environment and utilize resources. Generally, an executor should be created when setting up your environment, and then it can be used repeatedly for many different tasks.</p>
