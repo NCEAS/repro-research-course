@@ -353,9 +353,16 @@ Setup
 <li><code>52_pp52_sites_1.csv</code></li>
 <li><code>52_pp52_taxalist_1.csv</code></li>
 </ul>
-<p><strong>Note:</strong> It’s up to you on how you want to download and load the data! You can either use the download links (obtain by right-clicking the Download button and select “Copy Link Address” for each data entity) or manually download the data and then upload the files to RStudio server.</p>
+<p><strong>Note:</strong> It’s up to you on how you want to download and load the data! You can either use the download links (obtain by right-clicking the “Download” button and select “Copy Link Address” for each data entity) or manually download the data and then upload the files to RStudio server.</p>
 <ol start="4" type="1">
-<li>Organize your R Markdown in a <strong>meaningful</strong> way. Organization is personal - so this is up to you! Consider the different ways we’ve organized previous files using: headers, bold text, naming code chunks, comments in code chunks. What is most important is organizing and documenting the file so that your future self (or if you share this file with others!) understands it as well as your current self does right now.</li>
+<li><p>Organize your R Markdown in a <strong>meaningful</strong> way. Organization is personal - so this is up to you! Consider the different ways we’ve organized previous files using: headers, bold text, naming code chunks, comments in code chunks. What is most important is organizing and documenting the file so that your future self (or if you share this file with others!) understands it as well as your current self does right now.</p></li>
+<li>
+<p>Use the <code>Git</code> workflow. After you’ve set up your project and uploaded your data go through the workflow: <code>Stage &gt; Commit &gt; Pull &gt; Push</code></p>
+<ul>
+<li>
+<strong>Note:</strong> You also want to <code>Pull</code> when you first open a project.</li>
+</ul>
+</li>
 </ol>
 </div>
 </div>
@@ -436,19 +443,15 @@ Question 2b
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>What are the primary and foreign keys for each table? Recall that a <strong>primary key</strong> is a unique identifier for each observed entity, one per row. And a <strong>foreign key</strong> references to a primary key in another table (linkage).</p>
+<p>What are the primary and foreign keys for the tables <code>bird_observations</code> and <code>taxalist</code>? Recall that a <strong>primary key</strong> is a unique identifier for each observed entity, one per row. And a <strong>foreign key</strong> references to a primary key in another table (linkage).</p>
+<p><strong>Hint:</strong> First identify the primary keys for all the tables, then identify the foreign keys.</p>
 </div>
 </div>
 <details><summary>
 Answer:
 </summary><ul>
 <li>
-<code>bird_observations</code>: Does not have a primary key and foreign key is <code>survey_id</code>, <code>site_id</code>, <code>species_id</code>
-</li>
-<li>
-<code>sites</code>: Primary key is <code>site_id</code> and does not have a foreign key.</li>
-<li>
-<code>surveys</code>: Primary key is <code>survey_id</code> and foreign key is <code>site_id</code>.</li>
+<code>bird_observations</code>: Primary key is a combination of <code>survey_id</code>, <code>site_id</code>, and <code>species_id</code>. The foreign key is <code>species_id</code>.</li>
 <li>
 <code>taxalist</code>: Primary key is <code>species_id</code> and does not have a foreign key.</li>
 </ul></details></section><section id="create-a-subset-of-bird_observations" class="level3" data-number="10.1.3"><h3 data-number="10.1.3" class="anchored" data-anchor-id="create-a-subset-of-bird_observations">
@@ -483,18 +486,37 @@ Question 3
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-Qustion 4
+Question 4a
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use left join(s) to update <code>birds_subset</code> so that it also includes <code>sites</code> and <code>taxalist</code> information. For each join, include an explicit argument saying which key you are joining by (even if it will just assume the correct one for you). Store the updated data frame as <code>birds_left</code>. Make sure to look at the output - is what it contains consistent with what you expected it to contain?</p>
+<p>First, answer: what do you expect a <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> between <code>birds_subset</code> and <code>sites</code> to contain? Write this in your R Markdown or tell a neighbor.</p>
+</div>
+</div>
+<details><summary>
+Answer:
+</summary><p>I expect to see all columns and all observations from <code>birds_subset</code> and from <code>sites</code>, I expect to see the columns <code>park_code</code>, <code>park_district</code>, <code>park-name</code>, <code>point_code</code>, <code>point_location</code> and <code>park_acreage</code> and only observations for <code>NU-C</code> and <code>LI-W</code> because those are the only <code>site_id</code> values in <code>birds_subset</code> and in a left join only the observations matching the left table (in this case, <code>birds_subset</code> is the left table) will be kept.</p>
+</details><div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Qustion 4b
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use a left join to update <code>birds_subset</code> so that it also includes <code>sites</code> information. For each join, include an explicit argument saying which key you are joining by (even if it will just assume the correct one for you). Store the updated data frame as <code>birds_left</code>. Make sure to look at the output - is what it contains consistent with what you expected it to contain?</p>
 </div>
 </div>
 <div class="cell">
-<details><summary>Answer</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">birds_left</span> <span class="op">&lt;-</span> <span class="va">birds_subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">sites</span>, by <span class="op">=</span> <span class="st">"site_id"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">taxalist</span>, by <span class="op">=</span> <span class="st">"species_id"</span><span class="op">)</span></span>
-<span><span class="co"># don't see x = birds_subset here because piping in birds_subset means it automatically assumes birds_subset as x.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details><summary>Answer</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># syntax using pipe</span></span>
+<span><span class="va">birds_left</span> <span class="op">&lt;-</span> <span class="va">birds_subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">sites</span>, by <span class="op">=</span> <span class="st">"site_id"</span><span class="op">)</span></span>
+<span><span class="co"># don't see x = birds_subset here because piping in birds_subset means it automatically assumes birds_subset as x.</span></span>
+<span></span>
+<span><span class="co"># syntax without pipe</span></span>
+<span><span class="va">birds_left</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">birds_subset</span>, y <span class="op">=</span> <span class="va">sites</span>, by <span class="op">=</span> <span class="st">"site_id"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="use-full_join-to-merge-birds_subset-and-sites-tables" class="level3" data-number="10.1.5"><h3 data-number="10.1.5" class="anchored" data-anchor-id="use-full_join-to-merge-birds_subset-and-sites-tables">
@@ -709,6 +731,19 @@ Question 8b
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">bird_obs_subset</span><span class="op">$</span><span class="va">observer</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Save your work and use <code>Git</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t forget the <code>Git</code> workflow! After you’ve completed the exercises or reached a significant stopping point, use the workflow: <code>Stage &gt; Commit &gt; Pull &gt; Push</code></p>
+</div>
 </div>
 </section><section id="bonus-use-a-new-package-lubridate-to-wrangle-the-date-data-and-find-the-total-number-of-birds-by-park-and-month" class="level3" data-number="10.2.3"><h3 data-number="10.2.3" class="anchored" data-anchor-id="bonus-use-a-new-package-lubridate-to-wrangle-the-date-data-and-find-the-total-number-of-birds-by-park-and-month">
 <span class="header-section-number">10.2.3</span> Bonus: Use a new package <code>lubridate</code> to wrangle the date data and find the total number of birds by park and month</h3>
