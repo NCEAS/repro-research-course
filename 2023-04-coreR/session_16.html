@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.2.475">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
 <title>NCEAS Learning Hub’s coreR Course - 16&nbsp; R Practice: Wrangling Spatial Data &amp; Making Maps</title>
 <style>
 code{white-space: pre-wrap;}
@@ -20,8 +17,70 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
-
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
@@ -41,8 +100,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -60,29 +118,27 @@ ul.task-list li input[type="checkbox"] {
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit"
   }
-}</script>
-
-
+}</script><script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script><script src="site_libs/jquery-1.12.4/jquery.min.js"></script><link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script><link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script><script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="site_libs/leaflet-binding-2.1.2/leaflet.js"></script>
 </head>
-
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">R Practice: Wrangling Spatial Data &amp; Making Maps</span></h1>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">
+<span class="chapter-number">16</span>&nbsp; <span class="chapter-title">R Practice: Wrangling Spatial Data &amp; Making Maps</span>
+</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
+  </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">R Practice: Wrangling Spatial Data &amp; Making Maps</span></h1>
+      <h1 class="title d-none d-lg-block">
+<span class="chapter-number">16</span>&nbsp; <span class="chapter-title">R Practice: Wrangling Spatial Data &amp; Making Maps</span>
+</h1>
                       </div>
   </div>
     
@@ -97,8 +153,7 @@ ul.task-list li input[type="checkbox"] {
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Course Materials</a> 
         <div class="sidebar-tools-main tools-wide">
@@ -115,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
       </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
@@ -192,7 +247,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_15.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using <code>sf</code> for Spatial Analysis &amp; Intro to Making Maps</span></a>
+  <a href="./session_15.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using <code>sf</code> for Spatial Data &amp; Intro to Making Maps</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -211,32 +266,711 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
+</div>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+<li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#about-the-data" id="toc-about-the-data" class="nav-link" data-scroll-target="#about-the-data"><span class="toc-section-number">16.1</span>  About the data</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="toc-section-number">16.2</span>  Exercise:</a></li>
+  <li>
+<a href="#exercise-practice-cleaning-wrangling-data" id="toc-exercise-practice-cleaning-wrangling-data" class="nav-link" data-scroll-target="#exercise-practice-cleaning-wrangling-data"><span class="toc-section-number">16.3</span>  Exercise: Practice Cleaning &amp; Wrangling data</a>
+  <ul class="collapse">
+<li><a href="#read-in-the-data" id="toc-read-in-the-data" class="nav-link" data-scroll-target="#read-in-the-data"><span class="toc-section-number">16.3.1</span>  Read in the data</a></li>
+  <li><a href="#get-familiar-with-the-data" id="toc-get-familiar-with-the-data" class="nav-link" data-scroll-target="#get-familiar-with-the-data"><span class="toc-section-number">16.3.2</span>  Get familiar with the data</a></li>
+  <li><a href="#clean-wrangle-pika-and-elevation-tables" id="toc-clean-wrangle-pika-and-elevation-tables" class="nav-link" data-scroll-target="#clean-wrangle-pika-and-elevation-tables"><span class="toc-section-number">16.3.3</span>  Clean &amp; Wrangle <code>pika</code> and <code>elevation</code> tables</a></li>
+  <li><a href="#join-pika_clean-and-elevation_clean" id="toc-join-pika_clean-and-elevation_clean" class="nav-link" data-scroll-target="#join-pika_clean-and-elevation_clean"><span class="toc-section-number">16.3.4</span>  Join <code>pika_clean</code> and <code>elevation_clean</code></a></li>
   </ul>
-</nav>
+</li>
+  <li>
+<a href="#exercise-spatial-exploration-and-making-maps" id="toc-exercise-spatial-exploration-and-making-maps" class="nav-link" data-scroll-target="#exercise-spatial-exploration-and-making-maps"><span class="toc-section-number">16.4</span>  Exercise: Spatial Exploration and Making Maps</a>
+  <ul class="collapse">
+<li><a href="#converting-to-simple-features" id="toc-converting-to-simple-features" class="nav-link" data-scroll-target="#converting-to-simple-features"><span class="toc-section-number">16.4.1</span>  Converting to Simple Features</a></li>
+  <li><a href="#setting-a-coordinate-reference-system-crs" id="toc-setting-a-coordinate-reference-system-crs" class="nav-link" data-scroll-target="#setting-a-coordinate-reference-system-crs"><span class="toc-section-number">16.4.2</span>  Setting a Coordinate Reference System (CRS)</a></li>
+  <li><a href="#plotting-points-using-ggplot-and-geom_sf" id="toc-plotting-points-using-ggplot-and-geom_sf" class="nav-link" data-scroll-target="#plotting-points-using-ggplot-and-geom_sf"><span class="toc-section-number">16.4.3</span>  Plotting Points using <code>ggplot</code> and <code>geom_sf()</code></a></li>
+  <li><a href="#add-a-basemap-using-ggmap" id="toc-add-a-basemap-using-ggmap" class="nav-link" data-scroll-target="#add-a-basemap-using-ggmap"><span class="toc-section-number">16.4.4</span>  Add a basemap using <code>ggmap</code></a></li>
+  <li><a href="#bonus-make-an-interactive-map-using-leaflet" id="toc-bonus-make-an-interactive-map-using-leaflet" class="nav-link" data-scroll-target="#bonus-make-an-interactive-map-using-leaflet"><span class="toc-section-number">16.4.5</span>  Bonus: Make an interactive map using <code>leaflet</code></a></li>
+  </ul>
+</li>
+  </ul></nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content"><section id="learning-objectives" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Practice cleaning and wrangling spatial data</li>
+<li>Practice visualizing spatial data and making maps</li>
+<li>Practice adding a basemap to a map</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Acknolwedgements
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These exercises are adapted from the <a href="https://lter.github.io/lterdatasampler/index.html"><code>lterdatasampler</code> package</a>.</p>
+</div>
+</div>
+</section><section id="about-the-data" class="level2" data-number="16.1"><h2 data-number="16.1" class="anchored" data-anchor-id="about-the-data">
+<span class="header-section-number">16.1</span> About the data</h2>
+<p>These exercises will be using pika stress metrics and Colorado Rockies elevation data collected by researchers at the Niwot Ridge LTER research site. Data will be accessed from the <a href="https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-nwt.268.1">EDI Portal Physiological stress of American pika (<em>Ochotona princeps</em>) and associated habitat characteristics for Niwot Ridge, 2018 - 2019</a>.</p>
+</section><section id="exercise" class="level2" data-number="16.2"><h2 data-number="16.2" class="anchored" data-anchor-id="exercise">
+<span class="header-section-number">16.2</span> Exercise:</h2>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol start="0" type="1">
+<li><p>Make sure you’re in the right project (<code>training_{USERNAME}</code>) and use the <code>Git</code> workflow by <code>Pull</code>ing to check for any changes in the remote repository (aka repository on GitHub).</p></li>
+<li>
+<p>Create a new R Markdown file.</p>
+<ol type="a">
+<li>Title it “R Practice: Spatial Data and Making Maps”.</li>
+<li>Save the file and name it “r-practice-spatial-data-maps”.</li>
+</ol>
+</li>
+<li><p>Load the following libraries at the top of your R Markdown file.</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org">scales</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/">leaflet</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dkahle/ggmap">ggmap</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Obtain pika and elevation data from the <a href="https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-nwt.268.1">EDI Portal Physiological stress of American pika (Ochotona princeps) and associated habitat characteristics for Niwot Ridge, 2018 - 2019</a>. Download the following files:
+<ul>
+<li>
+<code>pika_fecal_glut.aw.data.csv</code> (Fecal glucocorticoid concentration)</li>
+<li>
+<code>pika_fecal_glut_habitat.aw.data.csv</code> (Habitat characteristics)</li>
+</ul>
+</li>
+</ol>
+<p><strong>Note:</strong> It’s up to you on how you want to download and load the data! You can either use the download links (obtain by right-clicking the “Download” button and select “Copy Link Address” for each data entity) or manually download the data and then upload the files to RStudio server.</p>
+<ol start="4" type="1">
+<li><p>Organize your R Markdown in a meaningful way. This is up to you! Consider the different ways we’ve organized previous files using: headers, bold text, naming code chunks, comments in code chunks. What is most important is organizing and documenting the file so that your future self (or if you share this file with others!) understands it as well as your current self does right now.</p></li>
+<li>
+<p>Use the <code>Git</code> workflow. After you’ve set up your project and uploaded your data go through the workflow: <code>Stage &gt; Commit &gt; Pull &gt; Push</code></p>
+<ul>
+<li>
+<strong>Note:</strong> You also want to <code>Pull</code> when you first open a project.</li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+</section><section id="exercise-practice-cleaning-wrangling-data" class="level2" data-number="16.3"><h2 data-number="16.3" class="anchored" data-anchor-id="exercise-practice-cleaning-wrangling-data">
+<span class="header-section-number">16.3</span> Exercise: Practice Cleaning &amp; Wrangling data</h2>
+<section id="read-in-the-data" class="level3" data-number="16.3.1"><h3 data-number="16.3.1" class="anchored" data-anchor-id="read-in-the-data">
+<span class="header-section-number">16.3.1</span> Read in the data</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read in the data and store the data frame <code>pika_fecal_glut.aw.data.csv</code> (Fecal glucocorticoid concentration) to an object called <code>pika</code>, and store the second data frame <code>pika_fecal_glut_habitat.aw.data.csv</code> (Habitat characteristics) to an object called <code>elevation</code></p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># read in data using download links</span></span>
+<span><span class="va">pika</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-nwt.268.1&amp;entityid=43270add3532c7f3716404576cfb3f2c"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">elevation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-nwt.268.1&amp;entityid=6a10b35988119d0462837f9bfa31dd2f"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># read in data from the data directory after manually downloading data </span></span>
+<span><span class="va">pika</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/pika_fecal_glut.aw.data.csv"</span><span class="op">)</span></span>
+<span><span class="va">elevation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/pika_fecal_glut_habitat.aw.data.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="get-familiar-with-the-data" class="level3" data-number="16.3.2"><h3 data-number="16.3.2" class="anchored" data-anchor-id="get-familiar-with-the-data">
+<span class="header-section-number">16.3.2</span> Get familiar with the data</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Always, always look at your data. Use functions to explore the data you just read in. Think about which functions we’ve been using to see the data, access information about columns, unique observations, data types and structure of the data frame.</p>
+<p><strong>Note:</strong> We will only use the columns <code>Station</code> and <code>Elev_M</code> from the <code>elevation</code> table, so spend more time explore the <code>pika</code> data. Also, some quick metadata: <code>Concentration_pg_g</code> in the <code>pika</code> table is the stress measurement and was taken from fecal pellets.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># view data in a spreadsheet-style viewer</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">pika</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns dimensions of the dataframe by number of rows and number of cols</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">pika</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns the top six rows of the dataframe</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pika</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns all the columns and some info about the cols</span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">pika</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># similar to glimpse but returns some summary statistics about the cols</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">pika</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns column names </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">pika</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns unique values in a column. In this case we can see all the different bird species IDs</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">pika</span><span class="op">$</span><span class="va">Site</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="clean-wrangle-pika-and-elevation-tables" class="level3" data-number="16.3.3"><h3 data-number="16.3.3" class="anchored" data-anchor-id="clean-wrangle-pika-and-elevation-tables">
+<span class="header-section-number">16.3.3</span> Clean &amp; Wrangle <code>pika</code> and <code>elevation</code> tables</h3>
+<p>We are going to be using some of the cleaning steps that the <code>lterdatasampler</code> developers used. Some of their cleaning steps may be beyond what we’ve covered in this course, but it’s overall straightforward and we’ll be guiding you through every step.</p>
+<p>Let’s start with the <code>pika</code> data.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>From the <code>pika</code> data we only want the columns:</p>
+<ul>
+<li><code>Date</code></li>
+<li><code>Station</code></li>
+<li><code>UTM_Easting</code></li>
+<li><code>UTM_Northing</code></li>
+<li><code>Concentration_pg_g</code></li>
+<li><code>Site</code></li>
+<li><code>Sex</code></li>
+</ul>
+<p>Write code to subset the data so it only contains those columns and save it to an object called <code>pika_clean</code>.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pika_clean</span> <span class="op">&lt;-</span> <span class="va">pika</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Notes</span>,</span>
+<span>           <span class="op">-</span><span class="va">Vial</span>,</span>
+<span>           <span class="op">-</span><span class="va">Plate</span>,</span>
+<span>           <span class="op">-</span><span class="va">Biweek</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 4
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Next, we want to convert data types.</p>
+<p>The variables <code>Station</code>, <code>Site</code>, and <code>Sex</code> all have a class of <code>character</code> (you can find out what data type a variable is by using the function <code><a href="https://rdrr.io/r/base/class.html">class()</a></code> i.e.&nbsp;<code>class(pika_clean$Station)</code>). We want to convert these three variables so that they have a class of <code>factor</code>. Do this within a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> and use the function <code><a href="https://rdrr.io/r/base/factor.html">as.factor()</a></code>. Don’t forget you can always check the help page using <code>?</code>.</p>
+<p>In the rest of these cleaning steps, we’ll be overriding <code>pika_clean</code>, meaning you don’t need to create a new object.</p>
+<p>Check that the conversation worked using <code><a href="https://rdrr.io/r/base/class.html">class()</a></code>.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pika_clean</span> <span class="op">&lt;-</span> <span class="va">pika_clean</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>        Station <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Station</span><span class="op">)</span>,</span>
+<span>        Site <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Site</span><span class="op">)</span>,</span>
+<span>        Sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Sex</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 5
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Next, we want to spell out the abbreviations in <code>Site</code>. With <code><a href="https://rdrr.io/r/base/unique.html">unique()</a></code>, we find that <code>Site</code> has three unique site IDs: <code>CG</code>, <code>WK</code>, <code>LL</code>. And from the metadata, we know that:</p>
+<ul>
+<li>CG = Cable Gate</li>
+<li>WK = West Knoll</li>
+<li>LL = Long Lake</li>
+</ul>
+<p>Write code to spell out the abbreviations within a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> using the function <code><a href="https://dplyr.tidyverse.org/reference/recode.html">recode()</a></code>. <code><a href="https://dplyr.tidyverse.org/reference/recode.html">recode()</a></code> is an extremely useful function that allows you to replace values within a vector. View the help page or use Google.</p>
+<p>Check that your code worked using <code><a href="https://rdrr.io/r/base/unique.html">unique()</a></code>.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pika_clean</span> <span class="op">&lt;-</span> <span class="va">pika_clean</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Site <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/recode.html">recode</a></span><span class="op">(</span></span>
+<span>        <span class="va">Site</span>,</span>
+<span>        <span class="st">"CG"</span> <span class="op">=</span> <span class="st">"Cable Gate"</span>,</span>
+<span>        <span class="st">"WK"</span> <span class="op">=</span> <span class="st">"West Knoll"</span>,</span>
+<span>        <span class="st">"LL"</span> <span class="op">=</span> <span class="st">"Long Lake"</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 6
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We’re almost done! Take a look at the <code>pika_clean</code> data using <code><a href="https://rdrr.io/r/utils/View.html">View()</a></code>. The table might be better organized if we had the variables <code>Station</code> and <code>Site</code> next to each other. We can change that using the function <code><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate()</a></code>. <code><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate()</a></code> is another useful function that allows us to change the column order using the arguments <code>.before</code> and <code>.after</code>. If needed, view the help page or use Google.</p>
+<p>Let’s change the order of the columns so that <code>Site</code> is before <code>Station</code>, and <code>Sex</code> is after <code>UTM-Northing</code>. This does not need to be within a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> because we are not changing any of the values within a column / variable.</p>
+<p>Check that your code worked by viewing <code>pika_clean</code> using <code><a href="https://rdrr.io/r/utils/View.html">View()</a></code>.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pika_clean</span> <span class="op">&lt;-</span> <span class="va">pika_clean</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">Site</span>, .before <span class="op">=</span> <span class="va">Station</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">Sex</span>, .after <span class="op">=</span> <span class="va">UTM_Northing</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We’re done! These are the all the cleaning and wrangling steps we are going to do for <code>pika</code>. We completed these steps one by one in their own code chunks, but know that you could have piped into each step in a single code chunk. See the code chunk below:</p>
+<div class="cell">
+<details><summary>Piped Sequence</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># cleaning and wrangling using a piped sequence</span></span>
+<span><span class="va">pika_clean</span> <span class="op">&lt;-</span> <span class="va">pika</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="co"># Question 3</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Notes</span>, </span>
+<span>           <span class="op">-</span><span class="va">Vial</span>, </span>
+<span>           <span class="op">-</span><span class="va">Plate</span>, </span>
+<span>           <span class="op">-</span><span class="va">Biweek</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>        <span class="co"># Question 4</span></span>
+<span>        Station <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Station</span><span class="op">)</span>,</span>
+<span>        Site <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Site</span><span class="op">)</span>,</span>
+<span>        Sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Sex</span><span class="op">)</span>,</span>
+<span>        <span class="co"># Question 5 (Note: within the same mutate)</span></span>
+<span>        Site <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/recode.html">recode</a></span><span class="op">(</span></span>
+<span>            <span class="va">Site</span>,</span>
+<span>            <span class="st">"CG"</span> <span class="op">=</span> <span class="st">"Cable Gate"</span>,</span>
+<span>            <span class="st">"WK"</span> <span class="op">=</span> <span class="st">"West Knoll"</span>,</span>
+<span>            <span class="st">"LL"</span> <span class="op">=</span> <span class="st">"Long Lake"</span></span>
+<span>        <span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="co"># Question 6</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">Site</span>, .before <span class="op">=</span> <span class="va">Station</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">Sex</span>, .after <span class="op">=</span> <span class="va">UTM_Northing</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now let’s clean and wrangle <code>elevation</code>.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 7
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>From the <code>elevation</code> data we only want the columns:</p>
+<ul>
+<li><code>Station</code></li>
+<li><code>Elev_M</code></li>
+</ul>
+<p>Write code to subset the data so it only contains those columns and save it to an object called <code>elevation_clean</code>.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">elevation_clean</span> <span class="op">&lt;-</span> <span class="va">elevation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Station</span>, <span class="va">Elev_M</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 8
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Lastly, we want to convert data types.</p>
+<p>The variable <code>Station</code> has a class of <code>character</code> (you can find out what data type a variable is by using the function <code><a href="https://rdrr.io/r/base/class.html">class()</a></code> i.e.&nbsp;<code>class(elevation_clean$Station)</code>). We want to convert this variable so that it has a class of <code>factor</code>. Do this within a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> and use the function <code><a href="https://rdrr.io/r/base/factor.html">as.factor()</a></code>. Don’t forget you can always check the help page using <code>?</code>.</p>
+<p>In the rest of these cleaning steps, we’ll be overriding <code>elevation_clean</code>, meaning you don’t need to create a new object.</p>
+<p>Check that the conversation worked using <code><a href="https://rdrr.io/r/base/class.html">class()</a></code>.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">elevation_clean</span> <span class="op">&lt;-</span> <span class="va">elevation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Station <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Station</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>If we combined these cleaning and wrangling steps in a piped sequence it would look like this:</p>
+<div class="cell">
+<details><summary>Piped Sequence</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># cleaning and wrangling using a piped sequence</span></span>
+<span><span class="va">elevation_clean</span> <span class="op">&lt;-</span> <span class="va">elevation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="co"># Question 7</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Station</span>, <span class="va">Elev_M</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="co"># Question 8</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Station <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Station</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="join-pika_clean-and-elevation_clean" class="level3" data-number="16.3.4"><h3 data-number="16.3.4" class="anchored" data-anchor-id="join-pika_clean-and-elevation_clean">
+<span class="header-section-number">16.3.4</span> Join <code>pika_clean</code> and <code>elevation_clean</code>
+</h3>
+<p>Finally, the last wrangling step we want to do is merge these two cleaned and subsetted tables.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 9
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Since we want all the information from our newly subsetted tables, use <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join()</a></code> to merge the tables together. Explicitly include the variable you’re joining by. Look at the output and check that it’s what you expected.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># using pipe</span></span>
+<span><span class="va">pikas</span> <span class="op">&lt;-</span> <span class="va">pika_clean</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">elevation_clean</span>,</span>
+<span>              by <span class="op">=</span> <span class="st">"Station"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># without pipe</span></span>
+<span><span class="va">pikas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pika_clean</span>,</span>
+<span>                   y <span class="op">=</span> <span class="va">elevation_clean</span>,</span>
+<span>                   by <span class="op">=</span> <span class="st">"Station"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section></section><section id="exercise-spatial-exploration-and-making-maps" class="level2" data-number="16.4"><h2 data-number="16.4" class="anchored" data-anchor-id="exercise-spatial-exploration-and-making-maps">
+<span class="header-section-number">16.4</span> Exercise: Spatial Exploration and Making Maps</h2>
+<p>Let’s use the data from the <code>pikas</code> table to practice some of the spatial functions we learned about from the <code>sf</code> package. We’ll also practice making maps using <code>ggplot</code>, as well as interactive maps using <code>leaflet</code>, and adding basemaps using <code>ggmap</code>.</p>
+<section id="converting-to-simple-features" class="level3" data-number="16.4.1"><h3 data-number="16.4.1" class="anchored" data-anchor-id="converting-to-simple-features">
+<span class="header-section-number">16.4.1</span> Converting to Simple Features</h3>
+<p>If we run <code>class(pikas)</code>, we’ll see that <code>pikas</code> has a class of table or data frame. However, if we want to create a map (or in the future run any spatial analysis), we need <code>pikas</code> to be a simple features (sf) object.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 10
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using the coordinates in the table <code>UTM_Easting</code> and <code>UTM_Northing</code> to convert <code>pikas</code> into an <code>sf</code> object. To do this, use the <code>sf</code> function <code><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf()</a></code> and save it to an object called <code>pikas_sf</code>.</p>
+<p>What new column do you expect to appear? What happened to the <code>UTM_Easting</code> and <code>UTM_Northing</code> columns?</p>
+<p>Check the class of <code>pikas_sf</code> to make sure it’s an <code>sf</code> object.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pikas_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pikas</span>,</span>
+<span>                     coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"UTM_Easting"</span>, <span class="st">"UTM_Northing"</span><span class="op">)</span><span class="op">)</span> </span>
+<span><span class="co"># make sure coords is in longitude, latitude order</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="setting-a-coordinate-reference-system-crs" class="level3" data-number="16.4.2"><h3 data-number="16.4.2" class="anchored" data-anchor-id="setting-a-coordinate-reference-system-crs">
+<span class="header-section-number">16.4.2</span> Setting a Coordinate Reference System (CRS)</h3>
+<p>Run <code>st_crs(pikas_sf)</code> in the Console. The output we get is <code>Coordinate Reference System: NA</code>. So while we now have a <code>geometry</code> column with spatial information, we still don’t have a CRS associated with our points. We need a CRS to make sure our data is represented accurately in 2D, as well as on the Earth’s surface, what units are being used and more.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 11
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Set the CRS for the geometry column in <code>pikas_sf</code> using <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs()</a></code> and the EPSG code 26913.</p>
+<p>Use <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs()</a></code> to check that you successfully set the CRS to 26913.</p>
+<p><strong>Note:</strong> This EPSG code is for North America, but knowing that the Niwot Ridge Research Station is located in north-central Colorado, you could search for this region on <a href="https://epsg.io/">epsg.io</a> and use a more local EPSG code. However, if you want to change the CRS after setting it here, you will need to use <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code> because replacing the EPSG code in <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs()</a></code> will not reproject the data.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pikas_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs</a></span><span class="op">(</span><span class="va">pikas_sf</span>, <span class="fl">26913</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="plotting-points-using-ggplot-and-geom_sf" class="level3" data-number="16.4.3"><h3 data-number="16.4.3" class="anchored" data-anchor-id="plotting-points-using-ggplot-and-geom_sf">
+<span class="header-section-number">16.4.3</span> Plotting Points using <code>ggplot</code> and <code>geom_sf()</code>
+</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 12
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Create a basic map of the points using <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf()</a></code> from <code>ggplot</code>. Don’t worry about making the map look nice, just plot to make sure the CRS you chose is accurate and isn’t causing any unintended distortion.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">pikas_sf</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details><summary>
+ggplot Map
+</summary><div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/pika_points_map.png" class="img-fluid figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+</details><div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 13
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now, take some time to make your <code>ggplot</code> map look pretty. Consider the following:</p>
+<ul>
+<li>Color by a variable (i.e.&nbsp;<code>Site</code>)</li>
+<li>Adding labels (title, subtitle, axes, legend)</li>
+<li>Change the shape of the points using the <code>shape</code> argument in <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code>
+</li>
+<li>Add a theme (i.e.&nbsp;<code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light()</a></code>)</li>
+<li>Customization of plot elements in <code><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme()</a></code>
+</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">pikas_sf</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">Site</span>, shape <span class="op">=</span> <span class="va">Site</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>        title <span class="op">=</span> <span class="st">"Location of Pika Sampling Stations"</span>,</span>
+<span>        subtitle <span class="op">=</span> <span class="st">"Niwot Ridge LTER"</span>,</span>
+<span>        x <span class="op">=</span> <span class="st">"Latitude (Degrees)"</span>,</span>
+<span>        y <span class="op">=</span> <span class="st">"Longitude (Degrees)"</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">30</span><span class="op">)</span><span class="op">)</span> <span class="co"># tilt x-axis text so that the labels don't overlap</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details><summary>
+ggplot Map
+</summary><img src="images/pika_points_map_pretty.png" class="img-fluid" style="width:75.0%" data-fig-align="center"></details></section><section id="add-a-basemap-using-ggmap" class="level3" data-number="16.4.4"><h3 data-number="16.4.4" class="anchored" data-anchor-id="add-a-basemap-using-ggmap">
+<span class="header-section-number">16.4.4</span> Add a basemap using <code>ggmap</code>
+</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 14
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before we start on the basemap, we need to reproject our data using <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code>. If you recall, our data is currently using the projected CRS NAD83/UTM Zone 13N with the EPSG code 26913.</p>
+<p>However, online basemaps often use the WGS84 Web Mercator coordinate system. This motivates us to reproject our data to the WGS84 CRS using <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code> so that it’s more compatible with third-party maps and therefore allows us to do more with our spatial data.</p>
+<p>Use <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code> to reproject <code>pikas_sf</code> to WGS84 using the EPSG code 4326. Store it to a new object called <code>pikas_sf_4326</code>.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pikas_sf_4326</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">pikas_sf</span>, <span class="fl">4326</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 15
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Create a bounding box for the Niwot Ridge LTER Research Station using left, right, top, and bottom coordinates. We found these coordinates for you using OpenStreetMap (see details steps below). Use the coordinates listed below to create a vector called <code>nwt_bbox</code>.</p>
+<ul>
+<li>left = -105.65</li>
+<li>bottom = 40.04</li>
+<li>right = -105.55</li>
+<li>top = 40.1</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nwt_bbox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>left <span class="op">=</span> <span class="op">-</span><span class="fl">105.65</span>, bottom <span class="op">=</span> <span class="fl">40.04</span>, right <span class="op">=</span> <span class="op">-</span><span class="fl">105.55</span>, top <span class="op">=</span> <span class="fl">40.1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-caution callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Steps to obtain bounding box coordinates for Niwot Ridge Research Station using <a href="https://www.openstreetmap.org/#map=15/34.4146/-119.8681">OpenStreetMap</a>.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Go to <a href="https://www.openstreetmap.org/#map=15/34.4146/-119.8681">openstreetmap.org</a>
+</li>
+<li>In the search bar type “Niwot Mountain”</li>
+<li>Click “Export” button in the top navigation bar</li>
+<li>Under “Export” section click “Manually select a different area”
+<ol type="a">
+<li>We have to do this because “Niwot Ridge Research Station” is not searchable but we can manually move the bounding box to where the research station is</li>
+</ol>
+</li>
+<li>Copy the coordinates in the “Export” section and use them for your bounding box</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 16
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Next, we can use <code><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html">ggmap()</a></code> and <code><a href="https://rdrr.io/pkg/ggmap/man/get_stamenmap.html">get_stamenmap()</a></code> to get our basemap and plot it.</p>
+<p><code><a href="https://rdrr.io/pkg/ggmap/man/get_stamenmap.html">get_stamenmap()</a></code> creates a ggmap raster object and <code><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html">ggmap()</a></code> will plot this ggmap raster object. We can specify the bbox argument as the <code>nwt_bbox</code> object we defined earlier. The zoom argument determines the scale of the map, and will take some trial and error to get right.</p>
+<p>You can also specify the basemap using the arguement <code>maptype</code>. There are three different map types: “terrain”, “watercolor”, and “toner”. Explore these map types and choose one.</p>
+<p>First, obtain the basemap using <code><a href="https://rdrr.io/pkg/ggmap/man/get_stamenmap.html">get_stamenmap()</a></code>, specify the arguements, and save it to an object called <code>nwt_basemap</code>. Then use <code><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html">ggmap()</a></code> to plot <code>nwt_basemap</code>.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nwt_basemap</span> <span class="op">&lt;-</span> <span class="fu">ggmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/get_stamenmap.html">get_stamenmap</a></span><span class="op">(</span><span class="va">nwt_bbox</span>, zoom <span class="op">=</span> <span class="fl">13</span>, </span>
+<span>                                    maptype <span class="op">=</span> <span class="st">"terrain"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html">ggmap</a></span><span class="op">(</span><span class="va">nwt_basemap</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details><summary>
+Basemap
+</summary><img src="images/nwt_basemap_plot.png" class="img-fluid" style="width:75.0%" data-fig-align="center"></details><div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 17
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>ggmap</code> and <code>ggplot</code> are compatible, so we can combine our <code><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html">ggmap()</a></code> code with our <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf()</a></code> code to create our final map with a basemap.</p>
+<p>First, plot <code>ggmap</code> raster object <code>nwt_basemap</code>. Then combine it with <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf()</a></code>.</p>
+<p>In <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf()</a></code> we need to:</p>
+<ul>
+<li>explicitly call <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code> with the <code>mapping</code> argument because there is no plot mapping</li>
+<li>in <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code> set the <code>color</code> and <code>shape</code> arguments to <code>Site</code>
+</li>
+<li>add the argument <code>inherit.aes = FALSE</code> to override the default aesthetics, instead of combining with them</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html">ggmap</a></span><span class="op">(</span><span class="va">nwt_basemap</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="va">pikas_sf_4326</span>, </span>
+<span>            mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">Site</span>, shape <span class="op">=</span> <span class="va">Site</span><span class="op">)</span>, </span>
+<span>            inherit.aes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details><summary>
+Basemap and Pika Map
+</summary><img src="images/nwt_basemap_pika_plot.png" class="img-fluid" style="width:80.0%" data-fig-align="center"></details><div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 18
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now, take some time to make your map look pretty. Consider the following:</p>
+<ul>
+<li>Add a theme (i.e.&nbsp;<code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_light()</a></code>)</li>
+<li>Add labels (title, subtitle, axes, legend)</li>
+<li>Customize the colors of the sites using <code><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_color_manual()</a></code>
+</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ggmap/man/ggmap.html">ggmap</a></span><span class="op">(</span><span class="va">nwt_basemap</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="va">pikas_sf_4326</span>,</span>
+<span>            mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">Site</span>, shape <span class="op">=</span> <span class="va">Site</span><span class="op">)</span>,</span>
+<span>            inherit.aes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>        title <span class="op">=</span> <span class="st">"Location of Pika Sampling Stations"</span>,</span>
+<span>        subtitle <span class="op">=</span> <span class="st">"Niwot Ridge LTER"</span>,</span>
+<span>        x <span class="op">=</span> <span class="st">"Longitude (Degrees)"</span>,</span>
+<span>        y <span class="op">=</span> <span class="st">"Latitude (Degrees)"</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># choosing colors to make sure points are visible</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"purple"</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details><summary>
+Basemap and Pika Map
+</summary><img src="images/nwt_basemap_pika_pretty_plot.png" class="img-fluid" style="width:80.0%" data-fig-align="center"></details></section><section id="bonus-make-an-interactive-map-using-leaflet" class="level3" data-number="16.4.5"><h3 data-number="16.4.5" class="anchored" data-anchor-id="bonus-make-an-interactive-map-using-leaflet">
+<span class="header-section-number">16.4.5</span> Bonus: Make an interactive map using <code>leaflet</code>
+</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 19
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use the functions <code><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html">leaflet()</a></code>, <code><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addTiles()</a></code>, and <code><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addCircles()</a></code> to create an interactive map. Use <code>pikas_sf_4326</code> as your data and <code>Station</code> as your <code>label</code>.</p>
+<p>If you want to add more styling to your interactive map, review the leaflet sections in <a href="https://learning.nceas.ucsb.edu/2023-04-coreR/session_12.html">Chapter 12</a>, <a href="https://learning.nceas.ucsb.edu/2023-04-coreR/session_15.html">Chapter 15</a>, or check out the <a href="https://github.com/rstudio/cheatsheets/blob/main/leaflet.pdf"><code>leaflet</code> cheatsheet</a>.</p>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addTiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addCircles</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">pikas_sf_4326</span>, label <span class="op">=</span> <span class="op">~</span><span class="va">Station</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-755460e044809dba9a87" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-755460e044809dba9a87">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircles","args":[[40.0455005946612,40.0457009896597,40.0457579828779,40.0555599523313,40.0559938983516,40.0571819744062,40.0561230806813,40.0568155865201,40.0573483958231,40.0565402167651,40.058671686916,40.0595218148983,40.0688580016368,40.0684234185393,40.0693147960073,40.0561142521124,40.058208286621,40.0480370024965,40.0455276225162,40.0457489160232,40.0553447313224,40.0559311304211,40.0555328645062,40.0571819744062,40.0561142521124,40.0573664142759,40.0567661666364,40.058172189238,40.0586718077615,40.0595307637568,40.0553356008104,40.055931069968,40.0571640762052,40.0561320899096,40.0568335447263,40.0573485162668,40.0567751758648,40.0565673044498,40.0581543522949,40.059539893701,40.0455730726236,40.0457099989451,40.0480372320608,40.0553357220997,40.0559490884176,40.05554193387,40.0560296347386,40.0571817940141,40.056114131674,40.0568156467663,40.0573753030538,40.0567841249372,40.0565582952184,40.0581632405179,40.0586716264914,40.0595128660386,40.0455730726236,40.0457099989451,40.0457399643054,40.0689473805207,40.0684142308771,40.069279116053,40.0553357220997,40.0559490884176,40.05554193387,40.0560296347386,40.0571817940141,40.056114131674,40.0568156467663,40.0573753030538,40.0567841249372,40.0565582952184,40.0581632405179,40.0586716264914,40.0595128660386,40.0553357220997,40.0559490884176,40.05554193387,40.0571817940141,40.056114131674,40.0568156467663,40.0573753030538,40.0567841249372,40.0565582952184,40.0581632405179,40.0586716264914,40.0595128660386,40.0455730726236,40.0457099989451,40.0457399643054,40.0480372320608,40.0689473805207,40.0684142308771,40.069279116053,40.0455730726236,40.0457099989451,40.0457399643054,40.0480372320608,40.0553357220997,40.0559490884176,40.05554193387,40.0571817940141,40.056114131674,40.0568156467663,40.0573753030538,40.0567841249372,40.0565582952184,40.0581632405179,40.0586716264914],[-105.570048542407,-105.569604743325,-105.569007351908,-105.594237990193,-105.593948644335,-105.594181730514,-105.595110503738,-105.595351022643,-105.595109437936,-105.592827816481,-105.597079035002,-105.596453294179,-105.587200179199,-105.587618609989,-105.587731811756,-105.595075253071,-105.597837114132,-105.567256090415,-105.570048767529,-105.569018999382,-105.599289376353,-105.597395129354,-105.594249479437,-105.594181730514,-105.595075253071,-105.59510959468,-105.594447787967,-105.597848523643,-105.597055585934,-105.596465097416,-105.59931274535,-105.597406853417,-105.594158125452,-105.595110582107,-105.595362903671,-105.595085989314,-105.594447866251,-105.592816326508,-105.597813192843,-105.596441726606,-105.569967086312,-105.569604818308,-105.567209199321,-105.599289297436,-105.597407010759,-105.594237833688,-105.594007577634,-105.594216903367,-105.595098701269,-105.595339298424,-105.595133121683,-105.59445966875,-105.592816248439,-105.597836720463,-105.597090759535,-105.596441490944,-105.569967086312,-105.569604818308,-105.5690072021,-105.587341668614,-105.587653711244,-105.587661143792,-105.599289297436,-105.597407010759,-105.594237833688,-105.594007577634,-105.594216903367,-105.595098701269,-105.595339298424,-105.595133121683,-105.59445966875,-105.592816248439,-105.597836720463,-105.597090759535,-105.596441490944,-105.599289297436,-105.597407010759,-105.594237833688,-105.594216903367,-105.595098701269,-105.595339298424,-105.595133121683,-105.59445966875,-105.592816248439,-105.597836720463,-105.597090759535,-105.596441490944,-105.569967086312,-105.569604818308,-105.5690072021,-105.567209199321,-105.587341668614,-105.587653711244,-105.587661143792,-105.569967086312,-105.569604818308,-105.5690072021,-105.567209199321,-105.599289297436,-105.597407010759,-105.594237833688,-105.594216903367,-105.595098701269,-105.595339298424,-105.595133121683,-105.59445966875,-105.592816248439,-105.597836720463,-105.597090759535],10,null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},null,null,["CG1","CG2","CG3","WK3","WK4","WK5","WK6","WK7","WK8","WK10","WK12","WK13","LL1","LL2","LL3","WK6","WK11","CG4","CG1","CG3","WK1","WK2","WK3","WK5","WK6","WK8","WK9","WK11","WK12","WK13","WK1","WK2","WK5","WK6","WK7","WK8","WK9","WK10","WK11","WK13","CG1","CG2","CG4","WK1","WK2","WK3","WK4","WK5","WK6","WK7","WK8","WK9","WK10","WK11","WK12","WK13","CG1","CG2","CG3","LL1","LL2","LL3","WK1","WK2","WK3","WK4","WK5","WK6","WK7","WK8","WK9","WK10","WK11","WK12","WK13","WK1","WK2","WK3","WK5","WK6","WK7","WK8","WK9","WK10","WK11","WK12","WK13","CG1","CG2","CG3","CG4","LL1","LL2","LL3","CG1","CG2","CG3","CG4","WK1","WK2","WK3","WK5","WK6","WK7","WK8","WK9","WK10","WK11","WK12"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]}],"limits":{"lat":[40.0455005946612,40.0693147960073],"lng":[-105.59931274535,-105.567209199321]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 
 
-
-
-<section id="learning-objectives" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
-
-
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -368,11 +1102,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./session_15.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using <code>sf</code> for Spatial Analysis &amp; Intro to Making Maps</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using <code>sf</code> for Spatial Data &amp; Intro to Making Maps</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
