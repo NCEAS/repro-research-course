@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 17&nbsp; What is Cloud Computing Anyways?</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../sections/reproducibility-containers.html" rel="next">
+<link href="../sections/software-design-2.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">What is Cloud Computing Anyways?</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Course Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://arcticdata.io" title="" class="sidebar-tool px-1"><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/arcticdatactr" title="" class="sidebar-tool px-1"><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/scalable-computing-course" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/adc-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome and Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/remote-computing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Remote Computing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/python-intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Programming on Clusters</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parallel-programming.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pleasingly Parallel Programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/data-structures-netcdf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Structures and Formats for Large Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parallel-with-dask.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Group Project: Staging and Preprocessing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/software-design-1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Software Design I: Functions and Concurrency</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/geopandas.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/ice-wedge-polygons.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Billions of Ice Wedge Polygons</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/data-ethics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Data Ethics for Scalable Computing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/google-earth-engine.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Google Earth Engine</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/adc-data-publishing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Documenting and Publishing Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Group Project: Visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/software-design-2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/cloud-computing.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">What is Cloud Computing Anyways?</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/reproducibility-containers.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility and Containers</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parquet-arrow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"> <span class="header-section-number">17.1</span> Learning Objectives</a></li>
+  <li><a href="#fa-cloud-what-is-cloud-computing-anyways" id="toc-fa-cloud-what-is-cloud-computing-anyways" class="nav-link" data-scroll-target="#fa-cloud-what-is-cloud-computing-anyways"> <span class="header-section-number">17.2</span> <i class="fa-solid fa-cloud" aria-hidden="true"></i> What is cloud computing anyways?</a></li>
+  <li><a href="#commercial-clouds" id="toc-commercial-clouds" class="nav-link" data-scroll-target="#commercial-clouds"> <span class="header-section-number">17.3</span> Commercial clouds</a></li>
+  <li><a href="#academic-clouds" id="toc-academic-clouds" class="nav-link" data-scroll-target="#academic-clouds"> <span class="header-section-number">17.4</span> Academic clouds</a>
+  <ul class="collapse">
+  <li><a href="#cloud-deployment-options" id="toc-cloud-deployment-options" class="nav-link" data-scroll-target="#cloud-deployment-options"> <span class="header-section-number">17.4.1</span> Cloud deployment options</a></li>
+  </ul></li>
+  <li><a href="#service-models" id="toc-service-models" class="nav-link" data-scroll-target="#service-models"> <span class="header-section-number">17.5</span> Service Models</a></li>
+  <li><a href="#fa-pizza-slice-an-analogy-pizza-as-a-service" id="toc-fa-pizza-slice-an-analogy-pizza-as-a-service" class="nav-link" data-scroll-target="#fa-pizza-slice-an-analogy-pizza-as-a-service"> <span class="header-section-number">17.6</span> <i class="fa-solid fa-pizza-slice" aria-hidden="true"></i> An Analogy: Pizza as a Service</a></li>
+  <li><a href="#virtual-machines-and-containers" id="toc-virtual-machines-and-containers" class="nav-link" data-scroll-target="#virtual-machines-and-containers"> <span class="header-section-number">17.7</span> Virtual Machines and Containers</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">What is Cloud Computing Anyways?</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="learning-objectives" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">17.1</span> Learning Objectives</h2>
+<ul>
+<li>Learn different uses of the term <em>cloud computing</em></li>
+<li>Understand the services of cloud providers</li>
+<li>Gain familiarity with containerized computing</li>
+<li>Work hands-on running a docker container, and building your own and running it</li>
+</ul>
+</section>
+<section id="fa-cloud-what-is-cloud-computing-anyways" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="fa-cloud-what-is-cloud-computing-anyways"><span class="header-section-number">17.2</span> <i class="fa-solid fa-cloud" aria-hidden="true"></i> What is cloud computing anyways?</h2>
+<p>The buzzword we all hear, but maybe don’t quite understand. ..</p>
+<p><strong>Cloud computing is a lot of things…</strong> <em>but generally speaking:</em></p>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><span class="bulletgrid"><i class="fa-solid fa-cloud" aria-hidden="true"></i><br>Cloud computing is the delivery of on-demand computer resources over the Internet. Or just “using someone else’s computer”.</span></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><span class="bulletgrid"><i class="fa-solid fa-server" aria-hidden="true"></i><br>“The Cloud” is powered by a global network of data centers which house the hardware (servers), power, and backup systems, etc. These data centers and infrastructure are managed by cloud providers</span></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><span class="bulletgrid"><i class="fa-solid fa-dollar-sign" aria-hidden="true"></i><br>Cloud computing services are typically offered using a “pay-as-you-go” pricing model, which in some scenarios may reduce capital expenses.</span></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><span class="bulletgrid"><i class="fa-solid fa-microchip" aria-hidden="true"></i><br>Cloud computing is a technology approach to using lightweight virtualization services to share large physical computing clusters across many users</span></p>
+</div>
+</div>
+</div>
+<p>Check out this article by Ingrid Burrington in The Atlantic, <a href="https://www.theatlantic.com/technology/archive/2016/01/amazon-web-services-data-center/423147/">Why Amazon’s Data Centers are Hidden in Spy Country</a>, for some interesting insight into one of the largest cloud provider’s data centers.</p>
+</section>
+<section id="commercial-clouds" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="commercial-clouds"><span class="header-section-number">17.3</span> Commercial clouds</h2>
+<p>There are a lots of different cloud computing platforms, but the big ones are:</p>
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> <a href="https://aws.amazon.com/what-is-cloud-computing/">Amazon Web Services</a> (AWS)<br> <i class="fa-solid fa-angle-right" aria-hidden="true"></i> <a href="https://cloud.google.com/">Google Cloud Platform</a> (GCP)<br> <i class="fa-solid fa-angle-right" aria-hidden="true"></i> <a href="https://azure.microsoft.com/en-us/">Microsoft Azure</a></p>
+<p><img src="../images/cloud_platforms.png" class="img-fluid"></p>
+<p><span style="font-size: 70%;">There are <em>many</em> other cloud service providers that offer varying degrees of infrastructure, ease of use, and cost. Check out <a href="digitalocean.com">DigitalOcean</a>, <a href="https://www.kamatera.com/">Kamatera</a>, and <a href="https://mamboserver.link/vultr">Vultr</a> to start.</span></p>
+</section>
+<section id="academic-clouds" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="academic-clouds"><span class="header-section-number">17.4</span> Academic clouds</h2>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../images/access-logo.png" class="img-fluid" data-fig-align="center"><br> <img src="../images/nersc-logo.png" class="img-fluid" data-fig-align="center"><br> <img src="../images/cyverse-logo.png" class="img-fluid" data-fig-align="center"><br> <img src="../images/pangeo_simple.png" class="img-fluid" data-fig-align="center"><br></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p>Federal agencies in the US and other institutions also support massive computing facilities supporting cloud computing. While there are too many to fully list, programs such as the National Science Foundation’s <a href="https://access-ci.org">ACCESS</a> program, the Department of Energy’s <a href="https://cs.lbl.gov/about/divisions-and-facilities/national-energy-research-scientific-computing-center/">National Energy Research Scientific Computing Center (NERSC)</a>, and the <a href="https://cyverse.org/">CyVerse</a> platform provide massive cloud computing resources to academic and agency researchers. The huge advantage is that these resources are generally free-for-use for affiliated researchers. When you need access to massive CPU and GPU hours, an application for access to these facilities can be extremely effective.</p>
+</div>
+</div>
+</div>
+<p>And the <a href="https://pangeo.io/">Pangeo</a> project is creating an open community focused on maintaining, supporting, and deploying open infrastructure for cloud computing. They support key <a href="https://pangeo.io/packages.html">scientific software packages</a> used throughout the cloud community, including <code>xarray</code> and <code>dask</code>, and generally are broadening capacity for large-scale, impactful research.</p>
+<section id="cloud-deployment-options" class="level3" data-number="17.4.1">
+<h3 data-number="17.4.1" class="anchored" data-anchor-id="cloud-deployment-options"><span class="header-section-number">17.4.1</span> Cloud deployment options</h3>
+<p>Different cloud service and deployment models offer a suite of options to fit client needs</p>
+<p><i class="fa-solid fa-server" aria-hidden="true"></i> <strong>Service Models:</strong> When you work in “the cloud” you’re using resources – including servers, storage, networks, applications, services, (and more!) – from a very large resource pool that is managed by you or the cloud service provider. Three cloud service models describe to what extent your resources are managed by yourself or by your cloud service providers.</p>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> Infrastructure as a Service (IaaS)</p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> Platform as a Service (PaaS)</p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> Software as a Service (SaaS)</p>
+</div>
+</div>
+</div>
+<p><i class="fa-solid fa-rocket" aria-hidden="true"></i> <strong>Deployment Models:</strong> Cloud deployment models describe the type of cloud environment based on ownership, scale, and access.</p>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> Private Cloud</p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> Public Cloud</p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> Hybrid Cloud</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="service-models" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="service-models"><span class="header-section-number">17.5</span> Service Models</h2>
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> <strong>Infrastructure as a Service (IaaS)</strong> provides users with computing resources like processing power, data storage capacity, and networking. IaaS platforms offer an alternative to on-premise physical infrastructure, which can be costly and labor-intensive. In comparison, IaaS platforms are more cost-effective (pay-as-you-go), flexible, and scalable.</p>
+<p>One example of IaaS is <a href="https://aws.amazon.com/ec2/">Amazon EC2</a>, which allows users to rent virtual computers on which to run their own computer applications (e.g.&nbsp;R/RStudio).</p>
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> <strong>Platform as a Service (PaaS)</strong> provides developers with a framework and tools for creating unique applications and software. A benefit of SaaS is that developers don’t need to worry about managing servers and underlying infrastructure (e.g.&nbsp;managing software updates or security patches). Rather, they can focus on the development, testing, and deploying of their application/software.</p>
+<p>One example of SaaS is <a href="https://aws.amazon.com/lambda/">AWS Lambda</a>, a serverless, event-driven compute service that lets you run code for virtually any type of application or backend service without provisioning or managing servers.</p>
+<p><i class="fa-solid fa-angle-right" aria-hidden="true"></i> <strong>Software as a Service (SaaS)</strong> makes software available to users via the internet. With SaaS, users don’t need to install and run software on their computers. Rather, they can access everything they need over the internet by logging into their account(s). The software/application owner does not have any control over the backend except for application-related management tasks.</p>
+<p>Some examples of SaaS applications include <a href="https://www.dropbox.com/">Dropbox</a>, <a href="https://slack.com/">Slack</a>, and <a href="https://www.docusign.com/">DocuSign</a>.</p>
+</section>
+<section id="fa-pizza-slice-an-analogy-pizza-as-a-service" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="fa-pizza-slice-an-analogy-pizza-as-a-service"><span class="header-section-number">17.6</span> <i class="fa-solid fa-pizza-slice" aria-hidden="true"></i> An Analogy: Pizza as a Service</h2>
+<p><img src="../images/pizza.png" width="80%" height="80%"></p>
+<p>Image Source: David Ng, Oursky</p>
+</section>
+<section id="virtual-machines-and-containers" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="virtual-machines-and-containers"><span class="header-section-number">17.7</span> Virtual Machines and Containers</h2>
+<p>As servers grow in size, we have increasing amounts of power and resources, but also a larger space to manage. Traditional operating systems use a common memory and process management model that is shared by all users and applications, which can cause some issues if one of the users consumes all of the memory, fills the disk, or causes a kernel panic. When running on a bare server, all of the processes from all users are mixed together and are not isolated, so the actions of one process can have large consequences for all of the others.</p>
+<p><img src="../images/virtualization.png" class="img-fluid"></p>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><strong>Virtual machines</strong> Virtualization is an approach to isolate the environments of the various users and services of a system so that we can make better use of the resource, and protect processes. In a virtualized environment, the host server still runs a host operating system, which includes a hypervisor process that can mediate between guest hosts on the machine and the underlying host operating system and hardware. This is effective at creating multiple <strong>virtual machines</strong> (VMs) running side-by-side on the same hardware. From the outside, and to most users, virtual machines appear to be a regular host on the network, when in fact they are virtual hosts that share the same underlying physical resources. But it also results in a fair amount of redundancy, in that each virtual machine must have its own operating system, libraries, and other resources. And calls pass through the guest operating system through the hypervisor to the physical layer, which can impose a performance penalty.</p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 70.0%;justify-content: center;">
+<p><strong>Containers</strong> A further step down the isolation road is to use a Container Runtime such as <a href="https://containerd.io/"><code>containerd</code></a> or <a href="https://docs.docker.com/engine/">Docker Engine</a>. Like virtual machines, containers provide mechanisms to create images that can be executed by a container runtime, and which provide stronger isolation among deployments. But they are also more lightweight, as the container only contains the libraries and executables needed to execute a target application, and not an entire guest operating system. They also are built using a layered file system, which allows multiple images to be layered together to create a composite that provides rich services withot as much duplication. This means that applications run with fewer resources, start up and shut down more quickly, and can be migrated easily to other hosts in a network.</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 30.0%;justify-content: center;">
+<p><img src="../images/docker-small-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../sections/software-design-2.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../sections/reproducibility-containers.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility and Containers</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
