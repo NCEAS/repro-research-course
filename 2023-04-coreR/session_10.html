@@ -330,7 +330,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="introduction" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">10.1</span> Introduction</h2>
 <p><code>Git</code> is a great tool for working on your own, but even better for working with friends and colleagues. <code>Git</code> allows you to work with confidence on your own local copy of files with the confidence that you will be able to successfully synchronize your changes with the changes made by others.</p>
-<p>The simplest way to collaborate with <code>Git</code> is to use a shared repository on a hosting service such as <a href="https://github.com">GitHub</a>, and use this shared repository as the mechanism to move changes from one Collaborator to another. While there are other more advanced ways to sync <code>git</code> repositories, this “hub and spoke” model works really well due to its simplicity.</p>
+<p>The simplest way to collaborate with <code>Git</code> is to use a shared repository on a hosting service such as <a href="https://github.com">GitHub</a>, and use this shared repository as the mechanism to move changes from one Collaborator to another. While there are other more advanced ways to sync <code>Git</code> repositories, this “hub and spoke” model works really well due to its simplicity.</p>
 <p>In this model, the Collaborator will <code>clone</code> a copy of the Owner’s repository from GitHub, and the Owner will grant them Collaborator status, enabling the Collaborator to directly pull and push from the Owner’s GitHub repository.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -371,6 +371,21 @@ Setup
 <ul>
 <li>Check your email for an invitation to GitHub or check your notifications (likely under “Your Organizations”) on GitHub to accept the invite to collaborate.</li>
 </ul>
+</div>
+</div>
+<div class="callout-caution callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Last thing, some <code>Git</code> configuration
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When <code>Git</code> released version 2.27, a new feature they incorporated allows users to specify how to pull, essentially, otherwise a warning will appear. To suppress this warning we need to configure our <code>Git</code> with this line of code:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config pull.rebase false</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>pull.rebase false</code> is a default strategy for pulling where it will try to auto-merge the files if possible, and if it can’t it will show a merge conflict</p>
 </div>
 </div>
 <p>We will start by having the Collaborator make some changes and share those with the Owner without generating any conflicts, In an ideal world, this would be the normal workflow. The instructors are going to demonstrate this in the next section.</p>
@@ -470,8 +485,8 @@ Instructions
 <section id="common-ways-to-resolve-a-merge-conflict" class="level3" data-number="10.3.1">
 <h3 data-number="10.3.1" class="anchored" data-anchor-id="common-ways-to-resolve-a-merge-conflict"><span class="header-section-number">10.3.1</span> Common ways to resolve a merge conflict</h3>
 <p><strong>1. Abort, abort, abort…</strong></p>
-<p>Sometimes you just made a mistake. When you get a merge conflict, the repository is placed in a “Merging” state until you resolve it. There’s a terminal command to abort doing the merge altogether:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge <span class="at">--abort</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Sometimes you just made a mistake. When you get a merge conflict, the repository is placed in a “Merging” state until you resolve it. There’s a Terminal command to abort doing the merge altogether:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge <span class="at">--abort</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Of course, after doing that you still haven’t synced with your Collaborator’s changes, so things are still unresolved. But at least your repository is now usable on your local machine.</p>
 <p><strong>2. Checkout</strong></p>
 <p>The simplest way to resolve a conflict, given that you know whose version of the file you want to keep, is to use the command line <code>Git</code> program to tell <code>Git</code> to use either <strong>your</strong> changes (the person doing the <code>merge</code>), or <strong>their</strong> changes (the Collaborator).</p>
@@ -479,7 +494,7 @@ Instructions
 <li>keep your Collaborator’s file: <code>git checkout --theirs conflicted_file.Rmd</code></li>
 <li>keep your own file: <code>git checkout --ours conflicted_file.Rmd</code></li>
 </ul>
-<p>Once you have run that command, then run <code>add</code> (staging), <code>commit</code>, and <code>push</code> the changes as normal.</p>
+<p>Once you have run that command, then run <code>add</code> (staging), <code>commit</code>, <code>pull</code>, and <code>push</code> the changes as normal.</p>
 <p><strong>3. Pull and edit the file</strong></p>
 <p>But that requires the command line. If you want to resolve from RStudio, or if you want to pick and choose some of your changes and some of your Collaborator’s, then instead you can manually edit and fix the file. When you <code>pull</code> the file with a conflict, <code>Git</code> notices that there is a conflict and modifies the file to show both your own changes and your Collaborator’s changes in the file. It also shows the file in the <code>Git</code> tab with an orange <code>U</code> icon, which indicates that the file is <code>Unmerged</code>, and therefore awaiting your help to resolve the conflict. It delimits these blocks with a series of less than and greater than signs, so they are easy to find:</p>
 <div class="quarto-figure quarto-figure-center">
@@ -505,11 +520,11 @@ Instructions
 </section>
 <section id="step-2-owner-makes-a-change-and-commits" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="step-2-owner-makes-a-change-and-commits">Step 2: Owner makes a change and commits</h3>
-<p>From that clean slate, the Owner first modifies and commits a small change including their name on a specific line of the <code>README.md</code> file (we will change line 4). Work to only change that one line, and add your username to the line in some form and commit the changes (but DO NOT push). We are now in a situation where the Owner has unpushed changes that the Collaborator can not yet see.</p>
+<p>From that clean slate, the Owner first modifies and commits a small change including their name on a specific line of the <code>README.md</code> file (we will change the first line, the title). Work to only change that one line, and add your username to the line in some form and commit the changes (but DO NOT push). We are now in a situation where the Owner has unpushed changes that the Collaborator can not yet see.</p>
 </section>
 <section id="step-3-collaborator-makes-a-change-and-commits-on-the-same-line" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="step-3-collaborator-makes-a-change-and-commits-on-the-same-line">Step 3: Collaborator makes a change and commits <strong>on the same line</strong></h3>
-<p>Now the Collaborator also makes changes to the same (line 4) of the <code>README.md</code> file in their RStudio copy of the project, adding their name to the line. They then commit. At this point, both the Owner and Collaborator have committed changes based on their shared version of the <code>README.md</code> file, but neither has tried to share their changes via GitHub.</p>
+<p>Now the Collaborator also makes changes to the same line (the first line, the title) on the <code>README.md</code> file in their RStudio copy of the project, adding their name to the line. They then commit. At this point, both the Owner and Collaborator have committed changes based on their shared version of the <code>README.md</code> file, but neither has tried to share their changes via GitHub.</p>
 </section>
 <section id="step-4-collaborator-pushes-the-file-to-github" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="step-4-collaborator-pushes-the-file-to-github">Step 4: Collaborator pushes the file to GitHub</h3>
