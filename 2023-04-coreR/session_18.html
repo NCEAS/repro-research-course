@@ -292,8 +292,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#workflow-in-a-nutshell" id="toc-workflow-in-a-nutshell" class="nav-link" data-scroll-target="#workflow-in-a-nutshell"><span class="toc-section-number">18.0.7</span>  Workflow in a nutshell</a></li>
   <li><a href="#adding-renv-to-conserve-your-environment" id="toc-adding-renv-to-conserve-your-environment" class="nav-link" data-scroll-target="#adding-renv-to-conserve-your-environment"><span class="toc-section-number">18.0.8</span>  Adding <code>renv</code> to conserve your environment</a></li>
   <li><a href="#conserve-your-computational-environement-with-docker" id="toc-conserve-your-computational-environement-with-docker" class="nav-link" data-scroll-target="#conserve-your-computational-environement-with-docker"><span class="toc-section-number">18.0.9</span>  Conserve your computational environement with Docker</a></li>
-  <li><a href="#the-5th-generation-of-reproducible-papers" id="toc-the-5th-generation-of-reproducible-papers" class="nav-link" data-scroll-target="#the-5th-generation-of-reproducible-papers">The 5th Generation of Reproducible Papers</a></li>
-  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="toc-section-number">18.0.10</span>  Resources</a></li>
+  <li><a href="#the-5th-generation-of-reproducible-papers" id="toc-the-5th-generation-of-reproducible-papers" class="nav-link" data-scroll-target="#the-5th-generation-of-reproducible-papers"><span class="toc-section-number">18.0.10</span>  The 5th Generation of Reproducible Papers</a></li>
+  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="toc-section-number">18.0.11</span>  Resources</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -421,7 +421,11 @@ Set up
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>To start a reproducible paper with <code>rrtools</code>: 1. Close your <code>username-training</code> project. Go to the project switcher dropdown, just click “close project.” This will set your working directory back to your home directory. 2. In console run the following line of code</p>
+<p>To start a reproducible paper with <code>rrtools</code>:</p>
+<ol type="1">
+<li><p>Close your <code>username-training</code> project. Go to the project switcher dropdown, just click “close project.” This will set your working directory back to your home directory.</p></li>
+<li><p>In console run the following line of code</p></li>
+</ol>
 <div class="cell">
 
 </div>
@@ -537,11 +541,15 @@ Summary
 </section>
 <section id="adding-renv-to-conserve-your-environment" class="level3" data-number="18.0.8">
 <h3 data-number="18.0.8" class="anchored" data-anchor-id="adding-renv-to-conserve-your-environment"><span class="header-section-number">18.0.8</span> Adding <code>renv</code> to conserve your environment</h3>
-<p><code>rrtools</code> has a couple more tricks up it’s sleeve to help your compendium be as reproducible and portable as possible.</p>
-<p>To capture the R packages and versions this project depends on, the <code>renv</code> package is used. - Running <code>renv::init()</code>, will initiate tracking of the R packages in your project. This unction will create a new folder called <code>renv</code> in your top directory. - <code>renv::init()</code> automatically detects dependencies in your code (by looking for library calls, at the DESCRIPTION file, etc.) and installs them to a private project specific library. This means that your project <code>mypaper</code> can use a different version of <code>dplyr</code> than another project which may need an older version without any hassle. - <code>renv</code> also write the package dependencies to a special file in the repository called <code>renv.lock</code>.</p>
 <ul>
-<li>If any of your packages you are using get updated, while your are working on your project, you can run <code>renv::snapshot()</code> to update the <code>renv.lock</code> file and your project-installed packages.</li>
-<li>You can read the <code>renv.lock</code> file using <code>renv::restore()</code>, when needed. This will install the versions of the packages needed.</li>
+<li><p><code>rrtools</code> has a couple more tricks up it’s sleeve to help your compendium be as reproducible and portable as possible.</p></li>
+<li><p>To capture the R packages and versions this project depends on, we can use the <code>renv</code> package.</p></li>
+<li><p>Running <code>renv::init()</code>, will initiate tracking of the R packages in your project.</p></li>
+<li><p>This action will create a new folder called <code>renv</code> in your top directory.</p></li>
+<li><p><code>renv::init()</code> automatically detects dependencies in your code (by looking for library calls, at the DESCRIPTION file, etc.) and installs them to a private project specific library. This means that your project <code>mypaper</code> can use a different version of <code>dplyr</code> than another project which may need an older version without any hassle.</p></li>
+<li><p><code>renv</code> also write the package dependencies to a special file in the repository called <code>renv.lock</code>.</p></li>
+<li><p>If any of your packages you are using is updated, while your are working on your project, you can run <code>renv::snapshot()</code> to update the <code>renv.lock</code> file and your project-installed packages.</p></li>
+<li><p>You can read the <code>renv.lock</code> file using <code>renv::restore()</code>, when needed. This will install the versions of the packages needed.</p></li>
 </ul>
 </section>
 <section id="conserve-your-computational-environement-with-docker" class="level3" data-number="18.0.9">
@@ -553,10 +561,13 @@ Summary
 <li>This is important when it comes to reproducibility, because when running someone else code, you may get different results or errors if you are using different versions of software (like an old version of <code>dplyr</code>).</li>
 <li>A Dockerfile contains the instructions for how to recreate the computational environment where your analysis was run.</li>
 </ul>
-<p><strong>In practice</strong> - Once you have your research compendium, you can called <code>rrtools::use_dockerfile()</code> - This, first creates a Dockerfile that loads a standard image for using R with the tidyverse, - And then has more instructions for how to create the environment so that it has the very specific R packages and versions you need.</p>
+<p><strong>In practice</strong></p>
 <ul>
-<li>If we look at the Dockerfile (example below), it calls to <code>renv::restore()</code>, as described above.</li>
-<li>The last line of the docker file renders our RMarkdown reproducible paper!</li>
+<li><p>Once you have your research compendium, you can called <code>rrtools::use_dockerfile()</code></p></li>
+<li><p>This, first creates a Dockerfile that loads a standard image for using R with the tidyverse,</p></li>
+<li><p>And then has more instructions for how to create the environment so that it has the very specific R packages and versions you need.</p></li>
+<li><p>If we look at the Dockerfile (example below), it calls to <code>renv::restore()</code>, as described above.</p></li>
+<li><p>The last line of the docker file renders our RMarkdown reproducible paper!</p></li>
 </ul>
 <pre><code># get the base image, the rocker/verse has R, RStudio and pandoc
 FROM rocker/verse:4.1.0
@@ -588,8 +599,8 @@ RUN . /etc/environment \
 </ul>
 <p><img src="images/github-actions.png" class="img-fluid"></p>
 </section>
-<section id="the-5th-generation-of-reproducible-papers" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="the-5th-generation-of-reproducible-papers">The 5th Generation of Reproducible Papers</h3>
+<section id="the-5th-generation-of-reproducible-papers" class="level3" data-number="18.0.10">
+<h3 data-number="18.0.10" class="anchored" data-anchor-id="the-5th-generation-of-reproducible-papers"><span class="header-section-number">18.0.10</span> The 5th Generation of Reproducible Papers</h3>
 <p><img src="images/Living-paper.png" class="img-fluid"></p>
 <p><strong>Whole Tale</strong> is a project that aims to simplify computational reproducibility. It enables researchers to easily package and share ‘tales’. Tales are executable research objects captured in a standards-based tale format complete with metadata. They can contain:</p>
 <ul>
@@ -610,8 +621,8 @@ RUN . /etc/environment \
 <p>By integrating with DataONE and Dataverse, Whole Tale includes over 90 major research repositories from which a user can select datasets to make those datasets the starting point of an interactive data exploration and analysis inside of one of the Whole Tale environments. DataONE, is adding functionality to work with data in the Whole Tale environment directly from the dataset landing page.</p>
 <p><strong>Full circle reproducibility can be achieved by publishing data, code AND the environment.</strong></p>
 </section>
-<section id="resources" class="level3" data-number="18.0.10">
-<h3 data-number="18.0.10" class="anchored" data-anchor-id="resources"><span class="header-section-number">18.0.10</span> Resources</h3>
+<section id="resources" class="level3" data-number="18.0.11">
+<h3 data-number="18.0.11" class="anchored" data-anchor-id="resources"><span class="header-section-number">18.0.11</span> Resources</h3>
 <ul>
 <li><a href="https://github.com/benmarwick/rrtools"><code>rrtools</code> documentation</a></li>
 <li>The <a href="https://github.com/rstudio/rticles%20B"><code>rticles</code></a></li>
