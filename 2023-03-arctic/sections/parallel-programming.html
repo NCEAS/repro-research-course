@@ -467,7 +467,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>run_serial(np.arange(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>run_serial: 164257.8320503235 ms</code></pre>
+<pre><code>run_serial: 170906.36897087097 ms</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>[0,
@@ -605,7 +605,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_serial: 29386.028051376343 ms
+<pre><code>download_serial: 84799.42321777344 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']</code></pre>
 </div>
 </div>
@@ -635,7 +635,7 @@ Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_threaded: 33750.31805038452 ms
+<pre><code>download_threaded: 30357.223987579346 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -661,10 +661,16 @@ SWI_2001.tif</code></pre>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2007.tif</code></pre>
+<pre><code>Downloading: SWI_2021.tif</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Downloading: SWI_2019.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2001.tif</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Downloading: SWI_2007.tif</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2020.tif</code></pre>
@@ -673,12 +679,6 @@ SWI_2001.tif</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2021.tif</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2019.tif</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
@@ -691,7 +691,7 @@ SWI_2001.tif</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>download_process: 21782.488107681274 ms
+<pre><code>download_process: 27528.392553329468 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -730,7 +730,7 @@ SWI_2001.tif</code></pre>
 <span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span>
 <span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>parsl.load(htex_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7ffba9beaa60&gt;</code></pre>
+<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7fdd20756a30&gt;</code></pre>
 </div>
 </div>
 <p>We now have a live parsl executor (<code>htex_local</code>) that is waiting to execute processes. We tell it to execute processes by annotating functions with decorators that indicate which tasks should be parallelized. Parsl then handles the scheduling and execution of those tasks based on the dependencies between them. In the simplest case, we’ll decorate our previous function for downloading a file with the <code>@python_app</code> decorator, which tells parsl that any function calls with this function should be run on the default executor (in this case, <code>htex_local</code>).</p>
@@ -777,16 +777,17 @@ SWI_2001.tif</code></pre>
 <pre><code>Define our download_futures function</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;AppFuture at 0x7ffba838c130 state=pending&gt;
-&lt;AppFuture at 0x7ffba838cd90 state=pending&gt;
-&lt;AppFuture at 0x7ffba8397310 state=pending&gt;
-&lt;AppFuture at 0x7ffba8397820 state=pending&gt;
-&lt;AppFuture at 0x7ffba8397d30 state=pending&gt;
-download_futures: 26.375532150268555 ms</code></pre>
+<pre><code>
+&lt;AppFuture at 0x7fdd1ac4e0d0 state=pending&gt;
+&lt;AppFuture at 0x7fdd1ac4ed90 state=pending&gt;
+&lt;AppFuture at 0x7fdd1ac5b2e0 state=pending&gt;
+&lt;AppFuture at 0x7fdd1ac5b7f0 state=pending&gt;
+&lt;AppFuture at 0x7fdd1ac5bd00 state=pending&gt;
+download_futures: 31.017780303955078 ms</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']
-wait_for_futures: 32383.370399475098 ms</code></pre>
+wait_for_futures: 44365.45777320862 ms</code></pre>
 </div>
 </div>
 <p>When we’re done, be sure to clean up and shutdown the <code>htex_local</code> executor, or it will continue to persist in your environment and utilize resources. Generally, an executor should be created when setting up your environment, and then it can be used repeatedly for many different tasks.</p>
