@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>NCEAS Learning Hub’s coreR Course - 9&nbsp; R Practice: Tidy Data &amp; Joins</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./session_10.html" rel="next">
+<link href="./session_08.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">
+<span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Practice: Tidy Data &amp; Joins</span>
+</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title d-none d-lg-block">
+<span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Practice: Tidy Data &amp; Joins</span>
+</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Course Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="sidebar-tool px-1"><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/ucsb_nceas" title="" class="sidebar-tool px-1"><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/core-r-course" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_01.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_02.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><code>Git</code> and GitHub Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_03.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Intro to R Programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_04.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to RMarkdown</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_05.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">FAIR and CARE Principles</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_06.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Intro to <code>Git</code> and GitHub</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_07.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Cleaning &amp; Wrangling Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_08.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Intro to Tidy Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_09.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">R Practice: Tidy Data &amp; Joins</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_10.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Collaborating using <code>Git</code> and GitHub &amp; Merge Conflicts</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_11.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Publishing to the Web using GitHub Pages</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_12.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Intro to Data visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_13.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">R Practice: Collaborating on, Wrangling &amp; Visualizing Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_14.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Writing Data Management Plans, Metadata Best Practices &amp; Publishing Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_15.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Using <code>sf</code> for Spatial Data &amp; Intro to Making Maps</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_16.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">R Practice: Wrangling Spatial Data &amp; Making Maps</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_17.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Git Workflows: Pull Requests, Branches &amp; Forks</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_18.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility &amp; Provenance</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#about-the-data" id="toc-about-the-data" class="nav-link" data-scroll-target="#about-the-data">About the data</a></li>
+  <li>
+<a href="#exercise-practice-joins" id="toc-exercise-practice-joins" class="nav-link" data-scroll-target="#exercise-practice-joins"><span class="toc-section-number">9.1</span>  Exercise: Practice Joins</a>
+  <ul class="collapse">
+<li><a href="#read-in-the-data" id="toc-read-in-the-data" class="nav-link" data-scroll-target="#read-in-the-data"><span class="toc-section-number">9.1.1</span>  Read in the data</a></li>
+  <li><a href="#get-familiar-with-the-data" id="toc-get-familiar-with-the-data" class="nav-link" data-scroll-target="#get-familiar-with-the-data"><span class="toc-section-number">9.1.2</span>  Get familiar with the data</a></li>
+  <li><a href="#create-a-subset-of-bird_observations" id="toc-create-a-subset-of-bird_observations" class="nav-link" data-scroll-target="#create-a-subset-of-bird_observations"><span class="toc-section-number">9.1.3</span>  Create a subset of <code>bird_observations</code></a></li>
+  <li><a href="#use-left_join-to-merge-birds_subset-with-the-tables-sites-and-taxalist" id="toc-use-left_join-to-merge-birds_subset-with-the-tables-sites-and-taxalist" class="nav-link" data-scroll-target="#use-left_join-to-merge-birds_subset-with-the-tables-sites-and-taxalist"><span class="toc-section-number">9.1.4</span>  Use <code>left_join()</code> to merge <code>birds_subset</code> with the tables <code>sites</code> and <code>taxalist</code></a></li>
+  <li><a href="#use-full_join-to-merge-birds_subset-and-sites-tables" id="toc-use-full_join-to-merge-birds_subset-and-sites-tables" class="nav-link" data-scroll-target="#use-full_join-to-merge-birds_subset-and-sites-tables"><span class="toc-section-number">9.1.5</span>  Use <code>full_join()</code> to merge <code>birds_subset</code> and <code>sites</code> tables</a></li>
+  <li><a href="#use-inner_join-to-merge-birds_subset-and-taxalist-data" id="toc-use-inner_join-to-merge-birds_subset-and-taxalist-data" class="nav-link" data-scroll-target="#use-inner_join-to-merge-birds_subset-and-taxalist-data"><span class="toc-section-number">9.1.6</span>  Use <code>inner_join()</code> to merge <code>birds_subset</code> and <code>taxalist</code> data</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#exercise-practice-wrangling-joining-data" id="toc-exercise-practice-wrangling-joining-data" class="nav-link" data-scroll-target="#exercise-practice-wrangling-joining-data"><span class="toc-section-number">9.2</span>  Exercise: Practice Wrangling &amp; Joining Data</a>
+  <ul class="collapse">
+<li><a href="#wrangle-bird_observations-data-and-merge-the-data-with-all-the-other-tables-sites-surveys-and-taxalist" id="toc-wrangle-bird_observations-data-and-merge-the-data-with-all-the-other-tables-sites-surveys-and-taxalist" class="nav-link" data-scroll-target="#wrangle-bird_observations-data-and-merge-the-data-with-all-the-other-tables-sites-surveys-and-taxalist"><span class="toc-section-number">9.2.1</span>  Wrangle <code>bird_observations</code> data and merge the data with all the other tables (<code>sites</code>, <code>surveys</code>, and <code>taxalist</code>)</a></li>
+  <li><a href="#explore-observer-data-and-fix-the-values-within-this-column-so-that-all-values-are-in-the-same-format" id="toc-explore-observer-data-and-fix-the-values-within-this-column-so-that-all-values-are-in-the-same-format" class="nav-link" data-scroll-target="#explore-observer-data-and-fix-the-values-within-this-column-so-that-all-values-are-in-the-same-format"><span class="toc-section-number">9.2.2</span>  Explore <code>observer</code> data and fix the values within this column so that all values are in the same format</a></li>
+  <li><a href="#bonus-use-a-new-package-lubridate-to-wrangle-the-date-data-and-find-the-total-number-of-birds-by-park-and-month" id="toc-bonus-use-a-new-package-lubridate-to-wrangle-the-date-data-and-find-the-total-number-of-birds-by-park-and-month" class="nav-link" data-scroll-target="#bonus-use-a-new-package-lubridate-to-wrangle-the-date-data-and-find-the-total-number-of-birds-by-park-and-month"><span class="toc-section-number">9.2.3</span>  Bonus: Use a new package <code>lubridate</code> to wrangle the date data and find the total number of birds by park and month</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content"><section id="learning-objectives" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Practice joining tables together</li>
+<li>Practice identifying primary and foreign keys</li>
+<li>Practice using common cleaning and wrangling functions</li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Acknowledgements
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These exercises are adapted from Allison Horst’s EDS 221: Scientific Programming Essentials Course for the Bren School’s Master of Environmental Data Science program.</p>
+</div>
+</div>
+</section><section id="about-the-data" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="about-the-data">About the data</h2>
+<p>These exercises will be using bird survey data collected from the central Arizona-Phoenix metropolitan area by Arizona State University researchers <span class="citation" data-cites="warren2021">[@warren2021]</span>.</p>
+</section><section id="exercise-practice-joins" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="exercise-practice-joins">
+<span class="header-section-number">9.1</span> Exercise: Practice Joins</h2>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol start="0" type="1">
+<li><p>Make sure you’re in the right project (<code>training_{USERNAME}</code>) and use the <code>Git</code> workflow by <code>Pull</code>ing to check for any changes in the remote repository (aka repository on GitHub).</p></li>
+<li>
+<p>Create a new R Markdown file.</p>
+<ol type="a">
+<li>Title it “R Practice: Tidy Data and Joins”.</li>
+<li>Save the file and name it “r-practice-tidy-data-joins”.</li>
+</ol>
+</li>
+</ol>
+<p><strong>Note:</strong> Double check that you’re in the right project. Where in RStudio can you check where you are?</p>
+<ol start="2" type="1">
+<li>Load the following libraries at the top of your R Markdown file.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span> <span class="co"># for bonus question</span></span>
+<span></span>
+<span><span class="co"># Quick question: Do you get a message after loading the libraries? What is it telling you? Talk to your neighbor about it or write a note in your Rmd.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Obtain data from the EDI Data Portal <a href="https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-cap&amp;identifier=256&amp;revision=10">Ecological and social interactions in urban parks: bird surveys in local parks in the central Arizona-Phoenix metropolitan area</a>. Download the following files:</li>
+</ol>
+<ul>
+<li><code>52_pp52_birds_1.csv</code></li>
+<li><code>52_pp52_surveys_1.csv</code></li>
+<li><code>52_pp52_sites_1.csv</code></li>
+<li><code>52_pp52_taxalist_1.csv</code></li>
+</ul>
+<p><strong>Note:</strong> It’s up to you on how you want to download and load the data! You can either use the download links (obtain by right-clicking the “Download” button and select “Copy Link Address” for each data entity) or manually download the data and then upload the files to RStudio server.</p>
+<ol start="4" type="1">
+<li><p>Organize your R Markdown in a <strong>meaningful</strong> way. Organization is personal - so this is up to you! Consider the different ways we’ve organized previous files using: headers, bold text, naming code chunks, comments in code chunks. What is most important is organizing and documenting the file so that your future self (or if you share this file with others!) understands it as well as your current self does right now.</p></li>
+<li>
+<p>Use the <code>Git</code> workflow. After you’ve set up your project and uploaded your data go through the workflow: <code>Stage &gt; Commit &gt; Pull &gt; Push</code></p>
+<ul>
+<li>
+<strong>Note:</strong> You also want to <code>Pull</code> when you first open a project.</li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+<section id="read-in-the-data" class="level3" data-number="9.1.1"><h3 data-number="9.1.1" class="anchored" data-anchor-id="read-in-the-data">
+<span class="header-section-number">9.1.1</span> Read in the data</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read in the data and store the data frames as <code>bird_observations</code>, <code>sites</code>, <code>surveys</code>, and <code>taxalist</code> (it should be clear from the raw file names which is which).</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># read in data using download links</span></span>
+<span><span class="va">bird_observations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&amp;entityid=53edaa7a0e083013d9bf20322db1780e"</span><span class="op">)</span></span>
+<span><span class="va">surveys</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&amp;entityid=b2466fa5cb5ed7ee1ea91398fc291c59"</span><span class="op">)</span></span>
+<span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&amp;entityid=81bf72420e69077097fb0790dcdc63a6"</span><span class="op">)</span></span>
+<span><span class="va">taxalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&amp;entityid=58f863b7e3066e68536a9cacdc7bd58e"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># read in data from the data directory after manually downloading data </span></span>
+<span><span class="va">bird_observations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/52_pp52_birds_1.csv"</span><span class="op">)</span></span>
+<span><span class="va">surveys</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/52_pp52_surveys_1.csv"</span><span class="op">)</span></span>
+<span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/52_pp52_sites_1.csv"</span><span class="op">)</span></span>
+<span><span class="va">taxalist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"data/52_pp52_taxalist_1.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="get-familiar-with-the-data" class="level3" data-number="9.1.2"><h3 data-number="9.1.2" class="anchored" data-anchor-id="get-familiar-with-the-data">
+<span class="header-section-number">9.1.2</span> Get familiar with the data</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 2a
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What functions can you use to explore the data you just read in? Think about which functions we’ve been using to explore the structure of the data frame, information about columns, unique observations, etc.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># view data in a spreadsheet-style viewer</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">bird_observations</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns dimensions of the dataframe by number of rows and number of cols</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">bird_observations</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns the top six rows of the dataframe</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">bird_observations</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns all the columns and some info about the cols</span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">bird_observations</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># similar to glimpse but returns some summary statistics about the cols</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">bird_observations</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns column names </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">bird_observations</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># returns unique values in a column. In this case we can see all the different bird species IDs</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">bird_observations</span><span class="op">$</span><span class="va">species_id</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 2b
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What are the primary and foreign keys for the tables <code>bird_observations</code> and <code>taxalist</code>? Recall that a <strong>primary key</strong> is a unique identifier for each observed entity, one per row. And a <strong>foreign key</strong> references to a primary key in another table (linkage).</p>
+<p><strong>Hint:</strong> First identify the primary keys for all the tables, then identify the foreign keys.</p>
+</div>
+</div>
+<details><summary>
+Answer:
+</summary><ul>
+<li>
+<code>bird_observations</code>: Primary key is a combination of <code>survey_id</code>, <code>site_id</code>, and <code>species_id</code>. The foreign key is <code>species_id</code>.</li>
+<li>
+<code>taxalist</code>: Primary key is <code>species_id</code> and does not have a foreign key.</li>
+</ul></details></section><section id="create-a-subset-of-bird_observations" class="level3" data-number="9.1.3"><h3 data-number="9.1.3" class="anchored" data-anchor-id="create-a-subset-of-bird_observations">
+<span class="header-section-number">9.1.3</span> Create a subset of <code>bird_observations</code>
+</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Write code to create a subset of <code>bird_observations</code> called <code>birds_subset</code> that only contains observations for birds with species id <code>BHCO</code> and <code>RWBL</code>, and from sites with site ID <code>LI-W</code> and <code>NU-C</code>.</p>
+<p><strong>Hint:</strong> What function do you use to subset data by rows?</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">birds_subset</span> <span class="op">&lt;-</span> <span class="va">bird_observations</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">species_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"BHCO"</span>, <span class="st">"RWBL"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">site_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LI-W"</span>, <span class="st">"NU-C"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="use-left_join-to-merge-birds_subset-with-the-tables-sites-and-taxalist" class="level3" data-number="9.1.4"><h3 data-number="9.1.4" class="anchored" data-anchor-id="use-left_join-to-merge-birds_subset-with-the-tables-sites-and-taxalist">
+<span class="header-section-number">9.1.4</span> Use <code>left_join()</code> to merge <code>birds_subset</code> with the tables <code>sites</code> and <code>taxalist</code>
+</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 4a
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>First, answer: what do you expect a <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> between <code>birds_subset</code> and <code>sites</code> to contain? Write this in your R Markdown or tell a neighbor.</p>
+</div>
+</div>
+<details><summary>
+Answer:
+</summary><p>I expect to see all columns and all observations from <code>birds_subset</code> and from <code>sites</code>, I expect to see the columns <code>park_code</code>, <code>park_district</code>, <code>park-name</code>, <code>point_code</code>, <code>point_location</code> and <code>park_acreage</code> and only observations for <code>NU-C</code> and <code>LI-W</code> because those are the only <code>site_id</code> values in <code>birds_subset</code> and in a left join only the observations matching the left table (in this case, <code>birds_subset</code> is the left table) will be kept.</p>
+</details><div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Qustion 4b
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use a left join to update <code>birds_subset</code> so that it also includes <code>sites</code> information. For each join, include an explicit argument saying which key you are joining by (even if it will just assume the correct one for you). Store the updated data frame as <code>birds_left</code>. Make sure to look at the output - is what it contains consistent with what you expected it to contain?</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># syntax using pipe</span></span>
+<span><span class="va">birds_left</span> <span class="op">&lt;-</span> <span class="va">birds_subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">sites</span>, by <span class="op">=</span> <span class="st">"site_id"</span><span class="op">)</span></span>
+<span><span class="co"># don't see x = birds_subset here because piping in birds_subset means it automatically assumes birds_subset as x.</span></span>
+<span></span>
+<span><span class="co"># syntax without pipe</span></span>
+<span><span class="va">birds_left</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">birds_subset</span>, y <span class="op">=</span> <span class="va">sites</span>, by <span class="op">=</span> <span class="st">"site_id"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="use-full_join-to-merge-birds_subset-and-sites-tables" class="level3" data-number="9.1.5"><h3 data-number="9.1.5" class="anchored" data-anchor-id="use-full_join-to-merge-birds_subset-and-sites-tables">
+<span class="header-section-number">9.1.5</span> Use <code>full_join()</code> to merge <code>birds_subset</code> and <code>sites</code> tables</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 5a
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>First, answer: what do you expect a <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join()</a></code> between <code>birds_subset</code> and <code>sites</code> to contain? Write this in your R Markdown or tell a neighbor.</p>
+</div>
+</div>
+<details><summary>
+Answer:
+</summary><p>I expect to see all columns and all observations from <code>birds_subset</code> and all columns and all observations from <code>sites</code> to be merged into one data frame because in a full join everything is kept.</p>
+</details><div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Questions 5b
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Write code to <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join()</a></code> the <code>birds_subset</code> and <code>sites</code> data into a new object called <code>birds_full</code>. Explicitly include the variable you’re joining by. Look at the output. Is it what you expected?</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># syntax using pipe</span></span>
+<span><span class="va">birds_full</span> <span class="op">&lt;-</span> <span class="va">birds_subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">sites</span>, by <span class="op">=</span> <span class="st">"site_id"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># syntax without pipe</span></span>
+<span><span class="va">birds_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">birds_subset</span>, y <span class="op">=</span> <span class="va">sites</span>, by <span class="op">=</span> <span class="st">"site_id"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="use-inner_join-to-merge-birds_subset-and-taxalist-data" class="level3" data-number="9.1.6"><h3 data-number="9.1.6" class="anchored" data-anchor-id="use-inner_join-to-merge-birds_subset-and-taxalist-data">
+<span class="header-section-number">9.1.6</span> Use <code>inner_join()</code> to merge <code>birds_subset</code> and <code>taxalist</code> data</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 6a
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>First, answer: what do you expect an <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code> between <code>birds_subset</code> and <code>taxalist</code> to contain? Write this in your R Markdown or tell a neighbor.</p>
+</div>
+</div>
+<details><summary>
+Answer:
+</summary><p>I expect to only have data merge together based on <code>species_id</code> and since there is only <code>BHCO</code> and <code>RWBL</code> in <code>birds_subset</code> then I will only retain data related to those two species. I will also expect to see the columns from <code>taxalist</code>: <code>common_name</code> and <code>asu_itis</code> to be merged into the joined table.</p>
+</details><div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 6b
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Write code to <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code> the <code>birds_subset</code> and <code>taxalist</code>, called <code>birds_inner.</code> Include an argument for what variable you’ll be joining by. Make sure you check the output.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># syntax using pipe</span></span>
+<span><span class="va">birds_inner</span> <span class="op">&lt;-</span> <span class="va">birds_subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">taxalist</span>, by <span class="op">=</span> <span class="st">"species_id"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># syntax without pipe</span></span>
+<span><span class="va">birds_inner</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">birds_subset</span>, y <span class="op">=</span> <span class="va">taxalist</span>, by <span class="op">=</span> <span class="st">"species_id"</span> <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 6c
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What would you get if instead of <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code> you’d used <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> for this example? Write code for the left join and check.</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># syntax using pipe</span></span>
+<span><span class="va">birds_inner_left</span> <span class="op">&lt;-</span> <span class="va">birds_subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">taxalist</span>, by <span class="op">=</span> <span class="st">"species_id"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># syntax without pipe</span></span>
+<span><span class="va">birds_inner_left</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">birds_subset</span>, y <span class="op">=</span> <span class="va">taxalist</span>, by <span class="op">=</span> <span class="st">"species_id"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 6d
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Why does that make sense for this scenario? In what case would you expect the outcome to differ from an <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code>? Write this in your R Markdown or tell a neighbor.</p>
+</div>
+</div>
+<details><summary>
+Answer:
+</summary><p>You have the same resulting data set regardless of using <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> to merge <code>bird_subset</code> and <code>taxalist</code>. The reasons for this are:</p>
+<ul>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code> keeps only the rows (observations) that have a matching key across both data sets - here, <code>species_id</code> is our key, and the only rows that match across both data sets are those where <code>species_id</code> equals <code>BHCO</code> or <code>RWBL</code></p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> keeps all rows from the left table (in our case, the left table is <code>birds_subset</code>) and merges on data with matching keys (<code>species_id</code>) on the right (here, the right table is <code>taxalist</code>). Because our left data set (<code>birds_subset</code>) only contains <code>species_id</code>s equal to <code>BHCO</code> or <code>RWBL</code>, only rows with those species will be kept from the right data set (<code>taxalist</code>)</p></li>
+</ul>
+<p>You’d expect the outcome to differ from an <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code> if <code>birds_subset</code> contained an observation with a <code>species_id</code> that was <em>not</em> found in <code>taxalist</code>. If there was an observation of a <code>species_id</code> in <code>birds_subset</code> that was <em>not</em> in <code>taxalist</code>, then that observation would be kept, and <code>NA</code>s would be assigned to the <code>common_name</code> and <code>asu_itis</code> columns for that observations</p>
+</details></section></section><section id="exercise-practice-wrangling-joining-data" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="exercise-practice-wrangling-joining-data">
+<span class="header-section-number">9.2</span> Exercise: Practice Wrangling &amp; Joining Data</h2>
+<section id="wrangle-bird_observations-data-and-merge-the-data-with-all-the-other-tables-sites-surveys-and-taxalist" class="level3" data-number="9.2.1"><h3 data-number="9.2.1" class="anchored" data-anchor-id="wrangle-bird_observations-data-and-merge-the-data-with-all-the-other-tables-sites-surveys-and-taxalist">
+<span class="header-section-number">9.2.1</span> Wrangle <code>bird_observations</code> data and merge the data with all the other tables (<code>sites</code>, <code>surveys</code>, and <code>taxalist</code>)</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 7a
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Starting with your object <code>bird_observations</code>, rename the <code>notes</code> column to <code>bird_obs_notes</code> (so this doesn’t conflict with <code>notes</code> in the <code>surveys</code> table).</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bird_observations</span> <span class="op">&lt;-</span> <span class="va">bird_observations</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>bird_obs_notes <span class="op">=</span> <span class="va">notes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 7b
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Create a subset that contains all observations in the <code>birds_observations</code> data frame,</li>
+<li>then join the <code>taxalist</code>, <code>sites</code> and <code>surveys</code> tables to it,</li>
+<li>and finally limit to only columns <code>survey_date</code>, <code>common_name</code>, <code>park_name</code>, <code>bird_count</code>, and <code>observer</code>.</li>
+</ul>
+<p><strong>Hint:</strong> What function do you use to subset data by columns?</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bird_obs_subset</span> <span class="op">&lt;-</span> <span class="va">bird_observations</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">taxalist</span>, by <span class="op">=</span> <span class="st">"species_id"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">sites</span>, by <span class="op">=</span> <span class="st">"site_id"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">surveys</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"site_id"</span>, <span class="st">"survey_id"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">survey_date</span>, <span class="va">common_name</span>, <span class="va">park_name</span>, <span class="va">bird_count</span>, <span class="va">observer</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="explore-observer-data-and-fix-the-values-within-this-column-so-that-all-values-are-in-the-same-format" class="level3" data-number="9.2.2"><h3 data-number="9.2.2" class="anchored" data-anchor-id="explore-observer-data-and-fix-the-values-within-this-column-so-that-all-values-are-in-the-same-format">
+<span class="header-section-number">9.2.2</span> Explore <code>observer</code> data and fix the values within this column so that all values are in the same format</h3>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 8a
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Continuing with <code>bird_obs_subset</code>, first use <code><a href="https://rdrr.io/r/base/unique.html">unique()</a></code> to see the different unique values in the column <code>observer</code>. How many observers are there? Which value is unlike the others?</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">bird_obs_subset</span><span class="op">$</span><span class="va">observer</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Question 8b
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Replace “Josh Burns” with a format that matches the other observer names. Then use <code><a href="https://rdrr.io/r/base/unique.html">unique()</a></code> again to check your work.</p>
+<p><strong>Hint:</strong> What function do you use when you are making a change to an entire column?</p>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bird_obs_subset</span> <span class="op">&lt;-</span> <span class="va">bird_obs_subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>observer <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>condition <span class="op">=</span> <span class="va">observer</span> <span class="op">==</span> <span class="st">"Josh Burns"</span>, </span>
+<span>                            true <span class="op">=</span> <span class="st">"J. Burns"</span>, </span>
+<span>                            false <span class="op">=</span> <span class="va">observer</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">bird_obs_subset</span><span class="op">$</span><span class="va">observer</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Save your work and use <code>Git</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t forget the <code>Git</code> workflow! After you’ve completed the exercises or reached a significant stopping point, use the workflow: <code>Stage &gt; Commit &gt; Pull &gt; Push</code></p>
+</div>
+</div>
+</section><section id="bonus-use-a-new-package-lubridate-to-wrangle-the-date-data-and-find-the-total-number-of-birds-by-park-and-month" class="level3" data-number="9.2.3"><h3 data-number="9.2.3" class="anchored" data-anchor-id="bonus-use-a-new-package-lubridate-to-wrangle-the-date-data-and-find-the-total-number-of-birds-by-park-and-month">
+<span class="header-section-number">9.2.3</span> Bonus: Use a new package <code>lubridate</code> to wrangle the date data and find the total number of birds by park and month</h3>
+<p><strong>Hint:</strong> How do you learn about a new function or package?</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Bonus Question(s)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Use <code><a href="https://lubridate.tidyverse.org/reference/month.html">lubridate::month()</a></code> to add a new column to <code>bird_obs_subset</code> called <code>survey_month</code>, containing only the month number. Then, convert the month number to a factor (again within <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>).</p></li>
+<li><p>Use <code><a href="https://dplyr.tidyverse.org/reference/relocate.html">dplyr::relocate()</a></code> to move the new <code>survey_month</code> column to immediately after the <code>survey_date</code> column. You can do this in a separate code chunk, or pipe straight into it from your existing code.</p></li>
+<li><p>Filter to only include parks <code>Lindo</code>, <code>Orme</code>, <code>Palomino</code>, and <code>Sonrisa</code>.</p></li>
+<li><p>Find the total number of birds observed by park and month (<strong>Hint:</strong> You can use <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code>).</p></li>
+</ol>
+</div>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bird_obs_subset</span> <span class="op">&lt;-</span> <span class="va">bird_obs_subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>survey_month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html">month</a></span><span class="op">(</span><span class="va">survey_date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>survey_month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">survey_month</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">survey_month</span>, .after <span class="op">=</span> <span class="va">survey_date</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">park_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Lindo"</span>, <span class="st">"Orme"</span>, <span class="st">"Palomino"</span>, <span class="st">"Sonrisa"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">park_name</span>, <span class="va">survey_month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>tot_bird_count_month <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Take a look at your final data frame. Does it give you the outcome you expected? Is it informative? How would you improve this wrangling process?</p>
+
+
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./session_08.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Intro to Tidy Data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./session_10.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Collaborating using <code>Git</code> and GitHub &amp; Merge Conflicts</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
