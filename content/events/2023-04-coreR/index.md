@@ -8,7 +8,7 @@ tags: ["Short Course"]
 date: 2023-04-03
 ---
 
-
+*Previously called the Reproducible Research Techniques for Synthesis course*
 
 __Dates__: April 3-7, 2023<br>
 __Location__: NCEAS <br>
