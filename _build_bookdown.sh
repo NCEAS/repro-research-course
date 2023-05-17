@@ -5,7 +5,7 @@
 set -e
 
 BRANCH=$1
-BRANCH='2023-04-coreR'
+BRANCH='2023-06-delta'
 
 export TOP
 TOP=$(pwd)
