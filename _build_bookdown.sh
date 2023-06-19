@@ -8,7 +8,11 @@
 set -e
 
 # Assume a BRANCH env variable is set, and the repo is already checked out
-[ -z "${BRANCH}" ] && echo "Exiting, please set BRANCH environment variable."; exit 1 
+if [[ -z "$BRANCH" ]]; then
+    echo "Exiting, please set BRANCH environment variable."
+fi
+
+echo "Building branch ${BRANCH}"
 
 export TOP
 TOP=$(pwd)
