@@ -23,15 +23,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
 
       - uses: actions/checkout@v3
         with:
             repository: NCEAS/nceas-training
             ref: '2023-06-delta'
             path: nceas-training
-          
+
+      - name: Print directory listing
+        run: |
+            pwd
+            ls -l
+
       - uses: Homebrew/actions/setup-homebrew@master
 
       - uses: actions/setup-python@v4
@@ -55,8 +58,8 @@ jobs:
       - name: Install R dependencies
         run: |
           install.packages(c("remotes", "blogdown"))
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_deps("nceas-training", dependencies = TRUE)
+          remotes::install_deps()
+          remotes::install_deps(pkgdir="./nceas-training")
         shell: Rscript {0}
 
       - name: Install pandoc
