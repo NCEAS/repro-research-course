@@ -354,9 +354,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>In theory, that code will work from anyone’s computer with an internet connection. But code that downloads data each and every time it is run is not particularly efficient, and will be prohibitive for all but the smallest datasets. A simple solution to this issue is to cache a local copy of the dataset, and only retrieve the original from the web when we don’t have a local copy. In this way, people running code or a script will download the data the first time their code is run, but use a local copy from thence forward. While this can be accomplished with some simple conditional logic in R, the pattern has been simplified using the <code>pins</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>delta_sites_edi <span class="ot">&lt;-</span> pins<span class="sc">::</span><span class="fu">pin</span>(<span class="st">'https://portal.edirepository.org/nis/dataviewer?packageid=edi.233.2&amp;entityid=6a82451e84be1fe82c9821f30ffc2d7d'</span>)</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>delta_sites_pin <span class="ot">&lt;-</span> pins<span class="sc">::</span><span class="fu">pin</span>(delta_sites_edi)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_sites_edi, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>delta_sites <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(delta_sites_pin, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(delta_sites)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
@@ -507,7 +507,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 6 266.0   11334    8113 259.6</code></pre>
 </div>
 </div>
-<p>For this point forward, we can</p>
+<p>From this point forward, we can view the repository sources that have a copy of the data associated with this content identifier:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>contentid<span class="sc">::</span><span class="fu">sources</span>(vostok_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -516,7 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 2                                https://zenodo.org/api/files/5967f986-b599-4492-9a08-94ce32323dc2/vostok.icecore.co2
 3                https://data.ess-dive.lbl.gov/catalog/d1/mn/v2/object/ess-dive-642bb2e5bd48452-20180716T160320693400
                  date
-1 2023-06-28 05:37:32
+1 2023-06-28 06:22:14
 2 2023-05-22 09:41:20
 3 2023-01-16 00:58:23</code></pre>
 </div>
