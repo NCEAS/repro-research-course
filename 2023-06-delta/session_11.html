@@ -596,7 +596,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Warnings are important, but we might not want them in our final document. After you have read the packages in, <strong>adjust the chunk settings in your library chunk</strong> to suppress warnings and messages.</p>
+<p>Warnings are important, but we might not want them in our final document. After you have read the packages in, <strong>adjust the chunk settings in your library chunk</strong> to suppress warnings and messages by adding <code>#| warning: false</code>.</p>
 </div>
 </div>
 <p>Now that we have introduced some data wrangling libraries, let’s get the data that we are going to use for this lesson.</p>
@@ -830,14 +830,14 @@ Caused by warning:
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Chinook =</span> <span class="fu">if_else</span>(<span class="at">condition =</span> Chinook <span class="sc">==</span> <span class="st">"I"</span>, </span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">true =</span> <span class="st">"1"</span>, </span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">false =</span> Chinook),</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">Chinook =</span> <span class="fu">as.integer</span>(Chinook))</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">Chinook =</span> <span class="fu">as.numeric</span>(Chinook))</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="do">##check</span></span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>catch_clean[i, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 7
   Region  Year Chinook Sockeye  Coho  Pink  Chum
-  &lt;chr&gt;  &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+  &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1 GSE     1955       1      66     0     0     1</code></pre>
 </div>
 </div>
@@ -869,9 +869,9 @@ Caused by warning:
 </div>
 <p>The syntax we used above for <code>pivot_longer()</code> might be a bit confusing so let’s walk though it.</p>
 <ul>
-<li>The first argument to <code>pivot_longer</code> is the columns over which we are pivoting. You can select these by listing either the names of the columns you do want to pivot, or in this case, the names of the columns you are not pivoting over.</li>
-<li>The <code>names_to</code> argument takes the name of the column that you are creating from the column <strong>names</strong> you are pivoting over.</li>
-<li>The <code>values_to</code> argument takes the name of the column that you are creating from the <strong>values</strong> in the columns you are pivoting over.</li>
+<li><p>The first argument to <code>pivot_longer</code> is the columns over which we are pivoting. You can select these by listing either the names of the columns you do want to pivot, or in this case, the names of the columns you are not pivoting over.</p></li>
+<li><p>The <code>names_to</code> argument: this is the name of the column that you are creating from the column <strong>names</strong> of the columns you are pivoting over.</p></li>
+<li><p>The <code>values_to</code> argument: the name of the column that you are creating from the <strong>values</strong> in the columns you are pivoting over.</p></li>
 </ul>
 <p>The opposite of <code>pivot_longer()</code> is the <code>pivot_wider()</code> function. It works in a similar declarative fashion:</p>
 <div class="cell">
@@ -1181,11 +1181,11 @@ Exercise
 </section>
 <section id="splitting-a-column-using-separate-and-unite" class="level2" data-number="13.14">
 <h2 data-number="13.14" class="anchored" data-anchor-id="splitting-a-column-using-separate-and-unite"><span class="header-section-number">13.14</span> Splitting a column using <code>separate()</code> and <code>unite()</code></h2>
-<p>The <code>separate()</code> function and its complement the <code>unite()</code> function allow us to easily split a single column into numerous (or numerous into a single).</p>
+<p>The <code>separate()</code> function allow us to easily split a single column into numerous. Its complement, the <code>unite()</code> function, allows ys to combine multiple columns into a single one.</p>
 <p>This can come in really handy when we need to split a column into two pieces by a consistent separator (like a dash).</p>
-<p>Let’s make a new <code>tibble</code> with fake data to illustrate this. Here we have a set of site identification codes with information about the island where the site is (the first 3 letters) and a site number (the 3 numbers). If we want to group and summarize by island, we need a column with just the island information.</p>
+<p>Let’s make a new <code>data.frame</code> with fake data to illustrate this. Here we have a set of site identification codes with information about the island where the site is (the first 3 letters) and a site number (the 3 numbers). If we want to group and summarize by island, we need a column with just the island information.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>sites_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">site =</span> <span class="fu">c</span>(<span class="st">"HAW-101"</span>,</span>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>sites_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">site =</span> <span class="fu">c</span>(<span class="st">"HAW-101"</span>,</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"HAW-103"</span>,</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"OAH-320"</span>,</span>
 <span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"OAH-219"</span>,</span>
@@ -1194,14 +1194,12 @@ Exercise
 <span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>sites_df <span class="sc">%&gt;%</span></span>
 <span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(site, <span class="fu">c</span>(<span class="st">"island"</span>, <span class="st">"site_number"</span>), <span class="st">"-"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 2
-  island site_number
-  &lt;chr&gt;  &lt;chr&gt;      
-1 HAW    101        
-2 HAW    103        
-3 OAH    320        
-4 OAH    219        
-5 MAI    039        </code></pre>
+<pre><code>  island site_number
+1    HAW         101
+2    HAW         103
+3    OAH         320
+4    OAH         219
+5    MAI         039</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1232,7 +1230,7 @@ Exercise
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(city, <span class="fu">c</span>(<span class="st">"city"</span>, <span class="st">"state_code"</span>), <span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>The <code>unite()</code> function does just the reverse of <code>separate()</code>. If we have a data.frame that contains columns for year, month, and day, we might want to unite these into a single date column.</p>
+<p>The <code>unite()</code> function does just the reverse of <code>separate()</code>. If we have a <code>data.frame</code> that contains columns for year, month, and day, we might want to unite these into a single date column.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>dates_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">c</span>(<span class="st">"1930"</span>,</span>
@@ -1263,32 +1261,29 @@ Exercise
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>catch_original <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">url</span>(<span class="st">"https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1"</span>, </span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">method =</span> <span class="st">"libcurl"</span>))</span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>region_defs <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">url</span>(<span class="st">"https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.303.1"</span>, </span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">method =</span> <span class="st">"libcurl"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(code, mgmtArea)</span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>mean_region <span class="ot">&lt;-</span> catch_original <span class="sc">%&gt;%</span></span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>All, <span class="sc">-</span>notesRegCode) <span class="sc">%&gt;%</span> </span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Chinook =</span> <span class="fu">ifelse</span>(Chinook <span class="sc">==</span> <span class="st">"I"</span>, <span class="dv">1</span>, Chinook)) <span class="sc">%&gt;%</span> </span>
-<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Chinook =</span> <span class="fu">as.numeric</span>(Chinook)) <span class="sc">%&gt;%</span> </span>
-<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(Region, Year), </span>
-<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"species"</span>, </span>
-<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"catch"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">catch =</span> catch<span class="sc">*</span><span class="dv">1000</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span> </span>
-<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_catch =</span> <span class="fu">mean</span>(catch))</span>
-<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mean_region)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>mean_region <span class="ot">&lt;-</span> catch_original <span class="sc">%&gt;%</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>All, <span class="sc">-</span>notesRegCode) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Chinook =</span> <span class="fu">ifelse</span>(Chinook <span class="sc">==</span> <span class="st">"I"</span>, <span class="dv">1</span>, Chinook)) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Chinook =</span> <span class="fu">as.numeric</span>(Chinook)) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(Region, Year), </span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"species"</span>, </span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"catch"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">catch =</span> catch<span class="sc">*</span><span class="dv">1000</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_catch =</span> <span class="fu">mean</span>(catch)) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_catch))</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mean_region)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 2
   Region mean_catch
   &lt;chr&gt;       &lt;dbl&gt;
-1 ALU        40384.
-2 BER        16373.
-3 BRB      2709796.
-4 CHG       315487.
-5 CKI       683571.
-6 COP       179223.</code></pre>
+1 SSE      3184661.
+2 BRB      2709796.
+3 NSE      1825021.
+4 KOD      1528350 
+5 PWS      1419237.
+6 SOP      1110942.</code></pre>
 </div>
 </div>
 <p>We have completed our lesson on Cleaning and Wrangling data. Before we break, let’s practice our Github workflow.</p>
