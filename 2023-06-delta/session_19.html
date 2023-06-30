@@ -322,7 +322,6 @@ div.csl-indent {
 
 <section id="learning-objectives" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
-<p>In this lesson, we will:</p>
 <ul>
 <li>Discuss the concept of reproducible workflows including computational reproducibility and provenance metadata</li>
 <li>Learn how to use R to package your work by building a reproducible paper in RMarkdown</li>
@@ -424,6 +423,7 @@ Data citation best practices are focused on providing credit where credit is due
 <ul>
 <li><a href="https://www.r-project.org/">R</a></li>
 <li><a href="https://rmarkdown.rstudio.com/">RMarkdown</a></li>
+<li><a href="https://quarto.org/">Quarto</a></li>
 <li><a href="https://git-scm.com/">git</a> and <a href="https://github.com">GitHub</a></li>
 </ul>
 <p>Fortunately for us, Ben Marwick (and others) have written an R package called <a href="https://github.com/benmarwick/rrtools">rrtools</a> that helps us create a research compendium from scratch.</p>
@@ -550,7 +550,7 @@ Summary
 <li>Write out any derived data (generated in <code>paper.Rmd</code>) to <code>./data/derived_data</code></li>
 <li>Write out any figures in <code>./analysis/figures</code></li>
 </ul>
-<p>You can then write all of your R code in your RMarkdown, and generate your manuscript all in the format needed for your journal (using it’s .csl file, stored in the paper directory).</p>
+<p>You can then write all of your R code in your RMarkdown/Quarto, and generate your manuscript all in the format needed for your journal (using it’s .csl file, stored in the paper directory).</p>
 </section>
 <section id="adding-renv-to-conserve-your-environment" class="level3" data-number="18.0.8">
 <h3 data-number="18.0.8" class="anchored" data-anchor-id="adding-renv-to-conserve-your-environment"><span class="header-section-number">18.0.8</span> Adding <code>renv</code> to conserve your environment</h3>
@@ -576,19 +576,19 @@ Summary
 </ul>
 <p><strong>In practice</strong></p>
 <ul>
-<li><p>Once you have your research compendium, you can called <code>rrtools::use_dockerfile()</code></p></li>
+<li><p>Once you have your research compendium, you can called <code>rrtools::use_dockerfile()</code>. If needed, re-install <code>rrtools</code> directly from GitHub <code>remotes::install_github("benmarwick/rrtools")</code></p></li>
 <li><p>This, first creates a Dockerfile that loads a standard image for using R with the tidyverse,</p></li>
 <li><p>And then has more instructions for how to create the environment so that it has the very specific R packages and versions you need.</p></li>
 <li><p>If we look at the Dockerfile (example below), it calls to <code>renv::restore()</code>, as described above.</p></li>
-<li><p>The last line of the docker file renders our RMarkdown reproducible paper!</p></li>
+<li><p>The last line of the docker file renders our Quarto/RMarkdown reproducible paper!</p></li>
 </ul>
 <pre><code># get the base image, the rocker/verse has R, RStudio and pandoc
-FROM rocker/verse:4.1.0
+FROM rocker/verse:4.2.2
 
 # required
-MAINTAINER Jeanette Clark &lt;jclark@nceas.ucsb.edu&gt;
+MAINTAINER Your Name &lt;your_email@somewhere.com&gt;
 
-COPY . /mypaper
+COPY . /&lt;REPO&gt;
 
 # go into the repo directory
 RUN . /etc/environment \
@@ -598,11 +598,12 @@ RUN . /etc/environment \
   &amp;&amp; sudo apt-get install libudunits2-dev -y \
   # build this compendium package
   &amp;&amp; R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))" \
-  &amp;&amp; R -e "install.packages(c('renv', 'rmarkdown'))" \
+  &amp;&amp; R -e "remotes::install_github(c('rstudio/renv', 'quarto-dev/quarto-r'))" \
   # install pkgs we need
   &amp;&amp; R -e "renv::restore()" \
-  # render the manuscript into a pdf,
-  &amp;&amp; R -e "rmarkdown::render('mypaper/analysis/paper/paper.Rmd')"</code></pre>
+  # render the manuscript into a docx, you'll need to edit this if you've
+  # customised the location and name of your main qmd file
+  &amp;&amp; R -e "quarto::quarto_render('/&lt;REPO&gt;/analysis/paper/paper.qmd')"</code></pre>
 <ul>
 <li>After running <code>rrtools::use_dockerfile()</code>, the package also sets up GitHub Actions for you.</li>
 <li>Actions are processes that are triggered in GitHub events (like a push) and run automatically.</li>
@@ -629,10 +630,7 @@ RUN . /etc/environment \
 <li>Achieve computational reproducibility</li>
 <li>“Set the default to reproducible.”</li>
 </ul>
-<p>They also empower users to verify and extend results with different data, methods, and environments. You can browse existing tales, run and interact with published tales and create new tales via the <a href="https://dashboard.wholetale.org/browse">Whole Tale Dashboard</a>.</p>
-<p><img src="images/Tale-browser.png" class="img-fluid"></p>
-<p>By integrating with DataONE and Dataverse, Whole Tale includes over 90 major research repositories from which a user can select datasets to make those datasets the starting point of an interactive data exploration and analysis inside of one of the Whole Tale environments. DataONE, is adding functionality to work with data in the Whole Tale environment directly from the dataset landing page.</p>
-<p><strong>Full circle reproducibility can be achieved by publishing data, code AND the environment.</strong></p>
+<p><strong>Full circle reproducibility can be achieved by publishing data, code AND the computational environment.</strong></p>
 </section>
 <section id="resources" class="level3" data-number="18.0.11">
 <h3 data-number="18.0.11" class="anchored" data-anchor-id="resources"><span class="header-section-number">18.0.11</span> Resources</h3>
