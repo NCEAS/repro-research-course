@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
-
+<meta name="generator" content="quarto-1.2.335">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
 <title>NCEAS Open Science Synthesis for the Delta Science Program - 16&nbsp; Creating R Packages</title>
 <style>
 code{white-space: pre-wrap;}
@@ -17,10 +14,9 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -47,15 +43,44 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
+    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
-
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
@@ -75,8 +100,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -92,37 +116,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
-
-
 </head>
-
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_15.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating R Packages</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">
+<span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating R Packages</span>
+</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
+  </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating R Packages</span></h1>
+      <h1 class="title d-none d-lg-block">
+<span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating R Packages</span>
+</h1>
                       </div>
   </div>
     
@@ -137,179 +150,147 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Course Materials</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://www.nceas.ucsb.edu/learning-hub" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
-    <a href="https://twitter.com/ucsb_nceas" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
-    <a href="https://github.com/NCEAS/nceas-training/tree/2023-06-delta" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="sidebar-tool px-1"><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/ucsb_nceas" title="" class="sidebar-tool px-1"><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/nceas-training/tree/2023-06-delta" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
+      <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-        </div>
+      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Overview</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Overview</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></span></a>
+  <a href="./session_01.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><code>Git</code> and GitHub Setup</span></span></a>
+  <a href="./session_02.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><code>Git</code> and GitHub Setup</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></span></a>
+  <a href="./session_03.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LEGO® Reproducibility Activity</span></span></a>
+  <a href="./session_04.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LEGO® Reproducibility Activity</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_05.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Management Lens for Publishing and Accesing Data</span></span></a>
+  <a href="./session_05.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Management Lens for Publishing and Accesing Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logic Model</span></span></a>
+  <a href="./session_06.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logic Model</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Hands On Synthesis</span></span></a>
+  <a href="./session_10.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Hands On Synthesis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_09.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling Essentials</span></span></a>
+  <a href="./session_09.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling Essentials</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_16.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">FAIR and CARE principles</span></span></a>
+  <a href="./session_16.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">FAIR and CARE principles</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introduction to Git and GitHub</span></span></a>
+  <a href="./session_07.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introduction to Git and GitHub</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_08.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Reproducible Data Access</span></span></a>
+  <a href="./session_08.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Reproducible Data Access</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_13.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Hands on Synthesis</span></span></a>
+  <a href="./session_13.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Hands on Synthesis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_11.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></span></a>
+  <a href="./session_11.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_12.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Practice: Cleaning and Wrangling Data</span></span></a>
+  <a href="./session_12.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Practice: Cleaning and Wrangling Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_14.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Creating Functions in R</span></span></a>
+  <a href="./session_14.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Creating Functions in R</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_15.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating R Packages</span></span></a>
+  <a href="./session_15.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating R Packages</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_13.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Hands on Synthesis</span></span></a>
+  <a href="./session_13.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Hands on Synthesis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_19.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility &amp; Provenance</span></span></a>
+  <a href="./session_19.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility &amp; Provenance</span></a>
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
+</div>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">16.1</span> Learning Objectives</a></li>
-  <li><a href="#why-packages" id="toc-why-packages" class="nav-link" data-scroll-target="#why-packages"><span class="header-section-number">16.2</span> Why packages?</a></li>
-  <li><a href="#install-and-load-packages" id="toc-install-and-load-packages" class="nav-link" data-scroll-target="#install-and-load-packages"><span class="header-section-number">16.3</span> Install and load packages</a></li>
-  <li><a href="#create-a-basic-package" id="toc-create-a-basic-package" class="nav-link" data-scroll-target="#create-a-basic-package"><span class="header-section-number">16.4</span> Create a basic package</a></li>
-  <li><a href="#add-your-code" id="toc-add-your-code" class="nav-link" data-scroll-target="#add-your-code"><span class="header-section-number">16.5</span> Add your code</a></li>
-  <li><a href="#add-documentation" id="toc-add-documentation" class="nav-link" data-scroll-target="#add-documentation"><span class="header-section-number">16.6</span> Add documentation</a></li>
-  <li><a href="#test-your-package" id="toc-test-your-package" class="nav-link" data-scroll-target="#test-your-package"><span class="header-section-number">16.7</span> Test your package</a></li>
-  <li><a href="#checking-and-installing-your-package" id="toc-checking-and-installing-your-package" class="nav-link" data-scroll-target="#checking-and-installing-your-package"><span class="header-section-number">16.8</span> Checking and installing your package</a></li>
-  <li><a href="#sharing-and-releasing-your-package" id="toc-sharing-and-releasing-your-package" class="nav-link" data-scroll-target="#sharing-and-releasing-your-package"><span class="header-section-number">16.9</span> Sharing and releasing your package</a></li>
+<li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="toc-section-number">16.1</span>  Learning Objectives</a></li>
+  <li><a href="#why-packages" id="toc-why-packages" class="nav-link" data-scroll-target="#why-packages"><span class="toc-section-number">16.2</span>  Why packages?</a></li>
+  <li><a href="#install-and-load-packages" id="toc-install-and-load-packages" class="nav-link" data-scroll-target="#install-and-load-packages"><span class="toc-section-number">16.3</span>  Install and load packages</a></li>
+  <li><a href="#create-a-basic-package" id="toc-create-a-basic-package" class="nav-link" data-scroll-target="#create-a-basic-package"><span class="toc-section-number">16.4</span>  Create a basic package</a></li>
+  <li><a href="#add-your-code" id="toc-add-your-code" class="nav-link" data-scroll-target="#add-your-code"><span class="toc-section-number">16.5</span>  Add your code</a></li>
+  <li><a href="#add-documentation" id="toc-add-documentation" class="nav-link" data-scroll-target="#add-documentation"><span class="toc-section-number">16.6</span>  Add documentation</a></li>
+  <li><a href="#test-your-package" id="toc-test-your-package" class="nav-link" data-scroll-target="#test-your-package"><span class="toc-section-number">16.7</span>  Test your package</a></li>
+  <li><a href="#checking-and-installing-your-package" id="toc-checking-and-installing-your-package" class="nav-link" data-scroll-target="#checking-and-installing-your-package"><span class="toc-section-number">16.8</span>  Checking and installing your package</a></li>
+  <li><a href="#sharing-and-releasing-your-package" id="toc-sharing-and-releasing-your-package" class="nav-link" data-scroll-target="#sharing-and-releasing-your-package"><span class="toc-section-number">16.9</span>  Sharing and releasing your package</a></li>
   <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge">Challenge</a></li>
-  <li><a href="#more-reading" id="toc-more-reading" class="nav-link" data-scroll-target="#more-reading"><span class="header-section-number">16.10</span> More reading</a></li>
-  </ul>
-</nav>
+  <li><a href="#more-reading" id="toc-more-reading" class="nav-link" data-scroll-target="#more-reading"><span class="toc-section-number">16.10</span>  More reading</a></li>
+  </ul></nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
-
-
-
-
-<section id="learning-objectives" class="level2" data-number="16.1">
-<h2 data-number="16.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">16.1</span> Learning Objectives</h2>
+<main class="content quarto-banner-title-block" id="quarto-document-content"><section id="learning-objectives" class="level2" data-number="16.1"><h2 data-number="16.1" class="anchored" data-anchor-id="learning-objectives">
+<span class="header-section-number">16.1</span> Learning Objectives</h2>
 <p>In this lesson, you will learn:</p>
 <ul>
 <li>The advantages of using R packages for organizing code</li>
 <li>Simple techniques for creating R packages</li>
 <li>Approaches to documenting code in packages</li>
-</ul>
-</section>
-<section id="why-packages" class="level2" data-number="16.2">
-<h2 data-number="16.2" class="anchored" data-anchor-id="why-packages"><span class="header-section-number">16.2</span> Why packages?</h2>
+</ul></section><section id="why-packages" class="level2" data-number="16.2"><h2 data-number="16.2" class="anchored" data-anchor-id="why-packages">
+<span class="header-section-number">16.2</span> Why packages?</h2>
 <p>Most R users are familiar with loading and utilizing packages in their work. And they know how rich CRAN is in providing for many conceivable needs. Most people have never created a package for their own work, and most think the process is too complicated. Really it’s pretty straighforward and super useful in your personal work. Creating packages serves two main use cases:</p>
 <ul>
 <li>Mechanism to redistribute reusable code (even if just for yourself)</li>
@@ -322,20 +303,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The analysis accompanying a thesis or manuscript, making it all that much easier for others to reproduce your results.</li>
 </ul>
 <p>The <code>usethis</code>, <code>devtools</code> and <code>roxygen2</code> packages make creating and maintining a package to be a straightforward experience.</p>
-</section>
-<section id="install-and-load-packages" class="level2" data-number="16.3">
-<h2 data-number="16.3" class="anchored" data-anchor-id="install-and-load-packages"><span class="header-section-number">16.3</span> Install and load packages</h2>
+</section><section id="install-and-load-packages" class="level2" data-number="16.3"><h2 data-number="16.3" class="anchored" data-anchor-id="install-and-load-packages">
+<span class="header-section-number">16.3</span> Install and load packages</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(usethis)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(roxygen2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://usethis.r-lib.org">usethis</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://roxygen2.r-lib.org/">roxygen2</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="create-a-basic-package" class="level2" data-number="16.4">
-<h2 data-number="16.4" class="anchored" data-anchor-id="create-a-basic-package"><span class="header-section-number">16.4</span> Create a basic package</h2>
-<p>Thanks to the great <a href="https://github.com/r-lib/usethis">usethis</a> package, it only takes one function call to create the skeleton of an R package using <code>create_package()</code>. Which eliminates pretty much all reasons for procrastination. To create a package called <code>mytools</code>, all you do is:</p>
+</section><section id="create-a-basic-package" class="level2" data-number="16.4"><h2 data-number="16.4" class="anchored" data-anchor-id="create-a-basic-package">
+<span class="header-section-number">16.4</span> Create a basic package</h2>
+<p>Thanks to the great <a href="https://github.com/r-lib/usethis">usethis</a> package, it only takes one function call to create the skeleton of an R package using <code><a href="https://usethis.r-lib.org/reference/create_package.html">create_package()</a></code>. Which eliminates pretty much all reasons for procrastination. To create a package called <code>mytools</code>, all you do is:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_package</span>(<span class="st">"~/mytools"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/create_package.html">create_package</a></span><span class="op">(</span><span class="st">"~/mytools"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>✔ Setting active project to '/Users/jones/development/mytools'
 ✔ Creating 'R/'
@@ -350,7 +329,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>create_package</code> function created a top-level directory structure, including a number of critical files under the <a href="http://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-structure">standard R package structure</a>. The most important of which is the <code>DESCRIPTION</code> file, which provides metadata about your package. Edit the <code>DESCRIPTION</code> file to provide reasonable values for each of the fields, including your own contact information.</p>
 <p>Information about choosing a LICENSE is provided in the <a href="http://cran.r-project.org/doc/manuals/r-release/R-exts.html#Licensing">Extending R</a> documentation. The DESCRIPTION file expects the license to be chose from a predefined list, but you can use it’s various utility methods for setting a specific license file, such as the <code>MIT</code> license or the <code>Apache 2</code> license:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_apache_license</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html">use_apache_license</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>✔ Setting License field in DESCRIPTION to 'Apache License (&gt;= 2.0)'
 ✔ Writing 'LICENSE.md'
@@ -366,78 +345,76 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>License<span class="sc">:</span> Apache <span class="fu">License</span> (<span class="sc">&gt;=</span> <span class="fl">2.0</span>)</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>LazyData<span class="sc">:</span> true</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="add-your-code" class="level2" data-number="16.5">
-<h2 data-number="16.5" class="anchored" data-anchor-id="add-your-code"><span class="header-section-number">16.5</span> Add your code</h2>
-<p>The skeleton package created contains a directory <code>R</code> which should contain your source files. Add your functions and classes in files to this directory, attempting to choose names that don’t conflict with existing packages. For example, you might add a file <code>custom_theme</code> that contains a function <code>custom_theme()</code> that you might want to reuse. The <code>usethis::use_r()</code> function will help set up you files in the right places. For example, running:</p>
+</section><section id="add-your-code" class="level2" data-number="16.5"><h2 data-number="16.5" class="anchored" data-anchor-id="add-your-code">
+<span class="header-section-number">16.5</span> Add your code</h2>
+<p>The skeleton package created contains a directory <code>R</code> which should contain your source files. Add your functions and classes in files to this directory, attempting to choose names that don’t conflict with existing packages. For example, you might add a file <code>custom_theme</code> that contains a function <code>custom_theme()</code> that you might want to reuse. The <code><a href="https://usethis.r-lib.org/reference/use_r.html">usethis::use_r()</a></code> function will help set up you files in the right places. For example, running:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_r</span>(<span class="st">"custom_theme"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_r.html">use_r</a></span><span class="op">(</span><span class="st">"custom_theme"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>● Modify 'R/custom_theme'</code></pre>
 <p>creates the file <code>R/custom_theme</code>, which you can then modify to add the implementation of the following function from the functions lesson:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>custom_theme <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">9</span>) {</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks       =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">text             =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">'Helvetica'</span>, <span class="at">color =</span> <span class="st">'gray30'</span>, <span class="at">size =</span> base_size),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title       =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> ggplot2<span class="sc">::</span><span class="fu">rel</span>(<span class="fl">1.25</span>), <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">'bold'</span>),</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.background =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position  =</span> <span class="st">'right'</span>,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.border     =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.major =</span> ggplot2<span class="sc">::</span><span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">'grey90'</span>, <span class="at">linewidth =</span> .<span class="dv">25</span>),</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.key       =</span> ggplot2<span class="sc">::</span><span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="cn">NA</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.line        =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>()</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">custom_theme</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">base_size</span> <span class="op">=</span> <span class="fl">9</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span></span>
+<span>      axis.ticks       <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      text             <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">'Helvetica'</span>, color <span class="op">=</span> <span class="st">'gray30'</span>, size <span class="op">=</span> <span class="va">base_size</span><span class="op">)</span>,</span>
+<span>      plot.title       <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">rel</a></span><span class="op">(</span><span class="fl">1.25</span><span class="op">)</span>, hjust <span class="op">=</span> <span class="fl">0.5</span>, face <span class="op">=</span> <span class="st">'bold'</span><span class="op">)</span>,</span>
+<span>      panel.background <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      legend.position  <span class="op">=</span> <span class="st">'right'</span>,</span>
+<span>      panel.border     <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      panel.grid.minor <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      panel.grid.major <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_line</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">'grey90'</span>, linewidth <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span>,</span>
+<span>      legend.key       <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="cn">NA</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>      axis.line        <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If your R code depends on functions from another package, then you must declare so in the <code>Imports</code> list in the <code>DESCRIPTION</code> file for your package. In our example above, we depend on the <code>ggplot2</code> package, and so we need to list it as a dependency. Once again, <code>usethis</code> provides a handy helper method:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_package</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_package.html">use_package</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>✔ Adding 'ggplot2' to Imports field in DESCRIPTION
 ● Refer to functions with `devtools::fun()`</code></pre>
-</section>
-<section id="add-documentation" class="level2" data-number="16.6">
-<h2 data-number="16.6" class="anchored" data-anchor-id="add-documentation"><span class="header-section-number">16.6</span> Add documentation</h2>
+</section><section id="add-documentation" class="level2" data-number="16.6"><h2 data-number="16.6" class="anchored" data-anchor-id="add-documentation">
+<span class="header-section-number">16.6</span> Add documentation</h2>
 <p>You should provide documentation for each of your functions and classes. This is done in the <code>roxygen2</code> approach of providing embedded comments in the source code files, which are in turn converted into manual pages and other R documentation artifacts. Be sure to define the overall purpose of the function, and each of its parameters.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Set a custom ggplot theme.</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' This function sets ggplot theme elements that I like, with the ability to change</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' the base size of the text.</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param base_size Base size of plot text</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @keywords plotting</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#' @examples</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#' library(ggplot2)</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#' ggplot(iris, aes(Sepal.Length, Sepal.Width)) +</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#'     geom_point() +</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#'     custom_theme(base_size = 10)</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>custom_theme <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">9</span>) {</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks       =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">text             =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">'Helvetica'</span>, <span class="at">color =</span> <span class="st">'gray30'</span>, <span class="at">size =</span> base_size),</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title       =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> ggplot2<span class="sc">::</span><span class="fu">rel</span>(<span class="fl">1.25</span>), <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">'bold'</span>),</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position  =</span> <span class="st">'right'</span>,</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border     =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major =</span> ggplot2<span class="sc">::</span><span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">'grey90'</span>, <span class="at">size =</span> .<span class="dv">25</span>),</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key       =</span> ggplot2<span class="sc">::</span><span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="cn">NA</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.line        =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>()</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#' Set a custom ggplot theme.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' This function sets ggplot theme elements that I like, with the ability to change</span></span>
+<span><span class="co">#' the base size of the text.</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @param base_size Base size of plot text</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @keywords plotting</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @export</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @examples</span></span>
+<span><span class="co">#' library(ggplot2)</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' ggplot(iris, aes(Sepal.Length, Sepal.Width)) +</span></span>
+<span><span class="co">#'     geom_point() +</span></span>
+<span><span class="co">#'     custom_theme(base_size = 10)</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="va">custom_theme</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">base_size</span> <span class="op">=</span> <span class="fl">9</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span></span>
+<span>        axis.ticks       <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        text             <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">'Helvetica'</span>, color <span class="op">=</span> <span class="st">'gray30'</span>, size <span class="op">=</span> <span class="va">base_size</span><span class="op">)</span>,</span>
+<span>        plot.title       <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">rel</a></span><span class="op">(</span><span class="fl">1.25</span><span class="op">)</span>, hjust <span class="op">=</span> <span class="fl">0.5</span>, face <span class="op">=</span> <span class="st">'bold'</span><span class="op">)</span>,</span>
+<span>        panel.background <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        legend.position  <span class="op">=</span> <span class="st">'right'</span>,</span>
+<span>        panel.border     <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        panel.grid.minor <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        panel.grid.major <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_line</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">'grey90'</span>, size <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span>,</span>
+<span>        legend.key       <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="cn">NA</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>        axis.line        <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Once your files are documented, you can then process the documentation using the <code>document()</code> function to generate the appropriate .Rd files that your package needs.</p>
+<p>Once your files are documented, you can then process the documentation using the <code><a href="https://devtools.r-lib.org/reference/document.html">document()</a></code> function to generate the appropriate .Rd files that your package needs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">document</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/document.html">document</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>Updating mytools documentation
 Updating roxygen version in /Users/jones/development/mytools/DESCRIPTION
@@ -445,54 +422,53 @@ Writing NAMESPACE
 Loading mytools
 Writing NAMESPACE
 Writing custom_theme.Rd</code></pre>
-<p>That’s really it. You now have a package that you can <code>check()</code> and <code>install()</code> and <code>release()</code>. See below for these helper utilities.</p>
-</section>
-<section id="test-your-package" class="level2" data-number="16.7">
-<h2 data-number="16.7" class="anchored" data-anchor-id="test-your-package"><span class="header-section-number">16.7</span> Test your package</h2>
-<p>You can test your code using the <code>tetsthat</code> testing framework. The <code>ussethis::use_testthat()</code> function will set up your package for testing, and then you can use the <code>use_test()</code> function to setup individual test files. For example, in the functions lesson we created some tests for our <code>fahr_to_celsius</code> functions but ran them line by line in the console.</p>
+<p>That’s really it. You now have a package that you can <code><a href="https://devtools.r-lib.org/reference/check.html">check()</a></code> and <code><a href="https://devtools.r-lib.org/reference/install.html">install()</a></code> and <code><a href="https://devtools.r-lib.org/reference/release.html">release()</a></code>. See below for these helper utilities.</p>
+</section><section id="test-your-package" class="level2" data-number="16.7"><h2 data-number="16.7" class="anchored" data-anchor-id="test-your-package">
+<span class="header-section-number">16.7</span> Test your package</h2>
+<p>You can test your code using the <code>tetsthat</code> testing framework. The <code>ussethis::use_testthat()</code> function will set up your package for testing, and then you can use the <code><a href="https://usethis.r-lib.org/reference/use_r.html">use_test()</a></code> function to setup individual test files. For example, in the functions lesson we created some tests for our <code>fahr_to_celsius</code> functions but ran them line by line in the console.</p>
 <p>First, lets add that function to our package. Run the <code>use_r</code> function in the console:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_r</span>(<span class="st">"fahr_to_celsius"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_r.html">use_r</a></span><span class="op">(</span><span class="st">"fahr_to_celsius"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then copy the function and documentation into the R script that opens and save the file.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Convert temperature data from Fahrenheit to Celsius</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param fahr Temperature data in degrees Fahrenheit to be converted</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return temperature value in degrees Celsius</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @keywords conversion</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @examples</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' fahr_to_celsius(32)</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' fahr_to_celsius(c(32, 212, 72))</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>fahr_to_celsius <span class="ot">&lt;-</span> <span class="cf">function</span>(fahr) {</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  celsius <span class="ot">&lt;-</span> (fahr<span class="dv">-32</span>)<span class="sc">*</span><span class="dv">5</span><span class="sc">/</span><span class="dv">9</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(celsius)</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#' Convert temperature data from Fahrenheit to Celsius</span></span>
+<span><span class="co">#'</span></span>
+<span><span class="co">#' @param fahr Temperature data in degrees Fahrenheit to be converted</span></span>
+<span><span class="co">#' @return temperature value in degrees Celsius</span></span>
+<span><span class="co">#' @keywords conversion</span></span>
+<span><span class="co">#' @export</span></span>
+<span><span class="co">#' @examples</span></span>
+<span><span class="co">#' fahr_to_celsius(32)</span></span>
+<span><span class="co">#' fahr_to_celsius(c(32, 212, 72))</span></span>
+<span><span class="va">fahr_to_celsius</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fahr</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">celsius</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">fahr</span><span class="op">-</span><span class="fl">32</span><span class="op">)</span><span class="op">*</span><span class="fl">5</span><span class="op">/</span><span class="fl">9</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">celsius</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, set up your package for testing:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_testthat</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_testthat.html">use_testthat</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>✔ Adding 'testthat' to Suggests field in DESCRIPTION
 ✔ Creating 'tests/testthat/'
 ✔ Writing 'tests/testthat.R'</code></pre>
 <p>Then write a test for <code>fahr_to_celsius</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_test</span>(<span class="st">"fahr_to_celsius"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_r.html">use_test</a></span><span class="op">(</span><span class="st">"fahr_to_celsius"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>✔ Writing 'tests/testthat/test-fahr_to_celsius.R'
 ● Modify 'tests/testthat/test-fahr_to_celsius.R'</code></pre>
-<p>You can now add tests to the <code>test-fahr_to_celsius.R</code>, and you can run all of the tests using <code>devtools::test()</code>. For example, if you add a test to the <code>test-fahr_to_celsius.R</code> file:</p>
+<p>You can now add tests to the <code>test-fahr_to_celsius.R</code>, and you can run all of the tests using <code><a href="https://devtools.r-lib.org/reference/test.html">devtools::test()</a></code>. For example, if you add a test to the <code>test-fahr_to_celsius.R</code> file:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">"fahr_to_celsius works"</span>, {</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">fahr_to_celsius</span>(<span class="dv">32</span>), <span class="dv">0</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">fahr_to_celsius</span>(<span class="dv">212</span>), <span class="dv">100</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"fahr_to_celsius works"</span>, <span class="op">{</span></span>
+<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu">fahr_to_celsius</span><span class="op">(</span><span class="fl">32</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu">fahr_to_celsius</span><span class="op">(</span><span class="fl">212</span><span class="op">)</span>, <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then you can run the tests to be sure all of your functions are working using <code>devtools::test()</code>:</p>
+<p>Then you can run the tests to be sure all of your functions are working using <code><a href="https://devtools.r-lib.org/reference/test.html">devtools::test()</a></code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/test.html">test</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>Loading mytools
 Testing mytools
@@ -507,44 +483,39 @@ Failed:   0
 Warnings: 0
 Skipped:  0</code></pre>
 <p>Yay, all tests passed!</p>
-</section>
-<section id="checking-and-installing-your-package" class="level2" data-number="16.8">
-<h2 data-number="16.8" class="anchored" data-anchor-id="checking-and-installing-your-package"><span class="header-section-number">16.8</span> Checking and installing your package</h2>
-<p>Now that your package is built, you can check it for consistency and completeness using <code>check()</code>, and then you can install it locally using <code>install()</code>, which needs to be run from the parent directory of your module.</p>
+</section><section id="checking-and-installing-your-package" class="level2" data-number="16.8"><h2 data-number="16.8" class="anchored" data-anchor-id="checking-and-installing-your-package">
+<span class="header-section-number">16.8</span> Checking and installing your package</h2>
+<p>Now that your package is built, you can check it for consistency and completeness using <code><a href="https://devtools.r-lib.org/reference/check.html">check()</a></code>, and then you can install it locally using <code><a href="https://devtools.r-lib.org/reference/install.html">install()</a></code>, which needs to be run from the parent directory of your module.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">check</span>()</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/check.html">check</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install.html">install</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Your package is now available for use in your local environment.</p>
-</section>
-<section id="sharing-and-releasing-your-package" class="level2" data-number="16.9">
-<h2 data-number="16.9" class="anchored" data-anchor-id="sharing-and-releasing-your-package"><span class="header-section-number">16.9</span> Sharing and releasing your package</h2>
+</section><section id="sharing-and-releasing-your-package" class="level2" data-number="16.9"><h2 data-number="16.9" class="anchored" data-anchor-id="sharing-and-releasing-your-package">
+<span class="header-section-number">16.9</span> Sharing and releasing your package</h2>
 <ul>
 <li><p><strong>GitHub</strong>: The simplest way to share your package with others is to upload it to a <a href="https://github.com">GitHub repository</a>, which allows others to install your package using the <code>install_github('mytools','github_username')</code> function from <code>devtools</code>.</p></li>
-<li><p><strong>CRAN</strong>: If your package might be broadly useful, also consider releasing it to CRAN, using the <code>release()</code> method from <code>devtools()</code>. Releasing a package to CRAN requires a significant amount of work to ensure it follows the standards set by the R community, but it is entirely tractable and a valuable contribution to the science community. If you are considering releasing a package more broadly, you may find that the supportive community at <a href="https://ropensci.org">ROpenSci</a> provides incredible help and valuable feeback through their onboarding process.</p></li>
+<li><p><strong>CRAN</strong>: If your package might be broadly useful, also consider releasing it to CRAN, using the <code><a href="https://devtools.r-lib.org/reference/release.html">release()</a></code> method from <code>devtools()</code>. Releasing a package to CRAN requires a significant amount of work to ensure it follows the standards set by the R community, but it is entirely tractable and a valuable contribution to the science community. If you are considering releasing a package more broadly, you may find that the supportive community at <a href="https://ropensci.org">ROpenSci</a> provides incredible help and valuable feeback through their onboarding process.</p></li>
 <li><p><strong>R-Universe</strong>: A newer approach is to link your package release to <a href="https://r-universe.dev">R-Universe</a>, which is an effective way to make it easy to test and maintain packages so that many people can install them using the familiar <code>install.pacakges()</code> function in R. In R-Universe, people and organizations can <a href="https://github.com/r-universe-org/help#how-to-setup-your-personal-universe">create their own <em>universe</em> of packages</a>, which represent a collection of packages that appear as a CRAN-compatible repository in R. For example, in DataONE we maintaine the DataONE R-Universe (https://dataoneorg.r-universe.dev), which lists the packages we actively maintain as an organization. So, any R-user that wants to install these packages can do so by adding our universe to their list of repositories, and then installing packages as normal. For example, to install the <code>codyn</code> package, one could use:</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'codyn'</span>, <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">'https://dataoneorg.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'codyn'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'https://dataoneorg.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="challenge" class="level2 unnumbered exercise">
-<h2 class="unnumbered exercise anchored" data-anchor-id="challenge">Challenge</h2>
-<p>Add the other temperature conversion functions with full documentation to your package, write tests to ensure the functions work properly, and then <code>document()</code>, <code>check()</code>, and <code>install()</code> the new version of the package. Don’t forget to update the version number before you install!</p>
-</section>
-<section id="more-reading" class="level2" data-number="16.10">
-<h2 data-number="16.10" class="anchored" data-anchor-id="more-reading"><span class="header-section-number">16.10</span> More reading</h2>
+</section><section id="challenge" class="level2 unnumbered exercise"><h2 class="unnumbered exercise anchored" data-anchor-id="challenge">Challenge</h2>
+<p>Add the other temperature conversion functions with full documentation to your package, write tests to ensure the functions work properly, and then <code><a href="https://devtools.r-lib.org/reference/document.html">document()</a></code>, <code><a href="https://devtools.r-lib.org/reference/check.html">check()</a></code>, and <code><a href="https://devtools.r-lib.org/reference/install.html">install()</a></code> the new version of the package. Don’t forget to update the version number before you install!</p>
+</section><section id="more-reading" class="level2" data-number="16.10"><h2 data-number="16.10" class="anchored" data-anchor-id="more-reading">
+<span class="header-section-number">16.10</span> More reading</h2>
 <ul>
-<li>Hadley Wickham’s awesome book: <a href="http://r-pkgs.had.co.nz/">R Packages</a></li>
-<li>Thomas Westlake’s blog <a href="https://r-mageddon.netlify.com/post/writing-an-r-package-from-scratch/">Writing an R package from scratch</a></li>
-<li>How to set up your <a href="https://github.com/r-universe-org/help#how-to-setup-your-personal-universe">personal R-Universe</a></li>
+<li>Hadley Wickham’s awesome book: <a href="http://r-pkgs.had.co.nz/">R Packages</a>
+</li>
+<li>Thomas Westlake’s blog <a href="https://r-mageddon.netlify.com/post/writing-an-r-package-from-scratch/">Writing an R package from scratch</a>
+</li>
+<li>How to set up your <a href="https://github.com/r-universe-org/help#how-to-setup-your-personal-universe">personal R-Universe</a>
+</li>
 </ul>
 
 
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -571,23 +542,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
+    target: function(trigger) {
+      return trigger.previousElementSibling;
     }
   });
   clipboard.on('success', function(e) {
@@ -652,92 +609,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -776,9 +647,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./session_14.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Creating Functions in R</span></span>
       </a>          
