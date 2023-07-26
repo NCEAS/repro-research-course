@@ -87,7 +87,7 @@ jobs:
       #- name: Build training materials scalable
        # run: sh _build_quarto.sh
       
-      - name: Render Quarto nceas-training
+      - name: Render Quarto training materials
         uses: quarto-dev/quarto-actions/render@v2
         with:
           to: html
@@ -95,8 +95,9 @@ jobs:
       
       - name: Move training materials to public/$BRANCH
         run: |
+          echo 'pwd: ${{ github.workspace }}'
           mkdir -p public/$BRANCH # make dir if none exists
-          cp -R nceas-training/materials/_book public/$BRANCH 
+          cp -R nceas-training/materials/_book/. public/$BRANCH/ 
         
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.5
