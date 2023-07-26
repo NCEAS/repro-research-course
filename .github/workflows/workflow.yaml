@@ -12,7 +12,7 @@ on:
 name: renderbook
 
 env:
-  BRANCH: '2023-08-delta'
+  BRANCH: '2023-08-delta' # must be set
 
 jobs:
 
@@ -29,7 +29,8 @@ jobs:
         with:
             submodules: true
 
-      - uses: actions/checkout@v3
+      - name: Make nceas-training repo accessible as a temp dir 
+        uses: actions/checkout@v3
         with:
             repository: NCEAS/nceas-training
             ref: "${{ env.BRANCH }}"
@@ -77,17 +78,25 @@ jobs:
               touch public/.nojekyll
               cp CNAME public/CNAME
 
-      - name: "Install Quarto"
+      - name: Install Quarto
         uses: quarto-dev/quarto-actions/install-quarto@v1
         
-      - name: "Install tinytex"
+      - name: Install tinytex
         run: quarto install tool tinytex
         
       #- name: Build training materials scalable
        # run: sh _build_quarto.sh
-        
-      - name: Build training materials learning-hub
-        run: sh _build_bookdown.sh # Note the BRANCH env var is set
+      
+      - name: Render Quarto nceas-training
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          to: html
+          path: nceas-training/materials # build from nceas-training from temp dir
+      
+      - name: Move training materials to public/$BRANCH
+        run: |
+          mkdir -p public/$BRANCH # make dir if none exists
+          cp -R nceas-training/materials/_book public/$BRANCH 
         
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.5
