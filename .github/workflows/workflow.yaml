@@ -13,11 +13,12 @@ on:
     types: [quarto]
 
 env:
+  BRANCH: github.event.client_payload.branch
   GH_USER: 'RRC_GHA' # must be set
 
 jobs:
   quarto:
-    if: github.event.action == 'quarto' || github.event.action == 'bookdown' || github.event_name == 'push' || github.event.client_payload.branch == 'develop'
+    if: github.event.action == 'quarto' || github.event_name == 'push'
     
     runs-on: ubuntu-latest
     
@@ -30,6 +31,10 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - name: Check name of branch from nceas-training
+        run: |
+          echo $GITHUB_HEAD_REF
+          
       - uses: actions/checkout@v3
         with:
             submodules: true
