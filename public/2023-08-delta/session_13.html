@@ -451,15 +451,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>responses <span class="ot">&lt;-</span> <span class="fu">read_sheet</span>(<span class="st">"https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?usp=sharing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>✖ Request failed [429]. Retry 1 happens in 1.8 seconds ...</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>✖ Request failed [429]. Retry 2 happens in 2.8 seconds ...</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>✖ Request failed [429]. Retry 3 happens in 6.1 seconds ...</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
 <pre><code>✔ Reading from "Example Survey Form (Responses)".</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
@@ -472,7 +463,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Make sure you click the third check box enabling the Tidyverse API to see, edit, create, and delete your sheets. Note that you will have to tell it to do any of these actions via the R code you write.</p>
 <p>When you come back to your R environment, you should have a data frame containing the data in your sheet! Let’s take a quick look at the structure of that sheet.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 10
 Columns: 5
@@ -485,17 +476,17 @@ $ `What might you change about the event?`               &lt;chr&gt; "more snack
 </div>
 <p>So, now that we have the data in a standard R <code>data.frame</code>, we can easily summarize it and plot results. By default, the column names in the sheet are the long fully descriptive questions that were asked, which can be hard to type. We can save those questions into a vector for later reference, like when we want to use the question text for plot titles.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">colnames</span>(responses)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(questions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">colnames</span>(responses)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(questions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> chr [1:4] "To what degree did the event meet your expectations?" ...</code></pre>
 </div>
 </div>
 <p>We can make the responses data frame more compact by renaming the columns of the vector with short numbered names of the form <code>Q1</code>. Note that, by using a sequence, this should work for sheets from just a few columns to many hundreds of columns, and provides a consistent question naming convention.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(questions) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(responses) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Timestamp"</span>, <span class="fu">names</span>(questions))</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(questions) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(responses) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Timestamp"</span>, <span class="fu">names</span>(questions))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 10
 Columns: 5
@@ -508,17 +499,17 @@ $ Q4        &lt;chr&gt; "more snacks", "no pineapple pizza!", "nothing", "needs 
 </div>
 <p>Now that we’ve renamed our columns, let’s summarize the responses for the first question. We can use the same pattern that we usually do to split the data from Q1 into groups, then summarize it by counting the number of records in each group, and then merge the count of each group back together into a summarized data frame. We can then plot the Q1 results using <code>ggplot</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> responses <span class="sc">%&gt;%</span> </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Q1) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(Q1) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>())</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(<span class="at">data =</span> q1, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Q1, <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> questions[<span class="dv">1</span>], </span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Number of reponses"</span>,</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"To what degree did the course meet expectations?"</span>) <span class="sc">+</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> responses <span class="sc">%&gt;%</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Q1) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(Q1) <span class="sc">%&gt;%</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>())</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(<span class="at">data =</span> q1, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Q1, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> questions[<span class="dv">1</span>], </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Number of reponses"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"To what degree did the course meet expectations?"</span>) <span class="sc">+</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="bypassing-authentication-for-public-sheets" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="bypassing-authentication-for-public-sheets">Bypassing authentication for public sheets</h5>
