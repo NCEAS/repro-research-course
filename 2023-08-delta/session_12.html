@@ -300,7 +300,11 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#example-using-the-phantom-of-the-opera" id="toc-example-using-the-phantom-of-the-opera" class="nav-link" data-scroll-target="#example-using-the-phantom-of-the-opera"><span class="header-section-number">12.3.1</span> Example using <em>The Phantom of the Opera</em></a></li>
   </ul></li>
-  <li><a href="#tidy-text-to-non-tidy-text-workflows" id="toc-tidy-text-to-non-tidy-text-workflows" class="nav-link" data-scroll-target="#tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">12.4</span> Tidy Text to Non-Tidy Text Workflows</a></li>
+  <li><a href="#tidy-text-to-non-tidy-text-workflows" id="toc-tidy-text-to-non-tidy-text-workflows" class="nav-link" data-scroll-target="#tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">12.4</span> Tidy Text to Non-tidy Text Workflows</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-document-term-matrix-dtm" id="toc-what-is-a-document-term-matrix-dtm" class="nav-link" data-scroll-target="#what-is-a-document-term-matrix-dtm"><span class="header-section-number">12.4.1</span> What is a Document Term Matrix (DTM)?</a></li>
+  <li><a href="#use-cast-to-convert-to-a-matrix-non-tidy-format" id="toc-use-cast-to-convert-to-a-matrix-non-tidy-format" class="nav-link" data-scroll-target="#use-cast-to-convert-to-a-matrix-non-tidy-format"><span class="header-section-number">12.4.2</span> Use <code>cast()</code> to Convert to a Matrix (Non-tidy) Format</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -570,15 +574,63 @@ Step 9 Lollipop Plot
 </section>
 </section>
 <section id="tidy-text-to-non-tidy-text-workflows" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">12.4</span> Tidy Text to Non-Tidy Text Workflows</h2>
+<h2 data-number="12.4" class="anchored" data-anchor-id="tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">12.4</span> Tidy Text to Non-tidy Text Workflows</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/tidytext-nontidy-workflow.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">A flowchart of a typical text analysis that combines <code>tidytext</code> with other tools and data formats, particularly the <code>tm</code> or <code>quanteda</code> packages. Source: Silge &amp; Robinson</figcaption>
 </figure>
 </div>
-<p>Many text analysis methods, in particular NLP techniques (e.g.&nbsp;topic models) require text data to be stored in a mathematical format. A common approach is to create a document term matrix (DTM), also called a document-feature matrix (DFM). In a matrix format, algorithms are able to more easily compare one document to many other documents to identify patterns.</p>
-<p>In the <a href="#exercise-tidy-text-workflow">Tidy Text Workflow Exercise</a>, we converted our corpus into a data table that has “one-token-per-row”. However, the tidy text format of “one-token-per-row” is not a common format for other R packages that work with text data or perform text analysis. Packages like <code>tm</code>, <code>quanteda</code>, <code>topicmodels</code></p>
+<p>In the <a href="#exercise-tidy-text-workflow">Tidy Text Workflow Exercise</a>, we converted our corpus into a data table that has “one-token-per-row”. However, the tidy text format of one-token-per-row is not a common format for other R packages that work with text data or perform text analysis. Packages like <code>tm</code>, <code>quanteda</code>, <code>topicmodels</code>.</p>
+<p>Many text analysis methods, in particular NLP techniques (e.g.&nbsp;topic models) require text data to be stored in a mathematical format. A common approach is to create a matrix, such as a: sparse matrix, a document term matrix (DTM), or a document-feature matrix (DFM). In a matrix format, algorithms are able to more easily compare one document to many other documents to identify patterns.</p>
+<section id="what-is-a-document-term-matrix-dtm" class="level3" data-number="12.4.1">
+<h3 data-number="12.4.1" class="anchored" data-anchor-id="what-is-a-document-term-matrix-dtm"><span class="header-section-number">12.4.1</span> What is a Document Term Matrix (DTM)?</h3>
+<p>A DTM or document-feature matrix (DFM)</p>
+<p>Silge and Robinson kept this in mind as they built the <code>tidytext</code> package, and included helpful <code>cast()</code> functions to turn a tidy text object (again a table with one-token-per-row) into a matrix.</p>
+</section>
+<section id="use-cast-to-convert-to-a-matrix-non-tidy-format" class="level3" data-number="12.4.2">
+<h3 data-number="12.4.2" class="anchored" data-anchor-id="use-cast-to-convert-to-a-matrix-non-tidy-format"><span class="header-section-number">12.4.2</span> Use <code>cast()</code> to Convert to a Matrix (Non-tidy) Format</h3>
+<p>let’s create a matrix of all books we looked at</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download corpus</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>all_books_corp <span class="ot">&lt;-</span> <span class="fu">gutenberg_download</span>(<span class="fu">c</span>(<span class="dv">175</span>, <span class="co"># phantom of the opera</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="dv">42</span>, <span class="co"># jekyll &amp; hyde</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="dv">84</span>, <span class="co"># frankenstein</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="dv">345</span>), <span class="co"># dracula</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">meta_fields =</span> <span class="fu">c</span>(<span class="st">"title"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># turn corpus into tidy text format</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>tidy_all_books <span class="ot">&lt;-</span> all_books_corp <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word, <span class="co"># output col created </span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">input =</span> text <span class="co"># input col that is split</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(title, word)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert tidy text table to spare matrix from `Matrix` package</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># requires `Matrix` to be installed</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>all_books_sparse <span class="ot">&lt;-</span> tidy_all_books <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cast_sparse</span>(<span class="at">row =</span> title,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">column =</span> word,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">value =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert tidy text table to DTM object from `tm` package</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># requires `tm` to be installed</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>all_books_dtm <span class="ot">&lt;-</span> tidy_all_books <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cast_dtm</span>(<span class="at">term =</span> word,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">document =</span> title,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">value =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert tidy text table to DFM object from `quanteda` package</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># requires `quanteda` to be installed</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>all_books_dfm <span class="ot">&lt;-</span> tidy_all_books <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cast_dfm</span>(<span class="at">term =</span> word, </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">document =</span> title, </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">value =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -595,7 +647,7 @@ R Text Mining Tools and Analysis Packages Resources
 </ul>
 </div>
 </div>
-<!--## Exercise: DTM Workflow
+<!--
 
 
 
@@ -604,9 +656,10 @@ Many existing text mining tools or algorithms work only on sparse document-term 
 TODO:
 - add Text vectorization to vocab list: the process of converting text data to numerical vectors. Later those vectors are used to build various machine learning models
 - add document-feature matrix (DFM) to vocab list
+- add sparse matrix to vocab list
+- make sure corpus definition includes metadata info associated with data
 
 NOTES:
-What is a Document Term Matrix (DTM)?
 
 Text analytical models (e.g., topic models) often require your data to be stored in a certain format
 only so will algorithms be able to quickly compare one document to a lot of other documents to identify patterns
@@ -648,6 +701,7 @@ Froehlich, Halley E., Rebecca R. Gentry, Michael B. Rust, Dietmar Grimm, and Ben
 Van Houtan, Kyle S., Tyler Gagne, Clinton N. Jenkins, and Lucas Joppa. 2020. <span>“Sentiment Analysis of Conservation Studies Captures Successes of Species Reintroductions.”</span> <em>Patterns</em> 1 (1): 100005. <a href="https://doi.org/10.1016/j.patter.2020.100005">https://doi.org/10.1016/j.patter.2020.100005</a>.
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
