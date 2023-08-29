@@ -20,7 +20,60 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -229,7 +282,27 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#what-is-text-data" id="toc-what-is-text-data" class="nav-link" data-scroll-target="#what-is-text-data"><span class="header-section-number">12.1</span> What is text data?</a>
+  <ul class="collapse">
+  <li><a href="#how-do-we-talk-about-text-data" id="toc-how-do-we-talk-about-text-data" class="nav-link" data-scroll-target="#how-do-we-talk-about-text-data"><span class="header-section-number">12.1.1</span> How do we talk about text data?</a></li>
+  <li><a href="#how-is-text-data-used-in-the-environmental-field" id="toc-how-is-text-data-used-in-the-environmental-field" class="nav-link" data-scroll-target="#how-is-text-data-used-in-the-environmental-field"><span class="header-section-number">12.1.2</span> How is text data used in the environmental field?</a></li>
+  </ul></li>
+  <li><a href="#what-is-tidy-text-data" id="toc-what-is-tidy-text-data" class="nav-link" data-scroll-target="#what-is-tidy-text-data"><span class="header-section-number">12.2</span> What is tidy text data?</a>
+  <ul class="collapse">
+  <li><a href="#what-is-the-tidytext-r-package" id="toc-what-is-the-tidytext-r-package" class="nav-link" data-scroll-target="#what-is-the-tidytext-r-package"><span class="header-section-number">12.2.1</span> What is the <code>tidytext</code> R package?</a></li>
+  </ul></li>
+  <li><a href="#exercise-tidy-text-workflow" id="toc-exercise-tidy-text-workflow" class="nav-link" data-scroll-target="#exercise-tidy-text-workflow"><span class="header-section-number">12.3</span> Exercise: Tidy Text Workflow</a>
+  <ul class="collapse">
+  <li><a href="#example-using-the-phantom-of-the-opera" id="toc-example-using-the-phantom-of-the-opera" class="nav-link" data-scroll-target="#example-using-the-phantom-of-the-opera"><span class="header-section-number">12.3.1</span> Example using <em>The Phantom of the Opera</em></a></li>
+  </ul></li>
+  <li><a href="#tidy-text-to-non-tidy-text-workflows" id="toc-tidy-text-to-non-tidy-text-workflows" class="nav-link" data-scroll-target="#tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">12.4</span> Tidy Text to Non-Tidy Text Workflows</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -237,10 +310,345 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<!--{{< include /sections/intro-tidy-text-data.qmd >}}-->
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Describe principles of tidy text</li>
+<li>Employ strategies to wrangle unstructured text data into a tidy format using the <code>tidytext</code> package</li>
+<li>Become familiar with text analysis (or text mining) methods and when to use them</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Acknowledgements
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This lesson has been adapted from the following resources:</p>
+<ul>
+<li><a href="https://www.tidytextmining.com/">Welcome to Text Mining with R</a> by <a href="https://juliasilge.com/">Julia Silge</a> and <a href="http://varianceexplained.org/">David Robinson</a>. Julia and David are also the developers of the <a href="https://juliasilge.github.io/tidytext/"><code>tidytext</code></a> package.</li>
+<li><a href="https://bookdown.org/paul/2021_computational_social_science/r-workflow-for-text-analysis.html">Section 7.3: (R-) Workflow for Text Analysis from Computational Social Science: Theory &amp; Application, Version: 17 June, 2021</a> by Paul C. Bauer</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="what-is-text-data" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="what-is-text-data"><span class="header-section-number">12.1</span> What is text data?</h2>
+<p>Text data is information stored as character or string data types. It comes in various different forms including books, research articles, social media posts, interview transcripts, newspapers, government reports, and much more.</p>
+<div class="callout callout-style-simple callout-warning no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Raw text data is often unstructured and quite “messy”. This could include wrong grammar, missing words, spelling issues, ambiguous language, humor, emojis, symbols, etc. Investing time into carefully cleaning and preparing text data is crucial for your ultimate analysis.</p>
+</div>
+</div>
+</div>
+<section id="how-do-we-talk-about-text-data" class="level3" data-number="12.1.1">
+<h3 data-number="12.1.1" class="anchored" data-anchor-id="how-do-we-talk-about-text-data"><span class="header-section-number">12.1.1</span> How do we talk about text data?</h3>
+<p>Here is a list of text data or text analysis terms we’ll be referring to throughout this lesson. Note this is not a comprehensive list of text analysis terms that are used beyond this lesson.</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Corpus (corpora, plural)</td>
+<td>Collection or database of text or multiple texts. These types of objects typically contain raw strings annotated with additional metadata and details.</td>
+</tr>
+<tr class="even">
+<td>Document-term matrix</td>
+<td>Represents the relationship between terms and documents, where each row stands for a term and each column for a document, and an entry is the number of occurrences of the term in the document.</td>
+</tr>
+<tr class="odd">
+<td>Natural Language Processing (NLP)</td>
+<td>NLP is an interdisciplinary field used in computer science, data science, linguistics, and others to analyze, categorize, and work with computerized text.</td>
+</tr>
+<tr class="even">
+<td>String</td>
+<td>Specific type of data whose values are enclosed within a set of quotes. Typically values or elements are characters (e.g.&nbsp;“Hello World!”).</td>
+</tr>
+<tr class="odd">
+<td>Text analysis</td>
+<td>The process of deriving high-quality information or patterns from text through evaluation and interpretation of the output. Also referred to as “text mining” or “text analytics”.</td>
+</tr>
+<tr class="even">
+<td>Token</td>
+<td>A meaningful unit of text, such as a word, to use for analysis.</td>
+</tr>
+<tr class="odd">
+<td>Tokenization</td>
+<td>The process of splitting text into tokens.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="how-is-text-data-used-in-the-environmental-field" class="level3" data-number="12.1.2">
+<h3 data-number="12.1.2" class="anchored" data-anchor-id="how-is-text-data-used-in-the-environmental-field"><span class="header-section-number">12.1.2</span> How is text data used in the environmental field?</h3>
+<p>As our knowledge about the environmental world grows, researchers will need new computational approaches for working with text data because reading and identifying all the relevant literature for literature syntheses is becoming an increasingly difficult task.</p>
+<p>Beyond literature syntheses, quantitative text analysis tools are extremely valuable for efficiently extracting information from texts and other text mining or text analysis tasks.</p>
+<p>Environmental researchers have used text data to:</p>
+<ul>
+<li>Understand how text mining is used in the field <span class="citation" data-cites="farrell2022">(<a href="#ref-farrell2022" role="doc-biblioref">Farrell et al. 2022</a>)</span></li>
+<li>Gain insights into public perception of a particular subject <span class="citation" data-cites="froehlich2017">(<a href="#ref-froehlich2017" role="doc-biblioref">Froehlich et al. 2017</a>)</span></li>
+<li>Highlight the power of NLP models to advance research <span class="citation" data-cites="vanhoutan2020">(<a href="#ref-vanhoutan2020" role="doc-biblioref">Van Houtan et al. 2020</a>)</span></li>
+</ul>
+</section>
+</section>
+<section id="what-is-tidy-text-data" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="what-is-tidy-text-data"><span class="header-section-number">12.2</span> What is tidy text data?</h2>
+<p>Let’s recall what are the three tidy data principles:</p>
+<ol type="1">
+<li>Every column is a variable.</li>
+<li>Every row is an observation.</li>
+<li>Every cell is a single value.</li>
+</ol>
+<p>Keeping that in mind, Silge and Robinson define the tidy text format as <strong>being a table with one-token-per-row</strong>.</p>
+<p>This one-token-per-row structure is in contrast to the ways text is often stored in current analyses, perhaps as strings or in a document-term matrix.</p>
+<p>For tidy text mining, the token that is stored in each row is most often a single word, but can also be an n-gram, sentence, or paragraph.</p>
+<p>By using tidy data principles, we can apply many “tidy” R packages including <code>dpylr</code>, <code>tidyr</code>, <code>ggplot2</code>, and more.</p>
+<section id="what-is-the-tidytext-r-package" class="level3" data-number="12.2.1">
+<h3 data-number="12.2.1" class="anchored" data-anchor-id="what-is-the-tidytext-r-package"><span class="header-section-number">12.2.1</span> What is the <code>tidytext</code> R package?</h3>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidytext-logo.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div><div class="column" style="width:70%;">
+<p><code>tidytext</code> is a package that applies the tidy principles to analyzing text. <br></p>
+<p>The package contains many useful functions to wrangle text data into tidy formats. It has been built considering other text mining R packages so that it’s easy to switch between text mining tools (e.g.&nbsp;<code>tm</code>, <code>quanteda</code>, <code>stringr</code>, <code>wordcloud2</code>).</p>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-tidy-text-workflow" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="exercise-tidy-text-workflow"><span class="header-section-number">12.3</span> Exercise: Tidy Text Workflow</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidytext-tidy-workflow.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Source: Silge &amp; Robinson</figcaption>
+</figure>
+</div>
+<p>We are going to use the <code>gutenbergr</code> package to access public domain texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a> (a library of free eBooks). We’ll then use the <code>tidytext</code>, <code>dyplr</code> and <code>ggplot2</code> packages to practice the tidy text workflow.</p>
+<p>Break out into groups and then follow the exercise setup and instructions.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Setup and Instructions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Create a new <code>qmd</code> file and title it “Intro to Text Data”, name yourself as the author, and then save the file as <code>intro-text-data.qmd</code>.</p></li>
+<li><p>Create a new code chunk and attach the following libraries:</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gutenbergr) <span class="co"># access public domain texts from Project Gutenberg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext) <span class="co"># text mining using tidy tools</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># wrangle data</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># plot data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Depending on which group you’re in, use one of the following public domain texts:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group A</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"Dracula"</span>) <span class="co"># dracula text</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Group B</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"Frankenstein; Or, The Modern Prometheus"</span>) <span class="co"># frankenstein text</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Group C</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Strange Case of Dr. Jekyll and Mr. Hyde"</span>) <span class="co"># jekyll hyde text</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li><p>Get the id number from the <code>gutenberg_works()</code> function so that you can download the text as a corpus using the function <code>gutenberg_download()</code>. Save the corpus to an object called <code>{book-title}_corp</code>. View the object - is the data in a tidy format?</p></li>
+<li><p>Tokenize the corpus data using <code>unnest_tokens()</code>. Take a look at the data - do we need every single token for our analysis?</p></li>
+<li><p>Remove “stop words” or words that can be safely removed or ignored without sacrificing the meaning of the sentence (e.g.&nbsp;“to”, “in”, “and”) using <code>anti_join()</code>. Take a look at the data - are you satisfied with your data? We won’t conduct any additional cleaning steps here, but consider how you would further clean the data.</p></li>
+<li><p>Calculate the top 10 most frequent words using the functions <code>count()</code> and <code>slice_max()</code>.</p></li>
+<li><p>Plot the top 10 most frequent words using <code>ggplot()</code>. We reccommend creating either a bar plot using <code>geom_col()</code> or a lollipop plot using both <code>geom_point()</code> and <code>geom_segment()</code>.</p></li>
+<li><p><strong>Bonus</strong>: Consider elements in <code>theme()</code> and improve your plot.</p></li>
+</ol>
+</div>
+</div>
+<section id="example-using-the-phantom-of-the-opera" class="level3" data-number="12.3.1">
+<h3 data-number="12.3.1" class="anchored" data-anchor-id="example-using-the-phantom-of-the-opera"><span class="header-section-number">12.3.1</span> Example using <em>The Phantom of the Opera</em></h3>
+<p>The code chunks below follows the instructions from above using the text of <em>The Phantom of the Opera</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get id number</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Phantom of the Opera"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 8
+  gutenberg_id title     author gutenberg_author_id language gutenberg_bookshelf
+         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;              
+1          175 The Phan… Lerou…                 112 en       Opera/Gothic Ficti…
+# ℹ 2 more variables: rights &lt;chr&gt;, has_text &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Steps 4-7 Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># access text data using id number from `gutenberg_works()`</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>phantom_corp <span class="ot">&lt;-</span> <span class="fu">gutenberg_download</span>(<span class="dv">175</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tidy text data - unnest and remove stop words</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>tidy_phantom <span class="ot">&lt;-</span> phantom_corp <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(word, text) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate top 10 most frequent words</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>count_phantom <span class="ot">&lt;-</span> tidy_phantom <span class="sc">%&gt;%</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(word) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Step 8 Plot Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize text data #</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> count_phantom, <span class="fu">aes</span>(n, <span class="fu">reorder</span>(word, n))) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Token"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details>
+<summary>
+Step 8 Bar Plot
+</summary>
+<p><img src="images/tidytext-barplot.png" class="img-fluid"></p>
+</details>
+<div class="cell">
+<details>
+<summary>Step 9 Plot Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize text data #</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># initial lollipop plot</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> count_phantom, <span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n)) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Token"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ascending order pretty lollipop plot</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> count_phantom, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(word, n), <span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"cyan4"</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n), <span class="at">color=</span><span class="st">"cyan4"</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Ten Words in The Phantom of the Opera"</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details>
+<summary>
+Step 9 Lollipop Plot
+</summary>
+<img src="images/tidytext-lollipopplot.png" class="img-fluid">
+</details>
+</section>
+</section>
+<section id="tidy-text-to-non-tidy-text-workflows" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">12.4</span> Tidy Text to Non-Tidy Text Workflows</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidytext-nontidy-workflow.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">A flowchart of a typical text analysis that combines <code>tidytext</code> with other tools and data formats, particularly the <code>tm</code> or <code>quanteda</code> packages. Source: Silge &amp; Robinson</figcaption>
+</figure>
+</div>
+<p>Many text analysis methods, in particular NLP techniques (e.g.&nbsp;topic models) require text data to be stored in a mathematical format. A common approach is to create a document term matrix (DTM), also called a document-feature matrix (DFM). In a matrix format, algorithms are able to more easily compare one document to many other documents to identify patterns.</p>
+<p>In the <a href="#exercise-tidy-text-workflow">Tidy Text Workflow Exercise</a>, we converted our corpus into a data table that has “one-token-per-row”. However, the tidy text format of “one-token-per-row” is not a common format for other R packages that work with text data or perform text analysis. Packages like <code>tm</code>, <code>quanteda</code>, <code>topicmodels</code></p>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+R Text Mining Tools and Analysis Packages Resources
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://cran.r-project.org/web/views/NaturalLanguageProcessing.html">CRAN Task View: Natural Language Processing</a></li>
+<li><a href="https://guides.library.upenn.edu/penntdm/r">Penn Libraries Guides: Text Analysis</a></li>
+</ul>
+</div>
+</div>
+<!--## Exercise: DTM Workflow
+
+
+
+Many existing text mining tools or algorithms work only on sparse document-term matrices. Therefore, tidytext provides cast_ verbs for converting from a tidy form to these matrices.
+
+TODO:
+- add Text vectorization to vocab list: the process of converting text data to numerical vectors. Later those vectors are used to build various machine learning models
+- add document-feature matrix (DFM) to vocab list
+
+NOTES:
+What is a Document Term Matrix (DTM)?
+
+Text analytical models (e.g., topic models) often require your data to be stored in a certain format
+only so will algorithms be able to quickly compare one document to a lot of other documents to identify patterns
+Typically: document-term matrix (DTM), sometimes also called document-feature matrix (DFM)
+matrix with each row being a document and each word being a column
+term-frequency (tf): The number within each cell describes the number of times the word appears in the document
+term frequency–inverse document frequency (tf-idf): weights the occurrence of certain words, e.g., lowering the weight of the word “social” in an corpus of sociological articles
+
+## Exercise: Tidy Text Data from a PDF
+
+- data: DSC plan chapters pdf format
+- read in pdf
+- turn pdf into a corpus
+- remove headers
+- tokenize
+- rm stop words
+    - add custom stop words
+- create word cloud
+
+
+::: {.cell}
+
+:::
+
+## Note about python
+
+python has many powerful packages and tools for running analyses like NLP -->
 <!--# previous lesson: text-analysis.qmd -->
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-farrell2022" class="csl-entry" role="listitem">
+Farrell, Maxwell J., Liam Brierley, Anna Willoughby, Andrew Yates, and Nicole Mideo. 2022. <span>“Past and Future Uses of Text Mining in Ecology and Evolution.”</span> <em>Proceedings of the Royal Society B: Biological Sciences</em> 289 (1975). <a href="https://doi.org/10.1098/rspb.2021.2721">https://doi.org/10.1098/rspb.2021.2721</a>.
+</div>
+<div id="ref-froehlich2017" class="csl-entry" role="listitem">
+Froehlich, Halley E., Rebecca R. Gentry, Michael B. Rust, Dietmar Grimm, and Benjamin S. Halpern. 2017. <span>“Public Perceptions of Aquaculture: Evaluating Spatiotemporal Patterns of Sentiment Around the World.”</span> Edited by Christopher M. Somers. <em>PLOS ONE</em> 12 (1): e0169281. <a href="https://doi.org/10.1371/journal.pone.0169281">https://doi.org/10.1371/journal.pone.0169281</a>.
+</div>
+<div id="ref-vanhoutan2020" class="csl-entry" role="listitem">
+Van Houtan, Kyle S., Tyler Gagne, Clinton N. Jenkins, and Lucas Joppa. 2020. <span>“Sentiment Analysis of Conservation Studies Captures Successes of Species Reintroductions.”</span> <em>Patterns</em> 1 (1): 100005. <a href="https://doi.org/10.1016/j.patter.2020.100005">https://doi.org/10.1016/j.patter.2020.100005</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
