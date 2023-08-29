@@ -367,7 +367,7 @@ Acknowledgements
 <section id="how-is-text-data-used-in-the-environmental-field" class="level3" data-number="12.1.2">
 <h3 data-number="12.1.2" class="anchored" data-anchor-id="how-is-text-data-used-in-the-environmental-field"><span class="header-section-number">12.1.2</span> How is text data used in the environmental field?</h3>
 <p>As our knowledge about the environmental world grows, researchers will need new computational approaches for working with text data because reading and identifying all the relevant literature for literature syntheses is becoming an increasingly difficult task.</p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD Beyond literature syntheses, quantitative text analysis tools are extremely valuable for efficiently extracting information from texts and other text mining or text analysis tasks. ======= Beyond literature syntheses, quantitative text analysis tools are extremely valuable for efficiently extracting information from texts and other text mining or text analysis tasks. &gt;&gt;&gt;&gt;&gt;&gt;&gt; bb20f6f8311df6dfd89cc170ff212e980fc9a258</p>
+<p>Beyond literature syntheses, quantitative text analysis tools are extremely valuable for efficiently extracting information from texts and other text mining or text analysis tasks.</p>
 </section>
 </section>
 <section id="what-is-tidy-text-data" class="level2" data-number="12.2">
@@ -434,7 +434,7 @@ Setup and Instructions
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"Frankenstein; Or, The Modern Prometheus"</span>) <span class="co"># frankenstein text</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Group C</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"Carmilla"</span>) <span class="co"># carmilla text</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Strange Case of Dr. Jekyll and Mr. Hyde"</span>) <span class="co"># jekyll hyde text</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="4" type="1">
 <li><p>Get the id number from the <code>gutenberg_works()</code> function so that you can download the text as a corpus using the function <code>gutenberg_download()</code>. Save the corpus to an object called <code>{book-title}_corp</code>. View the object - is the data in a tidy format?</p></li>
@@ -451,12 +451,12 @@ Setup and Instructions
 <p>The code chunks below follows the instructions from above using Ray Bradbury’s <em>Asleep in Armageddon</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get id number</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"Asleep in Armageddon"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Phantom of the Opera"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 8
   gutenberg_id title     author gutenberg_author_id language gutenberg_bookshelf
          &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;              
-1        63827 Asleep i… Bradb…               41269 en       &lt;NA&gt;               
+1          175 The Phan… Lerou…                 112 en       Opera/Gothic Ficti…
 # ℹ 2 more variables: rights &lt;chr&gt;, has_text &lt;lgl&gt;</code></pre>
 </div>
 </div>
@@ -520,9 +520,30 @@ Setup and Instructions
 <p><img src="session_12_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<!--## What is a Document Term Matrix (DTM)?
+
+<!--## Tidy Text to Non-Tidy Text Workflow
+
+Many text analysis methods, natural language processing techniques in particular (e.g. topic models) require text data to be stored in a mathematical format. A common approach is to create a document term matrix (DTM), also called a document-feature matrix (DFM). In a matrix format, algorithms will be able to more easily compare one document to many other documents to identify patterns.
 
 ## Exercise: DTM Workflow
+
+In the previous exercise, we converted our corpus into a data table that has "one-token-per-row".
+
+Many existing text mining tools or algorithms work only on sparse document-term matrices. Therefore, tidytext provides cast_ verbs for converting from a tidy form to these matrices.
+
+TODO:
+- add Text vectorization to vocab list: the process of converting text data to numerical vectors. Later those vectors are used to build various machine learning models
+- add document-feature matrix (DFM) to vocab list
+
+NOTES:
+What is a Document Term Matrix (DTM)?
+
+Text analytical models (e.g., topic models) often require your data to be stored in a certain format
+only so will algorithms be able to quickly compare one document to a lot of other documents to identify patterns
+Typically: document-term matrix (DTM), sometimes also called document-feature matrix (DFM)
+matrix with each row being a document and each word being a column
+term-frequency (tf): The number within each cell describes the number of times the word appears in the document
+term frequency–inverse document frequency (tf-idf): weights the occurrence of certain words, e.g., lowering the weight of the word “social” in an corpus of sociological articles
 
 ## Exercise: Tidy Text Data from a PDF
 
