@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -246,6 +280,22 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#steps-to-check-if-your-personal-access-token-is-valid" id="toc-steps-to-check-if-your-personal-access-token-is-valid" class="nav-link" data-scroll-target="#steps-to-check-if-your-personal-access-token-is-valid"><span class="header-section-number">18.1</span> Steps to check if your Personal Access Token is valid</a></li>
   </ul></li>
+  <li><a href="#regular-expressions" id="toc-regular-expressions" class="nav-link" data-scroll-target="#regular-expressions"><span class="header-section-number">19</span> Regular Expressions</a>
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">19.1</span> Introduction</a></li>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes"><span class="header-section-number">19.2</span> Learning Outcomes</a></li>
+  <li><a href="#lesson" id="toc-lesson" class="nav-link" data-scroll-target="#lesson"><span class="header-section-number">19.3</span> Lesson</a></li>
+  <li><a href="#overview-of-regular-expressions" id="toc-overview-of-regular-expressions" class="nav-link" data-scroll-target="#overview-of-regular-expressions"><span class="header-section-number">19.4</span> Overview of Regular Expressions</a></li>
+  <li><a href="#finish-out-our-example-together" id="toc-finish-out-our-example-together" class="nav-link" data-scroll-target="#finish-out-our-example-together"><span class="header-section-number">19.5</span> Finish out our example together</a></li>
+  <li><a href="#common-r-functions-that-use-regular-expressions" id="toc-common-r-functions-that-use-regular-expressions" class="nav-link" data-scroll-target="#common-r-functions-that-use-regular-expressions"><span class="header-section-number">19.6</span> Common R functions that use regular expressions</a>
+  <ul class="collapse">
+  <li><a href="#another-example" id="toc-another-example" class="nav-link" data-scroll-target="#another-example"><span class="header-section-number">19.6.1</span> Another example</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">19.7</span> Summary</a></li>
+  <li><a href="#more" id="toc-more" class="nav-link" data-scroll-target="#more"><span class="header-section-number">19.8</span> More</a></li>
+  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="header-section-number">19.9</span> Resources</a></li>
+  <li><a href="#appendicies" id="toc-appendicies" class="nav-link" data-scroll-target="#appendicies"><span class="header-section-number">19.10</span> Appendicies</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -423,6 +473,604 @@ Setting up your PAT
 <figure class="figure">
 <p><img src="images/discovered_token.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
+</div>
+</section>
+</section>
+<section id="regular-expressions" class="level1" data-number="19">
+<h1 data-number="19"><span class="header-section-number">19</span> Regular Expressions</h1>
+<section id="introduction" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">19.1</span> Introduction</h2>
+<p>Regular expressions are a fantastic tool for filtering and even extracting information out of strings of characters such as site codes, titles, or even entire documents. Regular expressions follow a custom syntax that we’ll need to learn but they are worth learning because:</p>
+<ul>
+<li>Regular expressions can do things other methods cannot</li>
+<li>Regular expressions can be used with many other languages and tools so it’s a learn-once, use-everywhere kind of tool</li>
+</ul>
+<p>But they’re something that you only need to learn a bit of to get a lot of value out of them. I often use fairly simple regular expressions, like the ones we used on the command line,</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="pp">*</span>.qmd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="learning-outcomes" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">19.2</span> Learning Outcomes</h2>
+<p>Students should:</p>
+<ul>
+<li>Understand when regular expressions are appropriate</li>
+<li>Have an introductory-level awareness of regular expression syntax</li>
+<li>Have some experience executing and working with regular expressions in R</li>
+</ul>
+</section>
+<section id="lesson" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="lesson"><span class="header-section-number">19.3</span> Lesson</h2>
+<p>Earlier this week, we used some simple regular expression on the command line (terminal). The same type of operations we used on the command line work in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>() <span class="co"># Like pwd()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/home/runner/work/repro-research-course/repro-research-course/nceas-training/materials"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir</span>() <span class="co"># Like `ls()`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "_book"                "_quarto.yml"          "book.bib"            
+ [4] "cover.png"            "data"                 "DESCRIPTION"         
+ [7] "files"                "images"               "index.html"          
+[10] "index.qmd"            "LICENSE.md"           "sections"            
+[13] "session_01.html"      "session_01.qmd"       "session_02.html"     
+[16] "session_02.qmd"       "session_03_files"     "session_03.html"     
+[19] "session_03.qmd"       "session_04.html"      "session_04.qmd"      
+[22] "session_05.html"      "session_05.qmd"       "session_06.html"     
+[25] "session_06.qmd"       "session_07.html"      "session_07.qmd"      
+[28] "session_08.html"      "session_08.qmd"       "session_09.html"     
+[31] "session_09.qmd"       "session_10_files"     "session_10.html"     
+[34] "session_10.qmd"       "session_11.html"      "session_11.qmd"      
+[37] "session_12.html"      "session_12.qmd"       "session_13.html"     
+[40] "session_13.qmd"       "session_14.html"      "session_14.qmd"      
+[43] "session_15.qmd"       "session_16.html"      "session_16.qmd"      
+[46] "session_17.qmd"       "session_17.rmarkdown" "session_18.qmd"      
+[49] "session_19.qmd"       "session_20.qmd"       "shiny-demo"          
+[52] "site_libs"            "style.css"            "toc.css"             </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(<span class="fu">dir</span>(), <span class="st">".*qmd"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `str_view()` was deprecated in stringr 1.5.0.
+ℹ Please use `str_view_all()` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] │ _book
+ [2] │ _quarto.yml
+ [3] │ book.bib
+ [4] │ cover.png
+ [5] │ data
+ [6] │ DESCRIPTION
+ [7] │ files
+ [8] │ images
+ [9] │ index.html
+[10] │ &lt;index.qmd&gt;
+[11] │ LICENSE.md
+[12] │ sections
+[13] │ session_01.html
+[14] │ &lt;session_01.qmd&gt;
+[15] │ session_02.html
+[16] │ &lt;session_02.qmd&gt;
+[17] │ session_03_files
+[18] │ session_03.html
+[19] │ &lt;session_03.qmd&gt;
+[20] │ session_04.html
+... and 34 more</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(<span class="fu">dir</span>(), <span class="st">".*html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] │ _book
+ [2] │ _quarto.yml
+ [3] │ book.bib
+ [4] │ cover.png
+ [5] │ data
+ [6] │ DESCRIPTION
+ [7] │ files
+ [8] │ images
+ [9] │ &lt;index.html&gt;
+[10] │ index.qmd
+[11] │ LICENSE.md
+[12] │ sections
+[13] │ &lt;session_01.html&gt;
+[14] │ session_01.qmd
+[15] │ &lt;session_02.html&gt;
+[16] │ session_02.qmd
+[17] │ session_03_files
+[18] │ &lt;session_03.html&gt;
+[19] │ session_03.qmd
+[20] │ &lt;session_04.html&gt;
+... and 34 more</code></pre>
+</div>
+</div>
+<p>Let’s start off with a simple example of where simpler methods won’t work and see how regular expressions can be used to get what we need done. Let’s say we just received some data we need to analyze and we find this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>site_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/site_data.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>site_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                           x    temp_c
+1          2000-copany bay-2  9.247435
+2  2001-choctawhatchee bay-2 29.170777
+3         2002-aransas bay-3 62.351057
+4  2003-choctawhatchee bay-4 89.888624
+5  2004-choctawhatchee bay-4 96.958163
+6  2005-choctawhatchee bay-2 49.894849
+7  2006-choctawhatchee bay-4 53.401312
+8       2007-galveston bay-2 54.335877
+9  2008-choctawhatchee bay-1  7.279786
+10         2009-copany bay-3  8.806454
+11 2000-choctawhatchee bay-2 21.353557
+12         2001-copany bay-1  3.229220
+13      2002-galveston bay-4 71.312880
+14 2003-choctawhatchee bay-4 42.640502
+15         2004-copany bay-1 92.070634
+16      2005-galveston bay-1 95.573717
+17 2006-choctawhatchee bay-3 99.215221
+18         2007-copany bay-1 80.570198
+19      2008-galveston bay-1 98.582018
+20      2009-galveston bay-2 46.406132
+21      2000-galveston bay-1 39.235548
+22 2001-choctawhatchee bay-2 95.831200
+23         2002-copany bay-1 49.300697
+24         2003-copany bay-3 29.875656
+25         2004-copany bay-1 58.682873
+26         2005-copany bay-1 19.943774
+27      2006-galveston bay-4 55.101811
+28      2007-galveston bay-4 77.270760
+29         2008-copany bay-2 25.395214
+30      2009-galveston bay-4 51.966997
+31 2000-choctawhatchee bay-4 83.095610
+32         2001-copany bay-2 40.698851
+33      2002-galveston bay-3 24.973809
+34 2003-choctawhatchee bay-1 44.232596
+35      2004-galveston bay-3 59.023020
+36 2005-choctawhatchee bay-4 59.439810
+37         2006-copany bay-3 63.713113
+38         2007-copany bay-1 63.446845
+39 2008-choctawhatchee bay-2 12.215281
+40      2009-galveston bay-4 24.810948</code></pre>
+</div>
+</div>
+<p>It looks like the author of the dataset mixed the year of measurements, site code (e.g., A, CCCC, etc.), and some sub-site code (e.g., 1, 2, 3, etc.) into a single column. If we wanted to, for example, calculate mean temperature by site, we’d need to split these up somehow into separate columns. How could we go about this? We could start with <code>substr</code> which lets us slice a string by its indices:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(site_data<span class="sc">$</span>x, <span class="dv">1</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "2000" "2001" "2002" "2003" "2004" "2005" "2006" "2007" "2008" "2009"
+[11] "2000" "2001" "2002" "2003" "2004" "2005" "2006" "2007" "2008" "2009"
+[21] "2000" "2001" "2002" "2003" "2004" "2005" "2006" "2007" "2008" "2009"
+[31] "2000" "2001" "2002" "2003" "2004" "2005" "2006" "2007" "2008" "2009"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">substr</span>(site_data<span class="sc">$</span>x, <span class="dv">5</span>, <span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "-copany bay-" "-choctawhatc" "-aransas bay" "-choctawhatc" "-choctawhatc"
+ [6] "-choctawhatc" "-choctawhatc" "-galveston b" "-choctawhatc" "-copany bay-"
+[11] "-choctawhatc" "-copany bay-" "-galveston b" "-choctawhatc" "-copany bay-"
+[16] "-galveston b" "-choctawhatc" "-copany bay-" "-galveston b" "-galveston b"
+[21] "-galveston b" "-choctawhatc" "-copany bay-" "-copany bay-" "-copany bay-"
+[26] "-copany bay-" "-galveston b" "-galveston b" "-copany bay-" "-galveston b"
+[31] "-choctawhatc" "-copany bay-" "-galveston b" "-choctawhatc" "-galveston b"
+[36] "-choctawhatc" "-copany bay-" "-copany bay-" "-choctawhatc" "-galveston b"</code></pre>
+</div>
+</div>
+<p>But we’d quickly find that, because the number of characters in the site code varies from one to four, we can’t extract just the site code. These are the types of problems where regular expressions come in handy.</p>
+<p>Before we start, we’re going to use the <code>str_view_all</code> function from the <code>stringr</code> package which shows a nice display of the result of executing a regular expression against our strings. In real use, we would use another function to actually get and work with the result.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(site_data<span class="sc">$</span>x, <span class="st">"[a-z ]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] │ 2000-&lt;copany bay&gt;-2
+ [2] │ 2001-&lt;choctawhatchee bay&gt;-2
+ [3] │ 2002-&lt;aransas bay&gt;-3
+ [4] │ 2003-&lt;choctawhatchee bay&gt;-4
+ [5] │ 2004-&lt;choctawhatchee bay&gt;-4
+ [6] │ 2005-&lt;choctawhatchee bay&gt;-2
+ [7] │ 2006-&lt;choctawhatchee bay&gt;-4
+ [8] │ 2007-&lt;galveston bay&gt;-2
+ [9] │ 2008-&lt;choctawhatchee bay&gt;-1
+[10] │ 2009-&lt;copany bay&gt;-3
+[11] │ 2000-&lt;choctawhatchee bay&gt;-2
+[12] │ 2001-&lt;copany bay&gt;-1
+[13] │ 2002-&lt;galveston bay&gt;-4
+[14] │ 2003-&lt;choctawhatchee bay&gt;-4
+[15] │ 2004-&lt;copany bay&gt;-1
+[16] │ 2005-&lt;galveston bay&gt;-1
+[17] │ 2006-&lt;choctawhatchee bay&gt;-3
+[18] │ 2007-&lt;copany bay&gt;-1
+[19] │ 2008-&lt;galveston bay&gt;-1
+[20] │ 2009-&lt;galveston bay&gt;-2
+... and 20 more</code></pre>
+</div>
+</div>
+<p>The expression we used above, <code>[a-z ]+</code>, is equivalent to asking for the first consecutive run of the letters a-z or ” ” (a space) in the entire string of characters. This is the type of problem regular expression were created for!</p>
+</section>
+<section id="overview-of-regular-expressions" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="overview-of-regular-expressions"><span class="header-section-number">19.4</span> Overview of Regular Expressions</h2>
+<p>Regular expressions can match things literally, e.g.,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(<span class="st">"grouper"</span>, <span class="st">"striper"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(<span class="st">"grouper"</span>, <span class="st">"grouper"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>but they also support a large set of special characters:</p>
+<ul>
+<li><code>.</code>: Match any character</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"grouper"</span>, <span class="st">"striper"</span>, <span class="st">"sheepshead"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">".p"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ gro&lt;up&gt;er
+[2] │ str&lt;ip&gt;er
+[3] │ she&lt;ep&gt;shead</code></pre>
+</div>
+</div>
+<p>If you actually want to match a period and not any character, you have to do what’s called escaping:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"stripers"</span>, <span class="st">"striper."</span>, <span class="st">"grouper"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">"striper</span><span class="sc">\\</span><span class="st">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ stripers
+[2] │ &lt;striper.&gt;
+[3] │ grouper</code></pre>
+</div>
+</div>
+<p>See how that regular expression only matched the striper with the period at the end and not the string stripers?</p>
+<ul>
+<li><code>[]</code>: Match any character in this set</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"grouper"</span>, <span class="st">"striper"</span>, <span class="st">"sheepshead"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">"[aeiou]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ gr&lt;o&gt;&lt;u&gt;p&lt;e&gt;r
+[2] │ str&lt;i&gt;p&lt;e&gt;r
+[3] │ sh&lt;e&gt;&lt;e&gt;psh&lt;e&gt;&lt;a&gt;d</code></pre>
+</div>
+</div>
+<ul>
+<li><code>[^]</code>: Match any character <em>not</em> in this set</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"grouper"</span>, <span class="st">"striper"</span>, <span class="st">"sheepshead"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">"[^aeiou]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;g&gt;&lt;r&gt;ou&lt;p&gt;e&lt;r&gt;
+[2] │ &lt;s&gt;&lt;t&gt;&lt;r&gt;i&lt;p&gt;e&lt;r&gt;
+[3] │ &lt;s&gt;&lt;h&gt;ee&lt;p&gt;&lt;s&gt;&lt;h&gt;ea&lt;d&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li><code>\s</code> &amp; <code>\S</code>: Match any whitespace (e.g., <code></code>, <code>\t</code>)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gag grouper"</span>, <span class="st">"striper"</span>, <span class="st">"red drum"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">"</span><span class="sc">\\</span><span class="st">s"</span>) <span class="co"># Note the double \\ before the s. This is an R-specific thing.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ gag&lt; &gt;grouper
+[2] │ striper
+[3] │ red&lt; &gt;drum</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>                           <span class="co"># many of our special characters must be preceded by a \\</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">"</span><span class="sc">\\</span><span class="st">S"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;g&gt;&lt;a&gt;&lt;g&gt; &lt;g&gt;&lt;r&gt;&lt;o&gt;&lt;u&gt;&lt;p&gt;&lt;e&gt;&lt;r&gt;
+[2] │ &lt;s&gt;&lt;t&gt;&lt;r&gt;&lt;i&gt;&lt;p&gt;&lt;e&gt;&lt;r&gt;
+[3] │ &lt;r&gt;&lt;e&gt;&lt;d&gt; &lt;d&gt;&lt;r&gt;&lt;u&gt;&lt;m&gt;</code></pre>
+</div>
+</div>
+<p>Note that the lower case version <code>\\s</code> selects any whitespace characters, whereas the uppercase version <code>\\S</code> selects all non-whitespace characters. The next pattern is analogous for digits:</p>
+<ul>
+<li><code>\d</code> &amp; <code>\D</code>: Match any digit, equivalent to <code>[0-9]</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"striper1"</span>, <span class="st">"red drum2"</span>, <span class="st">"tarpon123"</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">"</span><span class="sc">\\</span><span class="st">d"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ striper&lt;1&gt;
+[2] │ red drum&lt;2&gt;
+[3] │ tarpon&lt;1&gt;&lt;2&gt;&lt;3&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li><code>\w</code> &amp; <code>\W</code>: Match any word character, equivalent to <code>[A-Za-z0-9_]</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"striper1"</span>, <span class="st">"red drum2"</span>, <span class="st">"tarpon123"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">"</span><span class="sc">\\</span><span class="st">w"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;s&gt;&lt;t&gt;&lt;r&gt;&lt;i&gt;&lt;p&gt;&lt;e&gt;&lt;r&gt;&lt;1&gt;
+[2] │ &lt;r&gt;&lt;e&gt;&lt;d&gt; &lt;d&gt;&lt;r&gt;&lt;u&gt;&lt;m&gt;&lt;2&gt;
+[3] │ &lt;t&gt;&lt;a&gt;&lt;r&gt;&lt;p&gt;&lt;o&gt;&lt;n&gt;&lt;1&gt;&lt;2&gt;&lt;3&gt;</code></pre>
+</div>
+</div>
+<p>We can also specify how many of a particular character or class of character to match:</p>
+<ul>
+<li><code>?</code> Optionality / 0 or 1</li>
+</ul>
+<p>Say we want to get just the phone numbers out of this vector but we notice that the phone numbers take on some different formats:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>phone_numbers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"219 733 8965"</span>, <span class="st">"apple"</span>, <span class="st">"329-293-8753 "</span>, <span class="st">"123banana"</span>, <span class="st">"595.794.7569"</span>, <span class="st">"3872876718"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(phone_numbers, <span class="st">"</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d[ </span><span class="sc">\\</span><span class="st">.-]?</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d[ </span><span class="sc">\\</span><span class="st">.-]?</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d</span><span class="sc">\\</span><span class="st">d"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;219 733 8965&gt;
+[2] │ apple
+[3] │ &lt;329-293-8753&gt; 
+[4] │ 123banana
+[5] │ &lt;595.794.7569&gt;
+[6] │ &lt;3872876718&gt;</code></pre>
+</div>
+</div>
+<p>The above regular expression matches the number parts of the phone numbers, which can be separated by zero or one space (<code></code>), <code>.</code>, or <code>-</code>.</p>
+<ul>
+<li><code>+</code> 1 -&gt; infinity</li>
+</ul>
+<p>We can use the <code>+</code> expression to find words with one or more vowels:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"gag grouper"</span>, <span class="st">"striper"</span>, <span class="st">"red drum"</span>, <span class="st">"cobia"</span>, <span class="st">"sheepshead"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(fish, <span class="st">"[aeiuo]+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ g&lt;a&gt;g gr&lt;ou&gt;p&lt;e&gt;r
+[2] │ str&lt;i&gt;p&lt;e&gt;r
+[3] │ r&lt;e&gt;d dr&lt;u&gt;m
+[4] │ c&lt;o&gt;b&lt;ia&gt;
+[5] │ sh&lt;ee&gt;psh&lt;ea&gt;d</code></pre>
+</div>
+</div>
+<ul>
+<li><code>*</code> 0 -&gt; infinity</li>
+</ul>
+<p>and the <code>*</code> is <em>zero or more</em>`.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>numbers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"0.2"</span>, <span class="st">"123.1"</span>, <span class="st">"547"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(numbers, <span class="st">"</span><span class="sc">\\</span><span class="st">d*</span><span class="sc">\\</span><span class="st">.?</span><span class="sc">\\</span><span class="st">d*"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;0.2&gt;&lt;&gt;
+[2] │ &lt;123.1&gt;&lt;&gt;
+[3] │ &lt;547&gt;&lt;&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regular expressions are greedy</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>letters <span class="ot">&lt;-</span> <span class="st">"abcdefghijkc"</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(letters, <span class="st">"a.*c"</span>) <span class="co"># Greedy</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;abcdefghijkc&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(letters, <span class="st">"a.*?c"</span>) <span class="co"># Lazy</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;abc&gt;defghijkc</code></pre>
+</div>
+</div>
+<ul>
+<li><code>()</code>: Grouping</li>
+</ul>
+<p>One of the most powerful parts of regular expressions is grouping. Grouping allows us to split up our matched expressions and do more work with them. For example, we can create match the city and state in a set of addresses, splitting it into components:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>addresses <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Santa Barbara, CA"</span>, <span class="st">"Seattle, WA"</span>, <span class="st">"New York, NY"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_view_all</span>(addresses, <span class="st">"([</span><span class="sc">\\</span><span class="st">w</span><span class="sc">\\</span><span class="st">s]+), (</span><span class="sc">\\</span><span class="st">w+)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] │ &lt;Santa Barbara, CA&gt;
+[2] │ &lt;Seattle, WA&gt;
+[3] │ &lt;New York, NY&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_match_all</span>(addresses, <span class="st">"([</span><span class="sc">\\</span><span class="st">w</span><span class="sc">\\</span><span class="st">s]+), (</span><span class="sc">\\</span><span class="st">w+)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+     [,1]                [,2]            [,3]
+[1,] "Santa Barbara, CA" "Santa Barbara" "CA"
+
+[[2]]
+     [,1]          [,2]      [,3]
+[1,] "Seattle, WA" "Seattle" "WA"
+
+[[3]]
+     [,1]           [,2]       [,3]
+[1,] "New York, NY" "New York" "NY"</code></pre>
+</div>
+</div>
+<p>Once we use groups, <code>()</code>, we can also use back references to work with the result. Back references are \ and a number, where \1 is the first thing in (), \2 is the second thing in (), and so on.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(addresses, <span class="st">"([</span><span class="sc">\\</span><span class="st">w</span><span class="sc">\\</span><span class="st">s]+), (</span><span class="sc">\\</span><span class="st">w+)"</span>, <span class="st">"City: </span><span class="sc">\\</span><span class="st">1, State: </span><span class="sc">\\</span><span class="st">2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "City: Santa Barbara, State: CA" "City: Seattle, State: WA"      
+[3] "City: New York, State: NY"     </code></pre>
+</div>
+</div>
+<ul>
+<li><code>^</code> &amp; <code>$</code></li>
+</ul>
+<p>It can also be really useful to make a say something like “strings that start with a capital letter” or “strings that end with a period”:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>possible_sentences <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"This might be a sentence."</span>,</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"So. Might. this"</span>,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"but this could maybe not be?"</span>,</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Am I a sentence?"</span>,</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"maybe not"</span>,</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Regular expressions are useful!"</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ^ specifies the start so ^[A-z] means "starts with a capital letter""</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(possible_sentences, <span class="st">"^[A-Z]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE  TRUE FALSE  TRUE FALSE  TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>possible_sentences[<span class="fu">str_detect</span>(possible_sentences, <span class="st">"^[A-Z]"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "This might be a sentence."       "So. Might. this"                
+[3] "Am I a sentence?"                "Regular expressions are useful!"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can also do "ends with a period"</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(possible_sentences, <span class="st">"</span><span class="sc">\\</span><span class="st">.$"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE FALSE FALSE FALSE FALSE FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>possible_sentences[<span class="fu">str_detect</span>(possible_sentences, <span class="st">"</span><span class="sc">\\</span><span class="st">.$"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "This might be a sentence."</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can put them together:</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(possible_sentences, <span class="st">"^[A-Z].*[</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">?!]$"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE FALSE FALSE  TRUE FALSE  TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>possible_sentences[<span class="fu">str_detect</span>(possible_sentences, <span class="st">"^[A-Z].*[</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">?!]$"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "This might be a sentence."       "Am I a sentence?"               
+[3] "Regular expressions are useful!"</code></pre>
+</div>
+</div>
+</section>
+<section id="finish-out-our-example-together" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="finish-out-our-example-together"><span class="header-section-number">19.5</span> Finish out our example together</h2>
+<p>Now that we’ve gone over some basics of regular expressions, let’s finish our example by splitting the various components of column <code>x</code> into a <code>year</code>, <code>site</code>, and <code>sub_site</code> column:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>site_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                           x    temp_c
+1          2000-copany bay-2  9.247435
+2  2001-choctawhatchee bay-2 29.170777
+3         2002-aransas bay-3 62.351057
+4  2003-choctawhatchee bay-4 89.888624
+5  2004-choctawhatchee bay-4 96.958163
+6  2005-choctawhatchee bay-2 49.894849
+7  2006-choctawhatchee bay-4 53.401312
+8       2007-galveston bay-2 54.335877
+9  2008-choctawhatchee bay-1  7.279786
+10         2009-copany bay-3  8.806454
+11 2000-choctawhatchee bay-2 21.353557
+12         2001-copany bay-1  3.229220
+13      2002-galveston bay-4 71.312880
+14 2003-choctawhatchee bay-4 42.640502
+15         2004-copany bay-1 92.070634
+16      2005-galveston bay-1 95.573717
+17 2006-choctawhatchee bay-3 99.215221
+18         2007-copany bay-1 80.570198
+19      2008-galveston bay-1 98.582018
+20      2009-galveston bay-2 46.406132
+21      2000-galveston bay-1 39.235548
+22 2001-choctawhatchee bay-2 95.831200
+23         2002-copany bay-1 49.300697
+24         2003-copany bay-3 29.875656
+25         2004-copany bay-1 58.682873
+26         2005-copany bay-1 19.943774
+27      2006-galveston bay-4 55.101811
+28      2007-galveston bay-4 77.270760
+29         2008-copany bay-2 25.395214
+30      2009-galveston bay-4 51.966997
+31 2000-choctawhatchee bay-4 83.095610
+32         2001-copany bay-2 40.698851
+33      2002-galveston bay-3 24.973809
+34 2003-choctawhatchee bay-1 44.232596
+35      2004-galveston bay-3 59.023020
+36 2005-choctawhatchee bay-4 59.439810
+37         2006-copany bay-3 63.713113
+38         2007-copany bay-1 63.446845
+39 2008-choctawhatchee bay-2 12.215281
+40      2009-galveston bay-4 24.810948</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I'll show you how to extract the year part</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>site_data<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(site_data<span class="sc">$</span>x, <span class="st">"</span><span class="sc">\\</span><span class="st">d{4}"</span>)</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="co"># You do the rest</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>site_data<span class="sc">$</span>site <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(site_data<span class="sc">$</span>x, <span class="st">""</span>) <span class="co"># &lt;- Fill this in between the ""</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>site_data<span class="sc">$</span>plot <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(site_data<span class="sc">$</span>x, <span class="st">""</span>) <span class="co"># &lt;- Fill this in between the ""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="common-r-functions-that-use-regular-expressions" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="common-r-functions-that-use-regular-expressions"><span class="header-section-number">19.6</span> Common R functions that use regular expressions</h2>
+<ul>
+<li>Base R
+<ul>
+<li><code>grep</code></li>
+<li><code>gsub</code></li>
+<li><code>strsplit</code></li>
+</ul></li>
+<li><code>stringr</code> package
+<ul>
+<li><code>string_detect</code></li>
+<li><code>string_match</code></li>
+<li><code>string_replace</code></li>
+<li><code>string_split</code></li>
+</ul></li>
+</ul>
+<section id="another-example" class="level3" data-number="19.6.1">
+<h3 data-number="19.6.1" class="anchored" data-anchor-id="another-example"><span class="header-section-number">19.6.1</span> Another example</h3>
+<p>Data often come to us in strange forms and, before we can even begin analyzing the data, we have to do a lot of work to sanitize what we’ve been given. An example, which I just got the other week were temporal data with dates formatted like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>dates <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"1July17"</span>,</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">"02July2017"</span>,</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">"3July17"</span>,</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>           <span class="st">"4July17"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and so on like that. Do you see how the day of the month and year are represented in different ways through the series? If we want to convert these strings into <code>Date</code> objects for further analysis, we’ll to do some pre-cleaning before we can do that conversion. Regular expressions work great here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str_match_all</span>(dates, <span class="st">"(</span><span class="sc">\\</span><span class="st">d{1,2})([A-Za-z]+)(</span><span class="sc">\\</span><span class="st">d{2,4})"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+     [,1]      [,2] [,3]   [,4]
+[1,] "1July17" "1"  "July" "17"
+
+[[2]]
+     [,1]         [,2] [,3]   [,4]  
+[1,] "02July2017" "02" "July" "2017"
+
+[[3]]
+     [,1]      [,2] [,3]   [,4]
+[1,] "3July17" "3"  "July" "17"
+
+[[4]]
+     [,1]      [,2] [,3]   [,4]
+[1,] "4July17" "4"  "July" "17"</code></pre>
+</div>
+</div>
+<p>That above regular expression was complex. Let’s break it down into its main parts. Below, I’ve re-formatted the data and the regular expression a bit so we can see what’s going on.</p>
+<pre><code>|---------------|---------------| ---------|
+| 1             | July          | 17       |
+| 02            | July          | 2017     |
+| 3             | July          | 17       |
+| 4             | July          | 17       |
+|---------------|---------------| ---------|
+| \\d{1,2}      | [A-Za-z]+     | \\d{2,4} |
+|---------------|---------------| ---------|
+</code></pre>
+</section>
+</section>
+<section id="summary" class="level2" data-number="19.7">
+<h2 data-number="19.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">19.7</span> Summary</h2>
+<ul>
+<li>Regular expressions are a crucial tool in the data analysis toolbox</li>
+<li>Regular expressions help us solve problems we may not be otherwise able to solve</li>
+<li>Regular expressions are supported in many functions in R</li>
+</ul>
+</section>
+<section id="more" class="level2" data-number="19.8">
+<h2 data-number="19.8" class="anchored" data-anchor-id="more"><span class="header-section-number">19.8</span> More</h2>
+<ul>
+<li>Have the group figure out you can put * onto [].</li>
+<li>Have the group str_split on fixed chars and a regex</li>
+</ul>
+</section>
+<section id="resources" class="level2" data-number="19.9">
+<h2 data-number="19.9" class="anchored" data-anchor-id="resources"><span class="header-section-number">19.9</span> Resources</h2>
+<ul>
+<li><a href="https://regex101.com/">https://regex101.com/</a> (This is the site I usually use)</li>
+<li><a href="https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference">https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions</a></li>
+</ul>
+</section>
+<section id="appendicies" class="level2" data-number="19.10">
+<h2 data-number="19.10" class="anchored" data-anchor-id="appendicies"><span class="header-section-number">19.10</span> Appendicies</h2>
+<p>Here’s the code I used to generate the fake site_data <code>data.frame</code> above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fake data generation code</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>site_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">2000</span>, <span class="dv">2009</span>), <span class="dv">4</span>))</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>site_data<span class="sc">$</span>site <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"galveston bay"</span>, <span class="st">"choctawhatchee bay"</span>, <span class="st">"aransas bay"</span>, <span class="st">"copany bay"</span>), <span class="fu">nrow</span>(site_data), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>site_data<span class="sc">$</span>subsite <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="fu">nrow</span>(site_data), <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>site_data<span class="sc">$</span>temp_c <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="fu">nrow</span>(site_data), <span class="dv">0</span>, <span class="dv">100</span>)</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>site_data<span class="sc">$</span>site_code <span class="ot">&lt;-</span> <span class="fu">paste</span>(site_data<span class="sc">$</span>year, site_data<span class="sc">$</span>site, site_data<span class="sc">$</span>subsite, <span class="at">sep=</span><span class="st">"-"</span>)</span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>site_data <span class="ot">&lt;-</span> site_data[,<span class="fu">c</span>(<span class="st">"site_code"</span>, <span class="st">"temp_c"</span>)]</span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(site_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"temp_c"</span>)</span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(site_data, <span class="at">file =</span> <span class="st">"site_data.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
