@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -305,7 +324,7 @@ Acknowledgement
 </div>
 </div>
 <div class="callout-body-container callout-body">
-
+<p>This lesson is based on <a href="https://walker-data.com/census-r/index.html">Analyzing US Census Data: Methods, Maps, and Models in R</a>, (Chapter 1 through 4) by Kyle Walker. And Walker’s workshop “Analyzing 2020 Census Data with R and <code>tidycensus</code>” for University of Michigan (2022). GitHub repository <a href="https://github.com/walkerke/umich-workshop-2022">here</a>.</p>
 </div>
 </div>
 <!--## Overview
@@ -322,16 +341,51 @@ Acknowledgement
 <section id="introduction-to-tidycensus" class="level2" data-number="11.1">
 <h2 data-number="11.1" class="anchored" data-anchor-id="introduction-to-tidycensus"><span class="header-section-number">11.1</span> Introduction to <code>tidycensus</code></h2>
 <p>When working with census data, the general workflow would be to go to <a href="data.census.gov">data.census.gov</a>, filter data and queries based on variables and geographies, and then download the data into a spreadsheet. People that work with census data do this over and over again.</p>
-<p>Kyle Walker, one of the authors of the <code>tidycensus</code> package, created the package as a way to systematize the process and do this systematization using R. He learned about the US Census Application Programming Interface (API) which allows developers to access census resources programmatically, therefore incorporated in the package to facilitate access to interact with census data.</p>
-<p>Note there are other R packages that interact with the census API, such as <code>censusapi</code> and <code>acs</code>. However, in this lesson, we are going to focus on the <code>tidycensus</code> package, given that is constantly being maintained and has good documentation on how it works.</p>
+<p>The <code>tidycensus</code> package (<span class="citation" data-cites="tidycensus2021">Walker and Matt (<a href="#ref-tidycensus2021" role="doc-biblioref">2021</a>)</span>) came to be to systematize the process and do this systematization using R. In 2012 the US Census Bureau released the Census Application Programming Interface (API) as a way to disseminate government data resources to the public. This interface now provides programmatic access to hundreds of data resources from the Census Bureau. The vision behind this package was to incorporate the API access into an R package to facilitate access to census data using R.</p>
+<p>Note there are other R packages that interact with the census APIs, such as <a href="https://cran.r-project.org/web/packages/censusapi/index.html"><code>censusapi</code></a> and <a href="https://cran.r-project.org/web/packages/acs/index.html"><code>acs</code></a>. In this lesson, we are going to focus on the <code>tidycensus</code> package, given that is continuously maintained by the authors, has good documentation and it makes it easy to work with other <code>tidyverse</code> functions.</p>
 <p>From Walkers Book:</p>
 <blockquote class="blockquote">
-<p>“The <code>tidycensus</code> is an R package that provides an interface to access and work with the United States Census Bureau data. It simplifies the process of retrieving and analyzing census data by allowing users to query data directly from the Census Bureau’s API and then organize the data into a tidy format for easy manipulation and analysis.”</p>
+<p>“The <code>tidycensus</code> is an R package that provides an interface to access and work with the United States Census Bureau data. It simplifies the process of retrieving and analyzing census data by allowing users to query data directly from the Census Bureau’s APIs and then organize the data into a tidy format for easy manipulation and analysis.”</p>
 </blockquote>
+<p>Note that this lesson is just an introduction to this package. Here we aim to providing the basic tools for you to understand how the core functions of this package work so you can adapt to your specific census data needs.</p>
 <section id="general-structure" class="level3" data-number="11.1.1">
 <h3 data-number="11.1.1" class="anchored" data-anchor-id="general-structure"><span class="header-section-number">11.1.1</span> General Structure</h3>
-<p>Tidycensus takes an opinionated approach to accessing a selected number of census APIs. The main goal is to facilitate access in R to a few APIs.</p>
-<p>Through this package, you can access: - Decennial census (200, 2010, available data from 2020) - The American Community Survey (ACS) data sets - Population estimate program (information on yearly estimates and components of change) - The ASC Public Use Microdata. Anonymized individual-level records from the ACS organized by households. - Migration Flows APIs which include information about in and outflows from several geographies from the 5-year ACS samples.</p>
+<p><code>tidycensus</code> takes an opinionated approach to accessing a selected number of census APIs. The main goal is to facilitate access to a few census APIs through R.</p>
+<p>Data files you can access through this package are named and described in the table below.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Survey Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Decennial census</td>
+<td>2000, 2010, available data from 2020</td>
+</tr>
+<tr class="even">
+<td>American Community Survey (ACS)</td>
+<td><!--ADD DESCRIPTION --></td>
+</tr>
+<tr class="odd">
+<td>Population estimate program</td>
+<td>Information on yearly estimates and components of change</td>
+</tr>
+<tr class="even">
+<td>ACS Public Use Microdata</td>
+<td>Anonymized individual-level records from the ACS organized by households</td>
+</tr>
+<tr class="odd">
+<td>Migration Flows</td>
+<td>Information about in and outflows from several geographies from the 5-year ACS samples.</td>
+</tr>
+</tbody>
+</table>
 <p>The idea behind this package is to make the tedious process of working with Census data more concise. It pulls data from the census API and returns it to the user in a “tidy” format.</p>
 <p>Can easily merge census geometries to data for mapping. Which apparently can be a very time-consuming task. Unfortunately, for this session, we will not get into mapping. See the resource below for Walker’s book and class on how to map census data.</p>
 <p>Other features of this package: - Includes tools for handling margins of errors in the ACS and working with survey weights in the ACS PUMS - You can request data from states and counties by name instead of FIPS codes.</p>
@@ -549,6 +603,11 @@ Message error
 ( Chapter 5 and 6 - 10 min?) -->
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-tidycensus2021" class="csl-entry" role="listitem">
+Walker, Kyle, and Herman Matt. 2021. <span>“Tidycensus: Load US Census Boundary and Attribute Data as ’Tidyverse’ and ’Sf’ -Ready Data Frames.”</span> <a href="https://github.com/walkerke/tidycensus." class="uri">https://github.com/walkerke/tidycensus.</a>
+</div>
+</div>
 </section>
 </section>
 </section>
