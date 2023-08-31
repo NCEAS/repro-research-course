@@ -393,7 +393,8 @@ Acknowledgements
 </tr>
 <tr class="odd">
 <td>Sparse matrix</td>
-<td>A matrix where the majority of the entries are zero.</td>
+<td><p>A matrix where the majority of the entries are zero.</p>
+<p>Both DFM and DTM are sparse matrices and this is normal. Typically, the bigger the DTM or DFM, the more zeros you’ll see.</p></td>
 </tr>
 <tr class="even">
 <td>String</td>
@@ -691,7 +692,8 @@ Step 9 Lollipop Plot
 <p>Silge and Robinson kept this in mind as they built the <code>tidytext</code> package, and included helpful <code>cast()</code> functions to turn a tidy text object (again a table with one-token-per-row) into a matrix.</p>
 <section id="use-cast-to-convert-to-a-matrix-non-tidy-format" class="level3" data-number="12.4.1">
 <h3 data-number="12.4.1" class="anchored" data-anchor-id="use-cast-to-convert-to-a-matrix-non-tidy-format"><span class="header-section-number">12.4.1</span> Use <code>cast()</code> to Convert to a Matrix (Non-tidy) Format</h3>
-<p>let’s create a matrix of all books we looked at</p>
+<p>In these examples, we’ll be using multiple books as our text: <em>The Phantom of the Opera</em>, <em>The Strange Case of Dr.&nbsp;Jekyll and Mr.&nbsp;Hyde</em>, <em>Frankenstein; Or, The Modern Prometheus</em>, and <em>Dracula</em>.</p>
+<p>We’ll access these texts using <code>gutenbergr</code>’s <code>gutenberg_download()</code> function, and we’ll make sure to include the titles in the download.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download corpus</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>all_books_corp <span class="ot">&lt;-</span> <span class="fu">gutenberg_download</span>(<span class="fu">c</span>(<span class="dv">175</span>, <span class="co"># phantom of the opera</span></span>
@@ -700,6 +702,7 @@ Step 9 Lollipop Plot
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="dv">345</span>), <span class="co"># dracula</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">meta_fields =</span> <span class="fu">c</span>(<span class="st">"title"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>This code chunk is formatting our corpus into the tidy text format, and it is counting the number of times each word occurs in each book.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># turn corpus into tidy text format</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>tidy_all_books <span class="ot">&lt;-</span> all_books_corp <span class="sc">%&gt;%</span> </span>
@@ -708,14 +711,16 @@ Step 9 Lollipop Plot
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(title, word)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>This code chunk is converting our corpus of all books into a sparse matrix.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert tidy text table to spare matrix from `Matrix` package</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert tidy text table to sparse matrix from `Matrix` package</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># requires `Matrix` to be installed</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>all_books_sparse <span class="ot">&lt;-</span> tidy_all_books <span class="sc">%&gt;%</span> </span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cast_sparse</span>(<span class="at">row =</span> title,</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">column =</span> word,</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">value =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>This code chunk is converting our corpus of all books into a document-term matrix object from the <code>tm</code> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert tidy text table to DTM object from `tm` package</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># requires `tm` to be installed</span></span>
@@ -724,6 +729,7 @@ Step 9 Lollipop Plot
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">document =</span> title,</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">value =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>This code chunk is converting our corpus of all books into a document-feature matrix object from the <code>quanteda</code> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert tidy text table to DFM object from `quanteda` package</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># requires `quanteda` to be installed</span></span>
@@ -731,22 +737,6 @@ Step 9 Lollipop Plot
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cast_dfm</span>(<span class="at">term =</span> word, </span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">document =</span> title, </span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">value =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="callout callout-style-default callout-caution no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-R Text Mining Tools and Analysis Packages Resources
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li><a href="https://cran.r-project.org/web/views/NaturalLanguageProcessing.html">CRAN Task View: Natural Language Processing</a></li>
-<li><a href="https://guides.library.upenn.edu/penntdm/r">Penn Libraries Guides: Text Analysis</a></li>
-</ul>
-</div>
 </div>
 </section>
 </section>
@@ -980,8 +970,8 @@ Question 5
 <table class="table">
 <colgroup>
 <col style="width: 24%">
-<col style="width: 32%">
-<col style="width: 43%">
+<col style="width: 31%">
+<col style="width: 42%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1053,38 +1043,29 @@ Question 5
 </tr>
 </tbody>
 </table>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+R Text Mining Tools and Analysis Packages Resources
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://cran.r-project.org/web/views/NaturalLanguageProcessing.html">CRAN Task View: Natural Language Processing</a></li>
+<li><a href="https://guides.library.upenn.edu/penntdm/r">Penn Libraries Guides: Text Analysis</a></li>
+<li><a href="https://tutorials.quanteda.io/">Quanteda Tutorials By Kohei Watanabe and Stefan Müller</a></li>
+</ul>
+</div>
+</div>
 </section>
 <section id="note-about-python-and-nlp" class="level2" data-number="12.7">
 <h2 data-number="12.7" class="anchored" data-anchor-id="note-about-python-and-nlp"><span class="header-section-number">12.7</span> Note About Python and NLP</h2>
-<!--
-
-## Which Text Analysis Method or Tool Should I Use?
-
-## Exercise: Tidy Text Data from a PDF
-
-- data: DSC plan chapters pdf format
-- read in pdf
-- turn pdf into a corpus
-- remove headers
-- tokenize
-- rm stop words
-    - add custom stop words
-- create word cloud
-
-Many existing text mining tools or algorithms work only on sparse document-term matrices. Therefore, tidytext provides cast_ verbs for converting from a tidy form to these matrices.
-
-NOTES:
-
-Text analytical models (e.g., topic models) often require your data to be stored in a certain format
-only so will algorithms be able to quickly compare one document to a lot of other documents to identify patterns
-Typically: document-term matrix (DTM), sometimes also called document-feature matrix (DFM)
-matrix with each row being a document and each word being a column
-term-frequency (tf): The number within each cell describes the number of times the word appears in the document
-term frequency–inverse document frequency (tf-idf): weights the occurrence of certain words, e.g., lowering the weight of the word “social” in an corpus of sociological articles
-
-## Note about python
-
-python has many powerful packages and tools for running analyses like NLP -->
+<p>While both <code>R</code> and <code>python</code> are capable of natural language processing and other machine learning text analysis techniques, many claim there is an advantage to using <code>python</code> over <code>R</code>. <code>Python</code> has a vast amount of libraries and packages, and its libraries for machine learning (e.g.&nbsp;<code>scikit-learn</code>, <code>TensorFlow</code>, <code>Keras</code>) make it simple to build models from scratch (Note: packages like <code>TensorFlow</code> are being ported to <code>R</code>). Additionally, <code>Python</code> tends to run faster than <code>R</code>, which is why some may prefer to use <code>python</code> when working with large datasets.</p>
+<p>However, both languages have a vast array of libraries and packages, and large, active communities to lean on for support.</p>
+<p>It’s important to note that with tools like Jupyter Notebook and Quarto you’re not longer limited to just one language. With tools that support both <code>R</code> and <code>python</code> code, you have the capability to leverage the strengths of both languages. For example, you can build a NLP model using <code>python</code> and then create a visualization using <code>R</code>.</p>
 <!--# previous lesson: text-analysis.qmd -->
 
 
