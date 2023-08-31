@@ -272,15 +272,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#building-workflows-using-qualtrics" id="toc-building-workflows-using-qualtrics" class="nav-link" data-scroll-target="#building-workflows-using-qualtrics"><span class="header-section-number">13.2</span> Building workflows using Qualtrics</a>
   <ul class="collapse">
   <li><a href="#survey-instrument" id="toc-survey-instrument" class="nav-link" data-scroll-target="#survey-instrument"><span class="header-section-number">13.2.1</span> Survey Instrument</a></li>
-  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">13.2.2</span> Question 2</a></li>
-  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">13.2.3</span> Question 3</a></li>
-  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">13.2.4</span> Question 4</a></li>
+  <li><a href="#working-with-qualtircs" id="toc-working-with-qualtircs" class="nav-link" data-scroll-target="#working-with-qualtircs"><span class="header-section-number">13.2.2</span> Working with <code>qualtiRcs</code></a></li>
   </ul></li>
   <li><a href="#other-survey-tools" id="toc-other-survey-tools" class="nav-link" data-scroll-target="#other-survey-tools"><span class="header-section-number">13.3</span> Other survey tools</a>
   <ul class="collapse">
   <li><a href="#google-forms" id="toc-google-forms" class="nav-link" data-scroll-target="#google-forms"><span class="header-section-number">13.3.1</span> Google forms</a></li>
   <li><a href="#survey-monkey" id="toc-survey-monkey" class="nav-link" data-scroll-target="#survey-monkey"><span class="header-section-number">13.3.2</span> Survey Monkey</a></li>
   </ul></li>
+  <li><a href="#resourcese" id="toc-resourcese" class="nav-link" data-scroll-target="#resourcese"><span class="header-section-number">13.4</span> Resourcese</a></li>
   </ul>
 </nav>
     </div>
@@ -332,6 +331,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="images/survey_consent.png" class="img-fluid"></p>
 <p>The three main questions of the survey have three types of responses: a multiple choice answer, a multiple choice answer which also includes an “other” write in option, and a free text answer. We’ll use the results of this survey, which was sent out to NCEAS staff to fill out, to learn about how to create a reproducible survey report.</p>
 <p><img src="images/survey_main.png" class="img-fluid"></p>
+</section>
+<section id="working-with-qualtircs" class="level3" data-number="13.2.2">
+<h3 data-number="13.2.2" class="anchored" data-anchor-id="working-with-qualtircs"><span class="header-section-number">13.2.2</span> Working with <code>qualtiRcs</code></h3>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -395,9 +397,8 @@ Aside note
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>survey_results <span class="ot">&lt;-</span> <span class="fu">fetch_survey</span>(id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The survey results table has tons of information in it, not all of which will be relevant depending on your survey. The table has identifying information for the respondents (eg: <code>ResponseID</code>, <code>IPaddress</code>, <code>RecipientEmail</code>, <code>RecipientFirstName</code>, etc), much of which will be empty for this survey since it is anonymous. It also has information about the process of taking the survey, such as the <code>StartDate</code>, <code>EndDate</code>, <code>Progress</code>, and <code>Duration</code>. Finally, there are the answers to the questions asked, with columns labeled according to the <code>qname</code> column in the questions table (eg: Q1, Q2, Q3). Depending on the type of question, some questions might have multiple columns associated with them. We’ll have a look at this more closely in a later example.</p>
-</section>
-<section id="question-2" class="level3" data-number="13.2.2">
-<h3 data-number="13.2.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">13.2.2</span> Question 2</h3>
+<section id="question-2" class="level4" data-number="13.2.2.1">
+<h4 data-number="13.2.2.1" class="anchored" data-anchor-id="question-2"><span class="header-section-number">13.2.2.1</span> Question 2</h4>
 <p>Let’s look at the responses to the second question in the survey, “How long have you been programming?” Remember, the first question was the consent question.</p>
 <p>We’ll use the <code>dplyr</code> and <code>tidyr</code> tools we learned earlier to extract the information. Here are the steps:</p>
 <ul>
@@ -417,8 +418,8 @@ Aside note
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="question-3" class="level3" data-number="13.2.3">
-<h3 data-number="13.2.3" class="anchored" data-anchor-id="question-3"><span class="header-section-number">13.2.3</span> Question 3</h3>
+<section id="question-3" class="level4" data-number="13.2.2.2">
+<h4 data-number="13.2.2.2" class="anchored" data-anchor-id="question-3"><span class="header-section-number">13.2.2.2</span> Question 3</h4>
 <p>For question 3, we’ll use a similar workflow. For this question, however there are two columns containing survey answers. One contains the answers from the controlled vocabulary, the other contains any free text answers users entered.</p>
 <p>To present this information, we’ll first show the results of the controlled answers as a plot. Below the plot, we’ll include a table showing all of the free text answers for the “other” option.</p>
 <div class="cell">
@@ -444,8 +445,8 @@ Aside note
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="question-4" class="level3" data-number="13.2.4">
-<h3 data-number="13.2.4" class="anchored" data-anchor-id="question-4"><span class="header-section-number">13.2.4</span> Question 4</h3>
+<section id="question-4" class="level4" data-number="13.2.2.3">
+<h4 data-number="13.2.2.3" class="anchored" data-anchor-id="question-4"><span class="header-section-number">13.2.2.3</span> Question 4</h4>
 <p>The last question is just a free text question, so we can just display the results as is.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>q4 <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
@@ -458,6 +459,7 @@ Aside note
 </div>
 </section>
 </section>
+</section>
 <section id="other-survey-tools" class="level2" data-number="13.3">
 <h2 data-number="13.3" class="anchored" data-anchor-id="other-survey-tools"><span class="header-section-number">13.3</span> Other survey tools</h2>
 <section id="google-forms" class="level3" data-number="13.3.1">
@@ -466,13 +468,19 @@ Aside note
 <p>The downside is that google forms has far fewer features than Qualtrics in terms of survey flow and appearance.</p>
 <p>To show how we can link R into our survey workflows, I’ve set up a simple example survey <a href="https://docs.google.com/forms/d/1Yh3IxygzuLXzJvTHl-lskMy7YrQgmeWgr2bEw5gwdIM/edit?usp=sharing">here</a>.</p>
 <p>I’ve set up the results so that they are in a new spreadsheet <a href="https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?resourcekey#gid=1527662370">here:</a>. To access them, we will use the <code>googlesheets4</code> package.</p>
-<p>First, open up a new R script and load the <code>googlesheets4</code> library:</p>
+<p>First, open up a new Quarto doc and load the <code>googlesheets4</code> library:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googlesheets4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we can read the sheet in using the same URL that you would use to share the sheet with someone else. Right now, this sheet is public</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>responses <span class="ot">&lt;-</span> <span class="fu">read_sheet</span>(<span class="st">"https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?usp=sharing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✖ Request failed [429]. Retry 1 happens in 4.4 seconds ...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✖ Request failed [429]. Retry 2 happens in 6.6 seconds ...</code></pre>
+</div>
 <div class="cell-output cell-output-stderr">
 <pre><code>✔ Reading from "Example Survey Form (Responses)".</code></pre>
 </div>
@@ -486,7 +494,7 @@ Aside note
 <p>Make sure you click the third check box enabling the Tidyverse API to see, edit, create, and delete your sheets. Note that you will have to tell it to do any of these actions via the R code you write.</p>
 <p>When you come back to your R environment, you should have a data frame containing the data in your sheet! Let’s take a quick look at the structure of that sheet.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 10
 Columns: 5
@@ -499,17 +507,17 @@ $ `What might you change about the event?`               &lt;chr&gt; "more snack
 </div>
 <p>So, now that we have the data in a standard R <code>data.frame</code>, we can easily summarize it and plot results. By default, the column names in the sheet are the long fully descriptive questions that were asked, which can be hard to type. We can save those questions into a vector for later reference, like when we want to use the question text for plot titles.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">colnames</span>(responses)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(questions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">colnames</span>(responses)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(questions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> chr [1:4] "To what degree did the event meet your expectations?" ...</code></pre>
 </div>
 </div>
 <p>We can make the responses data frame more compact by renaming the columns of the vector with short numbered names of the form <code>Q1</code>. Note that, by using a sequence, this should work for sheets from just a few columns to many hundreds of columns, and provides a consistent question naming convention.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(questions) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>questions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(questions) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>questions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                    Q1 
 "To what degree did the event meet your expectations?" 
@@ -520,8 +528,8 @@ $ `What might you change about the event?`               &lt;chr&gt; "more snack
                                                     Q4 
               "What might you change about the event?" </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(responses) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Timestamp"</span>, <span class="fu">names</span>(questions))</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(responses) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Timestamp"</span>, <span class="fu">names</span>(questions))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 10
 Columns: 5
@@ -534,17 +542,17 @@ $ Q4        &lt;chr&gt; "more snacks", "no pineapple pizza!", "nothing", "needs 
 </div>
 <p>Now that we’ve renamed our columns, let’s summarize the responses for the first question. We can use the same pattern that we usually do to split the data from Q1 into groups, then summarize it by counting the number of records in each group, and then merge the count of each group back together into a summarized data frame. We can then plot the Q1 results using <code>ggplot</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> responses <span class="sc">%&gt;%</span> </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Q1) <span class="sc">%&gt;%</span> </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(Q1) <span class="sc">%&gt;%</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>())</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(<span class="at">data =</span> q1, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Q1, <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> questions[<span class="dv">1</span>], </span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Number of reponses"</span>,</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"To what degree did the course meet expectations?"</span>) <span class="sc">+</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> responses <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Q1) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(Q1) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>())</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(<span class="at">data =</span> q1, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Q1, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> questions[<span class="dv">1</span>], </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Number of reponses"</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"To what degree did the course meet expectations?"</span>) <span class="sc">+</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="bypassing-authentication-for-public-sheets" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="bypassing-authentication-for-public-sheets">Bypassing authentication for public sheets</h4>
@@ -570,9 +578,15 @@ Next populate the spreadhsheet with 5 to 10 rows of sample data that you make up
 <h3 data-number="13.3.2" class="anchored" data-anchor-id="survey-monkey"><span class="header-section-number">13.3.2</span> Survey Monkey</h3>
 <p>Similar to Qualtrics and qualtRics, there is an open source R package for working with data in Survey Monkey: <a href="https://github.com/cloudyr/Rmonkey">Rmonkey</a>. However, the last updates were made 5 years ago, an eternity in the software world, so it may or may not still function as intended.</p>
 <p>There are also commercial options available. For example, <a href="https://www.cdata.com/kb/tech/surveymonkey-jdbc-r.rst">cdata</a> have a driver and R package that enable access to an analysis of Survey Monkey data through R.</p>
-
-
 </section>
+</section>
+<section id="resourcese" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="resourcese"><span class="header-section-number">13.4</span> Resourcese</h2>
+<ul>
+<li><a href="https://www.qualtrics.com/support/integrations/api-integration/overview/#GeneratingAnAPIToken">How to get your Qualtrics API key</a></li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
