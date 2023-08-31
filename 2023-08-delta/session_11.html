@@ -448,15 +448,22 @@ Setup
 <section id="the-2020-decennial-data" class="level3" data-number="11.3.1">
 <h3 data-number="11.3.1" class="anchored" data-anchor-id="the-2020-decennial-data"><span class="header-section-number">11.3.1</span> The 2020 Decennial Data</h3>
 <p>Before we dive into retrieving data from the 2020 decennial census, we need to mention a couple of things. Based on all the challenges of running a decennial census during a pandemic, the Census Bureau had to make decisions and provide new and different functionalists. The pandemic also delayed the release of the 2020 census data. You can check <a href="https://www2.census.gov/programs-surveys/decennial/2020/program-management/2010_20_data_product_release_dates.pdf">here</a> what data products have been released until now, and the Bureau’s timeline to release more data.</p>
-<p>One of the main files from the 2020 census is the PL94-171 Redistricting Summary File which is used for congressional appointments and redistricting. Variable available in this file are: - Total counts (population &amp; households) - Occupied/vacant housing unit - Total and voting age population breakdown by race &amp; ethnicity - Group quarter status - Demographic and Housing Characteristics Summary Files (Different to summary file 1 form 2010). Contains age and sex breakdowns and detailed race and ethnicity data.</p>
+<p>One of the main files from the 2020 census is the PL94-171 Redistricting Summary File which is used for congressional appointments and redistricting. Variable available in this file are:</p>
+<ul>
+<li>Total counts (population &amp; households)</li>
+<li>Occupied/vacant housing unit</li>
+<li>Total and voting age population breakdown by race &amp; ethnicity</li>
+<li>Group quarter status</li>
+</ul>
+<p>Demographic and Housing Characteristics Summary Files (Different to summary file 1 form 2010). Contains age and sex breakdowns and detailed race and ethnicity data.</p>
 </section>
 <section id="getting-census-data" class="level3" data-number="11.3.2">
 <h3 data-number="11.3.2" class="anchored" data-anchor-id="getting-census-data"><span class="header-section-number">11.3.2</span> Getting census data</h3>
 <p>The main functions from <code>tidycensus</code> represent the select number of datasets that this package provides access to. The following table provides the description for each of the core functions from <a href="https://walker-data.com/census-r/an-introduction-to-tidycensus.html#decennial-census">Walker’s book</a>.</p>
 <table class="table">
 <colgroup>
-<col style="width: 31%">
-<col style="width: 68%">
+<col style="width: 32%">
+<col style="width: 67%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -488,7 +495,12 @@ Setup
 </tbody>
 </table>
 <p>Here we are going to focus on getting started with using <code>get_decennial()</code> as a way of understanding how this package works.</p>
-<p>With <code>get_decennial()</code>, you can query data from 2000, 2010 and 2020 decennial census. The 3 necessary arguments you need to provide are: - Geography - Variable - Year</p>
+<p>With <code>get_decennial()</code>, you can query data from 2000, 2010 and 2020 decennial census. The 3 necessary arguments you need to provide are:</p>
+<ul>
+<li>Geography</li>
+<li>Variable</li>
+<li>Year</li>
+</ul>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -510,7 +522,12 @@ Specifying a summary file
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="st">"P1_001N"</span>,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The resulting data frame you get from this query is a tibble in “tidy” format with 4 columns: - GEOID = Code for the geographic unit (in this case FIP codes) - variable = census code for the variable (eg. P1_001N is the code for the total population in the 2020 population redistricting file) - value = population count</p>
+<p>The resulting data frame you get from this query is a tibble in “tidy” format with 4 columns:</p>
+<ul>
+<li>GEOID = Code for the geographic unit (in this case FIP codes)</li>
+<li>variable = census code for the variable (eg. P1_001N is the code for the total population in the 2020 population redistricting file)</li>
+<li>value = population count</li>
+</ul>
 <p>This table provides data for one single variable. In this case the variable is “P1_001N” which refers to total population.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -605,7 +622,7 @@ Message
 </div>
 <p>The idea behind <code>load_variables()</code> is for you to be able to search for the variable code for the variable you need.</p>
 <p>Now that we’ve talked about variables let’s talk a little bit about geography and how <code>tidycensus</code> makes it easy to query data within census geographies. Census data is tabulated in enumeration units. These units are specific geographies including legal entities such as states and counties, and statistical entities that are not official jurisdictions but used to standardize data. The graphic below, provided by <a href="https://www.census.gov/programs-surveys/geography/guidance/hierarchy.html">census.gov</a> shows the standard hierarchy of census geographic entities.</p>
-<p><img src="images/census_geos.png" class="img-fluid"> The parameter geography = in <code>get_acs()</code> and <code>get_decennial()</code> allows us to request data from common enumeration units. This mean we can name the specific geography we want data from. For example, let’s get data for Hispanic population the 6 counties around the Delta.</p>
+<p><img src="images/census_geos.png" class="img-fluid"> The parameter <code>geography =</code> in <code>get_acs()</code> and <code>get_decennial()</code> allows us to request data from common enumeration units. This mean we can name the specific geography we want data from. For example, let’s get data for Hispanic population the 6 counties around the Delta.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>delta_hispanic <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"county"</span>,</span>
@@ -615,8 +632,8 @@ Message
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To learn more about the arguments for geography for each core function of <code>tidycensus</code>, check out the documentation <a href="https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus">here</a>.</p>
-<section id="quering-for-multiple-variabels" class="level4" data-number="11.3.2.1">
-<h4 data-number="11.3.2.1" class="anchored" data-anchor-id="quering-for-multiple-variabels"><span class="header-section-number">11.3.2.1</span> Quering for multiple variabels</h4>
+<section id="quering-for-multiple-variables" class="level4" data-number="11.3.2.1">
+<h4 data-number="11.3.2.1" class="anchored" data-anchor-id="quering-for-multiple-variables"><span class="header-section-number">11.3.2.1</span> Quering for multiple variables</h4>
 <p>The <code>varaible</code> argument can take a vector of variables as an input, allowing to query for more than one variable at the time. We can create a vector and then call that vector as the input of the <code>variable</code> argument, or we can use the concatenate function <code>c()</code> and request data from multiple variables.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Vector with race variables codes</span></span>
@@ -658,7 +675,11 @@ Exercise
 </div>
 <div class="callout-body-container callout-body">
 <p>Make a query to get White and Hispanic population data for Delta counties <strong>by tracks</strong> from the 2020 Decennial Census. Include the total population summary variable (<code>summary_var = "P2_001N"</code>).</p>
-<p>Hint: variable codes are: - Total Hispanic population = P2_002N - Total White population = P2_005N</p>
+<p>Hint: variable codes are:</p>
+<ul>
+<li>Total Hispanic population = P2_002N</li>
+<li>Total White population = P2_005N</li>
+</ul>
 </div>
 </div>
 <div class="cell">
