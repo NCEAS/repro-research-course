@@ -27,20 +27,23 @@ Week 3: October 23-27, 2023. UC Davis.
 
 [Materials Week 1](https://learning.nceas.ucsb.edu/2023-06-delta/)
 
-<!--[Materials Week 2](https://learning.nceas.ucsb.edu/2023-08-delta/)
+[Materials Week 2](https://learning.nceas.ucsb.edu/2023-08-delta/)
 
-[Materials Week 3](https://learning.nceas.ucsb.edu/2023-10-delta/) -->
+<!--[Materials Week 3](https://learning.nceas.ucsb.edu/2023-10-delta/) -->
 
 
 ## Instructors
 
 |Name         | Email              |
 |-------------|--------------------|
-|Halina Do-Linh | dolinh@nceas.ucsb.edu|
-|Carmen Galaz García | galaz-garcia@nceas.ucsb.edu|
-|Matt Jones | jones@nceas.ucsb.edu|
 |Camila Vargas Poulsen | vargas-poulsen@nceas.ucsb.edu |
+|Halina Do-Linh | dolinh@nceas.ucsb.edu|
+|Matt Jones | jones@nceas.ucsb.edu|
+|Carmen Galaz García | galaz-garcia@nceas.ucsb.edu|
 
 
 
 ## Participants
+
+
+
