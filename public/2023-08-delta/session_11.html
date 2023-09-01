@@ -298,8 +298,7 @@ div.csl-indent {
   <li><a href="#getting-census-data" id="toc-getting-census-data" class="nav-link" data-scroll-target="#getting-census-data"><span class="header-section-number">11.3.2</span> Getting census data</a></li>
   </ul></li>
   <li><a href="#getting-census-data-ready-for-analysis" id="toc-getting-census-data-ready-for-analysis" class="nav-link" data-scroll-target="#getting-census-data-ready-for-analysis"><span class="header-section-number">11.4</span> Getting Census Data ready for analysis</a></li>
-  <li><a href="#visualizing-census-data-with-ggplot2" id="toc-visualizing-census-data-with-ggplot2" class="nav-link" data-scroll-target="#visualizing-census-data-with-ggplot2"><span class="header-section-number">11.5</span> Visualizing Census Data with <code>ggplot2</code></a></li>
-  <li><a href="#notes-on-get_acs" id="toc-notes-on-get_acs" class="nav-link" data-scroll-target="#notes-on-get_acs"><span class="header-section-number">11.6</span> Notes on <code>get_acs()</code></a></li>
+  <li><a href="#notes-on-get_acs" id="toc-notes-on-get_acs" class="nav-link" data-scroll-target="#notes-on-get_acs"><span class="header-section-number">11.5</span> Notes on <code>get_acs()</code></a></li>
   </ul>
 </nav>
     </div>
@@ -670,18 +669,18 @@ Message
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Exercise
+Exercise 1: <code>get_decennial()</code>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Make a query to get White and Hispanic population data for Delta counties <strong>by tracks</strong> from the 2020 Decennial Census. Include the total population summary variable (<code>summary_var = "P2_001N"</code>).</p>
+<ol type="1">
+<li>Make a query to get White and Hispanic population data for Delta counties <strong>by tracks</strong> from the 2020 Decennial Census. Include the total population summary variable (<code>summary_var = "P2_001N"</code>).</li>
+</ol>
 <p>Hint: variable codes are:</p>
 <ul>
 <li>Total Hispanic population = P2_002N</li>
 <li>Total White population = P2_005N</li>
 </ul>
-</div>
-</div>
 <div class="cell">
 <details>
 <summary>Answer</summary>
@@ -696,29 +695,40 @@ Exercise
 </details>
 </div>
 <p>We can check our data by calling the <code>View(delta_track_hw)</code> function in the console.</p>
-<p>Now that we have our data, next thing we will do is calculate the percentage of White and Hispanic population in each track. Given that we have the summary variable within our data set we can easily add a new column with the percentage. And then, we will also clean the <code>NAMES</code> column and separate track, county and state into it’s own column.</p>
+<ol start="2" type="1">
+<li>Now that we have our data, next thing we will do is calculate the percentage of White and Hispanic population in each track. Given that we have the summary variable within our data set we can easily add a new column with the percentage. And then, we will also clean the <code>NAMES</code> column and separate track, county and state into it’s own column (hint: <code>tidyr::separate()</code>).</li>
+</ol>
 <div class="cell">
+<details>
+<summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>delta_track_clean <span class="ot">&lt;-</span> delta_track_hw <span class="sc">%&gt;%</span> </span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> (value <span class="sc">/</span> summary_value)) <span class="sc">%&gt;%</span> </span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(NAME, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"tract"</span>, <span class="st">"county"</span>, <span class="st">"state"</span>),</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">", "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Note that we can apply all other <code>dplyr</code> functions we have learned to this dataset depending on what we want to achieve. One of the main goals of <code>tidycensus</code> is to make the output data frames compatible with <code>tidyverse</code> functions.</p>
-<p>Now that we have or “clean” data, with all the variables we need. Let’s plot this data to compare the distribution of percentage White population and percentage Hispanic population by census track vary among the Delta Counties.</p>
-</section>
-<section id="visualizing-census-data-with-ggplot2" class="level2" data-number="11.5">
-<h2 data-number="11.5" class="anchored" data-anchor-id="visualizing-census-data-with-ggplot2"><span class="header-section-number">11.5</span> Visualizing Census Data with <code>ggplot2</code></h2>
-<p>Applying all what we learned earlier this week, we are going to use <code>ggplot2</code> to create some wonderful plots!</p>
+<ol start="3" type="1">
+<li>Now that we have or “clean” data, with all the variables we need. Let’s plot this data to <strong>compare the distribution of percentage</strong> White population and percentage Hispanic population by census track vary among the Delta Counties (hint: <code>geom_density()</code>).</li>
+</ol>
 <div class="cell">
+<details>
+<summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(delta_track_hw_cl, </span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> percent, <span class="at">fill =</span> county)) <span class="sc">+</span> </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>)<span class="sc">+</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable)<span class="sc">+</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
+</div>
+</div>
+<!-- ## Visualizing Census Data with `ggplot2`
+
+Applying all what we learned earlier this week, we are going to use `ggplot2` to create some wonderful plots! -->
 </section>
-<section id="notes-on-get_acs" class="level2" data-number="11.6">
-<h2 data-number="11.6" class="anchored" data-anchor-id="notes-on-get_acs"><span class="header-section-number">11.6</span> Notes on <code>get_acs()</code></h2>
+<section id="notes-on-get_acs" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="notes-on-get_acs"><span class="header-section-number">11.5</span> Notes on <code>get_acs()</code></h2>
 <ul>
 <li>The functions operates very similar to <code>get_decennial()</code></li>
 <li>The main differences is that is access a different survey so the options for each argument change.</li>
@@ -743,11 +753,74 @@ Exercise
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"CA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>You can access to different variables in a survey with the <code>load_variable()</code> function</li>
+<li>You can access to different variables in a survey with the <code>load_variables()</code> function</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## variables for 5-year 2017-2021 ACS</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">load_variables</span>(<span class="dv">2021</span>, <span class="st">"acs5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise 2: <code>get_acs()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Load variables for “acs5”, year 2021.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>vars_acs5_21 <span class="ot">&lt;-</span> <span class="fu">load_variables</span>(<span class="dv">2021</span>, <span class="st">"acs5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li><p>Find code for total median gross rent.</p></li>
+<li><p>Get acs data for median gross rent by county in California</p></li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ca_rent <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"county"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"B25031_001"</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"CA"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2021</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="4" type="1">
+<li>Visualize estimate by county using <code>geom_point</code>. (Hint: use y = reorder(NAME, estimate) to order counties by estimates)</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ca_rent, <span class="fu">aes</span>(<span class="at">x =</span> estimate, <span class="at">y =</span> <span class="fu">reorder</span>(NAME, estimate))) <span class="sc">+</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="5" type="1">
+<li>Add the following layer, one by one, to your plot. Discuss with your neighbor what each line of code is doing.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> estimate <span class="sc">-</span> moe, <span class="at">xmax =</span> estimate <span class="sc">+</span> moe),</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_dollar</span>()) </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_y_discrete</span>(<span class="at">labels =</span> <span class="cf">function</span>(x) <span class="fu">str_remove</span>(x, <span class="st">" County, California|, California"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="6" type="1">
+<li>Enhance you plot adding a theme_*, changing the color of the points, renaming the labels, adding a title, or any other modification you want to make.</li>
+</ol>
+</div>
 </div>
 
 
