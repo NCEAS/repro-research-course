@@ -537,7 +537,7 @@ A note on loading packages
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>You may have noticed the following warning messages pop up when you ran your library chunk.</p>
+<p>You may have noticed the following messages pop up when you ran your library chunk.</p>
 <pre><code>Attaching package: ‘dplyr’
 
 The following objects are masked from ‘package:stats’:
@@ -547,7 +547,7 @@ The following objects are masked from ‘package:stats’:
 The following objects are masked from ‘package:base’:
 
     intersect, setdiff, setequal, union</code></pre>
-<p>These are important warnings. They are letting you know that certain functions from the <code>stats</code> and <code>base</code> packages (which are loaded by default when you start R) are masked by <em>different functions</em> with the same name in the <code>dplyr</code> package. It turns out, the order that you load the packages in matters. Since we loaded <code>dplyr</code> after <code>stats</code>, R will assume that if you call <code>filter()</code>, you mean the <code>dplyr</code> version unless you specify otherwise.</p>
+<p>These are important messages. They are letting you know that certain functions from the <code>stats</code> and <code>base</code> packages (which are loaded by default when you start R) are masked by <em>different functions</em> with the same name in the <code>dplyr</code> package. It turns out, the order that you load the packages in matters. Since we loaded <code>dplyr</code> after <code>stats</code>, R will assume that if you call <code>filter()</code>, you mean the <code>dplyr</code> version unless you specify otherwise.</p>
 <p>Being specific about which version of <code>filter()</code>, for example, you call is easy. To explicitly call a function by its unambiguous name, we use the syntax <code>package_name::function_name(...)</code>. So, if we wanted to call the <code>stats</code> version of <code>filter()</code> in this Rmarkdown document, I would use the syntax <code>stats::filter(...)</code>.</p>
 </div>
 </div>
@@ -561,7 +561,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Warnings are important, but we might not want them in our final document. After you have read the packages in, <strong>adjust the chunk settings in your library chunk</strong> to suppress warnings and messages by adding <code>#| warning: false</code>.</p>
+<p>Messages and warnings are important, but we might not want them in our final document. After you have read the packages in, <strong>adjust the chunk settings in your library chunk</strong> to suppress warnings and messages by adding <code>#| message: false</code> or <code>#| warning: false</code>. Both of these chunk options, when set to false, prevents messages or warnings from appearing in the rendered file.</p>
 </div>
 </div>
 <p>Now that we have introduced some data wrangling libraries, let’s get the data that we are going to use for this lesson.</p>
@@ -621,7 +621,7 @@ Exercise
 </section>
 <section id="data-exploration" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="data-exploration"><span class="header-section-number">10.3</span> Data exploration</h2>
-<p>Similar to what we did in our <a href="https://learning.nceas.ucsb.edu/2023-04-coreR/session_03.html">Intro to Quarto</a> lesson, it is good practice to skim through the data you just read in. Doing so is important to make sure the data is read as you were expecting and to familiarize yourself with the data.</p>
+<p>Similar to what we did in our <a href="https://learning.nceas.ucsb.edu/2023-09-ucsb-faculty/session_06.html">Intro to Literate Analysis</a> lesson, it is good practice to skim through the data you just read in. Doing so is important to make sure the data is read as you were expecting and to familiarize yourself with the data.</p>
 <p>Some of the basic ways to explore your data are:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Prints the column names of my data frame</span></span>
@@ -1098,10 +1098,10 @@ Exercise
 </section>
 <section id="sorting-your-data-using-arrange" class="level2" data-number="10.13">
 <h2 data-number="10.13" class="anchored" data-anchor-id="sorting-your-data-using-arrange"><span class="header-section-number">10.13</span> Sorting your data using <code>arrange()</code></h2>
-<p>The <code>arrange()</code> function is used to sort the rows of a <code>data.frame</code>. Two common case to use <code>arrange()</code> are:</p>
+<p>The <code>arrange()</code> function is used to sort the rows of a <code>data.frame</code>. Two common cases to use <code>arrange()</code> are:</p>
 <ul>
 <li>To calculate a cumulative sum (with <code>cumsum()</code>) so row order matters</li>
-<li>To display a table (like in an <code>.Rmd</code> document) in sorted order</li>
+<li>To display a table (like in an <code>.qmd</code> document) in sorted order</li>
 </ul>
 <p>Let’s re-calculate mean catch by region, and then <code>arrange()</code> the output by mean catch:</p>
 <div class="cell">
@@ -1146,15 +1146,15 @@ Exercise
 </section>
 <section id="splitting-a-column-using-separate-and-unite" class="level2" data-number="10.14">
 <h2 data-number="10.14" class="anchored" data-anchor-id="splitting-a-column-using-separate-and-unite"><span class="header-section-number">10.14</span> Splitting a column using <code>separate()</code> and <code>unite()</code></h2>
-<p>The <code>separate()</code> function allow us to easily split a single column into numerous. Its complement, the <code>unite()</code> function, allows ys to combine multiple columns into a single one.</p>
+<p>The <code>separate()</code> function allow us to easily split a single column into numerous. Its complement, the <code>unite()</code> function, allows us to combine multiple columns into a single one.</p>
 <p>This can come in really handy when we need to split a column into two pieces by a consistent separator (like a dash).</p>
 <p>Let’s make a new <code>data.frame</code> with fake data to illustrate this. Here we have a set of site identification codes with information about the island where the site is (the first 3 letters) and a site number (the 3 numbers). If we want to group and summarize by island, we need a column with just the island information.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>sites_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">site =</span> <span class="fu">c</span>(<span class="st">"HAW-101"</span>,</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"HAW-103"</span>,</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"OAH-320"</span>,</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"OAH-219"</span>,</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"MAI-039"</span>))</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"HAW-103"</span>,</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"OAH-320"</span>,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"OAH-219"</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"MAU-039"</span>))</span>
 <span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>sites_df <span class="sc">%&gt;%</span></span>
 <span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(site, <span class="fu">c</span>(<span class="st">"island"</span>, <span class="st">"site_number"</span>), <span class="st">"-"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1164,7 +1164,7 @@ Exercise
 2    HAW         103
 3    OAH         320
 4    OAH         219
-5    MAI         039</code></pre>
+5    MAU         039</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1251,7 +1251,7 @@ Exercise
 6 SOP      1110942.</code></pre>
 </div>
 </div>
-<p>We have completed our lesson on Cleaning and Wrangling data. Before we break, let’s practice our Github workflow.</p>
+<p>We have completed our lesson on Cleaning and Wrangling data. Before we break, let’s practice our Git workflow.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1263,8 +1263,8 @@ Steps
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>Save the <code>.Rmd</code> you have been working on for this lesson.</li>
-<li>Knit the R Markdown file. This is a way to test everything in your code is working.</li>
+<li>Save the <code>.qmd</code> you have been working on for this lesson.</li>
+<li>Render the Quarto file. This is a way to test everything in your code is working.</li>
 <li><code>Stage &gt; Commit &gt; Pull &gt; Push</code></li>
 </ol>
 </div>
