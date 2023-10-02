@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./session_17.html" rel="next">
+<link href="./session_18.html" rel="next">
 <link href="./session_15.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -259,14 +259,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_17.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Project Management Using GitHub + Informative READMEs</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./session_18.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility &amp; Provenance</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reproducibility &amp; Provenance</span></span></a>
   </div>
 </li>
     </ul>
@@ -284,9 +278,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#r-functions-warm-up" id="toc-r-functions-warm-up" class="nav-link" data-scroll-target="#r-functions-warm-up"><span class="header-section-number">16.1.1</span> R Functions Warm Up</a></li>
   <li><a href="#functions-with-conditionals" id="toc-functions-with-conditionals" class="nav-link" data-scroll-target="#functions-with-conditionals"><span class="header-section-number">16.1.2</span> Functions with Conditionals</a></li>
-  <li><a href="#add-error-messages" id="toc-add-error-messages" class="nav-link" data-scroll-target="#add-error-messages"><span class="header-section-number">16.1.3</span> Add Error Messages</a></li>
+  <li><a href="#adding-error-or-warning-messages" id="toc-adding-error-or-warning-messages" class="nav-link" data-scroll-target="#adding-error-or-warning-messages"><span class="header-section-number">16.1.3</span> Adding Error or Warning Messages</a></li>
   </ul></li>
-  <li><a href="#exercise-r-packages" id="toc-exercise-r-packages" class="nav-link" data-scroll-target="#exercise-r-packages"><span class="header-section-number">16.2</span> Exercise: R Packages</a></li>
+  <li><a href="#exercise-r-packages" id="toc-exercise-r-packages" class="nav-link" data-scroll-target="#exercise-r-packages"><span class="header-section-number">16.2</span> Exercise: R Packages</a>
+  <ul class="collapse">
+  <li><a href="#add-functions-to-the-aboutme-package" id="toc-add-functions-to-the-aboutme-package" class="nav-link" data-scroll-target="#add-functions-to-the-aboutme-package"><span class="header-section-number">16.2.1</span> Add Functions to the <code>aboutMe</code> Package</a></li>
+  <li><a href="#add-documentation" id="toc-add-documentation" class="nav-link" data-scroll-target="#add-documentation"><span class="header-section-number">16.2.2</span> Add Documentation</a></li>
+  <li><a href="#test-age-function" id="toc-test-age-function" class="nav-link" data-scroll-target="#test-age-function"><span class="header-section-number">16.2.3</span> Test Age Function</a></li>
+  <li><a href="#test-check-and-install-aboutme" id="toc-test-check-and-install-aboutme" class="nav-link" data-scroll-target="#test-check-and-install-aboutme"><span class="header-section-number">16.2.4</span> Test, Check, and Install <code>aboutMe</code></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -299,8 +299,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="learning-objectives" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
 <ul>
-<li>Practice identifying parts of a functions</li>
 <li>Practice creating functions</li>
+<li>Practice testing functions</li>
+<li>Practice adding error messages to functions</li>
 <li>Practice deploying a package and organizing custom functions within it</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -319,10 +320,10 @@ Acknowledgements
 </section>
 <section id="exercise-r-functions" class="level2" data-number="16.1">
 <h2 data-number="16.1" class="anchored" data-anchor-id="exercise-r-functions"><span class="header-section-number">16.1</span> Exercise: R Functions</h2>
-<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Setup
@@ -333,8 +334,8 @@ Setup
 <li><p>Make sure you’re in the right project (<code>training_{USERNAME}</code>) and use the Git workflow by <code>Pull</code>ing to check for any changes in the remote repository (aka repository on GitHub).</p></li>
 <li><p>Create a new Quarto Document.</p>
 <ol type="a">
-<li>Title it “R Practice: Functions and Packages”.</li>
-<li>Save the file and name it “r-practice-functions-packages”.</li>
+<li>Title it “R Practice: Functions”.</li>
+<li>Save the file and name it “r-practice-functions”.</li>
 </ol></li>
 <li><p>Organize your Quarto Document and folders in a <strong>meaningful</strong> way. Organization is personal - so this is up to you! Consider the different ways we’ve organized previous files using: headers, bold text, naming code chunks, comments in code chunks. Consider what directories (folders) we’ve used or talked about to organize these files. What is most important is organizing and documenting the file so that your future self (or if you share this file with others!) understands it as well as your current self does right now.</p></li>
 <li><p>Use the Git workflow. After you’ve set up your project and uploaded your data go through the workflow: <code>Stage (add) -&gt; Commit -&gt; Pull -&gt; Push</code></p></li>
@@ -367,16 +368,15 @@ Question 1
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create function #</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>double_it <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="dv">2</span> <span class="sc">*</span> x)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># try it out #</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># explicit notation</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">double_it</span>(<span class="at">x =</span> <span class="dv">24</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># non explicit notation</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">double_it</span>(<span class="dv">24</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="dv">2</span> <span class="sc">*</span> x)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># try it out #</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># explicit notation</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">double_it</span>(<span class="at">x =</span> <span class="dv">24</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># non explicit notation</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">double_it</span>(<span class="dv">24</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -412,19 +412,6 @@ Question 2
 </section>
 <section id="functions-with-conditionals" class="level3" data-number="16.1.2">
 <h3 data-number="16.1.2" class="anchored" data-anchor-id="functions-with-conditionals"><span class="header-section-number">16.1.2</span> Functions with Conditionals</h3>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<code>print()</code> vs <code>return()</code>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>What’s the difference between <code>print()</code> and <code>return()</code>? The <code>print()</code> function only makes something visible to us. It does not get stored for later use. If we want an output to be stored for use, we use <code>return()</code>.</p>
-</div>
-</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -439,39 +426,110 @@ Question 3
 <ol type="a">
 <li>Talk to your neighbor about what this function does and what you expect the output would be.</li>
 <li>Run the function with some values. Is it running how you expect?</li>
-<li>Run the function again, but additionally create an arithmetic expression with the function. Is the output what you expect?</li>
-<li>Rewrite the function using <code>print()</code> instead of <code>return</code>. Then go back and go through Parts a-c this time with the version of the function with <code>print()</code>.</li>
+<li>Run the function again, but this time use the function in an arithmetic expression. Is the output what you expect?</li>
 </ol>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>find_max <span class="ot">&lt;-</span> <span class="cf">function</span>(value_1, value_2) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value_1 <span class="sc">&gt;</span> value_2) {</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(value_1)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (value_2 <span class="sc">&gt;</span> value_1) {</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(value_2)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="sc">*</span> <span class="fu">find_max</span>(<span class="dv">4</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># "find_max() function" #</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>find_max <span class="ot">&lt;-</span> <span class="cf">function</span>(value_1, value_2) {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value_1 <span class="sc">&gt;</span> value_2) {</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(value_1)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (value_2 <span class="sc">&gt;</span> value_1) {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(value_2)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <details>
-<summary>find_max() function using print()</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `find_max()` using `print()`</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>find_max_print <span class="ot">&lt;-</span> <span class="cf">function</span>(value_1, value_2) {</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value_1 <span class="sc">&gt;</span> value_2) {</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(value_1)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (value_2 <span class="sc">&gt;</span> value_1) {</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(value_2)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="sc">*</span> <span class="fu">find_max_print</span>(<span class="dv">4</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>Answer Part C</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># example using `find_max()` in an arithmetic expression #</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we expect the answer to be 20</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="sc">*</span> <span class="fu">find_max</span>(<span class="dv">4</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="adding-error-or-warning-messages" class="level3" data-number="16.1.3">
+<h3 data-number="16.1.3" class="anchored" data-anchor-id="adding-error-or-warning-messages"><span class="header-section-number">16.1.3</span> Adding Error or Warning Messages</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 4 Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let’s continue to test the <code>find_max()</code> function and make sure it runs appropriately in the following function calls in Questions 4a, 4b, and 4c.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 4a
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run <code>find_max(4, 2, 5)</code> in the Console.</p>
+<p>What happens? What kind of message appears? Is it sufficient? If not, consider adding a warning or error message using <code>warning()</code> or <code>stop()</code>. Remember, use <code>?function</code> to access the Help page. Add additional logic to the function, as needed.</p>
+</div>
+</div>
+<details>
+<summary>
+Answer 4a
+</summary>
+<p>When you run <code>find_max(4, 2, 5)</code>, the following error message appears:</p>
+<pre><code>Error in find_max(4, 2, 5) : unused argument (5)</code></pre>
+<p>This is an error message that is automatically created by R since our function only requires two parameters. This is a sufficient error message.</p>
+</details>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 4b
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run <code>find_max(4, 4)</code> in the Console.</p>
+<p>What happens? What kind of message appears? Is it sufficient? If not, consider adding a warning or error message using <code>warning()</code> or <code>stop()</code>. Remember, use <code>?function</code> to access the Help page. Add additional logic to the function, as needed.</p>
+</div>
+</div>
+<details>
+<summary>
+Hint 4b
+</summary>
+<p>When you run <code>find_max(4, 4)</code>, no message appears and the function is sent to the Console, but no value is either returned or printed.</p>
+<p>To account for this scenario, add an <code>if()</code> statement to the beginning of the function, and then use either <code>warning()</code> or <code>stop()</code>.</p>
+</details>
+<div class="cell">
+<details>
+<summary>Answer 4b Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `find_max()` function with error message</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>find_max <span class="ot">&lt;-</span> <span class="cf">function</span>(value_1, value_2) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value_1 <span class="sc">==</span> value_2) {</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">"Values must be different from each other."</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value_1 <span class="sc">&gt;</span> value_2) {</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(value_1)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (value_2 <span class="sc">&gt;</span> value_1) {</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(value_2)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># try it out #</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># does the message appear as you expected?</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="fu">find_max</span>(<span class="dv">4</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -480,16 +538,53 @@ Question 3
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Question 4
+Question 4c
 </div>
 </div>
 <div class="callout-body-container callout-body">
-
+<p>Run <code>find_max(4, "cow")</code> in the Console.</p>
+<p>What happens? What kind of message appears? Is it sufficient? If not, consider adding a warning or error message using <code>warning()</code> or <code>stop()</code>. Remember, use <code>?function</code> to access the Help page. Add additional logic to the function, as needed.</p>
 </div>
 </div>
-</section>
-<section id="add-error-messages" class="level3" data-number="16.1.3">
-<h3 data-number="16.1.3" class="anchored" data-anchor-id="add-error-messages"><span class="header-section-number">16.1.3</span> Add Error Messages</h3>
+<details>
+<summary>
+Hint 4c
+</summary>
+<p>When you run <code>find_max(4, "cow")</code>, the function runs as is and returns the value “cow”. This is not expected because these two values aren’t necessarily comparable since they’re different data types.</p>
+<p>However, <code>find_max()</code> doesn’t know any better since this scenario hasn’t been defined in the body of the function yet.</p>
+<p>To account for this scenario, add additional logic that <strong>checks the class</strong> of each argument before the function continues to execute.</p>
+<p>The logical operator for OR is <code>||</code>.</p>
+</details>
+<div class="cell">
+<details>
+<summary>Answer 4c Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `find_max()` function with error messages and checks</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>find_max <span class="ot">&lt;-</span> <span class="cf">function</span>(value_1, value_2) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `||` is the logical operator for OR</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.numeric</span>(value_1) <span class="sc">!=</span> <span class="cn">TRUE</span> <span class="sc">||</span> <span class="fu">is.numeric</span>(value_2) <span class="sc">!=</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># alt expression: is.numeric(value_1) == FALSE || is.numeric(value_2) == FALSE</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">"Value must be a numeric type."</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value_1 <span class="sc">==</span> value_2) {</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">"Values must be different from each other."</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (value_1 <span class="sc">&gt;</span> value_2) {</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(value_1)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (value_2 <span class="sc">&gt;</span> value_1) {</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(value_2)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># try it out #</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># does the message appear as you expected?</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="fu">find_max</span>(<span class="dv">4</span>, <span class="st">"cow"</span>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="fu">find_max</span>(<span class="st">"cow"</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 </section>
 <section id="exercise-r-packages" class="level2" data-number="16.2">
@@ -500,15 +595,92 @@ Question 4
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Tip
+Setup
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>ADD SETUP STEPS HERE</p>
+<ol type="1">
+<li><p>Create a new project using the R Package template by selecting: <code>File -&gt; New Project -&gt; New Directory -&gt; R Package -&gt; Create Project</code>. In the R Package dialog box, type “aboutMe” in the “Package Name:” field. Or you can use <code>usethis::create_package("~/aboutMe")</code>.</p></li>
+<li><p>Delete the files: <code>hello.R</code> in the <code>R</code> directory and <code>hello.Rd</code> in the <code>man</code> directory.</p></li>
+<li><p>Add a license by running in the Console: <code>usethis::use_apache_license()</code>.</p></li>
+<li><p>Turn the project into a Git repository. Recall the steps from <a href="https://learning.nceas.ucsb.edu/2023-10-coreR/session_06.html#exercise-3-setting-up-git-on-an-existing-project">Ch 6 Exercise 3: Setting up Git on an existing project</a>. Follow the steps either using the <code>usethis</code> package or Command Line.</p></li>
+</ol>
+</div>
+</div>
+<section id="add-functions-to-the-aboutme-package" class="level3" data-number="16.2.1">
+<h3 data-number="16.2.1" class="anchored" data-anchor-id="add-functions-to-the-aboutme-package"><span class="header-section-number">16.2.1</span> Add Functions to the <code>aboutMe</code> Package</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Create the following two functions for the <code>aboutMe</code> package:</p>
+<ol type="a">
+<li>Function that prints out your name and your favorite color.</li>
+<li>Function calculates your age for the current year. <strong>Hint</strong>: You can access the current year using <code>format(Sys.Date(), "%Y")</code>. <code>Sys.Date()</code> returns the current date, and <code>format()</code> and <code>"%Y"</code> formats the date to just the year in the format <code>YYYY</code> (as opposed to <code>YY</code>).</li>
+</ol>
+<p>Write each of these functions in their own scripts and save them to the <code>R</code> directory.</p>
+<p>Note: If any of your functions have dependencies, make sure to add it to the <code>DESCRIPTION</code> file.</p>
+</div>
+</div>
+</section>
+<section id="add-documentation" class="level3" data-number="16.2.2">
+<h3 data-number="16.2.2" class="anchored" data-anchor-id="add-documentation"><span class="header-section-number">16.2.2</span> Add Documentation</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Go back to each function script and add a Roxygen skeleton to document each function.</p>
+</div>
+</div>
+</section>
+<section id="test-age-function" class="level3" data-number="16.2.3">
+<h3 data-number="16.2.3" class="anchored" data-anchor-id="test-age-function"><span class="header-section-number">16.2.3</span> Test Age Function</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use <code>usethis::use_testthat()</code> to test the age function.</p>
+</div>
+</div>
+</section>
+<section id="test-check-and-install-aboutme" class="level3" data-number="16.2.4">
+<h3 data-number="16.2.4" class="anchored" data-anchor-id="test-check-and-install-aboutme"><span class="header-section-number">16.2.4</span> Test, Check, and Install <code>aboutMe</code></h3>
+<p>Use either the Build Tab or run the commands in the Console.</p>
+<p>After, go to the Packages Tab in the Files Pane, search for the <code>aboutMe</code> package, and check that the documentation for your package looks as you expected. Try loading the package using <code>library()</code> and call some of the functions you created.</p>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Save and Use Git
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Save your work and use the Git workflow: <code>Stage (add) -&gt; Commit -&gt; Pull -&gt; Push</code></p>
 </div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -752,8 +924,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./session_17.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Project Management Using GitHub + Informative READMEs</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./session_18.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reproducibility &amp; Provenance</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
