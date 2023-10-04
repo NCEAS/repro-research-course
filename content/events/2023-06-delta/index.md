@@ -45,5 +45,36 @@ Week 3: October 23-27, 2023. UC Davis.
 
 ## Participants
 
+-   Kelsey Ranjbar
+
+-   Daya Muralidharan
+
+-   Stephanie Webb
+
+-   Britne Clifton
+
+-   Trinh Nguyen
+
+-   Chris Kwan
+
+-   Karrin Alstad
+
+-   Lisa Crowley
+
+-   Bailey Morrison
+
+-   Alexandra Thomsen
+
+-   Pascale Goertler
+
+-   Kenji M Tomari
+
+-   Xoco Shinbrot
+
+-   Taylor Pantiga
+
+-   Eric Holmes
+
+-   Miranda Bell
 
 
