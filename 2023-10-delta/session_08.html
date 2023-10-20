@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>NCEAS Open Science Synthesis for the Delta Science Program - 8&nbsp; Reproducible Workflows</title>
+<title>NCEAS Open Science Synthesis for the Delta Science Program - 8&nbsp; Reproducible Workflows Using targets</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -75,7 +94,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_08.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reproducible Workflows</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_08.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reproducible Workflows Using `targets`</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -88,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reproducible Workflows</span></h1>
+      <h1 class="title">Reproducible Workflows Using <code>targets</code></h1>
                       </div>
   </div>
     
@@ -172,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_08.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reproducible Workflows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reproducible Workflows Using <code>targets</code></span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -217,7 +236,20 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#benefits-of-reproducible-workflows" id="toc-benefits-of-reproducible-workflows" class="nav-link" data-scroll-target="#benefits-of-reproducible-workflows"><span class="header-section-number">8.1</span> Benefits of Reproducible Workflows</a></li>
+  <li><a href="#challenges-of-reproducible-workflows" id="toc-challenges-of-reproducible-workflows" class="nav-link" data-scroll-target="#challenges-of-reproducible-workflows"><span class="header-section-number">8.2</span> Challenges of Reproducible Workflows</a></li>
+  <li><a href="#leveraging-reproducible-workflows-tools" id="toc-leveraging-reproducible-workflows-tools" class="nav-link" data-scroll-target="#leveraging-reproducible-workflows-tools"><span class="header-section-number">8.3</span> Leveraging Reproducible Workflows &amp; Tools</a>
+  <ul class="collapse">
+  <li><a href="#r-package-targets-for-reproducible-worklows" id="toc-r-package-targets-for-reproducible-worklows" class="nav-link" data-scroll-target="#r-package-targets-for-reproducible-worklows">R Package: <code>targets</code> for Reproducible Worklows</a></li>
+  </ul></li>
+  <li><a href="#exercise-creating-a-pipeline-using-targets" id="toc-exercise-creating-a-pipeline-using-targets" class="nav-link" data-scroll-target="#exercise-creating-a-pipeline-using-targets"><span class="header-section-number">8.4</span> Exercise: Creating a Pipeline using <code>targets</code></a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -225,9 +257,53 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<!--{{< include /sections/programmatic-data-access.qmd >}}-->
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Acknowledgements
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This lesson is adapted from the journal article <a href="https://doi.org/10.1111/2041-210X.14113">Improving ecological data science with workflow management software</a> by Brousil et al, and the journal’s accompanying example, <a href="https://targets-ecology.netlify.app/">A worked targets example for ecologists</a>.</p>
+</div>
+</div>
+</section>
+<section id="benefits-of-reproducible-workflows" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="benefits-of-reproducible-workflows"><span class="header-section-number">8.1</span> Benefits of Reproducible Workflows</h2>
+<p>What is a reproducible workflow?</p>
+<p>Other interchangeable terms we hear for reproducible workflows are:</p>
+<ul>
+<li>Workflow Management Systems</li>
+<li>Data pipelines</li>
+<li>Data workflow</li>
+</ul>
+</section>
+<section id="challenges-of-reproducible-workflows" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="challenges-of-reproducible-workflows"><span class="header-section-number">8.2</span> Challenges of Reproducible Workflows</h2>
+<p>WMS requires moving away from performing serial analytical operations within single or multiple scripts to instead breaking an analysis into smaller functions that are modular, thereby providing more computational flexibility <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></p>
+<p>Indeed, researchers will face a familiar trade-off—to invest the personnel time in learning and deploying a tool like WMS to save personnel and compute time later or to accept that less efficient, but more familiar analytical frameworks will come with costs in personnel time, compute time and potentially additional associated payments for computing resources. The balance will depend on the complexity of the analysis, the expectation of reusing the code over time and the resources available to the researcher (e.g.&nbsp;funds for computing or personnel) <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span>.</p>
+</section>
+<section id="leveraging-reproducible-workflows-tools" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="leveraging-reproducible-workflows-tools"><span class="header-section-number">8.3</span> Leveraging Reproducible Workflows &amp; Tools</h2>
+<section id="r-package-targets-for-reproducible-worklows" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="r-package-targets-for-reproducible-worklows">R Package: <code>targets</code> for Reproducible Worklows</h3>
+</section>
+</section>
+<section id="exercise-creating-a-pipeline-using-targets" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="exercise-creating-a-pipeline-using-targets"><span class="header-section-number">8.4</span> Exercise: Creating a Pipeline using <code>targets</code></h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-brousil2023" class="csl-entry" role="listitem">
+Brousil, Matthew R., Alessandro Filazzola, Michael F. Meyer, Sapna Sharma, and Stephanie E. Hampton. 2023. <span>“Improving Ecological Data Science with Workflow Management Software.”</span> <em>Methods in Ecology and Evolution</em> 14 (6): 1381–88. <a href="https://doi.org/10.1111/2041-210x.14113">https://doi.org/10.1111/2041-210x.14113</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
