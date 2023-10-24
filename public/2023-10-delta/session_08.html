@@ -241,12 +241,9 @@ div.csl-indent {
    
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
-  <li><a href="#benefits-of-reproducible-workflows" id="toc-benefits-of-reproducible-workflows" class="nav-link" data-scroll-target="#benefits-of-reproducible-workflows"><span class="header-section-number">8.1</span> Benefits of Reproducible Workflows</a></li>
-  <li><a href="#challenges-of-reproducible-workflows" id="toc-challenges-of-reproducible-workflows" class="nav-link" data-scroll-target="#challenges-of-reproducible-workflows"><span class="header-section-number">8.2</span> Challenges of Reproducible Workflows</a></li>
-  <li><a href="#leveraging-reproducible-workflows-tools" id="toc-leveraging-reproducible-workflows-tools" class="nav-link" data-scroll-target="#leveraging-reproducible-workflows-tools"><span class="header-section-number">8.3</span> Leveraging Reproducible Workflows &amp; Tools</a>
-  <ul class="collapse">
-  <li><a href="#r-package-targets-for-reproducible-worklows" id="toc-r-package-targets-for-reproducible-worklows" class="nav-link" data-scroll-target="#r-package-targets-for-reproducible-worklows">R Package: <code>targets</code> for Reproducible Worklows</a></li>
-  </ul></li>
+  <li><a href="#challenges-of-workflows" id="toc-challenges-of-workflows" class="nav-link" data-scroll-target="#challenges-of-workflows"><span class="header-section-number">8.1</span> Challenges of Workflows</a></li>
+  <li><a href="#benefits-of-reproducible-workflows" id="toc-benefits-of-reproducible-workflows" class="nav-link" data-scroll-target="#benefits-of-reproducible-workflows"><span class="header-section-number">8.2</span> Benefits of Reproducible Workflows</a></li>
+  <li><a href="#leveraging-targets-for-reproducible-worklows" id="toc-leveraging-targets-for-reproducible-worklows" class="nav-link" data-scroll-target="#leveraging-targets-for-reproducible-worklows"><span class="header-section-number">8.3</span> Leveraging <code>targets</code> for Reproducible Worklows</a></li>
   <li><a href="#exercise-creating-a-pipeline-using-targets" id="toc-exercise-creating-a-pipeline-using-targets" class="nav-link" data-scroll-target="#exercise-creating-a-pipeline-using-targets"><span class="header-section-number">8.4</span> Exercise: Creating a Pipeline using <code>targets</code></a></li>
   </ul>
 </nav>
@@ -274,33 +271,71 @@ Acknowledgements
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This lesson is adapted from the journal article <a href="https://doi.org/10.1111/2041-210X.14113">Improving ecological data science with workflow management software</a> by Brousil et al, and the journal’s accompanying example, <a href="https://targets-ecology.netlify.app/">A worked targets example for ecologists</a>.</p>
+<p>This lesson is adapted from the following resources:</p>
+<ul>
+<li>Journal article <a href="https://doi.org/10.1111/2041-210X.14113">Improving ecological data science with workflow management software</a> by Brousil et al</li>
+<li>Brousil et al’s accompanying example, <a href="https://targets-ecology.netlify.app/">A worked targets example for ecologists</a></li>
+<li>RLadies Santa Barbara Chapter Workshop: <a href="https://youtu.be/qxhLH6sIZqQ?feature=shared">An introduction to <code>targets</code> for R</a></li>
+</ul>
 </div>
 </div>
+</section>
+<section id="challenges-of-workflows" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="challenges-of-workflows"><span class="header-section-number">8.1</span> Challenges of Workflows</h2>
 <p>All research projects have a workflow of some kind and typically includes steps like: data preparation and harmonization, running analyses or models, creating visualizations, and more.</p>
-<p>However, many environmental research projects are becoming increasingly more complex as researchers are utilizing larger datasets that require complicated analytical methods. More complexity means more steps, and more room for error or poor organizational methods that make projects difficult to reproduce.</p>
-<p>This is where reproducible workflow tools and packages, like the R package <code>targets</code>, can play a huge role in streamlining complex workflows and ease the organization and sharing of projects.</p>
-<p>Other interchangeable terms we hear for workflows are:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/reproducible-workflows-targets-1.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Example of ideal straightforward data workflow</figcaption>
+</figure>
+</div>
+<p>However, many environmental research projects are becoming <strong>increasingly more complex</strong> as researchers are utilizing <strong>larger datasets</strong> that require <strong>complicated analytical methods</strong>. More complexity means more steps, and more room for error or poor organizational methods that make projects difficult to reproduce. More complex analysis may also mean <strong>longer run times</strong>, which can make updating functions and analysis time-consuming.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/reproducible-workflows-targets-2.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Example of a more realistic data workflow…</figcaption>
+</figure>
+</div>
+<p>This is where <strong>reproducible workflow tools and packages</strong>, like the R package <code>targets</code>, can play a huge role in <strong>streamlining complex workflows</strong> and ease the organization and sharing of projects.</p>
+<p>Other <strong>interchangeable terms for workflows</strong> are:</p>
 <ul>
 <li>Workflow Management Systems (WMS)</li>
 <li>Data pipelines</li>
 <li>Data workflow</li>
 </ul>
 </section>
-<section id="benefits-of-reproducible-workflows" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="benefits-of-reproducible-workflows"><span class="header-section-number">8.1</span> Benefits of Reproducible Workflows</h2>
-<p>A major benefit of WMS is the capacity to track the status of all required files and functions to prevent steps in a larger pipeline from being skipped and by ensuring that data are kept up to date as models or harmonization routines change. Despite WMS’s benefits, adopting a WMS requires moving away from performing serial analytical operations within single or multiple scripts to instead breaking an analysis into smaller functions that are modular (Figure 1), thereby providing more computational flexibility. <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></p>
+<section id="benefits-of-reproducible-workflows" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="benefits-of-reproducible-workflows"><span class="header-section-number">8.2</span> Benefits of Reproducible Workflows</h2>
+<p>Using a <strong>reproducible workflow</strong> allows us to:</p>
+<ul>
+<li><strong>track the status</strong> of all required files and functions which makes it easier to keep all steps in the overall workflow up-to-date <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></li>
+<li>break our analysis and data processing steps into smaller functions that are <strong>modular</strong> which results in more <strong>computational flexibility</strong> <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span> and makes it easier to debug when errors occur</li>
+<li><strong>reduce the computational tasks</strong> to only run as necessary as opposed to anytime there is an update in on the steps in the workflow <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></li>
+<li><strong>utilize continuous integration</strong> (automating tasks) so that we spend less time on manual work and are less prone to simple errors (e.g.&nbsp;misspellings) <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></li>
+</ul>
+<p>Overall a reproducible workflow enhances our research projects because it <strong>improves our understanding</strong> of our work for ourselves and for collaborators, makes our work <strong>more efficient and automated</strong>, and <strong>increases reproducibility</strong>.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Challenges of Reproducible Workflows
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While the benefits of reproducible workflows are immense, workflows and the utilizing workflow management tools can be <strong>intimidating</strong> at the start due to:</p>
+<ul>
+<li><strong>high learning-curve</strong> for implementing reproducible workflow tools <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></li>
+<li><strong>limited training resources</strong> and opportunities to applying WMS for environmental researchers and professionals <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></li>
+<li><strong>infrequent use</strong> of WMS and reproducible workflows in the environmental field means there are less examples to learn from and a <strong>lack of standardized methods</strong> for using WMS <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></li>
+</ul>
+</div>
+</div>
 </section>
-<section id="challenges-of-reproducible-workflows" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="challenges-of-reproducible-workflows"><span class="header-section-number">8.2</span> Challenges of Reproducible Workflows</h2>
-<p>WMS requires moving away from performing serial analytical operations within single or multiple scripts to instead breaking an analysis into smaller functions that are modular, thereby providing more computational flexibility <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span></p>
-<p>Indeed, researchers will face a familiar trade-off—to invest the personnel time in learning and deploying a tool like WMS to save personnel and compute time later or to accept that less efficient, but more familiar analytical frameworks will come with costs in personnel time, compute time and potentially additional associated payments for computing resources. The balance will depend on the complexity of the analysis, the expectation of reusing the code over time and the resources available to the researcher (e.g.&nbsp;funds for computing or personnel) <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span>.</p>
-</section>
-<section id="leveraging-reproducible-workflows-tools" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="leveraging-reproducible-workflows-tools"><span class="header-section-number">8.3</span> Leveraging Reproducible Workflows &amp; Tools</h2>
+<section id="leveraging-targets-for-reproducible-worklows" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="leveraging-targets-for-reproducible-worklows"><span class="header-section-number">8.3</span> Leveraging <code>targets</code> for Reproducible Worklows</h2>
 <p>WMS may not be needed by most beginners, but learning about these tools early may inspire researchers with the understanding that their analyses can scale with the ambition and complexity of their most pressing research questions. Implementing WMS is an investment that does take time but can save a great deal of time and frustration later <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span>.</p>
-<section id="r-package-targets-for-reproducible-worklows" class="level3 unnumbered">
-<h3 class="unnumbered anchored" data-anchor-id="r-package-targets-for-reproducible-worklows">R Package: <code>targets</code> for Reproducible Worklows</h3>
 <div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -315,7 +350,6 @@ What is the <code>targets</code> package?
 <p><code>targets</code> can also help users build, visualize, and manage workflows from raw files to outputs.</p>
 </div>
 </div>
-</section>
 </section>
 <section id="exercise-creating-a-pipeline-using-targets" class="level2" data-number="8.4">
 <h2 data-number="8.4" class="anchored" data-anchor-id="exercise-creating-a-pipeline-using-targets"><span class="header-section-number">8.4</span> Exercise: Creating a Pipeline using <code>targets</code></h2>
