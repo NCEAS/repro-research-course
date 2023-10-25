@@ -465,7 +465,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  8.280   0.016   8.296 </code></pre>
+  9.054   0.016   9.072 </code></pre>
 </div>
 </div>
 <p>The issue with this loop is that we execute each trial sequentially, which means that only one of our processors on this machine are in use. In order to exploit parallelism, we need to be able to dispatch our tasks as functions, with one task going to each processor. To do that, we need to convert our task to a function, and then use the <code>*apply()</code> family of R functions to apply that function to all of the members of a set. In R, using <code>apply</code> used to be faster than the equivalent code in a loop, but now they are similar due to optimizations in R loop handling. However, using the function allows us to later take advantage of other approaches to parallelization. Here’s the same code rewritten to use <code>lapply()</code>, which applies a function to each of the members of a list (in this case the trials we want to run):</p>
@@ -483,7 +483,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  8.958   0.000   8.962 </code></pre>
+  9.705   0.004   9.710 </code></pre>
 </div>
 </div>
 </section>
@@ -516,7 +516,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.004   0.011   4.633 </code></pre>
+  4.895   0.124   5.020 </code></pre>
 </div>
 </div>
 </section>
@@ -603,7 +603,7 @@ result.3 1.732051</code></pre>
 <span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  8.228   0.212   4.401 </code></pre>
+  8.960   0.283   4.804 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And compare that to what it takes to do the same analysis in serial</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
@@ -615,7 +615,7 @@ result.3 1.732051</code></pre>
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  8.453   0.012   8.468 </code></pre>
+  9.212   0.012   9.228 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># When you're done, clean up the cluster</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -624,7 +624,16 @@ result.3 1.732051</code></pre>
 </section>
 <section id="futures-with-furrr" class="level2" data-number="9.8">
 <h2 data-number="9.8" class="anchored" data-anchor-id="futures-with-furrr"><span class="header-section-number">9.8</span> Futures with <code>furrr</code></h2>
-<p>While <code>parallel</code> and <code>mclapply</code> have been reliably working in R for years for multicore parallel processing, different approaches like <code>clusterApply</code> have been needed to run tasks across multiple nodes in larger clusters. The <code>future</code> package (https://future.futureverse.org) has emerged in R as a powerful mechanism to support many types of asynchronous execution, both within a single node and across a cluster of nodes, but all using a uniform evaluation mechanism across different processing backends. The basic idea behind <code>future</code> is that you can either implicitly or explicitly create a <code>future</code> expression, and control is returned to calling code while the expression is evaluated asynchronously, and possiby in parallel depending on the backend chosen.</p>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p>While <code>parallel</code> and <code>mclapply</code> have been reliably working in R for years for multicore parallel processing, different approaches like <code>clusterApply</code> have been needed to run tasks across multiple nodes in larger clusters. The <a href="https://future.futureverse.org"><code>future</code> package</a> has emerged in R as a powerful mechanism to support many types of asynchronous execution, both within a single node and across a cluster of nodes, but all using a uniform evaluation mechanism across different processing backends. The basic idea behind <code>future</code> is that you can either implicitly or explicitly create a <code>future</code> expression, and control is returned to calling code while the expression is evaluated asynchronously, and possiby in parallel depending on the backend chosen.</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="images/future-logo.png" alt="Future logo" width="200"></p>
+</div>
+</div>
+</div>
 <p>In a familiar form, you can define a future expression analogously to how you define a function, using an expression such as:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
@@ -672,7 +681,16 @@ result.3 1.732051</code></pre>
 </div>
 <p>The <code>multisession</code> futures plan is one in which each future task is evaluated in a separate, background R session that runs on the same host that launched the process. If the host has multiple cores available, then <code>multisession</code> will make use of these and create background sessions on each of the available cores. If all background sessions are busy, then the creation of new <code>future</code> expressions wil be blocked until one is available.</p>
 <p>So, what’s the point of all of this? Basically, the <code>future</code> package provides a mechanism for evaluating expressions asynchronously, which we can leverage to launch many sessions on available cores. We can harness this with another package, <code>furrr</code>, which functions as an asynchrobous analogue to <code>purrr</code>.</p>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p>With <code>furrr</code>, you can use the <code>map()</code> pattern to execute an expression across a set of inputs using asynchronous futures. Most of the details here are hidden under the hood, so this usage pattern should feel really familiar to <code>purrr</code> users. For example, let’s return to our bootstrap linear model, and reimplement it, first using purrr, and then with furrr.</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="images/furrr-logo.png" alt="Furrr logo" width="200"></p>
+</div>
+</div>
+</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -689,7 +707,7 @@ Attaching package: 'purrr'</code></pre>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  9.017   0.000   9.019 </code></pre>
+  9.784   0.000   9.785 </code></pre>
 </div>
 </div>
 <div class="cell">
@@ -700,7 +718,7 @@ Attaching package: 'purrr'</code></pre>
 <span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.641   0.000   7.059 </code></pre>
+  0.701   0.004   7.788 </code></pre>
 </div>
 </div>
 <p>So basically by dropping in <code>furrr::future_map</code> as a replacement for <code>purrr::map</code>, we can see an immediate decrease in execution time, on my machine from 22 seconds down to 8 seconds. This is not as good as the improvement we saw with the other methods, which I attribute to the overhead of starting all of the background R sessions.</p>
