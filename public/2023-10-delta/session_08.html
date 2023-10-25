@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -243,8 +277,13 @@ div.csl-indent {
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
   <li><a href="#challenges-of-workflows" id="toc-challenges-of-workflows" class="nav-link" data-scroll-target="#challenges-of-workflows"><span class="header-section-number">8.1</span> Challenges of Workflows</a></li>
   <li><a href="#benefits-of-reproducible-workflows" id="toc-benefits-of-reproducible-workflows" class="nav-link" data-scroll-target="#benefits-of-reproducible-workflows"><span class="header-section-number">8.2</span> Benefits of Reproducible Workflows</a></li>
-  <li><a href="#leveraging-targets-for-reproducible-worklows" id="toc-leveraging-targets-for-reproducible-worklows" class="nav-link" data-scroll-target="#leveraging-targets-for-reproducible-worklows"><span class="header-section-number">8.3</span> Leveraging <code>targets</code> for Reproducible Worklows</a></li>
+  <li><a href="#leveraging-targets-for-reproducible-worklows" id="toc-leveraging-targets-for-reproducible-worklows" class="nav-link" data-scroll-target="#leveraging-targets-for-reproducible-worklows"><span class="header-section-number">8.3</span> Leveraging <code>targets</code> for Reproducible Worklows</a>
+  <ul class="collapse">
+  <li><a href="#what-does-the-targets-package-do" id="toc-what-does-the-targets-package-do" class="nav-link" data-scroll-target="#what-does-the-targets-package-do">What does the <code>targets</code> package do?</a></li>
+  <li><a href="#how-does-the-targets-package-work" id="toc-how-does-the-targets-package-work" class="nav-link" data-scroll-target="#how-does-the-targets-package-work">How does the <code>targets</code> package work?</a></li>
+  </ul></li>
   <li><a href="#exercise-creating-a-pipeline-using-targets" id="toc-exercise-creating-a-pipeline-using-targets" class="nav-link" data-scroll-target="#exercise-creating-a-pipeline-using-targets"><span class="header-section-number">8.4</span> Exercise: Creating a Pipeline using <code>targets</code></a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources"><span class="header-section-number">8.5</span> Additional Resources</a></li>
   </ul>
 </nav>
     </div>
@@ -335,7 +374,13 @@ Challenges of Reproducible Workflows
 </section>
 <section id="leveraging-targets-for-reproducible-worklows" class="level2" data-number="8.3">
 <h2 data-number="8.3" class="anchored" data-anchor-id="leveraging-targets-for-reproducible-worklows"><span class="header-section-number">8.3</span> Leveraging <code>targets</code> for Reproducible Worklows</h2>
-<p>WMS may not be needed by most beginners, but learning about these tools early may inspire researchers with the understanding that their analyses can scale with the ambition and complexity of their most pressing research questions. Implementing WMS is an investment that does take time but can save a great deal of time and frustration later <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span>.</p>
+<p>WMS or tools like <code>targets</code> may not be needed by most beginners, but learning about these tools give researchers the foundational capabilities to scale their projects in size and complexity. While it takes time to learn these tools to create reproducible workflows, it saves time and frustrations in the long run <span class="citation" data-cites="brousil2023">(<a href="#ref-brousil2023" role="doc-biblioref">Brousil et al. 2023</a>)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/reproducible-workflows-targets-3.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">A workflow visualized by <code>targets</code> using <code>tar_visnetwork()</code>. Source: The {targets} R package user manual</figcaption>
+</figure>
+</div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -346,13 +391,196 @@ What is the <code>targets</code> package?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>targets</code> is a package for R that analyzes and manages your workflow or analysis pipeline. It helps to save its users time by re-running outdated analysis steps only when needed. <code>targets</code> is a part of <a href="https://ropensci.org/">rOpenSci</a>.</p>
-<p><code>targets</code> can also help users build, visualize, and manage workflows from raw files to outputs.</p>
+<p><code>targets</code> is a <strong>data pipeline tool specifically for R</strong>. It coordinates and keeps track of an entire workflow. It can also help users build, visualize, and manage workflows from raw files to outputs.</p>
+</div>
+</div>
+<section id="what-does-the-targets-package-do" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="what-does-the-targets-package-do">What does the <code>targets</code> package do?</h3>
+<ul>
+<li>Keeps track of entire workflow</li>
+<li>Automatically detects when files or functions change</li>
+<li>Saves time by only running steps, or targets, that are no longer up to date</li>
+<li>Ensures that the pipeline is run in the correct order (meaning you don’t have to keep track of this after you set it up the first time)</li>
+<li>Can integrate with high performance computing, like parallel processing</li>
+<li>Ensures reproducibility: When targets are up to date, this is evidence that the outputs match the code and inputs</li>
+<li>More trustworthy and reproducible results</li>
+</ul>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The R package <code>drake</code> was the predecessor to the <code>targets</code> package.</p>
+</div>
 </div>
 </div>
 </section>
+<section id="how-does-the-targets-package-work" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="how-does-the-targets-package-work">How does the <code>targets</code> package work?</h3>
+<p>For <code>targets</code> to be successful, at a bare minimum it needs 1) a script with the different functions you’re using for analysis, and 2) a <code>_targets.R</code> script which is a special file that <code>targets</code> uses to coordinate, connect, and keep track of the steps in your workflow aka “targets”.</p>
+<p>A good “target”:</p>
+<ul>
+<li>is a meaningful step in your workflow</li>
+<li>large enough to subtract a decent amount of runtime when skipped</li>
+<li>small enough that some targets can be skipped even if others need to run</li>
+</ul>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>You <strong>use a target as if it is an R object</strong> available to your in your Environment. Learn more about targets in the <a href="https://books.ropensci.org/targets/targets.html">The {targets} R package user manual Ch 6 Targets</a>.</p>
+</div>
+</div>
+</div>
+<p>The <code>_targets.R</code> script is where you define “targets” aka analysis steps. To define your targets, you do so using the <code>list()</code> and <code>tar_targets()</code> functions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># targets syntax</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_target</span>(<span class="at">name =</span> first_target,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">command =</span> some_code),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_target</span>(<span class="at">name =</span> second_target,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">command =</span> some_code),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_target</span>(<span class="at">name =</span> third_target,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">command =</span> some_code),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># minimal example</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_target</span>(<span class="at">name =</span> read_data,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">command =</span> <span class="fu">read_csv</span>(<span class="st">"path/to/data.csv"</span>)),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_target</span>(<span class="at">name =</span> clean_data,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">command =</span> <span class="fu">my_cleaning_function</span>(read_data)),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_target</span>(<span class="at">name =</span> analysis_model,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>           <span class="at">command =</span> <span class="fu">my_modeling_function</span>(clean_data)),</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
 <section id="exercise-creating-a-pipeline-using-targets" class="level2" data-number="8.4">
 <h2 data-number="8.4" class="anchored" data-anchor-id="exercise-creating-a-pipeline-using-targets"><span class="header-section-number">8.4</span> Exercise: Creating a Pipeline using <code>targets</code></h2>
+<p>In this exercise, we are going to use the <code>palmerpenguins</code> data to recreate the pipeline below.</p>
+<p><img src="images/reproducible-workflows-targets-4.png" class="img-fluid"></p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Create a new project called <code>demo_targets</code></li>
+<li>Create the following directories:
+<ol type="a">
+<li>data</li>
+<li>R</li>
+<li>figs</li>
+</ol></li>
+<li>Create a new R script called <code>functions.R</code> and save it inside the R folder</li>
+<li>Create a new <code>_targets.R</code> script using <code>targets::tar_script()</code></li>
+</ol>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code for functions.R</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create_penguin_data ----</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>create_penguin_data <span class="ot">&lt;-</span> <span class="cf">function</span>(out_path) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  penguin_data <span class="ot">&lt;-</span> palmerpenguins<span class="sc">::</span>penguins_raw <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(penguin_data, out_path)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out_path)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>} <span class="co"># EO penguin_data</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># clean_data ----</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>clean_data <span class="ot">&lt;-</span> <span class="cf">function</span>(file_path) {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  clean_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(file_path) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># keep only common species name</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">species =</span> <span class="fu">str_extract</span>(<span class="at">string =</span> species,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                            <span class="at">pattern =</span> <span class="st">"Chinstrap|Adelie|Gentoo"</span>),</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> <span class="fu">year</span>(date_egg)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># select cols of interest</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(species,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>           island,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>           flipper_length_mm,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>           body_mass_g, </span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>           sex) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>()</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(clean_data)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co"># exploratory_plot ----</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>exploratory_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(clean_data) {</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">data =</span> clean_data, <span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>                                <span class="at">y =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Adelie"</span> <span class="ot">=</span> <span class="st">"purple2"</span>,</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="st">"orange"</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="st">"cyan4"</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">+</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="cn">NULL</span>,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">"Flipper Length (mm)"</span>,</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Body Mass (g)"</span>,</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"Species"</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(<span class="st">"figs/exploratory_plot.png"</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code for _targets.R</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(targets)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/functions.R"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set target-specific options such as packages:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tar_option_set</span>(<span class="at">packages =</span> <span class="st">"tidyverse"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># End this file with a list of target objects.</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create data</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tar_target</span>(<span class="at">name =</span> file,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">command =</span> <span class="fu">create_penguin_data</span>(<span class="at">out_path =</span> <span class="st">"data/penguin_data.csv"</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">packages =</span> <span class="fu">c</span>(<span class="st">"readr"</span>, <span class="st">"janitor"</span>)),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># clean data</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tar_target</span>(<span class="at">name =</span> data,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">command =</span> <span class="fu">clean_data</span>(<span class="at">file_path =</span> file),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">packages =</span> <span class="fu">c</span>(<span class="st">"readr"</span>, <span class="st">"dplyr"</span>, <span class="st">"tidyr"</span>, <span class="st">"stringr"</span>, <span class="st">"lubridate"</span>)),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plot data</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tar_target</span>(<span class="at">name =</span> plot_data,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">command =</span> <span class="fu">exploratory_plot</span>(<span class="at">clean_data =</span> data),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">packages =</span> <span class="st">"ggplot2"</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="additional-resources" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="additional-resources"><span class="header-section-number">8.5</span> Additional Resources</h2>
+<ul>
+<li><a href="https://books.ropensci.org/targets/">The <code>targets</code> R Package User Manual</a> by the <code>targets</code> creator Will Landau</li>
+<li><a href="https://player.vimeo.com/video/700982360?h=38c890bd4f">Get started with <code>targets</code> in 4 minutes</a> video by Will Landau</li>
+</ul>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
