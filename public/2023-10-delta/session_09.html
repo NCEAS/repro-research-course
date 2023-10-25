@@ -258,9 +258,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">9.1</span> Introduction</a></li>
   <li><a href="#why-parallelism" id="toc-why-parallelism" class="nav-link" data-scroll-target="#why-parallelism"><span class="header-section-number">9.2</span> Why parallelism?</a></li>
-  <li><a href="#processors-cpus-and-cores" id="toc-processors-cpus-and-cores" class="nav-link" data-scroll-target="#processors-cpus-and-cores"><span class="header-section-number">9.3</span> Processors (CPUs) and Cores</a></li>
+  <li><a href="#processors-cpus-cores-and-threads" id="toc-processors-cpus-cores-and-threads" class="nav-link" data-scroll-target="#processors-cpus-cores-and-threads"><span class="header-section-number">9.3</span> Processors (CPUs), Cores, and Threads</a></li>
   <li><a href="#when-to-parallelize" id="toc-when-to-parallelize" class="nav-link" data-scroll-target="#when-to-parallelize"><span class="header-section-number">9.4</span> When to parallelize</a></li>
-  <li><a href="#loops-and-repetitive-tasks-using-lapply" id="toc-loops-and-repetitive-tasks-using-lapply" class="nav-link" data-scroll-target="#loops-and-repetitive-tasks-using-lapply"><span class="header-section-number">9.5</span> Loops and repetitive tasks using lapply</a></li>
+  <li><a href="#pleasingly-parallel-task-lists" id="toc-pleasingly-parallel-task-lists" class="nav-link" data-scroll-target="#pleasingly-parallel-task-lists"><span class="header-section-number">9.5</span> Pleasingly Parallel task lists</a></li>
   <li><a href="#approaches-to-parallelization" id="toc-approaches-to-parallelization" class="nav-link" data-scroll-target="#approaches-to-parallelization"><span class="header-section-number">9.6</span> Approaches to parallelization</a>
   <ul class="collapse">
   <li><a href="#parallelize-using-mclapply" id="toc-parallelize-using-mclapply" class="nav-link" data-scroll-target="#parallelize-using-mclapply"><span class="header-section-number">9.6.1</span> Parallelize using: mclapply</a></li>
@@ -314,44 +314,67 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>I/O-bound</strong>: Take too much time to read/write from disk</li>
 <li><strong>network-bound</strong>: Take too much time to transfer</li>
 </ul>
-<p>To help with <strong>cpu-bound</strong> computations, one can take advantage of modern processor architectures that provide multiple cores on a single processor, and thereby enable multiple computations to take place at the same time. In addition, some machines ship with multiple processors, allowing large computations to occur across the entire cluster of those computers. Plus, these machines also have large amounts of memory to avoid <strong>memory-bound</strong> computing jobs.</p>
+<p>To help with <strong>cpu-bound</strong> computations, one can take advantage of modern processor architectures that provide multiple cores on a single processor, and thereby enable multiple computations to take place at the same time. In addition, some machines ship with multiple processors, allowing large computations to occur across the entire set of those processors. Plus, these machines also have large amounts of memory to avoid <strong>memory-bound</strong> computing jobs.</p>
 </section>
-<section id="processors-cpus-and-cores" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="processors-cpus-and-cores"><span class="header-section-number">9.3</span> Processors (CPUs) and Cores</h2>
-<p>A modern CPU (Central Processing Unit) is at the heart of every computer. While traditional computers had a single CPU, modern computers can ship with mutliple processors, which in turn can each contain multiple cores. These processors and cores are available to perform computations.</p>
-<p>A computer with one processor may still have 4 cores (quad-core), allowing 4 computations to be executed at the same time.</p>
+<section id="processors-cpus-cores-and-threads" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="processors-cpus-cores-and-threads"><span class="header-section-number">9.3</span> Processors (CPUs), Cores, and Threads</h2>
+<p>A modern CPU (Central Processing Unit) is at the heart of every computer. While traditional computers had a single CPU, modern computers can ship with mutliple processors, each of which in turn can contain multiple cores. These processors and cores are available to perform computations. But, just what’s the difference between processors and cores? A computer with one processor may still have 4 cores (quad-core), allowing 4 (or possibly more) computations to be executed at the same time.</p>
 <p><img src="images/processor.png" class="img-fluid"></p>
+<ul>
+<li><p><a href="https://en.wikipedia.org/wiki/Microprocessor"><strong>Microprocessor</strong></a>: an integrated circuit that contains the data processing logic and control for a computer.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Multi-core_processor"><strong>Multi-core processor</strong></a>: a microprocessor containing multiple processing units (cores) on a single integrated circuit. Each core in a multi-core processor can execute program instructions at the same time.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Process_(computing)"><strong>Process</strong></a>: an instance of a computer program (including instructions, memory, and other resources) that is executed on a microprocessor.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Thread_(computing)"><strong>Thread</strong></a>: a thread of execution is the smallest sequence of program instructions that can be executed independently, and is typically a component of a process. The threads in a process can be executed concurrently and typically share the same memory space. They are faster to create than a process.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Computer_cluster"><strong>Cluster</strong></a>: a set of multiple, physically distinct computing systems, each with its own microprocessors, memory, and storage resources, connected together by a (fast) network that allows the nodes to be viewed as a single system.</p></li>
+</ul>
 <p>A typical modern computer has multiple cores, ranging from one or two in laptops to thousands in high performance compute clusters. Here we show four quad-core processors for a total of 16 cores in this machine.</p>
 <p><img src="images/processors.png" class="img-fluid"></p>
 <p>You can think of this as allowing 16 computations to happen at the same time. Theroetically, your computation would take 1/16 of the time (but only theoretically, more on that later).</p>
-<p>Historically, R has only utilized one processor, which makes it single-threaded. Which is a shame, because the 2017 MacBook Pro that I am writing this on is much more powerful than that:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@powder:~$</span> sysctl hw.ncpu hw.physicalcpu</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.ncpu:</span> 8</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.physicalcpu:</span> 4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>To interpret that output, this machine <code>powder</code> has 4 physical CPUs, each of which has two processing cores, for a total of 8 cores for computation. I’d sure like my R computations to use all of that processing power. Because its all on one machine, we can easily use <em>multicore</em> processing tools to make use of those cores. Now let’s look at the computational server <code>aurora</code> at NCEAS:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@aurora:~$</span> lscpu <span class="kw">|</span> <span class="fu">egrep</span> <span class="st">'CPU\(s\)|per core|per socket'</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CPU</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>                88</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">On-line</span> CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">list:</span>   0-87</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Thread</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> core:    2</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Core</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> socket:    22</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node0 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>     0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node1 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>     1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83,85,87</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Now that’s some compute power! Aurora has 384 GB of RAM, and ample storage. All still under the control of a single operating system.</p>
-<p>However, maybe one of these NSF-sponsored high performance computing clusters (HPC) is looking attractive about now:</p>
+<p>Historically, many languages only utilized one processor, which makes them single-threaded. Which is a shame, because the 2019 MacBook Pro that I am writing this on is much more powerful than that, and has mutliple cores that would support concurrent execution of multiple threads:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@powder:~$</span> sysctl hw.ncpu hw.physicalcpu</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.ncpu:</span> 12</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hw.physicalcpu:</span> 6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To interpret that output, this machine <code>powder</code> has 6 physical CPUs, each of which has two processing cores, for a total of 12 cores for computation. I’d sure like my computations to use all of that processing power. Because its all on one machine, we can easily use <em>multicore</em> processing tools to make use of those cores. Now let’s look at the computational server <code>included-crab</code> at NCEAS:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@included-crab:~$</span> lscpu <span class="kw">|</span> <span class="fu">egrep</span> <span class="st">'CPU\(s\)|per core|per socket'</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CPU</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>                          88</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">On-line</span> CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">list:</span>             0-87</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Thread</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> core:              1</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Core</span><span class="er">(</span><span class="ex">s</span><span class="kw">)</span> <span class="ex">per</span> socket:              1</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">NUMA</span> node0 CPU<span class="er">(</span><span class="ex">s</span><span class="kw">)</span><span class="bu">:</span>               0-87</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now that’s more compute power! <code>included-crab</code> has 384 GB of RAM, and ample storage. All still under the control of a single operating system.</p>
+<p>Finally, maybe one of these <a href="https://allocations.access-ci.org/resources">NSF-sponsored high performance computing clusters (HPC)</a> is looking attractive about now:</p>
+<div class="grid">
+<div class="g-col-6">
 <ul>
-<li><a href="https://jetstream-cloud.org/">JetStream</a>
+<li><a href="https://www.tacc.utexas.edu/systems/stampede2">Stampede2</a> at TACC
 <ul>
-<li>640 nodes, 15,360 cores, 80TB RAM</li>
+<li>4200 KNL nodes: 285,600 cores</li>
+<li>1736 SKX nodes: 83,328 cores</li>
+<li>224 ICX nodes: 17,920 cores</li>
+<li>TOTAL: <strong>386,848</strong> cores</li>
 </ul></li>
-<li><a href="">Stampede2</a> at TACC is coming online in 2017
+<li><a href="https://www.ncsa.illinois.edu/research/project-highlights/delta/">Delta</a> at NCSA
 <ul>
-<li>4200 nodes, 285,600 cores</li>
+<li>124 CPU Milan nodes (15,872 cores)</li>
+<li>100 quad A100 GPU nodes (6400 cores + 400 GPUs)</li>
+<li>100 quad A40 GPU nodes (6400 cores + 400 GPUs)</li>
+<li>5 eight-way A100 GPU nodes (640 cores + 40 GPUs):</li>
+<li>1 MI100 GPU node (128 cores + 8 GPUs)</li>
+<li>7 PB of disk-based Lustre storage</li>
+<li>3 PB of flash based storage</li>
+<li>TOTAL: <strong>29,440</strong> cores, <strong>848</strong> gpus</li>
 </ul></li>
 </ul>
+</div>
+<div class="g-col-6">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://access-ci.org/wp-content/uploads/2022/10/Delta_System.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Delta Supercomputer</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>Note that these clusters have multiple nodes (hosts), and each host has multiple cores. So this is really multiple computers clustered together to act in a coordinated fashion, but each node runs its own copy of the operating system, and is in many ways independent of the other nodes in the cluster. One way to use such a cluster would be to use just one of the nodes, and use a multi-core approach to parallelization to use all of the cores on that single machine. But to truly make use of the whole cluster, one must use parallelization tools that let us spread out our computations across multiple host nodes in the cluster.</p>
 </section>
 <section id="when-to-parallelize" class="level2" data-number="9.4">
@@ -365,44 +388,76 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>So, its important to evaluate the computational efficiency of requests, and work to ensure that additional compute resources brought to bear will pay off in terms of increased work being done. With that, let’s do some parallel computing…</p>
 </section>
-<section id="loops-and-repetitive-tasks-using-lapply" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="loops-and-repetitive-tasks-using-lapply"><span class="header-section-number">9.5</span> Loops and repetitive tasks using lapply</h2>
-<p>When you have a list of repetitive tasks, you may be able to speed it up by adding more computing power. If each task is completely independent of the others, then it is a prime candidate for executing those tasks in parallel, each on its own core. For example, let’s build a simple loop that uses sample with replacement to do a bootstrap analysis. In this case, we select <code>Sepal.Length</code> and <code>Species</code> from the <code>iris</code> dataset, subset it to 100 observations, and then iterate across 10,000 trials, each time resampling the observations with replacement. We then run a logistic regression fitting species as a function of length, and record the coefficients for each trial to be returned.</p>
+<section id="pleasingly-parallel-task-lists" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="pleasingly-parallel-task-lists"><span class="header-section-number">9.5</span> Pleasingly Parallel task lists</h2>
+<p>When you have a list of repetitive tasks, you may be able to speed it up by adding more computing power. If each task is completely independent of the others, then it is a prime candidate for executing those tasks in parallel, each on its own core. For example, let’s build a simple loop that uses sample with replacement to do a bootstrap analysis. In this case, we select <code>bill_length_mm</code> and <code>species</code> from the <code>palmerpenguins</code> dataset, randomly subset it to 100 observations, and then iterate across 3,000 trials, each time resampling the observations with replacement. We then run a logistic regression fitting species as a function of length, and record the coefficients for each trial to be returned.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">"setosa"</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  trial <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>(trial <span class="sc">&lt;=</span> trials) {</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res, r)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    trial <span class="ot">&lt;-</span> trial <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>bill_length <span class="ot">&lt;-</span> penguins <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(species, bill_length_mm) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bill_length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   user  system elapsed 
- 23.267   0.055  23.332 </code></pre>
+<pre><code>  species bill_length_mm
+1  Adelie           39.1
+2  Adelie           39.5
+3  Adelie           40.3
+4  Adelie           36.7
+5  Adelie           39.3
+6  Adelie           38.9</code></pre>
 </div>
 </div>
-<p>The issue with this loop is that we execute each trial sequentially, which means that only one of our 8 processors on this machine are in use. In order to exploit parallelism, we need to be able to dispatch our tasks as functions, with one task going to each processor. To do that, we need to convert our task to a function, and then use the <code>*apply()</code> family of R functions to apply that function to all of the members of a set. In R, using <code>apply</code> used to be faster than the equivalent code in a loop, but now they are similar due to optimizations in R loop handling. However, using the function allows us to later take advantage of other approaches to parallelization. Here’s the same code rewritten to use <code>lapply()</code>, which applies a function to each of the members of a list (in this case the trials we want to run):</p>
+<p>Given this data, we can use a general linear model to estimate bill length as a function of species, where we use a loop to bootstrap over repeated subsamples of this dataset.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">"setosa"</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>boot_fx <span class="ot">&lt;-</span> <span class="cf">function</span>(trial) {</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(), r)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(trials, boot_fx)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">3000</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  trial <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>(trial <span class="sc">&lt;=</span> trials) {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(bill_length[index,<span class="dv">1</span>]<span class="sc">~</span>bill_length[index,<span class="dv">2</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(res, r)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    trial <span class="ot">&lt;-</span> trial <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
- 24.819   0.008  24.836 </code></pre>
+ 10.104   0.048  10.154 </code></pre>
+</div>
+</div>
+<p>The issue with this loop is that we execute each trial sequentially, which means that only one of our processors on this machine are in use. In order to exploit parallelism, we need to be able to dispatch our tasks as functions, with one task going to each processor. To do that, we need to convert our task to a function, and then use the <code>*apply()</code> family of R functions to apply that function to all of the members of a set. In R, using <code>apply</code> used to be faster than the equivalent code in a loop, but now they are similar due to optimizations in R loop handling. However, using the function allows us to later take advantage of other approaches to parallelization. Here’s the same code rewritten to use <code>lapply()</code>, which applies a function to each of the members of a list (in this case the trials we want to run):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>boot_fx <span class="ot">&lt;-</span> <span class="cf">function</span>(trial) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(bill_length[ind,<span class="dv">1</span>]<span class="sc">~</span>bill_length[ind,<span class="dv">2</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(), r)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, trials)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(trials, boot_fx)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+ 11.104   0.004  11.116 </code></pre>
 </div>
 </div>
 </section>
@@ -419,58 +474,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="parallelize-using-mclapply" class="level3" data-number="9.6.1">
 <h3 data-number="9.6.1" class="anchored" data-anchor-id="parallelize-using-mclapply"><span class="header-section-number">9.6.1</span> Parallelize using: mclapply</h3>
-<p>The <code>parallel</code> library can be used to send tasks (encoded as function calls) to each of the processing cores on your machine in parallel. This is done by using the <code>parallel::mclapply</code> function, which is analogous to <code>lapply</code>, but distributes the tasks to multiple processors. <code>mclapply</code> gathers up the responses from each of these function calls, and returns a list of responses that is the same length as the list or vector of input data (one return per input item).</p>
+<p>The <code>parallel</code> library can be used to send tasks (encoded as function calls) to each of the processing cores on your machine in parallel. This is done by using the <code>parallel::mclapply</code> function, which is analogous to <code>lapply</code>, but distributes the tasks to multiple processor cores. <code>mclapply</code> gathers up the responses from each of these function calls, and returns a list of responses that is the same length as the list or vector of input data (one return per input item). Now let’s demonstrate with our bootstrap example. First, determine how many cores are available on this machine:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>starts <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">100</span>, <span class="dv">40</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>fx <span class="ot">&lt;-</span> <span class="cf">function</span>(nstart) <span class="fu">kmeans</span>(Boston, <span class="dv">4</span>, <span class="at">nstart=</span>nstart)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>numCores <span class="ot">&lt;-</span> <span class="fu">detectCores</span>()</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>numCores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>numCores <span class="ot">&lt;-</span> <span class="fu">detectCores</span>()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>numCores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(starts, fx)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, using that, run our 3000 bootstrap samples with the same function, but this time parallel on those 2 cores.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  res_mca <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(trials, boot_fx, <span class="at">mc.cores =</span> numCores)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  1.353   0.000   1.353 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(starts, fx, <span class="at">mc.cores =</span> numCores)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   user  system elapsed 
-  0.688   0.111   0.847 </code></pre>
+  0.008   0.012   5.687 </code></pre>
 </div>
 </div>
-<p>Now let’s demonstrate with our bootstrap example: ::: {.cell}</p>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">"setosa"</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10000</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>boot_fx <span class="ot">&lt;-</span> <span class="cf">function</span>(trial) {</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(result1)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(), r)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">mclapply</span>(trials, boot_fx, <span class="at">mc.cores =</span> numCores)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   user  system elapsed 
- 12.420   0.136  12.754 </code></pre>
-</div>
-<p>:::</p>
 </section>
 <section id="parallelize-using-foreach-and-doparallel" class="level3" data-number="9.6.2">
 <h3 data-number="9.6.2" class="anchored" data-anchor-id="parallelize-using-foreach-and-doparallel"><span class="header-section-number">9.6.2</span> Parallelize using: foreach and doParallel</h3>
 <p>The normal <code>for</code> loop in R looks like:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">sqrt</span>(i))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">sqrt</span>(i))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1
 [1] 1.414214
@@ -478,10 +508,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The <code>foreach</code> method is similar, but uses the sequential <code>%do%</code> operator to indicate an expression to run. Note the difference in the returned data structure. ::: {.cell}</p>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%do%</span> {</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%do%</span> {</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 1
@@ -494,15 +524,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>:::</p>
 <p>In addition, <code>foreach</code> supports a parallelizable operator <code>%dopar%</code> from the <code>doParallel</code> package. This allows each iteration through the loop to use different cores or different machines in a cluster. Here, we demonstrate with using all the cores on the current machine: ::: {.cell}</p>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: iterators</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(numCores)  <span class="co"># use multicore, set to the number of our cores</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%dopar%</span> {</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(numCores)  <span class="co"># use multicore, set to the number of our cores</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">%dopar%</span> {</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 1
@@ -513,19 +543,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 [[3]]
 [1] 1.732051</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To simplify output, foreach has the .combine parameter that can simplify return values</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a vector</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine=</span>c) <span class="sc">%dopar%</span> {</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To simplify output, foreach has the .combine parameter that can simplify return values</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a vector</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine=</span>c) <span class="sc">%dopar%</span> {</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.000000 1.414214 1.732051</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a data frame</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine=</span>rbind) <span class="sc">%dopar%</span> {</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Return a data frame</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">foreach</span> (<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine=</span>rbind) <span class="sc">%dopar%</span> {</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sqrt</span>(i)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             [,1]
 result.1 1.000000
@@ -535,35 +565,34 @@ result.3 1.732051</code></pre>
 <p>:::</p>
 <p>The <a href="https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf">doParallel vignette</a> on CRAN shows a much more realistic example, where one can use `%dopar% to parallelize a bootstrap analysis where a data set is resampled 10,000 times and the analysis is rerun on each sample, and then the results combined:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's use the iris data set to do a parallel bootstrap</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># From the doParallel vignette, but slightly modified</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> iris[<span class="fu">which</span>(iris[,<span class="dv">5</span>] <span class="sc">!=</span> <span class="st">"setosa"</span>), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)]</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%dopar%</span> {</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefficients</span>(result1)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's use the iris data set to do a parallel bootstrap</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># From the doParallel vignette, but slightly modified</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">3000</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%dopar%</span> {</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(bill_length[ind,<span class="dv">1</span>]<span class="sc">~</span>bill_length[ind,<span class="dv">2</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefficients</span>(result1)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
- 21.638   0.224  11.647 </code></pre>
+ 10.538   0.328   5.835 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And compare that to what it takes to do the same analysis in serial</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%do%</span> {</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(x[ind,<span class="dv">2</span>]<span class="sc">~</span>x[ind,<span class="dv">1</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefficients</span>(result1)</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And compare that to what it takes to do the same analysis in serial</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="fu">icount</span>(trials), <span class="at">.combine=</span>rbind) <span class="sc">%do%</span> {</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">100</span>, <span class="dv">100</span>, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    result1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(bill_length[ind,<span class="dv">1</span>]<span class="sc">~</span>bill_length[ind,<span class="dv">2</span>], <span class="at">family=</span><span class="fu">binomial</span>(logit))</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coefficients</span>(result1)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
- 22.840   0.000  22.845 </code></pre>
+ 10.530   0.012  10.544 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># When you're done, clean up the cluster</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># When you're done, clean up the cluster</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
