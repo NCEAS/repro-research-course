@@ -8,8 +8,6 @@ tags: ["Collaborative", "openS"]
 date: 2023-08-21
 ---
 
-*openS was previously called Open Science for Synthesis (OSS)* 
-
 **Dates**: August 21-23, 2023 <br>
 **Location**: NCEAS <br>
 **Venue**: Santa Barbara, CA
@@ -17,6 +15,8 @@ date: 2023-08-21
 ![](images/logo/LearningHubHexSketch.png){fig-align="left"}
 
 ![](images/logo/usgs-logo.png){fig-align="right"}
+
+*openS was previously called Open Science for Synthesis (OSS)*
 
 The NCEAS openS Program consists of three 1-week long workshops, geared towards early career researchers. Participants engage in a mix of lectures, exercises, and synthesis research activities to conduct synthesis science and implement best practices in open data science.
 

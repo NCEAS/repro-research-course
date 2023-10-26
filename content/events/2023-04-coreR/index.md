@@ -8,11 +8,11 @@ tags: ["Short Course"]
 date: 2023-04-03
 ---
 
-*Previously called the Reproducible Research Techniques for Synthesis course*
-
 __Dates__: April 3-7, 2023<br>
 __Location__: NCEAS <br>
 __Venue__: Santa Barbara, CA
+
+*Previously called the Reproducible Research Techniques for Synthesis course*
 
 A five-day immersion in R programming for environmental data science. Researchers will gain experience with essential data science tools and best practices to increase their capacity as collaborators, reproducible coders, and open scientists. This course is taught both in-person and virtually.
 
