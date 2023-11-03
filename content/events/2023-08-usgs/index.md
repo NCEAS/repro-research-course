@@ -12,10 +12,6 @@ date: 2023-08-21
 **Location**: NCEAS <br>
 **Venue**: Santa Barbara, CA
 
-![](images/logo/LearningHubHexSketch.png){fig-align="left"}
-
-![](images/logo/usgs-logo.png){fig-align="right"}
-
 *openS was previously called Open Science for Synthesis (OSS)*
 
 The NCEAS openS Program consists of three 1-week long workshops, geared towards early career researchers. Participants engage in a mix of lectures, exercises, and synthesis research activities to conduct synthesis science and implement best practices in open data science.
@@ -49,3 +45,9 @@ Session Four: add theme
 |Halina Do-Linh | dolinh@nceas.ucsb.edu|
 |Camila Vargas Poulsen | vargas-poulsen@nceas.ucsb.edu |
 
+
+## Acknowledgements
+
+Work was supported by many additional contributors including:
+
+Ben Bolker, Amber E. Budden, Julien Brun, Natasha Haycock-Chavez, S. Jeanette Clark, Samantha Csik, Julie Lowndes, Stephanie Hampton, Matthew B. Jones, Samanta Katz, Erin McLean, Bryce Mecum, Deanna Pennington, Karthik Ram, Jim Regetz, Tracy Teal, Daphne Virlar-Knight, Leah Wasser.
