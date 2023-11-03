@@ -27,7 +27,6 @@ A five-day immersion in R programming for environmental data science. Researcher
 |-------------|--------------------|
 |Halina Do-Linh | dolinh@nceas.ucsb.edu|
 |Camila Vargas Poulsen | vargas-poulsen@nceas.ucsb.edu |
-|Daphne Virlar-Knight| virlar-knight@nceas.ucsb.edu |
 
 ## Acknowledgements
 
