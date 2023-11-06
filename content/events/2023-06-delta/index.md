@@ -10,7 +10,7 @@ date: 2023-06-26
 
 ![](DSP_Logo_Horizontal.jpg)
 
-In collaboration with the Delta Science Program we are running a 12 month facilitated research synthesis activity, supported by 3 one-week intensive training events. Curriculum material will focus on introducing Delta Researchers to best practices in, and application of, scientific computing and
+In collaboration with the Delta Science Program, we are running a 12-month facilitated research synthesis activity, supported by 3 one-week intensive training events. Curriculum material will focus on introducing Delta Researchers to best practices in, and application of, scientific computing and
 scientific software for reproducible science. In addition to developing and delivering learning curriculum, this collaboration will include the provision of data consulting, synthesis facilitation, and a remote workshop to conclude the group synthesis activities.
 
 The learning curricula will focus on techniques for data management, scientific programming, and collaboration techniques through the use of open-source, community-supported tools. Participants will learn skills for rapid and robust use of open source scientific software. These approaches will be explored and applied to scientific synthesis projects related to the Delta ecosystem.
@@ -29,7 +29,7 @@ Week 3: October 23-27, 2023. UC Davis.
 
 [Materials Week 2](https://learning.nceas.ucsb.edu/2023-08-delta/)
 
-<!--[Materials Week 3](https://learning.nceas.ucsb.edu/2023-10-delta/) -->
+[Materials Week 3](https://learning.nceas.ucsb.edu/2023-10-delta/)
 
 
 ## Instructors
