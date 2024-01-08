@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>UCSB Faculty Seminar Series: Grow Your Data &amp; Team Science Skills - 4&nbsp; Appendix</title>
+<title>UCSB Faculty Seminar Series: Grow Your Data &amp; Team Science Skills - 4&nbsp; Managing Dependencies</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,6 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./session_05.html" rel="next">
 <link href="./session_03.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -75,7 +76,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_04.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_04.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Managing Dependencies</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -88,7 +89,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix</span></h1>
+      <h1 class="title">Managing Dependencies in R projects</h1>
                       </div>
   </div>
     
@@ -148,7 +149,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_04.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Appendix</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Managing Dependencies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Check and Set your PAT</span></span></a>
   </div>
 </li>
     </ul>
@@ -161,7 +168,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#steps-to-check-and-set-your-personal-access-token-pat" id="toc-steps-to-check-and-set-your-personal-access-token-pat" class="nav-link active" data-scroll-target="#steps-to-check-and-set-your-personal-access-token-pat"><span class="header-section-number">4.1</span> Steps to check and set your Personal Access Token (PAT)</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">4.1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-dependency" id="toc-what-is-a-dependency" class="nav-link" data-scroll-target="#what-is-a-dependency"><span class="header-section-number">4.1.1</span> What is a dependency?</a></li>
+  <li><a href="#dependencies-in-computational-research" id="toc-dependencies-in-computational-research" class="nav-link" data-scroll-target="#dependencies-in-computational-research"><span class="header-section-number">4.1.2</span> Dependencies in Computational Research</a></li>
+  <li><a href="#dependency-hell-exemplified" id="toc-dependency-hell-exemplified" class="nav-link" data-scroll-target="#dependency-hell-exemplified"><span class="header-section-number">4.1.3</span> “Dependency Hell” Exemplified</a></li>
+  <li><a href="#understanding-the-r-system" id="toc-understanding-the-r-system" class="nav-link" data-scroll-target="#understanding-the-r-system"><span class="header-section-number">4.1.4</span> Understanding the R System</a></li>
+  </ul></li>
+  <li><a href="#strategies-to-mitigate-dependency-issues" id="toc-strategies-to-mitigate-dependency-issues" class="nav-link" data-scroll-target="#strategies-to-mitigate-dependency-issues"><span class="header-section-number">4.2</span> Strategies to mitigate dependency issues</a>
+  <ul class="collapse">
+  <li><a href="#dependency-management-in-r" id="toc-dependency-management-in-r" class="nav-link" data-scroll-target="#dependency-management-in-r"><span class="header-section-number">4.2.1</span> Dependency Management in R</a></li>
+  </ul></li>
+  <li><a href="#final-considerations" id="toc-final-considerations" class="nav-link" data-scroll-target="#final-considerations"><span class="header-section-number">4.3</span> Final Considerations</a></li>
   </ul>
 </nav>
     </div>
@@ -171,59 +189,428 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="steps-to-check-and-set-your-personal-access-token-pat" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="steps-to-check-and-set-your-personal-access-token-pat"><span class="header-section-number">4.1</span> Steps to check and set your Personal Access Token (PAT)</h2>
-<ol type="1">
-<li>Log in to <a href="https://included-crab.nceas.ucsb.edu/">included-crab</a></li>
-<li>Open the <code>Rproj</code> you are working in</li>
-<li>In the console run: <code>usethis::git_sitrep()</code></li>
-</ol>
+<section id="introduction" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
+<p>Ensuring research reproducibility extends beyond data and code sharing; it encompasses the entire computational setup used in the research. Understanding the causes of issues associated with computing environment dependencies and learning how to overcome them is crucial to achieving open science. Therefore, in this section, we will:</p>
+<ul>
+<li><p>Identify the root causes of “dependency hell” in computational research.</p></li>
+<li><p>Discuss the significance of enhancing reproducibility in R-based projects.</p></li>
+<li><p>Outline practices to improve the reproducibility of R-based projects.</p></li>
+<li><p>Implement effective strategies to mitigate dependency issues.</p></li>
+</ul>
+<section id="what-is-a-dependency" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="what-is-a-dependency"><span class="header-section-number">4.1.1</span> What is a dependency?</h3>
+<p>A dependency represents a directional connection between two or more elements, indicating a logical or sequential relationship among them. If any of these elements fail, it poses a risk to both the efficiency of the process and the intended outcome.</p>
+</section>
+<section id="dependencies-in-computational-research" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="dependencies-in-computational-research"><span class="header-section-number">4.1.2</span> Dependencies in Computational Research</h3>
+<p>Reusing code for reproducing results and visualizations isn’t always a straightforward ’plug-and-play activity. Complexity arises from the intricate web of dependencies inherent in computational research. These dependencies encompass not only the code itself but also packages, data sources, environment configurations, and nuanced interconnections between these components.</p>
+<p>Think of dependencies as building blocks in a towering structure, akin to a complex and intricate skyscraper. Each block represents a crucial element contributing to the overall stability and functionality of the structure. In this metaphor, the foundation of the skyscraper represents the core components, such as programming languages and operating systems. As you ascend the structure, each floor corresponds to a layer of dependencies, with one layer relying on the stability and support of the layers beneath it. If one block is weak or missing, it can compromise the integrity of the entire building. Therefore, managing dependencies becomes critical for open science.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/git_sitrep.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="images/lego-tower.jpeg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Dependency Fail. Google Images.</figcaption>
 </figure>
 </div>
-<ol start="4" type="1">
-<li>If your Personal Access Token is <unset>, you have to go ahead and reset it following the instructions on how to Set (or reset) your PAT.</unset></li>
-</ol>
+<p>Dependencies can generally be classified as <em>development</em> or <em>runtime</em>. While the former is more of a concern for software developers and beyond the scope of this section, <em>runtime</em> dependencies directly affect researchers and their ability to perform computations to advance or inspect research findings. <em>Runtime</em> dependencies represent components that applications rely on during execution, essential for proper software functionality.</p>
+<p>In computational research, dependency refers to any external resource, software, or component necessary for a program, algorithm, or analysis to function correctly. Dependencies encompass libraries/packages, specific software versions, and even hardware configurations needed for executing computational tasks or software applications.</p>
+<p>Types of dependencies encountered in R-based projects encompass different layers, including:</p>
+<ul>
+<li><p><strong>Operating system</strong>: The computer’s operating system.</p></li>
+<li><p><strong>System configurations</strong>: This includes library locations and the search path used to find files and libraries.</p></li>
+<li><p><strong>System-level libraries</strong>: Non-R libraries or R packages might depend on are listed as System Requirements in R package DESCRIPTION files.</p></li>
+<li><p><strong>R and R packages</strong>: Such as the version of R being used, along with packages like ggplot2 and dplyr.</p></li>
+</ul>
+<p>Quite a list, isn’t it? Each project has its own set of dependencies, making accurate documentation essential! When someone attempts to reproduce your analysis on a different computer, any variation in these elements from your own system during your last analysis could hinder their ability to replicate your work. This discrepancy undermines the principles and motivations behind openly sharing data and code.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/unset_token.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="images/meme-dependency.png" class="img-fluid figure-img" width="500"></p>
+<figcaption class="figure-caption">Created with imgflip.com</figcaption>
 </figure>
 </div>
-<p><strong>5. Set (or reset) your PAT</strong></p>
+<p>Don’t panic! We’ll cover some recommended practices to mitigate this issue in a bit.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Setting up your PAT
+Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li>Run <code>usethis::create_github_token()</code> in the Console.</li>
-<li>A new browser window should open up to GitHub, showing all the scopes options. You can review the scopes, but you don’t need to worry about which ones to select this time. This function automatically pre-selects some recommended scopes. <strong>Go ahead and scroll to the bottom and click “Generate Token”</strong>.</li>
-<li>Copy the generated token.</li>
-<li>Back in RStudio, run <code>gitcreds::gitcreds_set()</code> in the Console.</li>
-<li>Paste your PAT when the prompt asks for it.</li>
-<li>Last thing, run <code>usethis::git_sitrep()</code> in the Console to check your <code>Git</code> configuration and that you’ve successful stored your PAT.</li>
-</ol>
+<p><strong><em>Adding package dependencies</em></strong></p>
+<p>When installing packages and not using the GUI in RStudio/Posit, it’s a good practice to include the following syntax in your command:</p>
+<p><strong><code>install.packages("package name", dependencies = TRUE)</code></strong></p>
+<p>This ensures that all required dependencies associated with your installed package will be included.</p>
 </div>
 </div>
-<ol start="6" type="1">
-<li>Check your PAT is <discovered>.</discovered></li>
-</ol>
-<ul>
-<li>In the console run <code>usethis::git_sitrep()</code></li>
-<li>Expect to see this result:</li>
-</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Other recommendations for installing/updating packages:</em></strong></p>
+<p>At any point in the console, R may ask if you want to <strong>“update any old packages by asking,” Update all/some/none? [a/s/n]:“. If you see this, type”a” at the prompt and hit Enter</strong> to update any old packages. <em>Updating packages can sometimes take a while to run.</em> If you are short on time, you can choose “n” and proceed. Without updates, you run the risk of conflicts between your old packages and the ones from your updated R version later down the road.</p>
+<p>If you see a message in your console along the lines of “binary version available, but the source version is later”, followed by a question, <strong>“Do you want to install from sources the package which needs compilation? y/n”, type n for no, and hit enter.</strong></p>
+</div>
+</div>
+</section>
+<section id="dependency-hell-exemplified" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="dependency-hell-exemplified"><span class="header-section-number">4.1.3</span> “Dependency Hell” Exemplified</h3>
+<p>“Dependency hell” is a term frequently used to describe a prevalent issue in code reproducibility. It occurs when a researcher tries to execute code that relies on external libraries, packages, or specific software versions. These dependencies can further branch into their own dependencies, forming a complex network of interconnected elements.</p>
+<p>R relies on an extensive library of packages, a major benefit of offering diverse functionalities without users needing to create functions from scratch. Yet, harnessing these packages can present challenges. Starting the process by scripting your analysis is a positive step, but it doesn’t guarantee that you or someone else can accurately replicate your work in the future.</p>
+<p>Over time, these libraries, packages, and software may evolve, introducing new versions and additional dependencies or even becoming outdated and unsupported. This evolution can lead to script failures and irreproducible research outcomes.</p>
+<p>To illustrate this problem, consider Ruby and Avi’s example. Despite using identical code and data, the software packages installed on their computers have different versions. Ruby’s scripts may break or yield different results in Avi’s computing environment.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/discovered_token.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="images/rubyavi-example.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Image CC BY, retrieved from Reproducibility In Cancer Informatics</figcaption>
 </figure>
 </div>
+<p>Diverse computing setups aren’t just complex to disentangle; they also influence research outcomes. When someone else attempts to reproduce your analysis on a different computer, any variation in these elements from what existed on your system during your last analysis may prevent them from replicating your work. This issue is more common than perceived and isn’t limited to involving a second person, project, or different computer. Reproducibility issues can also arise in your own projects after system upgrades, as noted below:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.reddit.com/r/statistics/comments/sqp4lk/q_results_changed_after_updating_r_version_what/"><img src="images/issue-R-updates.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Reddit - R/Statistics (2018)</figcaption>
+</figure>
+</div>
+<p>Very frustrating, isn’t it? While it’s challenging to draw firm conclusions about the causes for those discrepancies based on the limited information shared, <a href="https://www.reddit.com/r/statistics/comments/sqp4lk/q_results_changed_after_updating_r_version_what/">most responses from the community</a> suggest adopting reproducibility practices and verifying package updates as a first step. Before we delve into alternatives to circumvent dependency issues and enhance reproducibility in R-based projects, let’s first recap how the R system operates in handling libraries, projects, and their packages.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Caution about updates</em></strong></p>
+<p>R packages aren’t guaranteed to be compatible across minor R versions. Therefore, it’s generally a good idea to reinstall all packages from scratch when upgrading from one version to another (e.g., R 3.5 to 3.6). Only patch version upgrades maintain backward compatibility.</p>
+</div>
+</div>
+<p>Check it out our handout on this topic.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/DLS-202310-Dependencies.png" class="img-fluid figure-img" width="300"></p>
+<figcaption class="figure-caption">Source: UCSB Library Research Data Services - <a href="https://rcd.ucsb.edu/data-literacy-series">Data Literacy Series</a>, 11/2023)</figcaption>
+</figure>
+</div>
+</section>
+<section id="understanding-the-r-system" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="understanding-the-r-system"><span class="header-section-number">4.1.4</span> Understanding the R System</h3>
+<p>In R, packages are collections of R functions, data, and compiled code in a well-defined format, created to add specific functionality. The directories in R where the packages are stored are called libraries. The terms “package” and “library” are sometimes used interchangeably and can cause confusion because the <code>library()</code> function is used to load a package. While this terminological issue hasn’t been addressed, let’s understand how libraries work in R and how they impact your projects.</p>
+<p>A repository is a source of packages; <code>install.packages()</code> gets a package from a repository (usually somewhere on the Internet) and puts it in a library (a directory on your computer). The most important repository is <a href="https://cran.r-project.org">The Comprehensive R Archive Network (CRAN)</a>, available for installing packages in just about every R session. Other freely available repositories include <a href="https://bioconductor.org">Bioconductor</a>, the <a href="https://packagemanager.posit.co">Posit Public Package Manager</a>, and <a href="https://r-universe.dev/search">R Universe</a>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Packages living elsewhere?</em></strong></p>
+<p>To download R packages from outside CRAN, you should indicate the repository address as shown below:</p>
+<p><code>install.packages("MPAgenomics", repos = "http://R-Forge.R-project.org", dependencies = TRUE)</code></p>
+</div>
+</div>
+<p>By default, R utilizes a top-level system library for installing base packages and a user library for the packages installed by individual users. The key difference lies in accessibility: the system-level library is available for all users on your system, whereas the other library is exclusively for your use.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/user-libraries.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">User Library</figcaption>
+</figure>
+</div>
+<p>Can you identify the potential problem here? It’s very likely that you’ll have multiple projects with unique dependencies but calling packages from the same library. Consequently, when installing a new package version in R, it automatically replaces the previous version in the user library. This library, shared across all projects by default, enforces the latest installed version of a particular package across all projects. Consequently, projects with code relying on different versions of the same package might break.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Know your library path!</em></strong></p>
+<p>It’s a good practice to know your library path. You can check the location by running <code>.libPaths()</code> in your console.</p>
+<p>Give it a try! What’s your current library path?</p>
+</div>
+</div>
+</section>
+</section>
+<section id="strategies-to-mitigate-dependency-issues" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="strategies-to-mitigate-dependency-issues"><span class="header-section-number">4.2</span> Strategies to mitigate dependency issues</h2>
+<p>Effectively managing dependencies is crucial to ensure the reproducibility and reliability of research reliant on code. Incorporating packages into our code directly ties the code’s execution to these packages. When sharing our code, others must install the required packages for proper functionality. However, complications arise when code written with an older package version encounters an updated version during installation.</p>
+<p>Differences in functionality between versions may emerge, posing challenges not just for others using our code but also for those revisiting or transferring code to different environments, such as a year after creation, following R reinstallation, or when changing computing devices.</p>
+<p>Packages undergo continuous maintenance, potentially altering functions or behaving differently from their initial use. Sometimes, code might break due to changes in indirectly linked packages that our used package relies upon, despite not being directly loaded. While keeping software updated is advisable, updating packages can cause unexpected disruptions and considerable frustration.</p>
+<p>To mitigate these frustrations, adopting dependency management strategies is essential. There are various strategies to address the dependency problem for others and your future self. We’ll describe both minimal and robust approaches to achieve this. Broadly speaking, we recommend:</p>
+<ol type="1">
+<li><p>Document and share information about your computing environment (i.e., operating system, software, and versions).</p></li>
+<li><p>Record all used packages and their versions.</p></li>
+<li><p>Employ dependency management systems and virtual environments to automate and streamline the aforementioned steps.</p></li>
+<li><p>Consider using containers to capture dependencies and offer a consistent runtime environment.</p></li>
+</ol>
+<p>We’ll delve into practical approaches to adopt these recommendations for R-based projects.</p>
+<section id="dependency-management-in-r" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="dependency-management-in-r"><span class="header-section-number">4.2.1</span> Dependency Management in R</h3>
+<p>Having gained insight into the underlying factors contributing to dependency challenges in computational research, let’s explore methods to implement the aforementioned strategies.</p>
+<section id="provide-a-snapshot-of-your-computing-environment-with-session-info" class="level4" data-number="4.2.1.1">
+<h4 data-number="4.2.1.1" class="anchored" data-anchor-id="provide-a-snapshot-of-your-computing-environment-with-session-info"><span class="header-section-number">4.2.1.1</span> <strong><em>Provide a Snapshot of Your Computing Environment with</em></strong> <strong><code>Session Info</code></strong></h4>
+<p>Documenting your system configuration and all necessary packages with their versions is crucial to assisting others and your future self. Session info offers valuable clues in case results aren’t reproducible. At a minimum, running <strong><code>sessionInfo()</code></strong> and documenting that information in your README within your repository or project folder is recommended. However, this might be less useful for .R scripts (unless you save the function output to a separate file). It also doesn’t provide executable code for others to install the requirements.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Get the Session Info for your Project</em></strong></p>
+<p>Open your most current project and get your session info if you haven’t yet.</p>
+</div>
+</div>
+</section>
+<section id="ease-the-hurdle-of-dependency-installations-by-including-an-install.r-script" class="level4" data-number="4.2.1.2">
+<h4 data-number="4.2.1.2" class="anchored" data-anchor-id="ease-the-hurdle-of-dependency-installations-by-including-an-install.r-script"><span class="header-section-number">4.2.1.2</span> <strong>Ease the hurdle of dependency installations by including an <code>install.R</code> script</strong></h4>
+<p>A slightly improved yet not very robust method of managing R dependencies involves including an executable install.R script containing commands to install all required dependencies. But why might this approach not be ideal?</p>
+<p>As observed, R’s default library settings can lead to issues. The problem with this approach arises from managing multiple projects at different stages, each with unique dependencies. Every time you start a new project and use the <strong><code>install.packages()</code></strong> function in R, you’ll fetch the latest package version available in CRAN or another repository, reinstall it and potentially replace the package in your environment. This action may break other projects. This is where <strong><code>renv</code></strong> proves advantageous!</p>
+</section>
+<section id="pack-package-dependencies-with-renv" class="level4" data-number="4.2.1.3">
+<h4 data-number="4.2.1.3" class="anchored" data-anchor-id="pack-package-dependencies-with-renv"><span class="header-section-number">4.2.1.3</span> <strong>Pack p<em>ackage</em> dependencies with <code>renv</code></strong></h4>
+<p><img src="images/renv-hexsticker.png" class="img-fluid" width="150"></p>
+<p>The <strong><code>renv</code></strong> package (<a href="https://rstudio.github.io/renv" class="uri">https://rstudio.github.io/renv</a>), short for ‘Reproducible ENVironment,’ aids in setting up R projects and managing dependencies to maintain your project:</p>
+<ul>
+<li><p><strong>Isolated (in a positive sense):</strong> Enables adding or updating a package in one project without impacting other projects, achieved by creating separate libraries for each project.</p></li>
+<li><p><strong>Portable:</strong> Simplifies moving your R projects across computers and platforms, streamlining the installation of necessary packages.</p></li>
+<li><p><strong>Reproducible:</strong> Logs precise package versions you rely on, ensuring consistent installations wherever you work.</p></li>
+</ul>
+<p><strong><code>renv</code></strong> establishes a local project library for each project, encapsulating dependencies. This allows easy re-running of results for each project using original package versions. Consequently, you can work on multiple projects without affecting one another and effortlessly share your project and its dependencies for others to reproduce.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/project-libraries.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Renv Project Libraries</figcaption>
+</figure>
+</div>
+<p>Before delving into how renv works, it’s important to mention that there are various ways to utilize it—either during the initial project creation or later through RStudio’s GUI or the command line. When creating a new project in RStudio, you can check the box as shown below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/new-project-renv.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>If you happen to overlook that step or collaborate with someone who has not set up <strong><code>renv</code></strong> for the project, you can still do so by selecting <code>Tools &gt; Project Options &gt; Environments</code>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/renv-gui-environments.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>Or check the box to use <code>renv</code> or use the command line:</p>
+<pre><code>install.packages("renv")
+library(renv)
+renv::init()</code></pre>
+<p>By following any of these approaches, <code>renv</code> establishes your reproducible environment and generates a set of files we will look at in a bit.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Your turn!</em></strong></p>
+<p>Now that you know the commands, initiate <code>renv</code> for our example project.</p>
+</div>
+</div>
+<p>You should also see a <code>renv</code> icon showing on the packages tab.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/renv-package-tab.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p><strong><em>More on</em></strong> <strong><code>Renv</code><em>Files</em></strong></p>
+<p>After initiating <code>renv</code> you will notice some new files and directories added to your project.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/renv-files.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<ul>
+<li><p>A project R profile, <code>.Rprofile</code>. This file is run automatically every time you start R (in that project), and <code>renv</code> uses it to configure your R session to use the project library. It calls the <code>renv/activate.R</code> file. This ensures that once you turn on renv for a project, it stays on until you turn it off.</p></li>
+<li><p><code>renv/library/*</code> – Folder with many subfolders – contains all packages currently used by your project.</p></li>
+<li><p>The lockfile, <code>renv.lock</code> file in JSON format, which records metadata about every package that can be re-installed on a new machine. This is the key ingredient that makes renv work.</p></li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Your turn!</em></strong></p>
+<p>Check your <code>renv.lock</code> to see how many packages are there.</p>
+</div>
+</div>
+<p>One key reason to use <strong><code>renv</code></strong> is to facilitate code sharing, ensuring everyone accesses the same package versions as you. Sharing these files allows others to replicate your work. As mentioned earlier, you’ll initiate this process by calling <strong><code>renv::init()</code></strong>. Next, you’ll need to commit <strong><code>renv.lock</code></strong>, <strong><code>.Rprofile</code></strong>, <strong><code>renv/settings.json</code></strong>, and <strong><code>renv/activate.R</code></strong> to version control, ensuring others can replicate your project environment. It’s worth noting that <strong><code>renv</code></strong> also generates a <strong><code>.gitignore</code></strong> file, streamlining the process for Git users and preventing others from importing unnecessary files.</p>
+<p>Whenever someone opens this project on their machine, <strong><code>renv</code></strong> will automatically bootstrap itself, downloading and installing the required <strong><code>renv</code></strong> version. It will also prompt them to download and install all necessary packages.</p>
+<p><strong><em>Working with renv</em></strong></p>
+<p>Besides <code>renv::init()</code>, renv’s workflow include other key functions such as: <code>renv::snapshot()</code>, <code>renv::status()</code> and <code>renv::restore()</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://rstudio.github.io/renv/articles/renv.html"><img src="images/renv-workflow.png" class="img-fluid figure-img" width="500"></a></p>
+<figcaption class="figure-caption">Renv workflow and functions.</figcaption>
+</figure>
+</div>
+<p><strong><em>Step 1:</em></strong> Initiate <code>renv</code> for a new project with <code>renv::init()</code></p>
+<p><strong><em>Step 2:</em></strong> Work on your project and add, remove or update packages as needed using the functions below:</p>
+<ul>
+<li><p><code>renv::install( )</code> or <code>install.packages( )</code></p></li>
+<li><p><code>renv::remove( )</code> or <code>remove.packages( )</code></p></li>
+<li><p><code>renv::update( )</code> or <code>update.packages( )</code></p></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Updating Dependencies</strong></p>
+<p>If you’re making changes to a project that has been collecting some dust, it’s good practice to start with an <code>renv::update()</code> before making any changes to the code.</p>
+</div>
+</div>
+<p><strong>Step 3:</strong> Save changes to your project library with <code>renv::snapshot()</code>. By doing so, your renv.lock file will be updated accordingly.</p>
+<p><strong><em>Restoring an existing project using</em></strong> <strong><code>renv</code></strong></p>
+<p>Every time you open a project for which <code>renv</code> has been set up, <code>renv</code> automatically runs and checks that the package versions you have installed on your computer match those of the project. If they match, there is nothing to do. But if there are any mismatches, <code>renv</code> will print a warning resembling the following:</p>
+<pre><code>* Project '~/Desktop/myproject' loaded. [renv 0.16.0]
+* The project library is out of sync with the lockfile.
+* Use `renv::restore()` to install packages recorded in the lockfile.</code></pre>
+<p>If this happens, simply run <code>renv::restore()</code> from the console pane to download and install the package versions needed to match the project’s requirements. For example, if the project uses tidyverse 1.3.2 and you have an older version tidyverse 1.3.1 installed on your computer, renv will upgrade your RStudio installation to tidyverse 1.3.2. (This works conversely as well: if the project uses an older version of a package you have installed, renv will attempt to download and install the older version for you. Don’t worry about losing the newer version. renv ensures that all versions of all packages remain installed on your computer, available for use by projects as needed).</p>
+<p>You may also use <code>renv::status()</code> to check for inconsistencies across the project lockfile, library, and <code>dependencies()</code>. In general, you should strive to ensure that <code>status()</code> reports no issues, as this maximizes your chances of successfully restore the project in the future or on another machine.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are other packages to help you manage dependencies in R such as <a href="https://groundhogr.com">Groundhog</a> as described <a href="https://ucsbcarpentry.github.io/Reproducible-Publications-with-RStudio-Quarto/03-Collaboration/02-managing-dependencies/index.html">in this lesson</a>. However, not only <code>renv</code> seems to be more widely adopted, but also has the advantage of being integrated with RStudio.</p>
+</div>
+</div>
+<p><strong><em>Deactivating and Uninstalling renv</em></strong></p>
+<p>To deactivate renv in a project, use <code>renv::deactivate()</code>. This removes the renv auto-loader from the project <code>.Rprofile</code>, but doesn’t touch any other renv files used in the project. If you’d like to later re-activate renv, you can do so with <code>renv::activate()</code>.</p>
+<p>To completely remove renv from a project, call <code>renv::deactivate(clean = TRUE)</code>. If you later want to use renv for this project, you’ll need to start from scratch with <code>renv::init().</code></p>
+<p>If you want to stop using renv for all your projects, you’ll also want to remove <code>renv'</code>s global infrastructure with the following R code:</p>
+<pre><code>root &lt;- renv::paths$root()
+unlink(root, recursive = TRUE)</code></pre>
+<p>You can then uninstall the renv package with <code>utils::remove.packages("renv")</code>.</p>
+<p><strong><em>Limitations of Renv</em></strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/limitations-renv.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Collaborating in R: renv with different versions of R? <a href="https://stackoverflow.com/questions/64044173/collaborating-in-r-renv-with-different-versions-of-r">Stack Overflow Post</a></figcaption>
+</figure>
+</div>
+<p>Renv is a valuable tool for improving reproducibility in R projects by handling package dependencies. However, it’s important to note that it’s not a universal solution and has its limitations. Renv primarily concentrates on package management, excluding other crucial elements. For instance, while renv tracks R package versions, it doesn’t handle the R version, operating system, or versions of system libraries.</p>
+<p>Take a look at our handout summarizing key points about renv:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://rcd.ucsb.edu/data-literacy-series"><img src="images/DLS-202311-Renv-v2.png" class="img-fluid figure-img" width="300"></a></p>
+<figcaption class="figure-caption">Source: UCSB Library Research Data Services - [Data Literacy Series](https://rcd.ucsb.edu/data-literacy-series), 11/2023)</figcaption>
+</figure>
+</div>
+</section>
+<section id="capture-your-computational-environment-with-binder" class="level4" data-number="4.2.1.4">
+<h4 data-number="4.2.1.4" class="anchored" data-anchor-id="capture-your-computational-environment-with-binder"><span class="header-section-number">4.2.1.4</span> <em>Capture your computational environment</em> with Binder</h4>
+<p>So far, we’ve discussed approaches for managing R package dependencies or documenting and sharing a static snapshot of your computational environment. But what if we aim to streamline the process and ‘ship’ a capsule of our computing environment to mitigate potential dependency issues linked to different operating systems, system libraries, configurations, and R versions?</p>
+<p>One solution is to use Binder. The <a href="https://mybinder.org/">mybinder</a> service converts a repository (on GitHub, Dataverse, Zenodo, or Fighsare) into a set of interactive/electronic notebooks or can even initiate RStudio in the cloud as illustrated below:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/binder-cartoon.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Credit: <a href="https://opendreamkit.org/2017/11/02/use-case-publishing-reproducible-notebooks/">Juliette Taka, Logilab, and the OpenDreamKit project</a></figcaption>
+</figure>
+</div>
+<p><strong><em>How to “binderize” your project?</em></strong></p>
+<p>The process of providing a runtime computational environment for your R project is simple and a good strategy to mitigate dependency issues.</p>
+<p>Binder supports both R and RStudio. To begin, you need to specify the R version by adding a <strong><code>runtime.txt</code></strong> file at the root directory of your project in your repo:</p>
+<pre><code>r-&lt;version&gt;-&lt;YYYY&gt;-&lt;MM&gt;-&lt;DD&gt;</code></pre>
+<p>E.g., <code>r-4.3.2-2023-03-15</code></p>
+<p>Then, you should add a <code>install.R</code> script containing the list of R packages that need to be installed in order for your script to run. Here is an example: <a href="https://github.com/binder-examples/r" class="uri">https://github.com/binder-examples/r</a></p>
+<p>Then, access <a href="https://mybinder.org/">https://mybinder.org</a> and enter your repo URL by selecting the desired repo type (we will stick to GitHub. Then click on “launch” and use the link to share with others.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/mybinder.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+<p>Create a Binder badge for your repo and add it to the README so that it becomes more obvious to potential reusers.</p>
+<p><img src="images/binder-badge.png" class="img-fluid"></p>
+<p>For example repo: <a href="https://github.com/binder-examples/r" class="uri">https://github.com/binder-examples/r</a></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Want a fancier badge?</em></strong></p>
+<p>You can also customize your binder badge <a href="https://mybinder.readthedocs.io/en/latest/howto/badges.html">here</a>.</p>
+</div>
+</div>
+<p>Other recommendations:</p>
+<ul>
+<li><p>Ensure you have updated all your packages before running your script locally.</p></li>
+<li><p>Add to the README.txt file when your analysis was last performed.</p></li>
+<li><p>Patience while your Binder builds! It might take a couple of minutes.</p></li>
+</ul>
+<p><strong>Binder Limitations</strong></p>
+<ul>
+<li><p>Not for heavy computing. The code should take less than 10 minutes to run, and the data should be less than 10 MB. You might need to subset it.</p></li>
+<li><p>The repository should be public.</p></li>
+<li><p>The repository should not require any personal or sensitive information (such as passwords).</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong><em>Your turn!</em></strong></p>
+<p>Follow the steps above and “Binderize” one of your project repos.</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="final-considerations" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="final-considerations"><span class="header-section-number">4.3</span> Final Considerations</h2>
+<p>In summary, we’ve delved into the root causes of “dependency hell” in research using R. We’ve seen how crucial it is to make R-based projects more reproducible, not just for reliability but also to build trust in the scientific community. Throughout, we’ve covered various ways to improve reproducibility, stressing the importance of clear methods and documentation, ranging from more simple to more robust approaches. By learning and applying strategies to tackle dependency issues, researchers pave the way for more reliable, reproducible and accessible science.</p>
 
 
 </section>
@@ -469,6 +856,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./session_05.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Check and Set your PAT</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
