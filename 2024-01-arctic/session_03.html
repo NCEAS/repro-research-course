@@ -820,8 +820,8 @@ Exercise: Update <code>weight_lb</code>
 </details>
 </div>
 <p>Call <code>mean_weight_lb</code> in the console or take a look at your Global Environment. Is that the value you expected? Why or why not?</p>
-<p>It wasn’t the value we expected because <code>mean_weight_lb</code> did not change. This demonstrates an important programming concept: <strong>Assigning a value to one object does not change the values of other objects.</strong></p>
-<p>Now, that we understand why the object’s value hasn’t changed - how do we update the value of <code>mean_weight_lb</code>? How is an R Script useful for this?</p>
+<p>It wasn’t the value we expected because <code>mean_weight_lb</code> did not change. This demonstrates an important R programming concept: <strong>Assigning a value to one object does not change the values of other objects in R.</strong></p>
+<p>Now that we understand why the object’s value hasn’t changed - how do we update the value of <code>mean_weight_lb</code>? How is an R Script useful for this?</p>
 <p>This lead us to another important programming concept, specifically for R Scripts: <strong>An R Script runs top to bottom.</strong></p>
 <p>This order of operations is important because if you are running code line by line, the values in object may be unexpected. When you are done writing your code in an R Script, it’s good practice to clear your Global Environment and use the <code>Run</code> button and select “Run all” to test that your R Script successfully runs top to bottom.</p>
 </section>
@@ -874,14 +874,10 @@ Optional Arguments
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>bg_chem_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="st">"data/BGchem2008data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If we wanted to add another argument, say <code>stringsAsFactors</code>, we need to specify it explicitly using the <code>name = value</code> pair, since the second argument is <code>header</code>.</p>
-<p>Many R users (including myself) will override the default <code>stringsAsFactors</code> argument using the following call:</p>
+<p>Many R users (including myself) will set the <code>stringsAsFactors</code> argument using the following call:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># relative file path</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bg_chem_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/BGchem2008data.csv"</span>, </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># absolute file path</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>bg_chem_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Documents/arctic_training_files/data/BGchem2008data.csv"</span>,</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bg_chem_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/BGchem2008data.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -900,7 +896,7 @@ Quick Tip
 </section>
 <section id="working-with-data-frames-in-r-using-the-subset-operator" class="level2" data-number="3.10">
 <h2 data-number="3.10" class="anchored" data-anchor-id="working-with-data-frames-in-r-using-the-subset-operator"><span class="header-section-number">3.10</span> Working with data frames in R using the Subset Operator <code>$</code></h2>
-<p>A <code>data.frame</code> is a two dimensional data structure in R that mimics spreadsheet behavior. It is a collection of rows and columns of data, where each column has a name and represents a variable, and each row represents an observation containing a measurement of that variable. When we ran <code>read.csv()</code>, the object <code>bg_chem_dat</code> that we created is a <code>data.frame</code>. There are many ways R and RStudio help you explore data frames. Here are a few, give them each a try:</p>
+<p>A <code>data.frame</code> is a list data structure in R that can represent tables and spreadsheets – we can think of it as a table. It is a collection of rows and columns of data, where each column has a name and represents a variable, and each row represents an observation containing a measurement of that variable. When we ran <code>read.csv()</code>, the object <code>bg_chem_dat</code> that we created was a <code>data.frame</code>. The columns in a <code>data.frame</code> might represent measured numeric response values (e.g., <code>weight_kg</code>), classifier variables (e.g., <code>site_name</code>), or categorical response variables (e.g., <code>course_satisfaction</code>). There are many ways R and RStudio help you explore data frames. Here are a few, give them each a try:</p>
 <ul>
 <li>Click on the word <code>bg_chem_dat</code> in the environment pane</li>
 <li>Click on the arrow next to <code>bg_chem_dat</code> in the environment pane</li>
@@ -916,9 +912,27 @@ Quick Tip
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(bg_chem_dat<span class="sc">$</span>CTD_Temperature)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>You can also save this calculation to an object using the subset operator <code>$</code>.</p>
+<p>You can also save this calculation to an object that was created using the subset operator <code>$</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>mean_temp <span class="ot">&lt;-</span> <span class="fu">mean</span>(bg_chem_dat<span class="sc">$</span>CTD_Temperature)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Other ways to load tablular data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While the base R package provides <code>read.csv</code> as a common way to load tabular data from text files, there are many other ways that can be convenient and will also produce a <code>data.frame</code> as output. Here are a few:</p>
+<ol type="1">
+<li>Use the <code>readr::read_csv()</code> function from the Tidyverse to load the data file. The <code>readr</code> package has a bunch of convenient helpers and handles CSV files in typically expected ways, like properly typing dates and time columns. <code>bg_chem_dat &lt;- readr::read_csv("data/BGchem2008data.csv")</code></li>
+<li>Load tabular data from Excel spreadsheets using the <code>readxl::read_excel()</code> function.</li>
+<li>Load tabular data from Google Sheets using the <code>googlesheets4::read_sheet()</code> function.</li>
+</ol>
+</div>
 </div>
 </section>
 <section id="error-messages-are-your-friends" class="level2" data-number="3.11">
