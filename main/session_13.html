@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>NCEAS Open Science Synthesis for the Delta Science Program - 13&nbsp; Reproducible Surveys</title>
+<title>Fundamentals in Data Management for Qualitative and Quantitative Arctic Research - 13&nbsp; Working with Text Data in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -64,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./session_14.html" rel="next">
+<link href="./session_18.html" rel="next">
 <link href="./session_12.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -82,7 +102,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -91,6 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -98,20 +125,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_13.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Reproducible Surveys</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_13.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -122,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Reproducible Surveys</span></h1>
+      <h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></h1>
                       </div>
   </div>
     
@@ -137,14 +165,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Course Materials</a> 
+      <a href="./">Training Materials</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://www.nceas.ucsb.edu/learning-hub" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
-    <a href="https://twitter.com/ucsb_nceas" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
-    <a href="https://github.com/NCEAS/nceas-training/tree/2023-06-delta" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/ucsb_nceas" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/nceas-training/tree/2024-01-arctic" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -158,125 +186,149 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Overview</span></a>
+ <span class="menu-text">About the course</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Collaborating using <code>Git</code> and GitHub &amp; Merge Conflicts</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to the Arctic Data Center</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Social Aspects of Collaboration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Thinking Preferences</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to R Programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Synthesis Time</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Thinking Preferences &amp; Social Aspects of Collaboration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_05.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Publishing your Analysis to the Web</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Writing Data Management Plans</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data Visualization in R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Systematic Reviews</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Practice: Literate Analysis</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_08.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Synthesis Time</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling Essentials</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_09.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Using <code>sf</code> for Spatia Data &amp; Intro to Making Maps</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introduction to Meta-Analysis</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Intro to Data Visualization</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_11.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ethical Data Collection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_12.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Working with US Census Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R Practice: Cleaning and Wrangling</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_13.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Reproducible Surveys</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_14.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Guest Speaker</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Metadata Best Practices and Data Publishing</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_15.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Synthesis Time</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating Data Portals</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_16.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Shiny</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reproducible Survey Workflow</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_17.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Appendix</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Provenance and Reproducibility</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">13.0.1</span> Learning Objectives</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">13.0.2</span> Introduction</a></li>
-  <li><a href="#building-workflows-using-qualtrics" id="toc-building-workflows-using-qualtrics" class="nav-link" data-scroll-target="#building-workflows-using-qualtrics"><span class="header-section-number">13.0.3</span> Building workflows using Qualtrics</a></li>
-  <li><a href="#other-survey-tools" id="toc-other-survey-tools" class="nav-link" data-scroll-target="#other-survey-tools"><span class="header-section-number">13.0.4</span> Other survey tools</a></li>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#what-is-text-data" id="toc-what-is-text-data" class="nav-link" data-scroll-target="#what-is-text-data"><span class="header-section-number">13.1</span> What is text data?</a>
+  <ul class="collapse">
+  <li><a href="#how-do-we-talk-about-text-data" id="toc-how-do-we-talk-about-text-data" class="nav-link" data-scroll-target="#how-do-we-talk-about-text-data"><span class="header-section-number">13.1.1</span> How do we talk about text data?</a></li>
+  <li><a href="#how-is-text-data-used-in-the-environmental-field" id="toc-how-is-text-data-used-in-the-environmental-field" class="nav-link" data-scroll-target="#how-is-text-data-used-in-the-environmental-field"><span class="header-section-number">13.1.2</span> How is text data used in the environmental field?</a></li>
+  </ul></li>
+  <li><a href="#what-is-tidy-text-data" id="toc-what-is-tidy-text-data" class="nav-link" data-scroll-target="#what-is-tidy-text-data"><span class="header-section-number">13.2</span> What is tidy text data?</a>
+  <ul class="collapse">
+  <li><a href="#what-is-the-tidytext-r-package" id="toc-what-is-the-tidytext-r-package" class="nav-link" data-scroll-target="#what-is-the-tidytext-r-package"><span class="header-section-number">13.2.1</span> What is the <code>tidytext</code> R package?</a></li>
+  </ul></li>
+  <li><a href="#exercise-tidy-text-workflow" id="toc-exercise-tidy-text-workflow" class="nav-link" data-scroll-target="#exercise-tidy-text-workflow"><span class="header-section-number">13.3</span> Exercise: Tidy Text Workflow</a>
+  <ul class="collapse">
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">13.3.1</span> Questions</a></li>
+  <li><a href="#bonus-question" id="toc-bonus-question" class="nav-link" data-scroll-target="#bonus-question"><span class="header-section-number">13.3.2</span> Bonus Question</a></li>
+  </ul></li>
+  <li><a href="#tidy-text-to-non-tidy-text-workflows" id="toc-tidy-text-to-non-tidy-text-workflows" class="nav-link" data-scroll-target="#tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">13.4</span> Tidy Text to Non-tidy Text Workflows</a></li>
+  <li><a href="#exercise-explore-unstructured-text-data-from-a-pdf" id="toc-exercise-explore-unstructured-text-data-from-a-pdf" class="nav-link" data-scroll-target="#exercise-explore-unstructured-text-data-from-a-pdf"><span class="header-section-number">13.5</span> Exercise: Explore Unstructured Text Data from a PDF</a>
+  <ul class="collapse">
+  <li><a href="#questions-1" id="toc-questions-1" class="nav-link" data-scroll-target="#questions-1"><span class="header-section-number">13.5.1</span> Questions</a></li>
+  <li><a href="#bonus-question-1" id="toc-bonus-question-1" class="nav-link" data-scroll-target="#bonus-question-1"><span class="header-section-number">13.5.2</span> Bonus Question</a></li>
+  </ul></li>
+  <li><a href="#common-text-analysis-and-text-mining-methods" id="toc-common-text-analysis-and-text-mining-methods" class="nav-link" data-scroll-target="#common-text-analysis-and-text-mining-methods"><span class="header-section-number">13.6</span> Common Text Analysis and Text Mining Methods</a></li>
   </ul>
 </nav>
     </div>
@@ -286,260 +338,856 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="learning-objectives" class="level3" data-number="13.0.1">
-<h3 data-number="13.0.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">13.0.1</span> Learning Objectives</h3>
+
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
 <ul>
-<li>Overview of survey tools</li>
-<li>Generating a reproducible survey report with Qualtrics</li>
+<li>Describe principles of tidy text data</li>
+<li>Employ strategies to wrangle unstructured text data into a tidy text format using the <code>tidytext</code> package</li>
+<li>Describe non-tidy text formats and how to convert between tidy text and non-tidy text formats</li>
+<li>Become familiar with text analysis (or text mining) methods and when to use them</li>
 </ul>
-</section>
-<section id="introduction" class="level3" data-number="13.0.2">
-<h3 data-number="13.0.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">13.0.2</span> Introduction</h3>
-<p>Surveys and questionnaires are commonly used research methods within social science and other fields. For example, understanding regional and national population demographics, income, and education as part of the <a href="https://www.census.gov/en.html">National Census</a> activity, assessing audience perspectives on specific topics of research interest (e.g.&nbsp;the work by Tenopir and colleagues on <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0021101">Data Sharing by Scientists</a>), evaluation of learning deliverables and outcomes, and consumer feedback on new and upcoming products. These are distinct from the use of the term survey within natural sciences, which might include geographical surveys (“the making of measurement in the field from which maps are drawn”), ecological surveys (“the process whereby a proposed development site is assess to establish any environmental impact the development may have”) or biodiversity surveys (“provide detailed information about biodiversity and community structure”) among others.</p>
-<p>Although surveys can be conducted on paper or verbally, here we focus on surveys done via software tools. Needs will vary according to the nature of the research being undertaken. However, there is fundamental functionality that survey software should provide including:</p>
-<ol type="1">
-<li>The ability to create and customize questions</li>
-<li>The ability to include different types of questions</li>
-<li>The ability to distribute the survey and manage response collection</li>
-<li>The ability to collect, summarize, and (securely) store response data</li>
-</ol>
-<p>More advanced features can include:</p>
-<ol type="1">
-<li><strong>Visual design and templates</strong> - custom design might include institutional branding or aesthetic elements. Templates allow you to save these designs and apply to other surveys</li>
-<li><strong>Question piping</strong> - piping inserts answers from previous questions into upcoming questions and can personalize the survey experience for users</li>
-<li><strong>Survey logic</strong> - with question logic and skip logic you can control the inclusion / exclusion of questions based on previous responses</li>
-<li><strong>Randomization</strong> - the ability to randomize the presentation of questions within (blocks of) the survey</li>
-<li><strong>Branching</strong> - this allows for different users to take different paths through the survey. Similar to question logic but at a bigger scale</li>
-<li><strong>Language support</strong> - automated translation or multi-language presentation support</li>
-<li><strong>Shared administration</strong> - enables collaboration on the survey and response analysis</li>
-<li><strong>Survey export</strong> - ability to download (export) the survey instrument</li>
-<li><strong>Reports</strong> - survey response visualization and reporting tools</li>
-<li><strong>Institutional IRB approved</strong> - institutional IRB policy may require certain software be used for research purposes</li>
-</ol>
-<p>Commonly used survey software within academic (vs market) research include Qualtrics, Survey Monkey and Google Forms. Both qualtrics and survey monkey are licensed (with limited functionality available at no cost) and google forms is free.</p>
-<p><img src="images/survey_comparison.png" class="img-fluid"></p>
-</section>
-<section id="building-workflows-using-qualtrics" class="level3" data-number="13.0.3">
-<h3 data-number="13.0.3" class="anchored" data-anchor-id="building-workflows-using-qualtrics"><span class="header-section-number">13.0.3</span> Building workflows using Qualtrics</h3>
-<p>In this lesson we will use the <a href="https://github.com/ropensci/qualtRics"><code>qualtRics</code></a> package to reproducible access some survey results set up for this course.</p>
-<section id="survey-instrument" class="level4" data-number="13.0.3.1">
-<h4 data-number="13.0.3.1" class="anchored" data-anchor-id="survey-instrument"><span class="header-section-number">13.0.3.1</span> Survey Instrument</h4>
-<p>The survey is very short, only four questions. The first question is on it’s own page and is a consent question, after a couple of short paragraphs describing what the survey is, it’s purpose, how long it will take to complete, and who is conducting it. This type of information is required if the survey is governed by an IRB, and the content will depend on the type of research being conducted. In this case, this survey is not for research purposes, and thus is not governed by IRB, but we still include this information as it conforms to the <a href="https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/read-the-belmont-report/index.html#xinform">Belmont Principles</a>. The Belmont Principles identify the basic ethical principles that should underlie research involving human subjects.</p>
-<p><img src="images/survey_consent.png" class="img-fluid"></p>
-<p>The three main questions of the survey have three types of responses: a multiple choice answer, a multiple choice answer which also includes an “other” write in option, and a free text answer. We’ll use the results of this survey, which was sent out to NCEAS staff to fill out, to learn about how to create a reproducible survey report.</p>
-<p><img src="images/survey_main.png" class="img-fluid"></p>
-<p>First, open a new RMarkdown document and add a chunk to load the libraries we’ll need for this lesson:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(qualtRics)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<p>Next, we need to set the API credentials. This function modifies the <code>.Renviron</code> file to set your API key and base URL so that you can access Qualtrics programmatically.</p>
-<p>The API key is as good as a password, so care should be taken to not share it publicly. For example, you would never want to save it in a script. The function below is the rare exception of code that should be run in the console and not saved. It works in a way that you only need to run it once, unless you are working on a new computer or your credentials changed. Note that in this book, we have not shared the actual API key, for the reasons outlined above. You should have an e-mail with the API key in it. Copy and paste it as a string to the <code>api_key</code> argument in the function below:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qualtrics_api_credentials</span>(<span class="at">api_key =</span> <span class="st">""</span>, <span class="at">base_url =</span> <span class="st">"ucsb.co1.qualtrics.com"</span>, <span class="at">install =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout-title-container flex-fill">
+Acknowledgements
 </div>
-</section>
-<section id="aside" class="level4 aside unnumbered">
-<h4 class="aside unnumbered anchored" data-anchor-id="aside">Aside</h4>
-<p>The .Renviron file is a special user controlled file that can create environment variables. Every time you open Rstudio, the variables in your environment file are loaded as…environment variables! Environment variables are named values that are accessible by your R process. They will not show up in your environment pane, but you can get a list of all of them using <code>Sys.getenv()</code>. Many are system defaults.</p>
-</section>
-<section id="section" class="level4 unnumbered">
-<h4 class="unnumbered anchored" data-anchor-id="section"></h4>
-<p>To view or edit your <code>.Renviron</code> file, you can use <code>usethis::edit_r_environ()</code>.</p>
-<p>To get a list of all the surveys in your Qualtrics instance, use the <code>all_surveys</code> function.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>surveys <span class="ot">&lt;-</span> <span class="fu">all_surveys</span>()</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(surveys) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This function returns a list of surveys, in this case only one, and information about each, including an identifier and it’s name. We’ll need that identifier later, so let’s go ahead and extract it using base R from the data frame.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">which</span>(surveys<span class="sc">$</span>name <span class="sc">==</span> <span class="st">"Survey for Data Science Training"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>id <span class="ot">&lt;-</span> surveys<span class="sc">$</span>id[i]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>You can retrieve a list of the questions the survey asked using the <code>survey_questions</code> function and the survey <code>id</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">survey_questions</span>(id)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(questions) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This returns a <code>data.frame</code> with one row per question with columns for question id, question name, question text, and whether the question was required. This is helpful to have as a reference for when you are looking at the full survey results.</p>
-<p>To get the full survey results, run <code>fetch_survey</code> with the survey id.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>survey_results <span class="ot">&lt;-</span> <span class="fu">fetch_survey</span>(id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>The survey results table has tons of information in it, not all of which will be relevant depending on your survey. The table has identifying information for the respondents (eg: <code>ResponseID</code>, <code>IPaddress</code>, <code>RecipientEmail</code>, <code>RecipientFirstName</code>, etc), much of which will be empty for this survey since it is anonymous. It also has information about the process of taking the survey, such as the <code>StartDate</code>, <code>EndDate</code>, <code>Progress</code>, and <code>Duration</code>. Finally, there are the answers to the questions asked, with columns labeled according to the <code>qname</code> column in the questions table (eg: Q1, Q2, Q3). Depending on the type of question, some questions might have multiple columns associated with them. We’ll have a look at this more closely in a later example.</p>
-</section>
-<section id="question-2" class="level4 unnumbered">
-<h4 class="unnumbered anchored" data-anchor-id="question-2">Question 2</h4>
-<p>Let’s look at the responses to the second question in the survey, “How long have you been programming?” Remember, the first question was the consent question.</p>
-<p>We’ll use the <code>dplyr</code> and <code>tidyr</code> tools we learned earlier to extract the information. Here are the steps:</p>
+<div class="callout-body-container callout-body">
+<p>This lesson has been adapted from the following resources:</p>
 <ul>
-<li><code>select</code> the column we want (<code>Q1</code>)</li>
-<li><code>group_by</code> and <code>summarize</code> the values</li>
+<li><a href="https://www.tidytextmining.com/">Welcome to Text Mining with R</a> by <a href="https://juliasilge.com/">Julia Silge</a> and <a href="http://varianceexplained.org/">David Robinson</a>. Julia and David are also the developers of the <a href="https://juliasilge.github.io/tidytext/"><code>tidytext</code></a> package.</li>
+<li><a href="https://bookdown.org/paul/2021_computational_social_science/r-workflow-for-text-analysis.html">Section 7.3: (R-) Workflow for Text Analysis from Computational Social Science: Theory &amp; Application, Version: 17 June, 2021</a> by Paul C. Bauer</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>q2 <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q2) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Q2) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We can show these results in a table using the <code>kable</code> function from the <code>knitr</code> package:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(q2, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"How long have you been programming?"</span>,</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Number of responses"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="question-3" class="level4" data-number="13.0.3.2">
-<h4 data-number="13.0.3.2" class="anchored" data-anchor-id="question-3"><span class="header-section-number">13.0.3.2</span> Question 3</h4>
-<p>For question 3, we’ll use a similar workflow. For this question, however there are two columns containing survey answers. One contains the answers from the controlled vocabulary, the other contains any free text answers users entered.</p>
-<p>To present this information, we’ll first show the results of the controlled answers as a plot. Below the plot, we’ll include a table showing all of the free text answers for the “other” option.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>q3 <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q3) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Q3) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="what-is-text-data" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="what-is-text-data"><span class="header-section-number">13.1</span> What is text data?</h2>
+<p>Text data is information stored as character or string data types. It comes in various different forms including books, research articles, social media posts, interview transcripts, newspapers, government reports, and much more.</p>
+<div class="callout callout-style-simple callout-warning no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> q3, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Q3, <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"What language do you currently use most frequently?"</span>, <span class="at">y =</span> <span class="st">"Number of reponses"</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout-body-container">
+<p>Raw text data is often unstructured and quite “messy”. This could include wrong grammar, missing words, spelling issues, ambiguous language, humor, emojis, symbols, etc. Investing time into carefully cleaning and preparing text data is crucial for your ultimate analysis.</p>
 </div>
-<p>Now we’ll extract the free text responses:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>q3_text <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q3_7_TEXT) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>()</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(q3_text, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Other responses to 'What language do you currently use mose frequently?'"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<section id="how-do-we-talk-about-text-data" class="level3" data-number="13.1.1">
+<h3 data-number="13.1.1" class="anchored" data-anchor-id="how-do-we-talk-about-text-data"><span class="header-section-number">13.1.1</span> How do we talk about text data?</h3>
+<p>Here is a list of text data or text analysis terms we’ll be referring to throughout this lesson. Note this is not a comprehensive list of text analysis terms that are used beyond this lesson.</p>
+<table class="table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 91%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Corpus (corpora, plural)</td>
+<td>Collection or database of text or multiple texts. These types of objects typically contain raw strings annotated with additional metadata and details.</td>
+</tr>
+<tr class="even">
+<td>Document-feature matrix (DFM)</td>
+<td>Represents the relationship between features and documents, where each row is a document and each column corresponds to a set of features. Features are not limited to terms and can include a variety of attributes that describe the documents. Each cell in the matrix contains a value that represents the presence, absence, or some quantitative measure of a specific feature in a particular document.</td>
+</tr>
+<tr class="odd">
+<td>Document-term matrix (DTM)</td>
+<td>Represents the relationship between terms and documents, where each row stands for a document and each column represents a term, and an entry is the number of occurrences of the term in the document.</td>
+</tr>
+<tr class="even">
+<td>Natural Language Processing (NLP)</td>
+<td>NLP is an interdisciplinary field used in computer science, data science, linguistics, and others to analyze, categorize, and work with computerized text.</td>
+</tr>
+<tr class="odd">
+<td>Sparse matrix</td>
+<td><p>A matrix where the majority of the entries are zero.</p>
+<p>Both DFM and DTM are sparse matrices and this is normal. Typically, the bigger the DTM or DFM, the more zeros you’ll see.</p></td>
+</tr>
+<tr class="even">
+<td>String</td>
+<td>Specific type of data whose values are enclosed within a set of quotes. Typically values or elements are characters (e.g.&nbsp;“Hello World!”).</td>
+</tr>
+<tr class="odd">
+<td>Text analysis</td>
+<td>The process of deriving high-quality information or patterns from text through evaluation and interpretation of the output. Also referred to as “text mining” or “text analytics”.</td>
+</tr>
+<tr class="even">
+<td>Token</td>
+<td>A meaningful unit of text, such as a word, to use for analysis.</td>
+</tr>
+<tr class="odd">
+<td>Tokenization</td>
+<td>The process of splitting text into tokens.</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="question-4" class="level4" data-number="13.0.3.3">
-<h4 data-number="13.0.3.3" class="anchored" data-anchor-id="question-4"><span class="header-section-number">13.0.3.3</span> Question 4</h4>
-<p>The last question is just a free text question, so we can just display the results as is.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>q4 <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q4) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="st">`</span><span class="at">What data science tool or language are you most excited to learn next?</span><span class="st">`</span> <span class="ot">=</span> Q4) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>()</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(q4, <span class="at">col.names =</span> <span class="st">"What data science tool or language are you most excited to learn next?"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="how-is-text-data-used-in-the-environmental-field" class="level3" data-number="13.1.2">
+<h3 data-number="13.1.2" class="anchored" data-anchor-id="how-is-text-data-used-in-the-environmental-field"><span class="header-section-number">13.1.2</span> How is text data used in the environmental field?</h3>
+<p>As our knowledge about the environmental world grows, researchers will need new computational approaches for working with text data because reading and identifying all the relevant literature for literature syntheses is becoming an increasingly difficult task.</p>
+<p>Beyond literature syntheses, quantitative text analysis tools are extremely valuable for efficiently extracting information from texts and other text mining or text analysis tasks.</p>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
-</section>
-</section>
-<section id="other-survey-tools" class="level3" data-number="13.0.4">
-<h3 data-number="13.0.4" class="anchored" data-anchor-id="other-survey-tools"><span class="header-section-number">13.0.4</span> Other survey tools</h3>
-<section id="google-forms" class="level4 unnumbered">
-<h4 class="unnumbered anchored" data-anchor-id="google-forms">Google forms</h4>
-<p>Google forms can be a great way to set up surveys, and it is very easy to interact with the results using R. The benefits of using google forms are a simple interface and easy sharing between collaborators, especially when writing the survey instrument.</p>
-<p>The downside is that google forms has far fewer features than Qualtrics in terms of survey flow and appearance.</p>
-<p>To show how we can link R into our survey workflows, I’ve set up a simple example survey <a href="https://docs.google.com/forms/d/1Yh3IxygzuLXzJvTHl-lskMy7YrQgmeWgr2bEw5gwdIM/edit?usp=sharing">here</a>.</p>
-<p>I’ve set up the results so that they are in a new spreadsheet <a href="https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?resourcekey#gid=1527662370">here:</a>. To access them, we will use the <code>googlesheets4</code> package.</p>
-<p>First, open up a new R script and load the <code>googlesheets4</code> library:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googlesheets4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Next, we can read the sheet in using the same URL that you would use to share the sheet with someone else. Right now, this sheet is public</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>responses <span class="ot">&lt;-</span> <span class="fu">read_sheet</span>(<span class="st">"https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?usp=sharing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>✔ Reading from "Example Survey Form (Responses)".</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>✔ Range 'Form Responses 1'.</code></pre>
+<div class="callout-title-container flex-fill">
+Environmental researchers have used text data to:
 </div>
 </div>
-<p>The first time you run this, you should get a popup window in your web browser asking you to confirm that you want to provide access to your google sheets via the tidyverse (googlesheets) package.</p>
-<p>My dialog box looked like this:</p>
-<p><img src="images/gsheets-access.png" class="img-fluid"></p>
-<p>Make sure you click the third check box enabling the Tidyverse API to see, edit, create, and delete your sheets. Note that you will have to tell it to do any of these actions via the R code you write.</p>
-<p>When you come back to your R environment, you should have a data frame containing the data in your sheet! Let’s take a quick look at the structure of that sheet.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 10
-Columns: 5
-$ Timestamp                                              &lt;dttm&gt; 2022-04-15 13:…
-$ `To what degree did the event meet your expectations?` &lt;chr&gt; "Met expectatio…
-$ `To what degree did your knowledge improve?`           &lt;chr&gt; "Increase", "Si…
-$ `What did you like most about the event?`              &lt;chr&gt; "the cool instr…
-$ `What might you change about the event?`               &lt;chr&gt; "more snacks", …</code></pre>
-</div>
-</div>
-<p>So, now that we have the data in a standard R <code>data.frame</code>, we can easily summarize it and plot results. By default, the column names in the sheet are the long fully descriptive questions that were asked, which can be hard to type. We can save those questions into a vector for later reference, like when we want to use the question text for plot titles.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">colnames</span>(responses)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(questions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> chr [1:4] "To what degree did the event meet your expectations?" ...</code></pre>
-</div>
-</div>
-<p>We can make the responses data frame more compact by renaming the columns of the vector with short numbered names of the form <code>Q1</code>. Note that, by using a sequence, this should work for sheets from just a few columns to many hundreds of columns, and provides a consistent question naming convention.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(questions) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(responses) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Timestamp"</span>, <span class="fu">names</span>(questions))</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 10
-Columns: 5
-$ Timestamp &lt;dttm&gt; 2022-04-15 13:48:58, 2022-04-15 13:49:43, 2022-04-15 13:50:…
-$ Q1        &lt;chr&gt; "Met expectations", "Above expectations", "Above expectation…
-$ Q2        &lt;chr&gt; "Increase", "Significant increase", "Significant increase", …
-$ Q3        &lt;chr&gt; "the cool instructors", "R is rad!", "everything", "the pizz…
-$ Q4        &lt;chr&gt; "more snacks", "no pineapple pizza!", "nothing", "needs more…</code></pre>
-</div>
-</div>
-<p>Now that we’ve renamed our columns, let’s summarize the responses for the first question. We can use the same pattern that we usually do to split the data from Q1 into groups, then summarize it by counting the number of records in each group, and then merge the count of each group back together into a summarized data frame. We can then plot the Q1 results using <code>ggplot</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> responses <span class="sc">%&gt;%</span> </span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Q1) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(Q1) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>())</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(<span class="at">data =</span> q1, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Q1, <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> questions[<span class="dv">1</span>], </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Number of reponses"</span>,</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"To what degree did the course meet expectations?"</span>) <span class="sc">+</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="bypassing-authentication-for-public-sheets" class="level5 unnumbered">
-<h5 class="unnumbered anchored" data-anchor-id="bypassing-authentication-for-public-sheets">Bypassing authentication for public sheets</h5>
-<p>If you don’t want to go through a little interactive dialog every time you read in a sheet, and your sheet is public, you can run the function <code>gs4_deauth()</code> to access the sheet as a public user. This is helpful for cases when you want to run your code non-interactively. This is actually how I set it up for this book to build!</p>
-</section>
-<section id="challenge" class="level5 unnumbered exercise">
-<h5 class="unnumbered exercise anchored" data-anchor-id="challenge">Challenge</h5>
-<p>Now that you have some background in accessing survey data from common tools, let’s do a quick exercise with Google Sheets. First, create a google sheet with the following columns that reflect a hypothetical survey result:</p>
+<div class="callout-body-container callout-body">
 <ul>
-<li>Timestamp</li>
-<li>Q1: How much did your proficiency with survey tools in R change? 1 = None, 2 = A little, 3 = A lot</li>
-<li>Q2: How many years or partial years had you used R prior to this course?</li>
-<li>Q3: How many years or partial years had you used statistics before this course?</li>
+<li>Understand how text mining is used in the field <span class="citation" data-cites="farrell2022">(<a href="#ref-farrell2022" role="doc-biblioref">Farrell et al. 2022</a>)</span></li>
+<li>Gain insights into public perception of a particular subject <span class="citation" data-cites="froehlich2017">(<a href="#ref-froehlich2017" role="doc-biblioref">Froehlich et al. 2017</a>)</span></li>
+<li>Highlight the power of NLP models to advance research <span class="citation" data-cites="vanhoutan2020">(<a href="#ref-vanhoutan2020" role="doc-biblioref">Van Houtan et al. 2020</a>)</span></li>
 </ul>
-<p>Next populate the spreadhsheet with 5 to 10 rows of sample data that you make up. Now that you have the Google sheet in place, copy its URL and use it to do the following in R:</p>
+</div>
+</div>
+</section>
+</section>
+<section id="what-is-tidy-text-data" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="what-is-tidy-text-data"><span class="header-section-number">13.2</span> What is tidy text data?</h2>
+<p>Let’s recall the <strong>tidy data principles</strong>:</p>
 <ol type="1">
-<li>Load the google sheet into an R data.frame using the <code>googlesheets</code> package</li>
-<li>Save the column headers as a vector of questions</li>
-<li>Rename the question columns with short, consistent names</li>
-<li>Summarize and plot the results for Q1 as a bar chart.</li>
+<li>Every column is a variable.</li>
+<li>Every row is an observation.</li>
+<li>Every cell is a single value.</li>
 </ol>
+<p>Keeping that in mind, Silge and Robinson define the tidy text format as <strong>being a table with one-token-per-row</strong>.</p>
+<p>This one-token-per-row structure is in contrast to the ways text is often stored in current analyses, perhaps as strings or in a document-term matrix.</p>
+<p>For tidy text mining, the token that is stored in each row is most often a single word, but can also be an n-gram, sentence, or paragraph.</p>
+<p>By using tidy data principles, we can apply many “tidy” R packages including <code>dpylr</code>, <code>tidyr</code>, <code>ggplot2</code>, and more.</p>
+<section id="what-is-the-tidytext-r-package" class="level3" data-number="13.2.1">
+<h3 data-number="13.2.1" class="anchored" data-anchor-id="what-is-the-tidytext-r-package"><span class="header-section-number">13.2.1</span> What is the <code>tidytext</code> R package?</h3>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidytext-logo.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</div><div class="column" style="width:70%;">
+<p><code>tidytext</code> is a package that applies the tidy principles to analyzing text. <br></p>
+<p>The package contains many useful functions to wrangle text data into tidy formats. It has been built considering other text mining R packages so that it’s easy to switch between text mining tools (e.g.&nbsp;<code>tm</code>, <code>quanteda</code>, <code>stringr</code>, <code>wordcloud2</code>).</p>
+</div>
+</div>
 </section>
 </section>
-<section id="survey-monkey" class="level4 unnumbered">
-<h4 class="unnumbered anchored" data-anchor-id="survey-monkey">Survey Monkey</h4>
-<p>Similar to Qualtrics and qualtRics, there is an open source R package for working with data in Survey Monkey: <a href="https://github.com/cloudyr/Rmonkey">Rmonkey</a>. However, the last updates were made 5 years ago, an eternity in the software world, so it may or may not still function as intended.</p>
-<p>There are also commercial options available. For example, <a href="https://www.cdata.com/kb/tech/surveymonkey-jdbc-r.rst">cdata</a> have a driver and R package that enable access to an analysis of Survey Monkey data through R.</p>
+<section id="exercise-tidy-text-workflow" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="exercise-tidy-text-workflow"><span class="header-section-number">13.3</span> Exercise: Tidy Text Workflow</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidytext-tidy-workflow.png" class="img-fluid figure-img"></p>
+<figcaption>Source: Silge &amp; Robinson</figcaption>
+</figure>
+</div>
+<p>We are going to use the <code>gutenbergr</code> package to access public domain texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a> (a library of free eBooks). We’ll then use the <code>tidytext</code>, <code>dyplr</code> and <code>ggplot2</code> packages to practice the tidy text workflow.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Create a new <code>qmd</code> file and title it “Intro to Text Data”, name yourself as the author, and then save the file as <code>intro-text-data.qmd</code>.</p></li>
+<li><p>Create a new code chunk and attach the following libraries:</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gutenbergr) <span class="co"># access public domain texts from Project Gutenberg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext) <span class="co"># text mining using tidy tools</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># wrangle data</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># plot data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Depending on which group you’re in, use one of the following public domain texts:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group A</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Phantom of the Opera"</span>) <span class="co"># phantom text</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Group B</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"Frankenstein; Or, The Modern Prometheus"</span>) <span class="co"># frankenstein text</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Group C</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Strange Case of Dr. Jekyll and Mr. Hyde"</span>) <span class="co"># jekyll hyde text</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<section id="questions" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="questions"><span class="header-section-number">13.3.1</span> Questions</h3>
+<p>The answers in the code chunks are using the text of <em>The Great Gatsby</em>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Get the id number from the <code>gutenberg_works()</code> function so that you can download the text as a corpus using the function <code>gutenberg_download()</code>. Save the corpus to an object called <code>{book-title}_corp</code>. View the object - is the data in a tidy format?</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get id number</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Great Gatsby"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># access text data using id number from `gutenberg_works()`</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>gatsby_corp <span class="ot">&lt;-</span> <span class="fu">gutenberg_download</span>(<span class="dv">64317</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Tokenize the corpus data using <code>unnest_tokens()</code>. Take a look at the data - do we need every single token for our analysis?</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tidy text data - unnest and remove stop words</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>gatsby_tidy <span class="ot">&lt;-</span> gatsby_corp <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(word, text)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gatsby_tidy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  gutenberg_id word  
+         &lt;int&gt; &lt;chr&gt; 
+1        64317 the   
+2        64317 great 
+3        64317 gatsby
+4        64317 by    
+5        64317 f     
+6        64317 scott </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Remove “stop words” or words that can be safely removed or ignored without sacrificing the meaning of the sentence (e.g.&nbsp;“to”, “in”, “and”) using <code>anti_join()</code>.</p>
+<p>Take a look at the data - are you satisfied with your data? We won’t conduct any additional cleaning steps here, but consider how you would further clean the data.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove stop words</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>gatsby_tidy <span class="ot">&lt;-</span> gatsby_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gatsby_tidy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  gutenberg_id word      
+         &lt;int&gt; &lt;chr&gt;     
+1        64317 gatsby    
+2        64317 scott     
+3        64317 fitzgerald
+4        64317 table     
+5        64317 contents  
+6        64317 ii        </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 4
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Calculate the top 10 most frequent words using the functions <code>count()</code> and <code>slice_max()</code>.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate top 10 most frequent words</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>gatsby_count <span class="ot">&lt;-</span> gatsby_tidy <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(word) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gatsby_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  word       n
+  &lt;chr&gt;  &lt;int&gt;
+1 gatsby   197
+2 tom      177
+3 daisy    150
+4 don’t     97
+5 house     95
+6 eyes      89</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 5
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Plot the top 10 most frequent words using <code>ggplot()</code>.</p>
+<p>We recommend creating either a bar plot using <code>geom_col()</code> or a lollipop plot using both <code>geom_point()</code> and <code>geom_segment()</code>.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Bar Plot Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> gatsby_count, <span class="fu">aes</span>(n, <span class="fu">reorder</span>(word, n))) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Token"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Base Lollipop Plot Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initial lollipop plot</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> gatsby_count, <span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n)) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Token"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="bonus-question" class="level3" data-number="13.3.2">
+<h3 data-number="13.3.2" class="anchored" data-anchor-id="bonus-question"><span class="header-section-number">13.3.2</span> Bonus Question</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 6
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider elements in <code>theme()</code> and improve your plot.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Custom Lollipop Plot Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ascending order pretty lollipop plot</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> gatsby_count, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(word, n), <span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"cyan4"</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n), <span class="at">color=</span><span class="st">"cyan4"</span>) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Ten Words in The Phantom of the Opera"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="tidy-text-to-non-tidy-text-workflows" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">13.4</span> Tidy Text to Non-tidy Text Workflows</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidytext-nontidy-workflow.png" class="img-fluid figure-img"></p>
+<figcaption>A flowchart of a typical text analysis that combines <code>tidytext</code> with other tools and data formats, particularly the <code>tm</code> or <code>quanteda</code> packages. Source: Silge &amp; Robinson</figcaption>
+</figure>
+</div>
+<p>In the <a href="#exercise-tidy-text-workflow">Tidy Text Workflow Exercise</a>, we converted our corpus into a data table that has “one-token-per-row”. However, the tidy text format of one-token-per-row is not a common format for other R packages that work with text data or perform text analysis. Packages like <code>tm</code>, <code>quanteda</code>, <code>topicmodels</code>.</p>
+<p>Many text analysis methods, in particular NLP techniques (e.g.&nbsp;topic models) require text data to be stored in a mathematical format. <strong>A common approach is to create a matrix, such as a: sparse matrix, a document term matrix (DTM), or a document-feature matrix (DFM)</strong>. In a matrix format, algorithms are able to more easily compare one document to many other documents to identify patterns.</p>
+<p>Silge and Robinson kept this in mind as they built the <code>tidytext</code> package, and included helpful <code>cast()</code> functions to turn a tidy text object (again a table with one-token-per-row) into a matrix.</p>
+<!---
+
+### Use `cast()` to Convert tidy-text to a Matrix (Non-tidy) Format
+
+In these examples, we'll be using multiple books as our text: *The Phantom of the Opera*, *The Strange Case of Dr. Jekyll and Mr. Hyde*, and *Frankenstein; Or, The Modern Prometheus*.
+
+We'll access these texts using `gutenbergr`'s `gutenberg_download()` function, and we'll make sure to include the titles in the download.
+
+::: {.cell}
+
+```{.r .cell-code}
+# download corpus
+all_books_corp <- gutenberg_download(c(175, # phantom of the opera
+                                       42, # jekyll & hyde
+                                       41445), # frankenstein
+                                     meta_fields = c("title"))
+```
+:::
+
+This code chunk is formatting our corpus into the tidy text format, and it is counting the number of times each word occurs in each book.
+
+::: {.cell}
+
+```{.r .cell-code}
+# turn corpus into tidy text format
+all_books_tidy <- all_books_corp %>% 
+    unnest_tokens(output = word, # output col created 
+                  input = text # input col that is split
+                  ) %>% 
+    count(title, word)
+```
+:::
+
+This code chunk is converting our corpus of all books into a sparse matrix.
+
+::: {.cell}
+
+```{.r .cell-code}
+# convert tidy text table to sparse matrix from `Matrix` package
+# requires `Matrix` to be installed
+all_books_sparse <- all_books_tidy %>% 
+    cast_sparse(row = title,
+                column = word,
+                value = n)
+```
+:::
+
+This code chunk is converting our corpus of all books into a document-term matrix object from the `tm` package.
+
+::: {.cell}
+
+```{.r .cell-code}
+# convert tidy text table to DTM object from `tm` package
+# requires `tm` to be installed
+all_books_dtm <- all_books_tidy %>% 
+    cast_dtm(term = word,
+             document = title,
+             value = n)
+```
+:::
+
+This code chunk is converting our corpus of all books into a document-feature matrix object from the `quanteda` package.
+
+::: {.cell}
+
+```{.r .cell-code}
+# convert tidy text table to DFM object from `quanteda` package
+# requires `quanteda` to be installed
+all_books_dfm <- all_books_tidy %>% 
+    cast_dfm(term = word, 
+             document = title, 
+             value = n)
+```
+:::
+
+-->
+</section>
+<section id="exercise-explore-unstructured-text-data-from-a-pdf" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="exercise-explore-unstructured-text-data-from-a-pdf"><span class="header-section-number">13.5</span> Exercise: Explore Unstructured Text Data from a PDF</h2>
+<p>Frequently the text data we want to analyzed is in PDF format. In the next exercise we walk through how to read in a PDF file into R to be able to programmatically analyze the text.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>In the <code>intro-text-data.qmd</code> file, create a new header for this exercise (e.g.&nbsp;“Explore Unstructured Text Data from a PDF”).</p></li>
+<li><p>Create a new code chunk and attach the following libraries:</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext) <span class="co"># tidy text tools</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda) <span class="co"># create a corpus</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pdftools) <span class="co"># read in data</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># wrangle data</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) <span class="co"># string manipulation</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># plots</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Depending on which group you’re in, read in one of the following chapters of the Delta Plan. Access and download the chapters of the Delta Plan from <a href="https://deltacouncil.ca.gov/delta-plan/">Delta Stewardship Council website</a>.</li>
+</ol>
+<p><strong>Notes for quick exploration of data:</strong></p>
+<ul>
+<li>Check the <code>class()</code> of the pdf you just read in - is it what you expected? How does the object appear in the Global Environment?</li>
+<li>Call the object in the Console. What does your data look like? What can you infer from how it’s structured?</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 3</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/dsc-plan-ch3.pdf"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dp_ch3 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 4</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/dsc-plan-ch4.pdf"</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>dp_ch4 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 5</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/dsc-plan-ch5.pdf"</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>dp_ch5 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 6</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/dsc-plan-ch6.pdf"</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>dp_ch6 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will demonstrate using Chapter 8.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/text/dsc-plan-ch8.pdf"</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dp_ch8 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>Using the <code>quanteda</code> package, turn the unstructured pdf text data into a corpus.</li>
+</ol>
+<p><strong>Notes for quick exploration of data:</strong></p>
+<ul>
+<li>Check the <code>class()</code> of the corpus you created - is it what you expected? How does the object appear in the Global Environment?</li>
+<li>Call the object in the Console. What does your data look like? How does this structure compare to the pdf object?</li>
+<li>Run <code>summary()</code> of the corpus in the Console. What insights can you glean?</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dp_ch8_corpus <span class="ot">&lt;-</span> quanteda<span class="sc">::</span><span class="fu">corpus</span>(dp_ch8)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" type="1">
+<li>Using <code>tidy()</code> from <code>tidytext</code>, make the corpus a tidy object.</li>
+</ol>
+<p><strong>Notes for quick exploration of data:</strong></p>
+<ul>
+<li>Check the <code>class()</code> of the corpus you created - is it what you expected? How does the object appear in the Global Environment?</li>
+<li>Call the object in the Console or use <code>View()</code>. What does your data look like? Is it what you expected?</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 8 is used for demonstration and testing</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dp_ch8_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(dp_ch8_corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<section id="questions-1" class="level3" data-number="13.5.1">
+<h3 data-number="13.5.1" class="anchored" data-anchor-id="questions-1"><span class="header-section-number">13.5.1</span> Questions</h3>
+<p>Work independently or in groups for Question 1-5. The code solutions are based on the text data from Chapter 8 of the Delta Plan.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Tokenize the tidy text data using <code>unnest_tokens()</code></p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dp_ch8_unnest <span class="ot">&lt;-</span> dp_ch8_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">input =</span> text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Remove stop words using <code>anti_join()</code> and the <code>stop_words</code> data frame from <code>tidytext</code>.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dp_ch8_words <span class="ot">&lt;-</span> dp_ch8_unnest <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">anti_join</span>(stop_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Calculate the top 10 most frequently occurring words. Consider using <code>count()</code> and <code>slice_max()</code>.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dp_ch8_count <span class="ot">&lt;-</span> dp_ch8_words <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(word) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 4
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Visualize the results using a plot of your choice (e.g.&nbsp;bar plot, lollipop plot, or wordcloud).</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Bar Plot Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dp_ch8_count, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Most Frequently Occurring Words in Chapter 8 of the Delta Plan"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"count"</span>) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Lollipop Plot Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lollipop plot</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> dp_ch8_count, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(word, n), <span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n)) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Most Frequently Occurring Words in Chapter 8 of the Delta Plan"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Wordcloud Plot Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># wordcloud</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(<span class="at">words =</span> dp_ch8_count<span class="sc">$</span>word,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">freq =</span> dp_ch8_count<span class="sc">$</span>n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="bonus-question-1" class="level3" data-number="13.5.2">
+<h3 data-number="13.5.2" class="anchored" data-anchor-id="bonus-question-1"><span class="header-section-number">13.5.2</span> Bonus Question</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 5
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What do you think of your plots? Are they helpful? Consider other techniques like adding custom stop words or stemming to improve your results.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="common-text-analysis-and-text-mining-methods" class="level2" data-number="13.6">
+<h2 data-number="13.6" class="anchored" data-anchor-id="common-text-analysis-and-text-mining-methods"><span class="header-section-number">13.6</span> Common Text Analysis and Text Mining Methods</h2>
+<p>The text analysis tools, methods, and packages depend greatly on your specific text analysis goals and the nature of your text data. You may end up only using one method or one package, or many in combination.</p>
+<table class="table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 31%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Text Analysis Method</th>
+<th>R Package</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Document-Term Matrix (DTM)</td>
+<td><code>tm</code>, <code>quanteda</code>, <code>tm.plugin.webmining</code></td>
+<td>Represent text data as a matrix of word frequencies.</td>
+</tr>
+<tr class="even">
+<td>Named Entity Recognition (NER)</td>
+<td><code>openNLP</code>, <code>spacyr</code>, <code>udpipe</code></td>
+<td>Identify entities like names, locations, etc. in text.</td>
+</tr>
+<tr class="odd">
+<td>Sentiment Analysis</td>
+<td><code>tidytext</code>, <code>sentimentr</code>, <code>syuzhet</code></td>
+<td>Determine sentiment (positive/negative) in text.</td>
+</tr>
+<tr class="even">
+<td>Stopword Removal</td>
+<td><code>tm</code>, <code>quanteda</code>, <code>tidytext</code></td>
+<td>Remove common and irrelevant words.</td>
+</tr>
+<tr class="odd">
+<td>Text Classification</td>
+<td><code>caret</code>, <code>tm</code>, <code>quanteda</code></td>
+<td>Categorize text into predefined classes/categories.</td>
+</tr>
+<tr class="even">
+<td>Text Clustering</td>
+<td><code>tm</code>, <code>text2vec</code>, <code>tm.plugin.clustering</code></td>
+<td>Group similar documents together.</td>
+</tr>
+<tr class="odd">
+<td>Text Summarization</td>
+<td><code>tm</code>, <code>textclean</code>, <code>textrank</code></td>
+<td>Condense the main points of a text into a summary.</td>
+</tr>
+<tr class="even">
+<td>TF-IDF</td>
+<td><code>tm</code>, <code>tm.plugin.webmining</code>, <code>tidytext</code></td>
+<td>Measure word importance in a document corpus.</td>
+</tr>
+<tr class="odd">
+<td>Tokenization</td>
+<td><code>tm</code>, <code>quanteda</code>, <code>text2vec</code></td>
+<td>Split text into individual words/tokens.</td>
+</tr>
+<tr class="even">
+<td>Topic Modeling</td>
+<td><code>tm</code>, <code>topicmodels</code>, <code>lda2vec</code></td>
+<td>Discover hidden topics in a collection of documents.</td>
+</tr>
+<tr class="odd">
+<td>Word Embeddings</td>
+<td><code>word2vec</code>, <code>text2vec</code>, <code>fastText</code></td>
+<td>Represent words as dense vectors for semantic analysis.</td>
+</tr>
+<tr class="even">
+<td>Dependency Parsing</td>
+<td><code>udpipe</code>, <code>spaCy</code>, <code>openNLP</code></td>
+<td>Analyze grammatical structure and word dependencies.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+R Text Mining Tools and Analysis Packages Resources
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://cran.r-project.org/web/views/NaturalLanguageProcessing.html">CRAN Task View: Natural Language Processing</a></li>
+<li><a href="https://guides.library.upenn.edu/penntdm/r">Penn Libraries Guides: Text Analysis</a></li>
+<li><a href="https://tutorials.quanteda.io/">Quanteda Tutorials By Kohei Watanabe and Stefan Müller</a></li>
+</ul>
+</div>
+</div>
+<!--## Note About Python and NLP
+
+While both `R` and `python` are capable of natural language processing and other machine learning text analysis techniques, many claim there is an advantage to using `python` over `R`. `Python` has a vast amount of libraries and packages, and its libraries for machine learning (e.g. `scikit-learn`, `TensorFlow`, `Keras`) make it simple to build models from scratch (Note: packages like `TensorFlow` are being ported to `R`). Additionally, `Python` tends to run faster than `R`, which is why some may prefer to use `python` when working with large datasets.
+
+However, both languages have a vast array of libraries and packages, and large, active communities to lean on for support.
+
+It's important to note that with tools like Jupyter Notebook and Quarto you're not longer limited to just one language. With tools that support both `R` and `python` code, you have the capability to leverage the strengths of both languages. For example, you can build a NLP model using `python` and then create a visualization using `R`. -->
 
 
-</section>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-farrell2022" class="csl-entry" role="listitem">
+Farrell, Maxwell J., Liam Brierley, Anna Willoughby, Andrew Yates, and Nicole Mideo. 2022. <span>“Past and Future Uses of Text Mining in Ecology and Evolution.”</span> <em>Proceedings of the Royal Society B: Biological Sciences</em> 289 (1975). <a href="https://doi.org/10.1098/rspb.2021.2721">https://doi.org/10.1098/rspb.2021.2721</a>.
+</div>
+<div id="ref-froehlich2017" class="csl-entry" role="listitem">
+Froehlich, Halley E., Rebecca R. Gentry, Michael B. Rust, Dietmar Grimm, and Benjamin S. Halpern. 2017. <span>“Public Perceptions of Aquaculture: Evaluating Spatiotemporal Patterns of Sentiment Around the World.”</span> Edited by Christopher M. Somers. <em>PLOS ONE</em> 12 (1): e0169281. <a href="https://doi.org/10.1371/journal.pone.0169281">https://doi.org/10.1371/journal.pone.0169281</a>.
+</div>
+<div id="ref-vanhoutan2020" class="csl-entry" role="listitem">
+Van Houtan, Kyle S., Tyler Gagne, Clinton N. Jenkins, and Lucas Joppa. 2020. <span>“Sentiment Analysis of Conservation Studies Captures Successes of Species Reintroductions.”</span> <em>Patterns</em> 1 (1): 100005. <a href="https://doi.org/10.1016/j.patter.2020.100005">https://doi.org/10.1016/j.patter.2020.100005</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -622,10 +1270,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -635,8 +1282,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -649,6 +1305,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -692,6 +1467,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -717,6 +1493,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -778,17 +1580,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./session_12.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Working with US Census Data</span></span>
+      <a href="./session_12.html" class="pagination-link  aria-label=" &lt;span="" practice:="" cleaning="" and="" wrangling&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R Practice: Cleaning and Wrangling</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./session_14.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Guest Speaker</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./session_18.html" class="pagination-link" aria-label="<span class='chapter-number'>14</span>&nbsp; <span class='chapter-title'>U.S Census Data in R</span>">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
