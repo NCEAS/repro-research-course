@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Reproducible Approaches to Arctic Research Using R - 16&nbsp; Reproducible Survey Workflow</title>
+<title>Reproducible Approaches to Arctic Research Using R - 16&nbsp; Writing Functions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -103,6 +103,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.31/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 
 
 <link rel="stylesheet" href="style.css">
@@ -117,7 +126,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_16.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Reproducible Survey Workflow</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_16.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Writing Functions</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -130,7 +139,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Reproducible Survey Workflow</span></h1>
+      <h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Writing Functions</span></h1>
                       </div>
   </div>
     
@@ -178,103 +187,115 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">RStudio &amp; git Setup</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to R Programming</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Thinking Preferences &amp; Social Aspects of Collaboration</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data Managment Plans</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_05.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Writing Data Management Plans</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Documenting and Publishing Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introduction to Git and GitHub</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Practice: Literate Analysis</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Data Modeling Essentials</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_08.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling Essentials</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_09.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Collaborating with Git and GitHub</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Intro to Data Visualization</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Publishing you Analysis to the Web</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_11.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ethical Data Collection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Intro to Data Visualization</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_12.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R Practice: Cleaning and Wrangling</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Practice Session I</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_13.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Data Portals</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_14.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Metadata Best Practices and Data Publishing</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Thinking Preferences</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_15.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Creating Data Portals</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Social Aspects of Collaboration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_16.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Reproducible Survey Workflow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Writing Functions</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_17.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Provenance and Reproducibility</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Building R Packages</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./session_18.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Practice Session II</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_19.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Working with Spatial Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_20.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Reproducibility &amp; Provenance</span></span></a>
   </div>
 </li>
     </ul>
@@ -288,18 +309,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">16.1</span> Introduction</a></li>
-  <li><a href="#building-workflows-using-qualtrics" id="toc-building-workflows-using-qualtrics" class="nav-link" data-scroll-target="#building-workflows-using-qualtrics"><span class="header-section-number">16.2</span> Building workflows using Qualtrics</a>
+  <li><a href="#r-functions" id="toc-r-functions" class="nav-link" data-scroll-target="#r-functions"><span class="header-section-number">16.1</span> R Functions</a>
   <ul class="collapse">
-  <li><a href="#survey-instrument" id="toc-survey-instrument" class="nav-link" data-scroll-target="#survey-instrument"><span class="header-section-number">16.2.1</span> Survey Instrument</a></li>
-  <li><a href="#working-with-qualtircs" id="toc-working-with-qualtircs" class="nav-link" data-scroll-target="#working-with-qualtircs"><span class="header-section-number">16.2.2</span> Working with <code>qualtiRcs</code></a></li>
+  <li><a href="#why-functions" id="toc-why-functions" class="nav-link" data-scroll-target="#why-functions"><span class="header-section-number">16.1.1</span> Why Functions?</a></li>
+  <li><a href="#exercise-temperature-conversion" id="toc-exercise-temperature-conversion" class="nav-link" data-scroll-target="#exercise-temperature-conversion"><span class="header-section-number">16.1.2</span> Exercise: Temperature Conversion</a></li>
+  <li><a href="#documenting-r-functions" id="toc-documenting-r-functions" class="nav-link" data-scroll-target="#documenting-r-functions"><span class="header-section-number">16.1.3</span> Documenting R Functions</a></li>
+  <li><a href="#exercise-minimizing-work-with-functions" id="toc-exercise-minimizing-work-with-functions" class="nav-link" data-scroll-target="#exercise-minimizing-work-with-functions"><span class="header-section-number">16.1.4</span> Exercise: Minimizing Work with Functions</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">16.1.5</span> Summary</a></li>
   </ul></li>
-  <li><a href="#other-survey-tools" id="toc-other-survey-tools" class="nav-link" data-scroll-target="#other-survey-tools"><span class="header-section-number">16.3</span> Other survey tools</a>
-  <ul class="collapse">
-  <li><a href="#google-forms" id="toc-google-forms" class="nav-link" data-scroll-target="#google-forms"><span class="header-section-number">16.3.1</span> Google forms</a></li>
-  <li><a href="#survey-monkey" id="toc-survey-monkey" class="nav-link" data-scroll-target="#survey-monkey"><span class="header-section-number">16.3.2</span> Survey Monkey</a></li>
-  </ul></li>
-  <li><a href="#resourcese" id="toc-resourcese" class="nav-link" data-scroll-target="#resourcese"><span class="header-section-number">16.4</span> Resourcese</a></li>
   </ul>
 </nav>
     </div>
@@ -313,316 +330,304 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="learning-objectives" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
 <ul>
-<li>Overview of survey tools</li>
-<li>Generating a reproducible survey report with Qualtrics</li>
+<li>Explain the importance of using and developing functions</li>
+<li>Create custom functions using R code</li>
+<li>Document functions to improve understanding and code communication</li>
 </ul>
 </section>
-<section id="introduction" class="level2" data-number="16.1">
-<h2 data-number="16.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">16.1</span> Introduction</h2>
-<p>Surveys and questionnaires are commonly used research methods within social science and other fields. For example, understanding regional and national population demographics, income, and education as part of the <a href="https://www.census.gov/en.html">National Census</a> activity, assessing audience perspectives on specific topics of research interest (e.g.&nbsp;the work by Tenopir and colleagues on <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0021101">Data Sharing by Scientists</a>), evaluation of learning deliverable and outcomes, and consumer feedback on new and upcoming products. These are distinct from the use of the term survey within natural sciences, which might include geographical surveys (“the making of measurement in the field from which maps are drawn”), ecological surveys (“the process whereby a proposed development site is assess to establish any environmental impact the development may have”) or biodiversity surveys (“provide detailed information about biodiversity and community structure”) among others.</p>
-<p>Although surveys can be conducted on paper or verbally, here we focus on surveys done via software tools. Needs will vary according to the nature of the research being undertaken. However, there is fundamental functionality that survey software should provide including:</p>
+<section id="r-functions" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="r-functions"><span class="header-section-number">16.1</span> R Functions</h2>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Quick reminder: What is a function?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>A set of statements or expressions of code that are organized together to perform a specific task.</p>
+<p>The statements or expressions of code within the function accept accept user input(s), does something with it, and returns a useful output.</p>
+<p>Syntax: <code>result_value &lt;- function_name(argument1 = value1, argument2 = value2, ...)</code></p>
+</div>
+</div>
+</div>
+<p>Many people write R code as a single, continuous stream of commands, often drawn from the R Console itself and simply pasted into a script. While any script brings benefits over non-scripted solutions, there are advantages to breaking code into small, reusable modules. This is the role of a <strong>function</strong> in R. In this lesson, we will review the advantages of coding with functions, practice by creating some functions and show how to call them, and then do some exercises to build other simple functions.</p>
+<section id="why-functions" class="level3" data-number="16.1.1">
+<h3 data-number="16.1.1" class="anchored" data-anchor-id="why-functions"><span class="header-section-number">16.1.1</span> Why Functions?</h3>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>DRY: Don’t Repeat Yourself</strong></p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>“You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e.&nbsp;you now have three copies of the same code).”</p>
+<p><em><a href="https://r4ds.had.co.nz/functions.html">Chapter 19 Functions</a> in R for Data Science (Grolemund &amp; Wickham)</em></p>
+</blockquote>
+<p>By creating small functions that only complete one logical task and do it well, we quickly gain:</p>
+<ul>
+<li>Improved understanding</li>
+<li>Reuse via decomposing tasks into bite-sized chunks</li>
+<li>Improved error testing</li>
+</ul>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Naming Functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The name of a function is important. Ideally, function names should be short, but still clearly captures what the function does.</p>
+<p>Best Practices from <a href="https://r4ds.had.co.nz/functions.html">Chapter 19 Functions</a> in R for Data Science:</p>
+<ul>
+<li>Function names should be verbs and arguments should be nouns (there are <a href="https://r4ds.had.co.nz/functions.html#functions-are-for-humans-and-computers">exceptions</a>).</li>
+<li>Use the <code>snake_case</code> naming convention for functions that are multiple words.</li>
+<li>For a “family” of functions, use a common prefix to indicate that they are connected.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="exercise-temperature-conversion" class="level3" data-number="16.1.2">
+<h3 data-number="16.1.2" class="anchored" data-anchor-id="exercise-temperature-conversion"><span class="header-section-number">16.1.2</span> Exercise: Temperature Conversion</h3>
+<p>Imagine you have a bunch of data measured in Fahrenheit and you want to convert that for analytical purposes to Celsius. You might have an R script that does this for you.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>airtemps <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">212</span>, <span class="fl">30.3</span>, <span class="dv">78</span>, <span class="dv">32</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>celsius1 <span class="ot">&lt;-</span> (airtemps[<span class="dv">1</span>] <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> <span class="dv">5</span><span class="sc">/</span><span class="dv">9</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>celsius2 <span class="ot">&lt;-</span> (airtemps[<span class="dv">2</span>] <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> <span class="dv">5</span><span class="sc">/</span><span class="dv">9</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>celsius3 <span class="ot">&lt;-</span> (airtemps[<span class="dv">3</span>] <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> <span class="dv">5</span><span class="sc">/</span><span class="dv">9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note the duplicated code, where the same formula is repeated three times. This code would be both more compact and more reliable if we didn’t repeat ourselves.</p>
+<section id="create-a-function-that-converts-fahrenheit-to-celsius" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="create-a-function-that-converts-fahrenheit-to-celsius">Create a Function that Converts Fahrenheit to Celsius</h4>
+<p>Functions in R are a mechanism to process some input and return a value. Similarly to other variables, functions can be assigned to a variable so that they can be used throughout code by reference. To create a function in R, you use the <code>function</code> function (so meta!) and assign its result to a variable. Let’s create a function that calculates Celsius temperature outputs from Fahrenheit temperature inputs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fahr_to_celsius <span class="ot">&lt;-</span> <span class="cf">function</span>(fahr) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  celsius <span class="ot">&lt;-</span> (fahr <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> <span class="dv">5</span><span class="sc">/</span><span class="dv">9</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(celsius)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>By running this code, we have created a function and stored it in R’s global environment. The <code>fahr</code> argument to the <code>function</code> function indicates that the function we are creating takes a single parameter (the temperature in Fahrenheit), and the <code>return</code> statement indicates that the function should return the value in the <code>celsius</code> variable that was calculated inside the function. Let’s use it, and check if we got the same value as before:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>celsius4 <span class="ot">&lt;-</span> <span class="fu">fahr_to_celsius</span>(airtemps[<span class="dv">1</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>celsius4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>celsius1 <span class="sc">==</span> celsius4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Excellent. So now we have a conversion function we can use. Note that, because most operations in <code>R</code> can take multiple types as inputs, we can also pass the original vector of <code>airtemps</code>, and calculate all of the results at once:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>celsius <span class="ot">&lt;-</span> <span class="fu">fahr_to_celsius</span>(airtemps)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>celsius</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100.0000000  -0.9444444  25.5555556   0.0000000</code></pre>
+</div>
+</div>
+<p>This takes a vector of temperatures in Fahrenheit, and returns a vector of temperatures in Celsius.</p>
+</section>
+<section id="your-turn-create-a-function-that-converts-celsius-to-fahrenheit" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="your-turn-create-a-function-that-converts-celsius-to-fahrenheit">Your Turn: Create a Function that Converts Celsius to Fahrenheit</h4>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Create a function named <code>celsius_to_fahr</code> that does the reverse, it takes temperature data in Celsius as input, and returns the data converted to Fahrenheit.</p>
+<p>Create the function <code>celsius_to_fahr</code> in a new R Script file.</p>
+<p>Then use that formula to convert the <code>celsius</code> vector back into a vector of Fahrenheit values, and compare it to the original <code>airtemps</code> vector to ensure that your answers are correct.</p>
+<p><strong>Hint:</strong> the formula for Celsius to Fahrenheit conversions is <code>celsius * 9/5 + 32</code>.</p>
+</div>
+</div>
+<p>Did you encounter any issues with rounding or precision?</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution, but don’t peek!
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Don’t peek until you write your own…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>celsius_to_fahr <span class="ot">&lt;-</span> <span class="cf">function</span>(celsius) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    fahr <span class="ot">&lt;-</span> celsius <span class="sc">*</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">5</span> <span class="sc">+</span> <span class="dv">32</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(fahr)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">celsius_to_fahr</span>(celsius)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>airtemps <span class="sc">==</span> result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE TRUE TRUE TRUE</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="documenting-r-functions" class="level3" data-number="16.1.3">
+<h3 data-number="16.1.3" class="anchored" data-anchor-id="documenting-r-functions"><span class="header-section-number">16.1.3</span> Documenting R Functions</h3>
+<p>Functions need documentation so that we can communicate what they do, and why. The <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code> R package</a> provides a simple means to document your functions so that you can explain what the function does, the assumptions about the input values, a description of the value that is returned, and the rationale for decisions made about implementation.</p>
+<p>Documentation in <code>roxygen2</code> is placed immediately before the function definition, and is indicated by a special comment line that always starts with the characters <code>#'</code>. Here’s a documented version of a function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Convert temperature values from Fahrenheit to Celsius</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param fahr Numeric or numeric vector in degrees Fahrenheit</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return Numeric or numeric vector in degrees Celsius</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @examples</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' fahr_to_celsius(32)</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' fahr_to_celsius(c(32, 212, 72))</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>fahr_to_celsius <span class="ot">&lt;-</span> <span class="cf">function</span>(fahr) {</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  celsius <span class="ot">&lt;-</span> (fahr <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> <span class="dv">5</span><span class="sc">/</span><span class="dv">9</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(celsius)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note the use of the <code>@param</code> keyword to define the expectations of input data, and the <code>@return</code> keyword for defining the value that is returned from the function. The <code>@examples</code> function is useful as a reminder as to how to use the function. Finally, the <code>@export</code> keyword indicates that, if this function were added to a package, then the function should be available to other code and packages to utilize.</p>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Check it out: Function Documentation Section from R Packages (2e)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For more best practices on function documentation, review Hadley Wickham and Jennifer Bryan’s online book <a href="https://r-pkgs.org/">R Packages (2e)</a> - <a href="https://r-pkgs.org/man.html">Chapter 10, Section 16: Function Documentation</a>.</p>
+</div>
+</div>
+</section>
+<section id="exercise-minimizing-work-with-functions" class="level3" data-number="16.1.4">
+<h3 data-number="16.1.4" class="anchored" data-anchor-id="exercise-minimizing-work-with-functions"><span class="header-section-number">16.1.4</span> Exercise: Minimizing Work with Functions</h3>
+<p>Functions can of course be as simple or complex as needed. They can be be very effective in repeatedly performing calculations, or for bundling a group of commands that are used on many different input data sources. For example, we might create a simple function that takes Fahrenheit temperatures as input, and calculates both Celsius and Kelvin temperatures. All three values are then returned in a list, making it very easy to create a comparison table among the three scales.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>convert_temps <span class="ot">&lt;-</span> <span class="cf">function</span>(fahr) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  celsius <span class="ot">&lt;-</span> (fahr <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> <span class="dv">5</span><span class="sc">/</span><span class="dv">9</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  kelvin <span class="ot">&lt;-</span> celsius <span class="sc">+</span> <span class="fl">273.15</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">fahr =</span> fahr, <span class="at">celsius =</span> celsius, <span class="at">kelvin =</span> kelvin))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>temps_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">convert_temps</span>(<span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>,<span class="dv">100</span>,<span class="dv">10</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-ee6e857a611d0d3b527e" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ee6e857a611d0d3b527e">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"],[-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100],[-73.33333333333333,-67.77777777777777,-62.22222222222222,-56.66666666666666,-51.11111111111111,-45.55555555555556,-40,-34.44444444444444,-28.88888888888889,-23.33333333333333,-17.77777777777778,-12.22222222222222,-6.666666666666667,-1.111111111111111,4.444444444444445,10,15.55555555555556,21.11111111111111,26.66666666666667,32.22222222222222,37.77777777777778],[199.8166666666667,205.3722222222222,210.9277777777777,216.4833333333333,222.0388888888889,227.5944444444444,233.15,238.7055555555555,244.2611111111111,249.8166666666666,255.3722222222222,260.9277777777777,266.4833333333333,272.0388888888889,277.5944444444444,283.15,288.7055555555555,294.2611111111111,299.8166666666667,305.3722222222222,310.9277777777777]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>fahr<\/th>\n      <th>celsius<\/th>\n      <th>kelvin<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"fahr","targets":1},{"name":"celsius","targets":2},{"name":"kelvin","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Once we have a dataset like that, we might want to plot it. One thing that we do repeatedly is set a consistent set of display elements for creating graphs and plots. By using a function to create a custom <code>ggplot</code> theme, we can enable to keep key parts of the formatting flexible. For example, in the <code>custom_theme</code> function, we provide a <code>base_size</code> argument that defaults to using a font size of 9 points. Because it has a default set, it can safely be omitted. But if it is provided, then that value is used to set the base font size for the plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>custom_theme <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">9</span>) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    ggplot2<span class="sc">::</span><span class="fu">theme</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">text             =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">'Helvetica'</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">color =</span> <span class="st">'gray30'</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">size =</span> base_size),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title       =</span> ggplot2<span class="sc">::</span><span class="fu">element_text</span>(<span class="at">size =</span> ggplot2<span class="sc">::</span><span class="fu">rel</span>(<span class="fl">1.25</span>), </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">face =</span> <span class="st">'bold'</span>),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.background =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.border     =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.major =</span> ggplot2<span class="sc">::</span><span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">'grey90'</span>, </span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">linewidth =</span> <span class="fl">0.25</span>),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position  =</span> <span class="st">'right'</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.key       =</span> ggplot2<span class="sc">::</span><span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="cn">NA</span>, </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks       =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>(),</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.line        =</span> ggplot2<span class="sc">::</span><span class="fu">element_blank</span>()</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(temps_df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> fahr, <span class="at">y =</span> celsius, <span class="at">color =</span> kelvin)) <span class="sc">+</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">custom_theme</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_16_files/figure-html/func-custom-theme-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this case, we set the font size to 10, and plotted the air temperatures. The <code>custom_theme</code> function can be used anywhere that one needs to consistently format a plot.</p>
+<p>But we can go further. One can wrap the entire call to ggplot in a function, enabling one to create many plots of the same type with a consistent structure. For example, we can create a <code>scatterplot</code> function that takes a data frame as input, along with a point_size for the points on the plot, and a font_size for the text.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>scatterplot <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">point_size =</span> <span class="dv">2</span>, <span class="at">font_size =</span> <span class="dv">9</span>) {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(df, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> fahr, <span class="at">y =</span> celsius, <span class="at">color =</span> kelvin)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> point_size) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">custom_theme</span>(font_size)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calling that let’s us, in a single line of code, create a highly customized plot but maintain flexibility via the arguments passed in to the function. Let’s set the point size to 3 and font to 16 to make the plot more legible.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterplot</span>(temps_df, <span class="at">point_size =</span> <span class="dv">3</span>, <span class="at">font_size =</span> <span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_16_files/figure-html/func-call-sp-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Once these functions are set up, all of the plots built with them can be reformatted by changing the settings in just the functions, whether they were used to create 1, 10, or 100 plots.</p>
+</section>
+<section id="summary" class="level3" data-number="16.1.5">
+<h3 data-number="16.1.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">16.1.5</span> Summary</h3>
+<ul>
+<li>Functions are useful to reduce redundancy, reuse code, and reduce errors</li>
+<li>Build functions with <code>function()</code></li>
+<li>Document functions with <code>roxygen2</code> comments</li>
+</ul>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Workflow for Creating Functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ol type="1">
-<li>The ability to create and customize questions</li>
-<li>The ability to include different types of questions</li>
-<li>The ability to distribute the survey and manage response collection</li>
-<li>The ability to collect, summarize, and (securely) store response data</li>
+<li>Have a clear goal (sometimes it helps to create a visual).</li>
+<li>Outline the plan and then add more detailed steps or tasks.</li>
+<li>Build it up bit-by-bit and start with a minimum viable example. As your function becomes more complex, it can harder to track all the bits.</li>
+<li>Always check intermediates!</li>
 </ol>
-<p>More advanced features can include:</p>
-<ul>
-<li><strong>Visual design and templates</strong> - custom design might include institutional branding or aesthetic elements. Templates allow you to save these designs and apply to other surveys</li>
-<li><strong>Question piping</strong> - piping inserts answers from previous questions into upcoming questions and can personalize the survey experience for users</li>
-<li><strong>Survey logic</strong> - with question logic and skip logic you can control the inclusion / exclusion of questions based on previous responses</li>
-<li><strong>Randomization</strong> - the ability to randomize the presentation of questions within (blocks of) the survey</li>
-<li><strong>Branching</strong> - this allows for different users to take different paths through the survey. Similar to question logic but at a bigger scale</li>
-<li><strong>Language support</strong> - automated translation or multi-language presentation support</li>
-<li><strong>Shared administration</strong> - enables collaboration on the survey and response analysis</li>
-<li><strong>Survey export</strong> - ability to download (export) the survey instrument</li>
-<li><strong>Reports</strong> - survey response visualization and reporting tools</li>
-<li><strong>Institutional IRB approved</strong> - institutional IRB policy may require certain software be used for research purposes</li>
-</ul>
-<p>Commonly used survey software within academic (vs market) research include Qualtrics, Survey Monkey and Google Forms. Both Qualtrics and Survey Monkey are licensed (with limited functionality available at no cost) and Google forms is free.</p>
-<p><img src="images/survey_comparison.png" class="img-fluid"></p>
-</section>
-<section id="building-workflows-using-qualtrics" class="level2" data-number="16.2">
-<h2 data-number="16.2" class="anchored" data-anchor-id="building-workflows-using-qualtrics"><span class="header-section-number">16.2</span> Building workflows using Qualtrics</h2>
-<p>In this lesson we will use the <a href="https://github.com/ropensci/qualtRics"><code>qualtRics</code></a> package to reproducible access some survey results set up for this course.</p>
-<section id="survey-instrument" class="level3" data-number="16.2.1">
-<h3 data-number="16.2.1" class="anchored" data-anchor-id="survey-instrument"><span class="header-section-number">16.2.1</span> Survey Instrument</h3>
-<p>The survey is very short, only four questions. The first question is on it’s own page and is a consent question, after a couple of short paragraphs describing what the survey is, it’s purpose, how long it will take to complete, and who is conducting it. This type of information is required if the survey is governed by an IRB, and the content will depend on the type of research being conducted. In this case, this survey is not for research purposes, and thus is not governed by IRB, but we still include this information as it conforms to the <a href="https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/read-the-belmont-report/index.html#xinform">Belmont Principles</a>. The Belmont Principles identify the basic ethical principles that should underlie research involving human subjects.</p>
-<p><img src="images/survey_consent.png" class="img-fluid"></p>
-<p>The three main questions of the survey have three types of responses: a multiple choice answer, a multiple choice answer which also includes an “other” write in option, and a free text answer. We’ll use the results of this survey, which was sent out to NCEAS staff to fill out, to learn about how to create a reproducible survey report.</p>
-<p><img src="images/survey_main.png" class="img-fluid"></p>
-</section>
-<section id="working-with-qualtircs" class="level3" data-number="16.2.2">
-<h3 data-number="16.2.2" class="anchored" data-anchor-id="working-with-qualtircs"><span class="header-section-number">16.2.2</span> Working with <code>qualtiRcs</code></h3>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Set up
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p>First, open a new Quarto document and add a chunk to load the libraries we’ll need for this lesson:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(qualtRics)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Next, we need to set the API credentials. The <code>qualtrics_api_credentials</code> function creates environment variables to hold your Qualtrics account information. The function can either temporarily store this information for just this session, or it can modify the <code>.Renviron</code> file to set your API key and base URL so that you can access Qualtrics programmatically from any session.</p>
-<p>The API key is as good as a password, so care should be taken to not share it publicly. For example, you would never want to save it in a script. The function below is the rare exception of code that should be run in the console and not saved. It works in a way that you only need to run it once, unless you are working on a new computer or your credentials changed. Note that in this book, we have not shared the actual API key, for the reasons outlined above. For the course, we will share the key via a file or by e-mail. Provide the key as a string to the <code>api_key</code> argument in the function below:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>key_file <span class="ot">&lt;-</span> <span class="fu">read_lines</span>(<span class="st">"/tmp/qualtrics-key.txt"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qualtrics_api_credentials</span>(<span class="at">api_key =</span> key_file[<span class="dv">1</span>], <span class="at">base_url =</span> <span class="st">"ucsb.co1.qualtrics.com"</span>, <span class="at">install =</span> <span class="cn">FALSE</span>, <span class="at">overwrite =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aside note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The .Renviron file is a special user controlled file that can create environment variables. Every time you open Rstudio, the variables in your environment file are loaded as…environment variables! Environment variables are named values that are accessible by your R process. They will not show up in your environment pane, but you can get a list of all of them using <code>Sys.getenv()</code>. Many are system defaults.</p>
-<p>To view or edit your <code>.Renviron</code> file, you can use <code>usethis::edit_r_environ()</code>.</p>
-</div>
-</div>
-<p>To get a list of all the surveys in your Qualtrics instance, use the <code>all_surveys</code> function.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>surveys <span class="ot">&lt;-</span> <span class="fu">all_surveys</span>()</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(surveys) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>This function returns a list of surveys, in this case only one, and information about each, including an identifier and it’s name. We’ll need that identifier later, so let’s go ahead and extract it using base R from the data frame.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">which</span>(surveys<span class="sc">$</span>name <span class="sc">==</span> <span class="st">"Survey for Data Science Training"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>id <span class="ot">&lt;-</span> surveys<span class="sc">$</span>id[i]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>You can retrieve a list of the questions the survey asked using the <code>survey_questions</code> function and the survey <code>id</code>.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">survey_questions</span>(id)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(questions) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>This returns a <code>data.frame</code> with one row per question with columns for question id, question name, question text, and whether the question was required. This is helpful to have as a reference for when you are looking at the full survey results.</p>
-<p>To get the full survey results, run <code>fetch_survey</code> with the survey id.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>survey_results <span class="ot">&lt;-</span> <span class="fu">fetch_survey</span>(id)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(survey_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>The survey results table has tons of information in it, not all of which will be relevant depending on your survey. The table has identifying information for the respondents (eg: <code>ResponseID</code>, <code>IPaddress</code>, <code>RecipientEmail</code>, <code>RecipientFirstName</code>, etc), much of which will be empty for this survey since it is anonymous. It also has information about the process of taking the survey, such as the <code>StartDate</code>, <code>EndDate</code>, <code>Progress</code>, and <code>Duration</code>. Finally, there are the answers to the questions asked, with columns labeled according to the <code>qname</code> column in the questions table (eg: Q1, Q2, Q3). Depending on the type of question, some questions might have multiple columns associated with them. We’ll have a look at this more closely in a later example.</p>
-<section id="question-2" class="level4" data-number="16.2.2.1">
-<h4 data-number="16.2.2.1" class="anchored" data-anchor-id="question-2"><span class="header-section-number">16.2.2.1</span> Question 2</h4>
-<p>Let’s look at the responses to the second question in the survey, “How long have you been programming?” Remember, the first question was the consent question.</p>
-<p>We’ll use the <code>dplyr</code> and <code>tidyr</code> tools we learned earlier to extract the information. Here are the steps:</p>
-<ul>
-<li><code>select</code> the column we want (<code>Q1</code>)</li>
-<li><code>group_by</code> and <code>summarize</code> the values</li>
-</ul>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>q2 <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q2) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Q2) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>We can show these results in a table using the <code>kable</code> function from the <code>knitr</code> package:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(q2, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"How long have you been programming?"</span>,</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Number of responses"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</section>
-<section id="question-3" class="level4" data-number="16.2.2.2">
-<h4 data-number="16.2.2.2" class="anchored" data-anchor-id="question-3"><span class="header-section-number">16.2.2.2</span> Question 3</h4>
-<p>For question 3, we’ll use a similar workflow. For this question, however there are two columns containing survey answers. One contains the answers from the controlled vocabulary, the other contains any free text answers users entered.</p>
-<p>To present this information, we’ll first show the results of the controlled answers as a plot. Below the plot, we’ll include a table showing all of the free text answers for the “other” option.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>q3 <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q3) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Q3) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> q3, </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Q3, <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"What language do you currently use most frequently?"</span>, <span class="at">y =</span> <span class="st">"Number of reponses"</span>) <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Now we’ll extract the free text responses:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>q3_text <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q3_7_TEXT) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>()</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(q3_text, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Other responses to 'What language do you currently use mose frequently?'"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</section>
-<section id="question-4" class="level4" data-number="16.2.2.3">
-<h4 data-number="16.2.2.3" class="anchored" data-anchor-id="question-4"><span class="header-section-number">16.2.2.3</span> Question 4</h4>
-<p>The last question is just a free text question, so we can just display the results as is.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>q4 <span class="ot">&lt;-</span> survey_results <span class="sc">%&gt;%</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q4) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="st">`</span><span class="at">What data science tool or language are you most excited to learn next?</span><span class="st">`</span> <span class="ot">=</span> Q4) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>()</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(q4, <span class="at">col.names =</span> <span class="st">"What data science tool or language are you most excited to learn next?"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</section>
-</section>
-</section>
-<section id="other-survey-tools" class="level2" data-number="16.3">
-<h2 data-number="16.3" class="anchored" data-anchor-id="other-survey-tools"><span class="header-section-number">16.3</span> Other survey tools</h2>
-<section id="google-forms" class="level3" data-number="16.3.1">
-<h3 data-number="16.3.1" class="anchored" data-anchor-id="google-forms"><span class="header-section-number">16.3.1</span> Google forms</h3>
-<p>Google forms can be a great way to set up surveys, and it is very easy to interact with the results using R. The benefits of using google forms are a simple interface and easy sharing between collaborators, especially when writing the survey instrument.</p>
-<p>The downside is that google forms has far fewer features than Qualtrics in terms of survey flow and appearance.</p>
-<p>To show how we can link R into our survey workflows, I’ve set up a simple example survey <a href="https://docs.google.com/forms/d/1Yh3IxygzuLXzJvTHl-lskMy7YrQgmeWgr2bEw5gwdIM/edit?usp=sharing">here</a>.</p>
-<p>I’ve set up the results so that they are in a new spreadsheet <a href="https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?resourcekey#gid=1527662370">here:</a>. To access them, we will use the <code>googlesheets4</code> package.</p>
-<p>First, open up a new Quarto doc and load the <code>googlesheets4</code> library:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googlesheets4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Next, we can read the sheet in using the same URL that you would use to share the sheet with someone else. Right now, this sheet is public</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>responses <span class="ot">&lt;-</span> <span class="fu">read_sheet</span>(<span class="st">"https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?usp=sharing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>The first time you run this, you should get a popup window in your web browser asking you to confirm that you want to provide access to your google sheets via the tidyverse (googlesheets) package.</p>
-<p>My dialog box looked like this:</p>
-<p><img src="images/gsheets-access.png" class="img-fluid"></p>
-<p>Make sure you click the third check box enabling the Tidyverse API to see, edit, create, and delete your sheets. Note that you will have to tell it to do any of these actions via the R code you write.</p>
-<p>When you come back to your R environment, you should have a data frame containing the data in your sheet! Let’s take a quick look at the structure of that sheet.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>So, now that we have the data in a standard R <code>data.frame</code>, we can easily summarize it and plot results. By default, the column names in the sheet are the long fully descriptive questions that were asked, which can be hard to type. We can save those questions into a vector for later reference, like when we want to use the question text for plot titles.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">colnames</span>(responses)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(questions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>We can make the responses data frame more compact by renaming the columns of the vector with short numbered names of the form <code>Q1</code>. Note that, by using a sequence, this should work for sheets from just a few columns to many hundreds of columns, and provides a consistent question naming convention.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(questions) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">4</span>))</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>questions</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(responses) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Timestamp"</span>, <span class="fu">names</span>(questions))</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(responses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Now that we’ve renamed our columns, let’s summarize the responses for the first question. We can use the same pattern that we usually do to split the data from Q1 into groups, then summarize it by counting the number of records in each group, and then merge the count of each group back together into a summarized data frame. We can then plot the Q1 results using <code>ggplot</code>:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> responses <span class="sc">%&gt;%</span> </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Q1) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">group_by</span>(Q1) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">n =</span> dplyr<span class="sc">::</span><span class="fu">n</span>())</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(<span class="at">data =</span> q1, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Q1, <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> questions[<span class="dv">1</span>], </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Number of reponses"</span>,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"To what degree did the course meet expectations?"</span>) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<section id="bypassing-authentication-for-public-sheets" class="level4 unnumbered">
-<h4 class="unnumbered anchored" data-anchor-id="bypassing-authentication-for-public-sheets">Bypassing authentication for public sheets</h4>
-<p>If you don’t want to go through a little interactive dialog every time you read in a sheet, and your sheet is public, you can run the function <code>gs4_deauth()</code> to access the sheet as a public user. This is helpful for cases when you want to run your code non-interactively. This is actually how I set it up for this book to build!</p>
-<!-- ##### Challenge {- .exercise}
-
-Now that you have some background in accessing survey data from common tools, let's do a quick exercise with Google Sheets. First, create a google sheet with the following columns that reflect a hypothetical survey result:
-
-- Timestamp
-- Q1: How much did your proficiency with survey tools in R change?  1 = None, 2 = A little, 3 = A lot
-- Q2: How many years or partial years had you used R prior to this course?
-- Q3: How many years or partial years had you used statistics before this course?
-
-Next populate the spreadhsheet with 5 to 10 rows of sample data that you make up. Now that you have the Google sheet in place, copy its URL and use it to do the following in R:
-
-1. Load the google sheet into an R data.frame using the `googlesheets` package
-2. Save the column headers as a vector of questions
-3. Rename the question columns with short, consistent names
-4. Summarize and plot the results for Q1 as a bar chart. -->
-</section>
-</section>
-<section id="survey-monkey" class="level3" data-number="16.3.2">
-<h3 data-number="16.3.2" class="anchored" data-anchor-id="survey-monkey"><span class="header-section-number">16.3.2</span> Survey Monkey</h3>
-<p>Similar to Qualtrics and qualtRics, there is an open source R package for working with data in Survey Monkey: <a href="https://github.com/cloudyr/Rmonkey">Rmonkey</a>. However, the last updates were made 5 years ago, an eternity in the software world, so it may or may not still function as intended.</p>
-<p>There are also commercial options available. For example, <a href="https://www.cdata.com/kb/tech/surveymonkey-jdbc-r.rst">cdata</a> have a driver and R package that enable access to an analysis of Survey Monkey data through R.</p>
-</section>
-</section>
-<section id="resourcese" class="level2" data-number="16.4">
-<h2 data-number="16.4" class="anchored" data-anchor-id="resourcese"><span class="header-section-number">16.4</span> Resourcese</h2>
-<ul>
-<li><a href="https://www.qualtrics.com/support/integrations/api-integration/overview/#GeneratingAnAPIToken">How to get your Qualtrics API key</a></li>
-</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1015,13 +1020,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./session_15.html" class="pagination-link  aria-label=" &lt;span="" data="" portals&lt;="" span&gt;"="">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Creating Data Portals</span></span>
+      <a href="./session_15.html" class="pagination-link  aria-label=" &lt;span="" aspects="" of="" collaboration&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Social Aspects of Collaboration</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./session_17.html" class="pagination-link" aria-label="<span class='chapter-number'>17</span>&nbsp; <span class='chapter-title'>Provenance and Reproducibility</span>">
-        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Provenance and Reproducibility</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./session_17.html" class="pagination-link" aria-label="<span class='chapter-number'>17</span>&nbsp; <span class='chapter-title'>Building R Packages</span>">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Building R Packages</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
