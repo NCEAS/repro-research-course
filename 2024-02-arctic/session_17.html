@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -261,7 +295,18 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#about-the-data" id="toc-about-the-data" class="nav-link" data-scroll-target="#about-the-data">About the data</a></li>
+  <li><a href="#write-a-function-that-will-translate-species-codes-into-common-names." id="toc-write-a-function-that-will-translate-species-codes-into-common-names." class="nav-link" data-scroll-target="#write-a-function-that-will-translate-species-codes-into-common-names."><span class="header-section-number">17.1</span> Write a function that will translate species codes into common names.</a>
+  <ul class="collapse">
+  <li><a href="#visual-schematic-of-data" id="toc-visual-schematic-of-data" class="nav-link" data-scroll-target="#visual-schematic-of-data"><span class="header-section-number">17.1.1</span> Visual schematic of data</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -270,8 +315,165 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Integrate knowledge on writing functions in R</li>
+<li>Understand how functions can be used when cleaning data</li>
+</ul>
+</section>
+<section id="about-the-data" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="about-the-data">About the data</h2>
+<p>For this practice session we will use data on shorebird breeding ecology collected in Utqiaġvik, Alaska, 2003-2018 by Richard Lanctot and Sarah Saalfeld. This data is publicly available at the Arctic Data Center.</p>
+<ul>
+<li><a href="https://doi.org/10.18739/A23R0PT35">Richard Lanctot and Sarah Saalfeld. 2019. Utqiaġvik shorebird breeding ecology study, Utqiaġvik, Alaska, 2003-2018. Arctic Data Center. doi:10.18739/A23R0PT35</a></li>
+</ul>
+<p>One of the features if this dataset is that it has many files with similar formatting, most of which contain the column <code>species</code> which is comprised of the <a href="https://www.usgs.gov/labs/bird-banding-laboratory/science/understanding-bbl-codes">Bird Banding Laboratory species codes</a>. These four letter codes aren’t very intuitive to most people, so the main goal for this session is to write a function that can be used on any file in this dataset that contains a species code.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol start="0" type="1">
+<li>Make sure you’re in the right project (<code>training_{USERNAME}</code>) and use the Git workflow by <code>Pull</code>ing to check for any changes in the remote repository (aka repository on GitHub).</li>
+<li>Create a new Quarto Document.
+<ol type="a">
+<li>Title it “R Practice: Functions”.</li>
+<li>Save the file and name it “r-practice-functions”.</li>
+</ol></li>
+<li>Insert a Setup r chunck and load the necessary libraries. Note here we introduce a new package called <code>rvest</code>. This package enables easy scraping and handling of information from websites.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Load the species table using the following code. This code scrapes a table from a url and uses some cleaning and wrangling functions to get the table into our Environement in the format we want.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>webpage <span class="ot">&lt;-</span> rvest<span class="sc">::</span><span class="fu">read_html</span>(<span class="st">"https://www.pwrc.usgs.gov/BBL/Bander_Portal/login/speclist.php"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>tbls <span class="ot">&lt;-</span> rvest<span class="sc">::</span><span class="fu">html_nodes</span>(webpage, <span class="st">"table"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    rvest<span class="sc">::</span><span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> tbls[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(alpha_code, common_name) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li><p>Obtain data from the the Arctic Data Center <a href="https://doi.org/10.18739/A23R0PT35">Utqiaġvik shorebird breeding ecology study, Utqiaġvik</a>. Download the following files:</p>
+<ul>
+<li><code>Utqiagvik_adult_shorebird_banding.csv</code></li>
+<li><code>Utqiagvik_chick_shorebird_banding.csv</code></li>
+</ul></li>
+</ol>
+<p><strong>Note:</strong> It’s up to you on how you want to download and load the data! You can either use the download links (obtain by right-clicking the “Download” button and select “Copy Link Address” for each data entity) or manually download the data and then upload the files to RStudio server.</p>
+<ol start="5" type="1">
+<li>Use the Git workflow. After you’ve set up your project and uploaded your data go through the workflow: <code>Stage (add) -&gt; Commit -&gt; Pull -&gt; Push</code></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+A note on <code>rvest</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is a handy package that requires a moderate amount of knowledge of <code>html</code> to use. We used it here because we don’t have a plain text version of the BBL species codes. Ideally, to build a reproducible and long lived workflow, we would want to run this code and then store a plain text version of the data in a long lived location, which cites the original source appropriately.</p>
+</div>
+</div>
+</section>
+<section id="write-a-function-that-will-translate-species-codes-into-common-names." class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="write-a-function-that-will-translate-species-codes-into-common-names."><span class="header-section-number">17.1</span> Write a function that will translate species codes into common names.</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Read and explore data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>fsfsfsf</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Write functions to clean species code
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Hint</strong>: The fastest way to do this involves adding a column to the <code>data.frame</code>. Your function will have two arguments - <strong>Optional Extra Challenge</strong>: For a little extra challenge, try to incorporate an <code>if</code> statement that looks for <code>NA</code> values in the common name field you are adding. What other conditionals might you include to make your function smarter?</li>
+</ul>
+</div>
+</div>
+<section id="visual-schematic-of-data" class="level3" data-number="17.1.1">
+<h3 data-number="17.1.1" class="anchored" data-anchor-id="visual-schematic-of-data"><span class="header-section-number">17.1.1</span> Visual schematic of data</h3>
+<p>Make this:</p>
+<pre><code>year common_name         pred_count
+2003 Glaucous Gull               54
+2003 Parasitic Jaeger             2
+2003 Pomarine Jaeger              6
+2004 Glaucous Gull               69
+2004 Long-tailed Jaeger          13</code></pre>
+<p>And then make this:</p>
+<pre><code>common_name             year total_predated pred_count
+American Golden-Plover  2003              4         62
+American Golden-Plover  2004             22         93
+American Golden-Plover  2005              0         72
+American Golden-Plover  2006              0        193
+American Golden-Plover  2007             12        154
+American Golden-Plover  2008             22        328
+American Golden-Plover  2009             92        443</code></pre>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why do we need to use a function for this task?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You will likely at some point realize that the function we asked you to write is pretty simple. The code can in fact be accomplished in a single line. So why write your own function for this? There are a couple of answers. The first and most obvious is that we want to you practice writing function syntax with simple examples. But there are other reasons why this operation might benefit from a function:</p>
+<ul>
+<li>Follow the DRY principles!
+<ul>
+<li>If you find yourself doing the same cleaning steps on many of your data files, over and over again, those operations are good candidates for functions. This falls into that category, since we need to do the same transformation on both of the files we use here, and if we incorporated more files from this dataset it would come in even more use.</li>
+</ul></li>
+<li>Add custom warnings and quality control.
+<ul>
+<li>Functions allow you to incorporate quality control through conditional statements coupled with warnings. Instead of checking for NA’s or duplicated rows after you run a join, you can check within the function and return a warning if any are found.</li>
+</ul></li>
+<li>Check your function input more carefully
+<ul>
+<li>Similar to custom warnings, functions allow you to create custom errors too. Writing functions is a good way to incorporate defensive coding practices, where potential issues are looked for and the process is stopped if they are found.</li>
+</ul></li>
+</ul>
+</div>
+</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
