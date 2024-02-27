@@ -346,15 +346,20 @@ Setup
 <li>Insert a Setup r chunck and load the necessary libraries. Note here we introduce a new package called <code>rvest</code>. This package enables easy scraping and handling of information from websites.</li>
 </ol>
 <div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <ol start="3" type="1">
-<li>Load the species table using the following code. This code scrapes a table from a url and uses some cleaning and wrangling functions to get the table into our Environement in the format we want.</li>
+<li>Load the species table using the following code. This code scrapes a table from a url and uses some cleaning and wrangling functions to get the table into our Environment in the format we want.</li>
 </ol>
 <div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>webpage <span class="ot">&lt;-</span> rvest<span class="sc">::</span><span class="fu">read_html</span>(<span class="st">"https://www.pwrc.usgs.gov/BBL/Bander_Portal/login/speclist.php"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>tbls <span class="ot">&lt;-</span> rvest<span class="sc">::</span><span class="fu">html_nodes</span>(webpage, <span class="st">"table"</span>) <span class="sc">%&gt;%</span> </span>
@@ -363,13 +368,16 @@ Setup
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>species <span class="ot">&lt;-</span> tbls[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> </span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(alpha_code, common_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(species, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <ol start="4" type="1">
 <li><p>Obtain data from the the Arctic Data Center <a href="https://doi.org/10.18739/A23R0PT35">Utqiaġvik shorebird breeding ecology study, Utqiaġvik</a>. Download the following files:</p>
 <ul>
-<li><code>Utqiagvik_adult_shorebird_banding.csv</code></li>
-<li><code>Utqiagvik_chick_shorebird_banding.csv</code></li>
+<li><code>Utqiagvik_predator_surveys.csv</code></li>
+<li><code>Utqiagvik_nest_data.csv</code></li>
 </ul></li>
 </ol>
 <p><strong>Note:</strong> It’s up to you on how you want to download and load the data! You can either use the download links (obtain by right-clicking the “Download” button and select “Copy Link Address” for each data entity) or manually download the data and then upload the files to RStudio server.</p>
@@ -394,51 +402,145 @@ A note on <code>rvest</code>
 </section>
 <section id="write-a-function-that-will-translate-species-codes-into-common-names." class="level2" data-number="17.1">
 <h2 data-number="17.1" class="anchored" data-anchor-id="write-a-function-that-will-translate-species-codes-into-common-names."><span class="header-section-number">17.1</span> Write a function that will translate species codes into common names.</h2>
-<!--
-EDIT FROM HERE
-
-::: callout-note
-### Read and explore data
-
-   fsfsfsf
-::: 
-
-
-
-::: callout-note
-## Write functions to clean species code
-
- -   **Hint**: The fastest way to do this involves adding a column to the `data.frame`. Your function will have two arguments
-    -   **Optional Extra Challenge**: For a little extra challenge, try to incorporate an `if` statement that looks for `NA` values in the common name field you are adding. What other conditionals might you include to make your function smarter?
-:::
-
-
-### Visual schematic of data
-
-Make this:
-
-    year common_name         pred_count
-    2003 Glaucous Gull               54
-    2003 Parasitic Jaeger             2
-    2003 Pomarine Jaeger              6
-    2004 Glaucous Gull               69
-    2004 Long-tailed Jaeger          13
-
-And then make this:
-
-```
-common_name             year total_predated pred_count
-American Golden-Plover  2003              4         62
-American Golden-Plover  2004             22         93
-American Golden-Plover  2005              0         72
-American Golden-Plover  2006              0        193
-American Golden-Plover  2007             12        154
-American Golden-Plover  2008             22        328
-American Golden-Plover  2009             92        443
-```
-
-REMOVE ARROW BELOW
--->
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Read and explore data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read in each data file and store the data frame as <code>shorebird_adult</code> and <code>shorebird_chick</code> accordingly. After reading the data, insert a new chunk or in the console, explore the data using any function we have used during the lessons (eg. <code>colname()</code>, <code>glimpse()</code>)</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## When reading from a file in your data folder in your Rpoj</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>nest_data <span class="ot">&lt;-</span>  <span class="fu">read_csv</span>(<span class="st">"data/Utqiagvik_nest_data.csv"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>predator_survey <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/  Utqiagvik_predator_surveys.csv"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## When reading using the url</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>nest_data <span class="ot">&lt;-</span>  <span class="fu">read_csv</span>(<span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A982bd2fc-4edf-4da7-96ef-0d11b853102d"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>predator_survey <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A9ffec04c-7e2d-41dd-9e88-b6c2e8c4375e"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Exploring the data (these functions can also be used to explore nest_data) </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(predator_survey)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(predator_survey)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(predator_survey<span class="sc">$</span>species)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(predator_survey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How would you translate species codes into common names for one of the data frmes?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before thinking of how to write a function, first discuss what are you trying to achieve and how would you get there. Write and run the code that would allow you to combine the <code>species</code> data frame with the <code>predator_survey</code> so that the outcome data frame has the species code and common names.</p>
+<p><strong>Hint:</strong> <code>joins</code></p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>predator_comm_names <span class="ot">&lt;-</span> <span class="fu">left_join</span>(predator_survey,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                                 species,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"species"</span> <span class="ot">=</span> <span class="st">"alpha_code"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Write a functions to add species common name to any data frame.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>How can you generalize the code from the previous question and make it into a function?</p>
+<p>The idea is that you can use this function in any data frame that has a <code>species</code> column with the Bird Banding Laboratory Species Code.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>assign_species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species){</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"species"</span> <span class="ot">=</span> <span class="st">"alpha_code"</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(return_df)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Document your funtion inserting Roxygen skeleton and adding the necesary description.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Place the cursor inside your function, In the top menu go to Code &gt; Insert Roxygen skeleton. Document parameters, return and write one example.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Title</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param df A data frame containing BBL species codes in column `species`</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param species A data frame defining BBL species codes with columns `alpha_code` and `common_name` </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return A data frame with original data df, plus the common name of species</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @export</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' @examples `*provide example*`</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>assign_species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species){</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"species"</span> <span class="ot">=</span> <span class="st">"alpha_code"</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(return_df)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Use your function to clean names of each data frame
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<!--Finalize this question-->
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Challenge
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Optional Extra Challenge</strong>: For a little extra challenge, try to incorporate an <code>if</code> statement that looks for <code>NA</code> values in the common name field you are adding. What other conditionals might you include to make your function smarter?</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
