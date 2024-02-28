@@ -301,14 +301,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
   <li><a href="#about-the-data" id="toc-about-the-data" class="nav-link" data-scroll-target="#about-the-data">About the data</a></li>
-  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="header-section-number">17.1</span> Exercise</a>
-  <ul class="collapse">
-  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1"><span class="header-section-number">17.1.1</span> Question 1</a></li>
-  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">17.1.2</span> Question 2</a></li>
-  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">17.1.3</span> Question 3</a></li>
-  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">17.1.4</span> Question 4</a></li>
-  <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5"><span class="header-section-number">17.1.5</span> Question 5</a></li>
-  </ul></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1"><span class="header-section-number">17.1</span> Question 1</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">17.2</span> Question 2</a></li>
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">17.3</span> Question 3</a></li>
+  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">17.4</span> Question 4</a></li>
+  <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5"><span class="header-section-number">17.5</span> Question 5</a></li>
+  <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge"><span class="header-section-number">17.6</span> Challenge</a></li>
   </ul>
 </nav>
     </div>
@@ -353,20 +352,15 @@ Setup
 <li>Insert a Setup r chunck and load the necessary libraries. Note here we introduce a new package called <code>rvest</code>. This package enables easy scraping and handling of information from websites.</li>
 </ol>
 <div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <ol start="3" type="1">
 <li>Load the species table using the following code. This code scrapes a table from a url and uses some cleaning and wrangling functions to get the table into our Environment in the format we want.</li>
 </ol>
 <div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>webpage <span class="ot">&lt;-</span> rvest<span class="sc">::</span><span class="fu">read_html</span>(<span class="st">"https://www.pwrc.usgs.gov/BBL/Bander_Portal/login/speclist.php"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>tbls <span class="ot">&lt;-</span> rvest<span class="sc">::</span><span class="fu">html_nodes</span>(webpage, <span class="st">"table"</span>) <span class="sc">%&gt;%</span> </span>
@@ -378,7 +372,6 @@ Setup
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha_code =</span> <span class="fu">tolower</span>(alpha_code))</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(species, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <ol start="4" type="1">
 <li><p>Obtain data from the the Arctic Data Center <a href="https://doi.org/10.18739/A23R0PT35">Utqiaġvik shorebird breeding ecology study, Utqiaġvik</a>. Download the following files:</p>
@@ -408,10 +401,11 @@ A note on <code>rvest</code>
 </div>
 </div>
 </section>
-<section id="exercise" class="level2" data-number="17.1">
-<h2 data-number="17.1" class="anchored" data-anchor-id="exercise"><span class="header-section-number">17.1</span> Exercise</h2>
-<section id="question-1" class="level3" data-number="17.1.1">
-<h3 data-number="17.1.1" class="anchored" data-anchor-id="question-1"><span class="header-section-number">17.1.1</span> Question 1</h3>
+<section id="exercise" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise">Exercise</h2>
+</section>
+<section id="question-1" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="question-1"><span class="header-section-number">17.1</span> Question 1</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -452,8 +446,8 @@ Read and explore data
 </details>
 </div>
 </section>
-<section id="question-2" class="level3" data-number="17.1.2">
-<h3 data-number="17.1.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">17.1.2</span> Question 2</h3>
+<section id="question-2" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">17.2</span> Question 2</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -477,8 +471,8 @@ How would you translate species codes into common names for one of the data fram
 </details>
 </div>
 </section>
-<section id="question-3" class="level3" data-number="17.1.3">
-<h3 data-number="17.1.3" class="anchored" data-anchor-id="question-3"><span class="header-section-number">17.1.3</span> Question 3</h3>
+<section id="question-3" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="question-3"><span class="header-section-number">17.3</span> Question 3</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -503,8 +497,8 @@ Write a functions to add species common name to any data frame.
 </details>
 </div>
 </section>
-<section id="question-4" class="level3" data-number="17.1.4">
-<h3 data-number="17.1.4" class="anchored" data-anchor-id="question-4"><span class="header-section-number">17.1.4</span> Question 4</h3>
+<section id="question-4" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="question-4"><span class="header-section-number">17.4</span> Question 4</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -539,8 +533,8 @@ Document your funtion inserting Roxygen skeleton and adding the necesary descrip
 </details>
 </div>
 </section>
-<section id="question-5" class="level3" data-number="17.1.5">
-<h3 data-number="17.1.5" class="anchored" data-anchor-id="question-5"><span class="header-section-number">17.1.5</span> Question 5</h3>
+<section id="question-5" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="question-5"><span class="header-section-number">17.5</span> Question 5</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -570,6 +564,10 @@ Use your function to clean names of each data frame
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, nestID, common_name, length, width)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Congrats! Now you have clean data sets ready for analysis.</p>
+</section>
+<section id="challenge" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="challenge"><span class="header-section-number">17.6</span> Challenge</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -612,7 +610,6 @@ Why do we need to use a function for this task?
 </div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
