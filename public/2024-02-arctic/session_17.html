@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">17.3</span> Question 3</a></li>
   <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">17.4</span> Question 4</a></li>
   <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5"><span class="header-section-number">17.5</span> Question 5</a></li>
-  <li><a href="#challenge" id="toc-challenge" class="nav-link" data-scroll-target="#challenge"><span class="header-section-number">17.6</span> Challenge</a></li>
+  <li><a href="#optional-challenge" id="toc-optional-challenge" class="nav-link" data-scroll-target="#optional-challenge"><span class="header-section-number">17.6</span> Optional Challenge</a></li>
   </ul>
 </nav>
     </div>
@@ -416,7 +416,7 @@ Read and explore data
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Read in each data file and store the data frame as <code>shorebird_adult</code> and <code>shorebird_chick</code> accordingly. After reading the data, insert a new chunk or in the console, explore the data using any function we have used during the lessons (eg. <code>colname()</code>, <code>glimpse()</code>)</p>
+<p>Read in each data file and store the data frame as <code>nest_data</code>, <code>predator_survey</code>, and <code>egg_measures</code> accordingly. After reading the data, insert a new chunk or in the console, explore the data using any function we have used during the lessons (eg. <code>colname()</code>, <code>glimpse()</code>)</p>
 </div>
 </div>
 <div class="cell">
@@ -484,7 +484,7 @@ Write a functions to add species common name to any data frame.
 </div>
 <div class="callout-body-container callout-body">
 <p>How can you generalize the code from the previous question and make it into a function?</p>
-<p>The idea is that you can use this function in any data frame that has a <code>species</code> column with the Bird Banding Laboratory Species Code.</p>
+<p>The idea is that you can use this function in <strong>any data frame</strong> that has a column named <code>species</code> with the Bird Banding Laboratory Species Code.</p>
 </div>
 </div>
 <div class="cell">
@@ -545,29 +545,30 @@ Use your function to clean names of each data frame
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Create clean versions of the three data frames by applying the function you created and removing columns that you think are note necessary and filter out <code>NA</code> values.</p>
+<p>Create clean versions of the three data frames by applying the function you created and removing columns that you think are note necessary(aka selecting the ones you want to keep) and filter out <code>NA</code> values.</p>
 </div>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## This is one solution. </span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>predator_clean <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(predator_survey, species) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, date, common_name, count) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>nest_location_clean <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(nest_data, species) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, nestID, common_name, lat_corrected, long_corrected)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>predator_clean <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(predator_survey, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, date, common_name, count) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>nest_location_clean <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(nest_data, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, nestID, common_name, lat_corrected, long_corrected) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>eggs_clean <span class="ot">&lt;-</span> <span class="fu">assign_species_name</span>(egg_measures, species) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, nestID, common_name, length, width)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, site, nestID, common_name, length, width) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(common_name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Congrats! Now you have clean data sets ready for analysis.</p>
 </section>
-<section id="challenge" class="level2" data-number="17.6">
-<h2 data-number="17.6" class="anchored" data-anchor-id="challenge"><span class="header-section-number">17.6</span> Challenge</h2>
+<section id="optional-challenge" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="optional-challenge"><span class="header-section-number">17.6</span> Optional Challenge</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -578,8 +579,40 @@ Challenge
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Optional Extra Challenge</strong>: For a little extra challenge, try to incorporate an <code>if</code> statement that looks for <code>NA</code> values in the common name field you are adding. What other conditionals might you include to make your function smarter?</p>
+<p>For a little extra challenge, try to incorporate an <code>if</code> statement that looks for <code>NA</code> values in the common name field you are adding. What other conditionals might you include to make your function smarter?</p>
 </div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Function to add common name to data.frame according to the BBL list of species codes</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param df A data frame containing BBL species codes in column `species`</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param species A data frame defining BBL species codes with columns `alpha_code` and `common_name`</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return A data frame with original data df, plus the common name of species</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>assign_species_name <span class="ot">&lt;-</span> <span class="cf">function</span>(df, species){</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"alpha_code"</span> <span class="sc">%in%</span> <span class="fu">names</span>(species)) <span class="sc">|</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="sc">!</span>(<span class="st">"species"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) <span class="sc">|</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="sc">!</span>(<span class="st">"common_name"</span> <span class="sc">%in%</span> <span class="fu">names</span>(species))){</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">"Tables appear to be formatted incorrectly."</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    }  </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    return_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, species, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"species"</span> <span class="ot">=</span> <span class="st">"alpha_code"</span>))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">nrow</span>(return_df) <span class="sc">&gt;</span> <span class="fu">nrow</span>(df)){</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="st">"Joined table has more rows than original table. Check species table for duplicated code values."</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">which</span>(<span class="fu">is.na</span>(return_df<span class="sc">$</span>common_name))) <span class="sc">&gt;</span> <span class="dv">0</span>){</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>      x <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">which</span>(<span class="fu">is.na</span>(return_df<span class="sc">$</span>common_name)))</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">warning</span>(<span class="fu">paste</span>(<span class="st">"Common name has"</span>, x, <span class="st">"rows containing NA"</span>))</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(return_df)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -595,7 +628,7 @@ Why do we need to use a function for this task?
 <ul>
 <li>Follow the DRY principles!
 <ul>
-<li>If you find yourself doing the same cleaning steps on many of your data files, over and over again, those operations are good candidates for functions. This falls into that category, since we need to do the same transformation on both of the files we use here, and if we incorporated more files from this dataset it would come in even more use.</li>
+<li>If you find yourself doing the same cleaning steps on many of your data files, over and over again, those operations are good candidates for functions. This falls into that category, since we need to do the same transformation on all of the files we use here, and if we incorporated more files from the dataset it would come in even more use.</li>
 </ul></li>
 <li>Add custom warnings and quality control.
 <ul>
