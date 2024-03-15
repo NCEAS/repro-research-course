@@ -75,17 +75,17 @@ jobs:
           remotes::install_deps()
         shell: Rscript {0}
     
-      - name: Install R dependencies for nceas-training
-        if: ${{ env.BRANCH }} == "nceas-training"
+      - name: Install dependencies based on branch
         run: |
-         remotes::install_deps(pkgdir="nceas-training/materials")
-        shell: Rscript {0}
-    
-      - name: Install python dependencies for scalable-computing
-        if: ${{ env.BRANCH }} == "scalable-computing-course"
-        run: |
-         echo Installing python dependencies
-         python3 -m pip install -r scalable-computing-course/requirements.txt
+          if [[ "${{ env.BRANCH }}" == "nceas-training" ]]; then
+            echo "Installing R dependencies"
+            R -e 'remotes::install_deps(pkgdir="nceas-training/materials")'
+          elif [[ "${{ env.BRANCH }}" == "scalable-computing-course" ]]; then
+            echo "Installing python dependencies"
+            python3 -m pip install -r scalable-computing-course/requirements.txt
+          fi
+      shell: bash
+
 
 
       - name: Install pandoc
