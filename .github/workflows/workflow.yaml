@@ -73,8 +73,19 @@ jobs:
           options(repos = c(REPO_NAME = "https://packagemanager.posit.co/cran/__linux__/jammy/latest"))
           install.packages(c("remotes"))
           remotes::install_deps()
-          remotes::install_deps(pkgdir="nceas-training/materials")
         shell: Rscript {0}
+    
+      - name: Install R dependencies for nceas-training
+        if: ${{ env.BRANCH }} == 'nceas-training' }}
+        run: |
+         remotes::install_deps(pkgdir="nceas-training/materials")
+        shell: Rscript {0}
+    
+      - name: Install python dependencies for scalable-computing
+        if: ${{ env.BRANCH }} == 'scalable-computing-course' }}
+        run: |
+         python3 -m pip install -r scalable-computing-course/requirements.txt
+
 
       - name: Install pandoc
         run: |
