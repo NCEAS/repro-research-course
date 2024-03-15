@@ -122,8 +122,12 @@ jobs:
         run: |
           mkdir -p public/$BRANCH # make dir if none exists
           echo $(ls public)
-          echo $(ls ${{ env.REPO }}/materials)
-          cp -R '${{ env.REPO }}/materials/_book'/* public/$BRANCH/
+          if [[ "${{ env.REPO }}" == "nceas-training" ]]; then
+            echo $(ls ${{ env.REPO }}/materials)
+            cp -R '${{ env.REPO }}/materials/_book'/* public/$BRANCH/
+          elif [[ "${{ env.REPO }}" == "scalable-computing-course" ]]; then
+            echo $(ls ${{ env.REPO }})
+            cp -R '${{ env.REPO }}/_book'/* public/$BRANCH/
           
       - name: Commit build
         run: |
