@@ -112,14 +112,14 @@ jobs:
         uses: quarto-dev/quarto-actions/render@v2
         with:
           to: html
-          path: nceas-training/materials # build from nceas-training from temp dir
+          path: ${{ env.REPO }}/materials # build from nceas-training from temp dir
           
       - name: Move training materials to public/$BRANCH
         run: |
           mkdir -p public/$BRANCH # make dir if none exists
           echo $(ls public)
-          echo $(ls nceas-training/materials)
-          cp -R 'nceas-training/materials/_book'/* public/$BRANCH/
+          echo $(ls ${{ env.REPO }}/materials)
+          cp -R '${{ env.REPO }}/materials/_book'/* public/$BRANCH/
           
       - name: Commit build
         run: |
