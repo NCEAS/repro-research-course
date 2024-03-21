@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 11&nbsp; Group Project: Data Processing</title>
+<title>Scalable and Computationally Reproducible Approaches to Arctic Research - 11&nbsp; Group Project: Visualization</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/group-project-2.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/group-project-2.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Visualization</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -173,7 +173,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../sections/group-project-2.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Visualization</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -223,7 +223,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup"><span class="header-section-number">11.1</span> Setup</a></li>
-  <li><a href="#rasterizing-geopackages" id="toc-rasterizing-geopackages" class="nav-link" data-scroll-target="#rasterizing-geopackages"><span class="header-section-number">11.2</span> Rasterizing GeoPackages</a>
+  <li><a href="#resampling-rasters" id="toc-resampling-rasters" class="nav-link" data-scroll-target="#resampling-rasters"><span class="header-section-number">11.2</span> Resampling rasters</a>
   <ul class="collapse">
   <li><a href="#packages-libraries-and-modules" id="toc-packages-libraries-and-modules" class="nav-link" data-scroll-target="#packages-libraries-and-modules"><span class="header-section-number">11.2.1</span> Packages, Libraries, and Modules</a></li>
   </ul></li>
@@ -235,7 +235,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Data Processing</span></h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Visualization</span></h1>
 </div>
 
 
@@ -254,14 +254,36 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="setup" class="level2" data-number="11.1">
 <h2 data-number="11.1" class="anchored" data-anchor-id="setup"><span class="header-section-number">11.1</span> Setup</h2>
-<p>In your fork of the <a href="https://github.com/NCEAS/scalable-computing-examples"><code>scalable-computing-examples</code></a> repository, open the Jupyter notebook in the <code>group-project</code> directory called <code>session-11.ipynb</code>. This workbook will serve as a skeleton for you to work in. It will load in all the libraries you need, including a few helper functions we wrote for the course, show an example for how to use the method on one file, and then lays out blocks for you and your group to fill in with code that will run that method in parallel.</p>
+<p>In your fork of the <a href="https://github.com/NCEAS/scalable-computing-examples"><code>scalable-computing-examples</code></a> repository, open the Jupyter notebook in the <code>group-project</code> directory called <code>session-15.ipynb</code>. This workbook will serve as a skeleton for you to work in. It will load in all the libraries you need, including a few helper functions we wrote for the course, show an example for how to use the method on one file, and then lays out blocks for you and your group to fill in with code that will run that method in parallel.</p>
 <p>In your small groups, work together to write the solution, but everyone should aim to have a working solution on their own fork of the repository. In other words, everyone should type out the solution themselves as part of the group effort. Writing the code out yourself (even if others are contributing to the content) is a great way to get “mileage” as you develop these skills.</p>
 <p>Only one person in the group should run the parallel code.</p>
 </section>
-<section id="rasterizing-geopackages" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="rasterizing-geopackages"><span class="header-section-number">11.2</span> Rasterizing GeoPackages</h2>
-<p>In the last lession, we staged the input files into GeoPackages. Now we will import those <code>.gpkg</code> files and write each as a raster (<code>.tif</code>). The resulting rasters will have 2 bands, one for each statistic we calculate based on the vector geometries in each pixel.</p>
-<p>We need to create the highest zoom level rasters before we create the lower zoom levels in the next lesson. This brings us one step closer to visualizing the ice wedge polygons on a basemap, with the ability to zoom in and out!</p>
+<section id="resampling-rasters" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="resampling-rasters"><span class="header-section-number">11.2</span> Resampling rasters</h2>
+<p>In this portion of the group project, we will further process the raster files by resampling them to lower zoom levels. This means we will take the average of clusters of pixels, and that value will be assigned to the single pixel that encompasses the entire area that is represented by the original cluster of pixels. Here is an example of creating a zoom level 10 pixel from 4 zoom level 11 pixels:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/resampling.png" class="img-fluid figure-img"></p>
+<figcaption>Drawing of downsampling a raster, created by Robyn Thiessen-Bock.</figcaption>
+</figure>
+</div>
+<p>As we aggregate cells to produce rasters at lower zoom levels, the <em>cell size increases</em>, but the <em>extent of the raster remains the same</em>. This is called “downsampling”.</p>
+<p>After we do this for each zoom level, you can imagine they are organzied as a pyramid, with the lowest zoom levels (and lowest resolution rasters) at the top, like so:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/raster_pyramid.png" class="img-fluid figure-img"></p>
+<figcaption>A pyramid of rasters at different resolutions (zoom levels). Souce: <a href="https://www.maptiler.com/google-maps-coordinates-tile-bounds-projection/#3/15.00/50.00">maptiler</a></figcaption>
+</figure>
+</div>
+<p>The highest zoom level has the most rasters. As we create the lower zoom levels, we aggregate the rasters <em>only</em> from the zoom level directly above. As the zoom level decreases, our computation is faster.</p>
+<p>Check out the <a href="">Permafrost Discovery Gateway Imagery Viewer</a> and zoom in and out. You can see for yourself how the resolution increases and the extent that you are trying to view decreases.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/zoom_in_IWP.png" class="img-fluid figure-img"></p>
+<figcaption>Ice wedge polygons at high resolution, visible when zoomed-in to the Permafrost Discovery Gateway Imagery Viewer.</figcaption>
+</figure>
+</div>
+<p>The higher resolution tiles are the “child” tiles, and the lower resolution tiles are the “parent” tiles.</p>
 <section id="packages-libraries-and-modules" class="level3" data-number="11.2.1">
 <h3 data-number="11.2.1" class="anchored" data-anchor-id="packages-libraries-and-modules"><span class="header-section-number">11.2.1</span> Packages, Libraries, and Modules</h3>
 <ul>
@@ -269,15 +291,16 @@ ul.task-list li input[type="checkbox"] {
 <li><a href="https://parsl.readthedocs.io/en/stable/">parsl 2023.3.20</a></li>
 <li><a href="https://github.com/PermafrostDiscoveryGateway/viz-staging">pdgstaging</a>
 <ul>
-<li>package developed by Permafrost Discovery Gateway software developer and designer Robyn Thiessen-Bock</li>
+<li>developed by Permafrost Discovery Gateway software developer and designer Robyn Thiessen-Bock</li>
 </ul></li>
 <li><a href="https://github.com/PermafrostDiscoveryGateway/viz-raster/tree/main">pdgraster</a>
 <ul>
-<li>package developed by Permafrost Discovery Gateway software developer and designer Robyn Thiessen-Bock</li>
+<li>developed by Permafrost Discovery Gateway software developer and designer Robyn Thiessen-Bock</li>
 </ul></li>
 <li><a href="https://geopandas.org/en/stable/docs.html">geopandas0.11</a></li>
 <li><a href="https://docs.python.org/3/library/random.html">random</a></li>
 <li><a href="https://matplotlib.org/3.5.3/api/_as_gen/matplotlib.pyplot.html">matplotlib 3.5</a></li>
+<li><a href="https://ipyleaflet.readthedocs.io/en/latest/">ipyleaflet 0.17</a></li>
 </ul>
 
 
