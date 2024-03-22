@@ -203,8 +203,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sections/ice-wedge-polygons.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Billions of Ice Wedge Polygons</span></span></a>
+  <a href="../sections/geoscience-and-ai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">AI in Arctic Science</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -245,8 +245,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../sections/docker-hpc-cloud.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Docker for HPC and Cloud</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../sections/reproducibility-containers.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reproducibility and Containers</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility and Containers</span></span></a>
   </div>
 </li>
     </ul>
@@ -443,14 +449,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="4.7" class="anchored" data-anchor-id="task-parallelization-in-python"><span class="header-section-number">4.7</span> Task parallelization in Python</h2>
 <p>Python also provides a number of easy to use packages for concurrent processing. We will review two of these, <code>concurrent.futures</code> and <code>parsl</code>, to show just how easy it can be to parallelize your programs. <a href="https://docs.python.org/3/library/concurrent.futures.html"><code>concurrent.futures</code></a> is built right into the python3 release, and is a great starting point for learning concurrency.</p>
 <p>We’re going to start with a task that is a little expensive to compute, and define it in a function. All this <code>task(x)</code> function does is to use numpy to create a fairly large range of numbers, and then sum them.</p>
-<div id="ed74d61a" class="cell" data-execution_count="2">
+<div id="2c6c1bce" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> task(x):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> np.arange(x<span class="op">*</span><span class="dv">10</span><span class="op">**</span><span class="dv">8</span>).<span class="bu">sum</span>()</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can start by executing this task function serially ten times with varying inputs. In this case, we create a function <code>run_serial</code> that takes a list of inputs to be run, and it calls the <code>task</code> function for each of those inputs. The <code>@timethis</code> decorator is a simple way to wrap the function with timing code so that we can see how long it takes to execute.</p>
-<div id="12384888" class="cell" data-execution_count="3">
+<div id="dfd56744" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
@@ -459,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>run_serial(np.arange(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>run_serial: 7264.334440231323 ms</code></pre>
+<pre><code>run_serial: 7340.070724487305 ms</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>[0,
@@ -477,7 +483,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In this case, it takes around <em>25 seconds</em> to execute 10 tasks, depending on what else is happening on the machine and network.</p>
 <p>So, can we make this faster using a multi-threaded parallel process? Let’s try with <code>concurrent.futures</code>. The main concept in this package is one of a <code>future</code>, which is a structure which represents the value that will be created in a computation in the future when the function completes execution. With <code>concurrent.futures</code>, tasks are scheduled and do not block while they await their turn to be executed. Instead, threads are created and executed <em>asynchronously</em>, meaning that the function returns it’s <code>future</code> potentially before the thread has actually been executed. Using this approach, the user schedules a series of tasks to be executed asynchronously, and keeps track of the futures for each task. When the future indicates that the execution has been completed, we can then retrieve the result of the computation.</p>
 <p>In practice this is a simple change from our serial implementation. We will use the <code>ThreadPoolExecutor</code> to create a pool of workers that are available to process tasks. Each worker is set up in its own thread, so it can execute in parallel with other workers. After setting up the pool of workers, we use concurrent.futures <code>map()</code> to schedule each task from our <code>task_list</code> (in this case, an input value from 1 to 10) to run on one of the workers. As for all map() implementations, we are asking for each value in <code>task_list</code> to be executed in the <code>task</code> function we defined above, but in this case it will be executed using one of the workers from the <code>executor</code> that we created.</p>
-<div id="6014f3ec" class="cell" data-execution_count="4">
+<div id="8d8791d6" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ThreadPoolExecutor</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
@@ -515,7 +521,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>First, let’s download the data serially to set a benchmark. The data files are listed in a table with their filename and identifier, and can be downloaded directly from the Arctic Data Center using their identifier. To make things easier, we’ve already provided a data frame with the names and identifiers of each file that could be downloaded.</p>
-<div id="0508a5b9" class="cell" data-execution_count="5">
+<div id="6ad9cafd" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
@@ -565,7 +571,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="serial" class="level3" data-number="4.8.1">
 <h3 data-number="4.8.1" class="anchored" data-anchor-id="serial"><span class="header-section-number">4.8.1</span> Serial</h3>
 <p>When you have a list of repetitive tasks, you may be able to speed it up by adding more computing power. If each task is completely independent of the others, then it is pleasingly parallel and a prime candidate for executing those tasks in parallel, each on its own core. For example, let’s build a simple loop that downloads the data files that we need for an analysis. First, we start with the serial implementation.</p>
-<div id="a596fbc1" class="cell" data-execution_count="6">
+<div id="86edaecb" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_file(row):</span>
@@ -590,7 +596,7 @@ Downloading: SWI_2019.tif
 Downloading: SWI_2021.tif
 Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif
-download_serial: 97362.10870742798 ms
+download_serial: 48159.91258621216 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']</code></pre>
 </div>
 </div>
@@ -600,7 +606,7 @@ download_serial: 97362.10870742798 ms
 <section id="multi-threaded-with-concurrent.futures" class="level3" data-number="4.8.2">
 <h3 data-number="4.8.2" class="anchored" data-anchor-id="multi-threaded-with-concurrent.futures"><span class="header-section-number">4.8.2</span> Multi-threaded with <code>concurrent.futures</code></h3>
 <p>In this case, we’ll use the same <code>download_file</code> function from before, but let’s switch up and create a <code>download_threaded()</code> function to use <code>concurrent.futures</code> with a <code>ThreadPoolExecutor</code> just as we did earlier.</p>
-<div id="c559bd85" class="cell" data-execution_count="7">
+<div id="58e991ab" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ThreadPoolExecutor</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
@@ -618,7 +624,7 @@ Downloading: SWI_2019.tif
 Downloading: SWI_2021.tif
 Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif
-download_threaded: 21462.809801101685 ms
+download_threaded: 21496.013641357422 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -631,7 +637,7 @@ SWI_2001.tif</code></pre>
 <section id="multi-process-with-concurrent.futures" class="level3" data-number="4.8.3">
 <h3 data-number="4.8.3" class="anchored" data-anchor-id="multi-process-with-concurrent.futures"><span class="header-section-number">4.8.3</span> Multi-process with <code>concurrent.futures</code></h3>
 <p>You’ll remember from earlier that you can execute tasks concurrently by creating multiple threads within one process (multi-threaded), or by creating and executing muliple processes. The latter creates more independence, as each of the executing tasks has their own memory and process space, but it also takes longer to set up. With <code>concurrent.futures</code>, we can switch to a multi-process pool by using a <code>ProcessPoolExecutor</code>, analogously to how we used <code>ThreadPoolExecutor</code> previously. So, some simple changes, and we’re running multiple processes.</p>
-<div id="78876ec3" class="cell" data-execution_count="8">
+<div id="d1c3bb74" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ProcessPoolExecutor</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
@@ -644,12 +650,12 @@ SWI_2001.tif</code></pre>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2019.tifDownloading: SWI_2007.tifDownloading: SWI_2021.tif
+<pre><code>Downloading: SWI_2007.tifDownloading: SWI_2019.tifDownloading: SWI_2021.tifDownloading: SWI_2001.tif
+
+
+
 Downloading: SWI_2020.tif
-
-
-Downloading: SWI_2001.tif
-download_process: 13985.574007034302 ms
+download_process: 8706.670761108398 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -665,7 +671,7 @@ SWI_2001.tif</code></pre>
 <p><code>concurrent.futures</code> is great and powerful, but it has its limits. Particularly as you try to scale up into the thousands of concurrent tasks, other libraries like <a href="https://parsl-project.org/">Parsl</a> (<a href="https://parsl.readthedocs.io/">docs</a>), <a href="https://www.dask.org/">Dask</a>, <a href="https://www.ray.io/">Ray</a>, and others come into play. They all have their strengths, but Parsl makes it particularly easy to build parallel workflows out of existing python code through it’s use of decorators on existing python functions.</p>
 <p>In addition, Parsl supports a lot of different kinds of <a href="https://parsl.readthedocs.io/en/stable/userguide/execution.html#execution-providers">providers</a>, allowing the same python code to be easily run multi-threaded using a <code>ThreadPoolExecutor</code> and via multi-processing on many different cluster computing platforms using the <code>HighThroughputExecutor</code>. For example, Parsl includes providers supporting local execution, and on Slurm, Condor, Kubernetes, AWS, and other platforms. And Parsl handles data staging as well across these varied environments, making sure the data is in the right place when it’s needed for computations.</p>
 <p>Similarly to before, we start by configuring an executor in parsl, and loading it. We’ll use multiprocessing by configuring the <code>HighThroughputExecutor</code> to use our local resources as a cluster, and we’ll activate our virtual environment to be sure we’re executing in a consistent environment.</p>
-<div id="49c92e14" class="cell" data-execution_count="9">
+<div id="3741e68f" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Required packages</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> parsl</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl <span class="im">import</span> python_app</span>
@@ -688,11 +694,11 @@ SWI_2001.tif</code></pre>
 <span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span>
 <span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>parsl.load(htex_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7f8f465a8850&gt;</code></pre>
+<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7fdad3750bb0&gt;</code></pre>
 </div>
 </div>
 <p>We now have a live parsl executor (<code>htex_local</code>) that is waiting to execute processes. We tell it to execute processes by annotating functions with decorators that indicate which tasks should be parallelized. Parsl then handles the scheduling and execution of those tasks based on the dependencies between them. In the simplest case, we’ll decorate our previous function for downloading a file with the <code>@python_app</code> decorator, which tells parsl that any function calls with this function should be run on the default executor (in this case, <code>htex_local</code>).</p>
-<div id="5aa45938" class="cell" data-execution_count="10">
+<div id="718da7fc" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decorators seem to be ignored as the first line of a cell, so print something first</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Create decorated function"</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -711,7 +717,7 @@ SWI_2001.tif</code></pre>
 </div>
 </div>
 <p>Now we just write regular python code that calls that function, and parsl handles the scheduling. Parsl app executors return an <a href="https://parsl.readthedocs.io/en/stable/userguide/futures.html#appfutures"><code>AppFuture</code></a>, and we can call the <code>AppFuture.done()</code> function to determine when the future result is ready without blocking. Or, we can just block on <code>AppFuture.result()</code> which waits for each of the executions to complete and then returns the result.</p>
-<div id="7fc67f18" class="cell" data-execution_count="11">
+<div id="64bd6b53" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#! eval: true</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Define our download_futures function"</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -733,18 +739,18 @@ SWI_2001.tif</code></pre>
 <span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>wait_for_futures(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Define our download_futures function
-&lt;AppFuture at 0x7f8f082d02b0 state=pending&gt;
-&lt;AppFuture at 0x7f8f082d2110 state=pending&gt;
-&lt;AppFuture at 0x7f8f082d12d0 state=pending&gt;
-&lt;AppFuture at 0x7f8f082d1a50 state=pending&gt;
-&lt;AppFuture at 0x7f8f08292260 state=pending&gt;
-download_futures: 10.508537292480469 ms
+&lt;AppFuture at 0x7fda944c9510 state=pending&gt;
+&lt;AppFuture at 0x7fda944cbf70 state=pending&gt;
+&lt;AppFuture at 0x7fdad581fd90 state=pending&gt;
+&lt;AppFuture at 0x7fdad581f910 state=pending&gt;
+&lt;AppFuture at 0x7fda9442f220 state=pending&gt;
+download_futures: 14.001131057739258 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']
-wait_for_futures: 25726.195573806763 ms</code></pre>
+wait_for_futures: 29702.876567840576 ms</code></pre>
 </div>
 </div>
 <p>When we’re done, be sure to clean up and shutdown the <code>htex_local</code> executor, or it will continue to persist in your environment and utilize resources. Generally, an executor should be created when setting up your environment, and then it can be used repeatedly for many different tasks.</p>
-<div id="ca98945e" class="cell" data-execution_count="12">
+<div id="ae05657b" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>htex_local.executors[<span class="dv">0</span>].shutdown()</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
