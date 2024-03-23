@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -73,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -231,12 +265,25 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">15.1</span> Learning Objectives</a></li>
   <li><a href="#just-what-is-a-container" id="toc-just-what-is-a-container" class="nav-link" data-scroll-target="#just-what-is-a-container"><span class="header-section-number">15.2</span> Just what is a container?</a></li>
   <li><a href="#hands-on-with-containers-and-docker" id="toc-hands-on-with-containers-and-docker" class="nav-link" data-scroll-target="#hands-on-with-containers-and-docker"><span class="header-section-number">15.3</span> Hands-on with Containers and Docker</a></li>
-  <li><a href="#your-first-container" id="toc-your-first-container" class="nav-link" data-scroll-target="#your-first-container"><span class="header-section-number">15.4</span> Your first container</a></li>
+  <li><a href="#how-about-python" id="toc-how-about-python" class="nav-link" data-scroll-target="#how-about-python"><span class="header-section-number">15.4</span> How about python?</a></li>
+  <li><a href="#exploring-available-images-and-versions" id="toc-exploring-available-images-and-versions" class="nav-link" data-scroll-target="#exploring-available-images-and-versions"><span class="header-section-number">15.5</span> Exploring available images and versions</a></li>
+  <li><a href="#build-your-own-images" id="toc-build-your-own-images" class="nav-link" data-scroll-target="#build-your-own-images"><span class="header-section-number">15.6</span> Build your own images</a></li>
+  <li><a href="#sharing-images-to-registries" id="toc-sharing-images-to-registries" class="nav-link" data-scroll-target="#sharing-images-to-registries"><span class="header-section-number">15.7</span> Sharing images to registries</a>
+  <ul class="collapse">
+  <li><a href="#anatomy-of-an-image" id="toc-anatomy-of-an-image" class="nav-link" data-scroll-target="#anatomy-of-an-image"><span class="header-section-number">15.7.1</span> Anatomy of an image</a></li>
+  <li><a href="#oci" id="toc-oci" class="nav-link" data-scroll-target="#oci"><span class="header-section-number">15.7.2</span> OCI</a></li>
+  </ul></li>
+  <li><a href="#container-lifecycle" id="toc-container-lifecycle" class="nav-link" data-scroll-target="#container-lifecycle"><span class="header-section-number">15.8</span> Container lifecycle</a>
+  <ul class="collapse">
+  <li><a href="#spinning-up-ubuntu" id="toc-spinning-up-ubuntu" class="nav-link" data-scroll-target="#spinning-up-ubuntu"><span class="header-section-number">15.8.1</span> Spinning up ubuntu</a></li>
+  </ul></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="header-section-number">15.9</span> Exercise</a></li>
+  <li><a href="#bonus-info-running-containers-locally" id="toc-bonus-info-running-containers-locally" class="nav-link" data-scroll-target="#bonus-info-running-containers-locally"><span class="header-section-number">15.10</span> Bonus info: Running containers locally</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -268,42 +315,275 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="just-what-is-a-container" class="level2" data-number="15.2">
 <h2 data-number="15.2" class="anchored" data-anchor-id="just-what-is-a-container"><span class="header-section-number">15.2</span> Just what is a container?</h2>
-<p>And why might I want one?</p>
+<p>And why might I want one? In short, as a very lightweight way to create a reproducible computing environment. Containers have some desirable properties:</p>
+<ul>
+<li><strong>Declarative</strong>: The are defined by a clear procedure making it possible to reliably rebuild an identical container in a variety of environments, promototing reproducibility</li>
+<li><strong>Portable</strong>: Containers are designed to run on a container runtime which works identically across systems, so you can launch a container from a Mac, Linux, or Windows and get the same output every time</li>
+<li><strong>Lightweight</strong>: Containers contain only the exact files and data needed for a specific application, without all of the extra operating system baggage found in virtual machines</li>
+<li><strong>Scalable</strong>: Containers can be launched multiple times from their source image, and thus can be horizontally scaled across a compute cluster to parallelize operations</li>
+</ul>
+<p>From the following figure, one can see that a container is much more lightweight than both a bare metal server and a virtual machine, in that it contains only the files needed for a specific application.</p>
 <p><img src="../images/virtualization.png" class="img-fluid"></p>
+<p><strong>Images</strong> <em>An image is a snapshot of a computing environment.</em> It contains all of the files and data needed to execute a particular application or service, along with the instructions on which service should be run. But it is not executed per se. As a snapshot, an image represents a template that can be used to create one or more containers (each of which is an instantiation of the contents of the image). Images are also built using a layered file system, which allows multiple images to be layered together to create a composite that provides rich services without as much duplication.</p>
+<p><strong>Containers</strong> A container represents in instance of an image that can be run. Containers are executed in a Container Runtime such as <a href="https://containerd.io/"><code>containerd</code></a> or <a href="https://docs.docker.com/engine/">Docker Engine</a>. Like virtual machines, containers provide mechanisms to create images that can be executed by a container runtime, and which provide stronger isolation among deployments. But they are also more lightweight, as the container only contains the libraries and executables needed to execute a target application, and not an entire guest operating system. This means that applications run with fewer resources, start up and shut down more quickly, and can be migrated easily to other hosts in a network.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <div>
 
 </div>
-<div class="quarto-layout-panel" data-layout="[[100],[70,30]]">
+<div class="quarto-layout-panel" data-layout="[[40,60]]">
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<p><strong>Containers</strong> A further step down the isolation road is to use a Container Runtime such as <a href="https://containerd.io/"><code>containerd</code></a> or <a href="https://docs.docker.com/engine/">Docker Engine</a>. Like virtual machines, containers provide mechanisms to create images that can be executed by a container runtime, and which provide stronger isolation among deployments. But they are also more lightweight, as the container only contains the libraries and executables needed to execute a target application, and not an entire guest operating system. They also are built using a layered file system, which allows multiple images to be layered together to create a composite that provides rich services without as much duplication. This means that applications run with fewer resources, start up and shut down more quickly, and can be migrated easily to other hosts in a network.</p>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 70.0%;justify-content: center;">
+<div class="quarto-layout-cell" style="flex-basis: 40.0%;justify-content: center;">
 <p><img src="../images/docker-small-logo.png" class="img-fluid"></p>
 </div>
+<div class="quarto-layout-cell" style="flex-basis: 60.0%;justify-content: flex-start;">
+<p>The <a href="https://docker.com">Docker</a> system was one of the first widespread implementations of containers, and its popularity drove much of the terminology around containers. After it’s inception, the software ecosystem around contaianers has been standardized and maintained by the <a href="https://opencontainers.org">Open Container Intitiative (OCI)</a>, which defines the image specification, runtime specification, and distribution specification followed by most vendors. So, we might often use the ‘docker’ terminology, but we are referring to OCI-compliant images and containers.</p>
 </div>
 </div>
-<p><strong>Images</strong></p>
-<p>TODO: What is an image, and how does it relate to a container?</p>
+</div>
+</div>
+</div>
 </section>
-<section id="hands-on-with-containers-and-docker" class="level2" data-number="15.3">
+<section id="hands-on-with-containers-and-docker" class="level2 page-columns page-full" data-number="15.3">
 <h2 data-number="15.3" class="anchored" data-anchor-id="hands-on-with-containers-and-docker"><span class="header-section-number">15.3</span> Hands-on with Containers and Docker</h2>
-<p>Working with docker or containers requires a container runtime. One of the nicest lately is <a href="https://rancherdesktop.io/">Rancher Desktop</a>. Install the binary for you platform, and then after it starts, enter the configuration Preferences, and then deselect “Kubernetes” to disable the kubernetes distribution, which takes up a lot of resources.</p>
+<p>Let’s get started. At it’s simplest, you can use docker to run an image that somebody else created. Let’s do that with a simple Hello World app. Open a terminal (on a machine with docker installed), and run:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run hello-world</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Hello from Docker!</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>This message shows that your installation appears to be working correctly.</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>To generate this message, Docker took the following steps:</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a> 1. The Docker client contacted the Docker daemon.</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a> 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    (arm64v8)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a> 3. The Docker daemon created a new container from that image which runs the</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    executable that produces the output you are currently reading.</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a> 4. The Docker daemon streamed that output to the Docker client, which sent it</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    to your terminal.</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>To try something more ambitious, you can run an Ubuntu container with:</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a> $ docker run -it ubuntu bash</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>Share images, automate workflows, and more with a free Docker ID:</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a> https://hub.docker.com/</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>For more examples and ideas, visit:</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a> https://docs.docker.com/get-started/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In a nutshell, the <code>docker run</code> command will take an image from your local machine, and execute it as a container instance.</p>
+<p><img src="../images/docker-run.png" class="img-fluid"></p>
+<p>You can manage your local containers and images using the docker client. Start by listing your local images:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker image ls</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">REPOSITORY</span>                                          TAG       IMAGE ID       CREATED         SIZE</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hello-world</span>                                         latest    ee301c921b8a   10 months ago   9.14kB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And you can list the containers that are running. Because containers are somewhat analogous to processes, list them with:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There is no output there, because no containers are currently running. You can see the containers that were run previously by adding the <code>-a</code> (all) option. Only long-running containers will generally be visible with <code>docker ps</code> without the <code>-a</code> flag.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND    CREATED          STATUS                      PORTS     NAMES</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">f0a2c6c27af7</span>   hello-world   <span class="st">"/hello"</span>   12 minutes ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">12</span> minutes ago             nervous_vaughan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So from that listing, we can see the <code>hello-world</code> image (with id <code>f0a2c6c27af7</code>) was run 12 minutes ago. We could run it again with either the container identifier (using <code>docker start -i f0a2c6c27af7</code>), or with the container name, which was assigned automatically (<code>docker start -i nervous_vaughan</code>). Using <code>start</code>, we are running the same container instance (<code>f0a2c6c27af7</code>) as previously, rather than creating a new one (which we could do by calling <code>docker run</code> again).</p>
+<p>Once you are finished with a container you can remove the container, but note that the image will still be present locally.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND    CREATED          STATUS                     PORTS     NAMES</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">f0a2c6c27af7</span>   hello-world   <span class="st">"/hello"</span>   22 minutes ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">6</span> minutes ago             nervous_vaughan</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker rm f0a2c6c27af7</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ex">f0a2c6c27af7</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND    CREATED      STATUS                  PORTS     NAMES</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker image ls</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">REPOSITORY</span>                                          TAG       IMAGE ID       CREATED         SIZE</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="ex">hello-world</span>                                         latest    ee301c921b8a   10 months ago   9.14kB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So the image is still on your local machine and could be run again to create a new container anytime.</p>
+</section>
+<section id="how-about-python" class="level2 page-columns page-full" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="how-about-python"><span class="header-section-number">15.4</span> How about python?</h2>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[70,30]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 70.0%;justify-content: flex-start;">
+<p>We’ve been using python 3.10, which is installed on the server. What if you wanted to run a newer version of python? It’s a command away with docker:</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 30.0%;justify-content: center;">
+<p><img src="../images/python-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<div class="column-page-right">
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> python:3.12</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Unable</span> to find image <span class="st">'python:3.12'</span> locally</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">3.12:</span> Pulling from library/python</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">6ee0baa58a3d:</span> Pull complete </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">992a857ef575:</span> Pull complete </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ex">3861a6536e4e:</span> Pull complete </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ex">e5e6faea05ea:</span> Pull complete </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">91c9495e7b5a:</span> Pull complete </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ex">9001688a971d:</span> Pull complete </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="ex">ad27ab4515af:</span> Pull complete </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">b152d3b07485:</span> Pull complete </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Digest:</span> sha256:336461f63f4eb1100e178d5acbfea3d1a5b2a53dea88aa0f9b8482d4d02e981c</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="ex">Status:</span> Downloaded newer image for python:3.12</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="ex">Python</span> 3.12.2 <span class="er">(</span><span class="ex">main,</span> Mar 12 2024, 08:01:18<span class="kw">)</span> <span class="ex">[GCC</span> 12.2.0] on linux</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">"help"</span>, <span class="st">"copyright"</span>, <span class="st">"credits"</span> or <span class="st">"license"</span> for more information.</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> print<span class="kw">(</span><span class="st">"Hello from python!"</span><span class="kw">)</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from python!</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can even use this image to run commands at the command prompt. The <code>-i</code> interactive and <code>-t</code> terminal options allow you to run a command interactively with terminal output. Let’s run a quick command to print the python version:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> <span class="at">--rm</span> python:3.12 python <span class="at">-V</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Python</span> 3.12.2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and we could run a little python command-line calculation from the image:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> <span class="at">--rm</span> python:3.12 python <span class="at">-c</span> <span class="st">'print(f"Four plus one is {4+1}")'</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Four</span> plus one is 5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you were to run commands like this frequently, you’d build up a lot of container instances from your image, so instead we passed the <code>--rm</code> option to tell docker to delete the container (but not the image) when it is done executing each time. So, at times you’ll need to clean up. I’ve run the commands a few times interactively without remembering the <code>--rm</code> option, so now I can list and remove the containers that I don’t need hanging around any more.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND     CREATED             STATUS                           PORTS     NAMES</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">d3f717354ed5</span>   python:3.12   <span class="st">"python3"</span>   About an hour ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">59</span> minutes ago                  laughing_borg</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">e882d6a89f2c</span>   python:3.12   <span class="st">"python3"</span>   About an hour ago   Exited <span class="er">(</span><span class="ex">130</span><span class="kw">)</span> <span class="ex">About</span> an hour ago             interesting_elgamal</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">9d984d596e4e</span>   python:3.12   <span class="st">"python3"</span>   About an hour ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">About</span> an hour ago               adoring_jang</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">b015e761fbab</span>   hello-world   <span class="st">"/hello"</span>    7 days ago          Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">7</span> days ago                      compassionate_wozniak</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">1bf3a36a924c</span>   hello-world   <span class="st">"/hello"</span>    7 days ago          Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">7</span> days ago                      jolly_goldwasser</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker rm laughing_borg interesting_elgamal adoring_jang compassionate_wozniak</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">laughing_borg</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="ex">interesting_elgamal</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="ex">adoring_jang</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ex">compassionate_wozniak</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND    CREATED      STATUS                  PORTS     NAMES</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="ex">1bf3a36a924c</span>   hello-world   <span class="st">"/hello"</span>   7 days ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">7</span> days ago             jolly_goldwasser</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exploring-available-images-and-versions" class="level2 page-columns page-full" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="exploring-available-images-and-versions"><span class="header-section-number">15.5</span> Exploring available images and versions</h2>
+<p>Now that version of python is available on your machine. When you list the image, you’ll see that the python version is provided as the <code>tag</code>.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker image ls</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">REPOSITORY</span>                                          TAG       IMAGE ID       CREATED         SIZE</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span>                                              3.12      ff82813aa87b   6 weeks ago     1.02GB</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">hello-world</span>                                         latest    ee301c921b8a   10 months ago   9.14kB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>TAG</code> associated with an image is typically used to indicate the version of the image. We downloaded this image from the DockerHub image registry. If you inspect the <a href="https://hub.docker.com/_/python">DockerHub python page</a>, you’ll see that this is an ‘official’ image from the python project, and that it is one of many different images that can be downloaded. So, images are a fantastic way to be able to reliably return to a specific version of software that you might want to use.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Be careful with images that you download from the internet – they might contain anything, including malware. Because you are running the code locally, you never know mischief might be managed, and you probably don’t want to find out. So it is best to only run images from trusted sources. Generally, the ‘official’ images for projects are marked in image registries, and there are procedures to ensure they are from those trusted sources. But, it’s also easy to spoof something that looks official, so put on your tinfoil hat when running unfamiliar images.</p>
+</div>
+</div>
+</div></div><p><img src="../images/dockerhub-python.png" class="img-fluid"></p>
+<p>Of course, python is just the start. You can find images for just about any software you need, including machine learning libraries like <strong>TensorFlow</strong> (<a href="https://hub.docker.com/r/tensorflow/tensorflow">tensorflow/tensorflow</a>), databases like <strong>Postresql</strong> (<a href="https://hub.docker.com/r/bitnami/postgresql">bitnami/postgresql</a>), search systems like <strong>Solr</strong> (<a href="https://hub.docker.com/_/solr">solr</a>), and web servers like <strong>nginx</strong> (<a href="https://hub.docker.com/_/nginx">nginx</a>). Take a few mintues to explore the thousands of applications available at these image registries:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><a href="https://hub.docker.com"><img src="../images/dockerhub-logo.png" class="img-fluid"></a></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><a href="https://artifacthub.io/"><img src="../images/artifacthub-logo.png" class="img-fluid"></a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="build-your-own-images" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="build-your-own-images"><span class="header-section-number">15.6</span> Build your own images</h2>
+<ul>
+<li>what they are and why they are important</li>
+<li>basic structure</li>
+<li>write the simplest one possible “”</li>
+<li>typical structure</li>
+</ul>
+</section>
+<section id="sharing-images-to-registries" class="level2" data-number="15.7">
+<h2 data-number="15.7" class="anchored" data-anchor-id="sharing-images-to-registries"><span class="header-section-number">15.7</span> Sharing images to registries</h2>
+<p>Container registries…</p>
+<ul>
+<li>GHCR</li>
+<li>Dockerhub</li>
+<li>ArtifactHub</li>
+<li>…</li>
+</ul>
+<section id="anatomy-of-an-image" class="level3" data-number="15.7.1">
+<h3 data-number="15.7.1" class="anchored" data-anchor-id="anatomy-of-an-image"><span class="header-section-number">15.7.1</span> Anatomy of an image</h3>
+<ul>
+<li>images and layers</li>
+<li>why layers are important</li>
+<li>Dockerfiles and layers</li>
+</ul>
+</section>
+<section id="oci" class="level3" data-number="15.7.2">
+<h3 data-number="15.7.2" class="anchored" data-anchor-id="oci"><span class="header-section-number">15.7.2</span> OCI</h3>
+<ul>
+<li>layers and sha checksums</li>
+<li>saving layers and images</li>
+</ul>
+</section>
+</section>
+<section id="container-lifecycle" class="level2" data-number="15.8">
+<h2 data-number="15.8" class="anchored" data-anchor-id="container-lifecycle"><span class="header-section-number">15.8</span> Container lifecycle</h2>
+<p>Putting it all together, you can use the docker client tool to build an image from a <code>Dockerfile</code>, then run it as a container, and you can push that image to an image registry, or pull one down that you want to run on a particular machine.</p>
+<p><img src="../images/docker-workflow.png" class="img-fluid"></p>
+<section id="spinning-up-ubuntu" class="level3" data-number="15.8.1">
+<h3 data-number="15.8.1" class="anchored" data-anchor-id="spinning-up-ubuntu"><span class="header-section-number">15.8.1</span> Spinning up ubuntu</h3>
+<ul>
+<li><code>docker run --name container1 -h myubuntu -it ubuntu:22.04</code></li>
+<li><code>docker rm container1</code></li>
+</ul>
+<p>Shell on running containers - <code>docker exec -it container1 -- bash</code></p>
+</section>
+</section>
+<section id="exercise" class="level2" data-number="15.9">
+<h2 data-number="15.9" class="anchored" data-anchor-id="exercise"><span class="header-section-number">15.9</span> Exercise</h2>
+<ul>
+<li>Optional?</li>
+</ul>
+</section>
+<section id="bonus-info-running-containers-locally" class="level2" data-number="15.10">
+<h2 data-number="15.10" class="anchored" data-anchor-id="bonus-info-running-containers-locally"><span class="header-section-number">15.10</span> Bonus info: Running containers locally</h2>
+<p>Working with docker or containers requires a container runtime. If you’re on a Mac or Windows machine, you can run containers through a variety of different runtime systems. One of the nicest lately is <a href="https://rancherdesktop.io/">Rancher Desktop</a>. Install the binary for you platform, and then after it starts, enter the configuration Preferences, and then deselect “Kubernetes” to disable the kubernetes distribution, which takes up a lot of resources if you’re not using it.</p>
 <p><img src="../images/rancher-k8s-config.png" class="img-fluid"></p>
 <p>There are many different tools you can use with docker, including the <code>docker</code> client tool, and the <code>containerd</code> ecosystem using <code>nerdctl</code> as a client tool. Both the <code>docker</code> command and the <code>nerdctl</code> command share the same commands. A few quick example commands one might use in the docker ecosystem:</p>
 <ul>
 <li><code>docker pull python:3.9</code>: to grab an existing python image from the DockerHub repository</li>
 <li><code>docker run -it python:3.9 -- python</code>: to start a standard python interpreter</li>
 <li><code>docker build</code>: to build a new image from a Dockerfile configuration file</li>
-</ul>
-<p>Let’s get started.</p>
-</section>
-<section id="your-first-container" class="level2" data-number="15.4">
-<h2 data-number="15.4" class="anchored" data-anchor-id="your-first-container"><span class="header-section-number">15.4</span> Your first container</h2>
-<ul>
-<li><code>docker run hello-world</code></li>
 </ul>
 
 
