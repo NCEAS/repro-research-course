@@ -279,10 +279,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#multi-process-with-concurrent.futures" id="toc-multi-process-with-concurrent.futures" class="nav-link" data-scroll-target="#multi-process-with-concurrent.futures"><span class="header-section-number">4.8.3</span> Multi-process with <code>concurrent.futures</code></a></li>
   </ul></li>
   <li><a href="#parallel-processing-with-parsl" id="toc-parallel-processing-with-parsl" class="nav-link" data-scroll-target="#parallel-processing-with-parsl"><span class="header-section-number">4.9</span> Parallel processing with <code>parsl</code></a></li>
-  <li><a href="#when-to-parallelize" id="toc-when-to-parallelize" class="nav-link" data-scroll-target="#when-to-parallelize"><span class="header-section-number">4.10</span> When to parallelize</a></li>
-  <li><a href="#parallel-pitfalls" id="toc-parallel-pitfalls" class="nav-link" data-scroll-target="#parallel-pitfalls"><span class="header-section-number">4.11</span> Parallel Pitfalls</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.12</span> Summary</a></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">4.13</span> Further Reading</a></li>
+  <li><a href="#are-we-done-yet" id="toc-are-we-done-yet" class="nav-link" data-scroll-target="#are-we-done-yet"><span class="header-section-number">4.10</span> Are we done yet?</a></li>
+  <li><a href="#when-to-parallelize" id="toc-when-to-parallelize" class="nav-link" data-scroll-target="#when-to-parallelize"><span class="header-section-number">4.11</span> When to parallelize</a></li>
+  <li><a href="#parallel-pitfalls" id="toc-parallel-pitfalls" class="nav-link" data-scroll-target="#parallel-pitfalls"><span class="header-section-number">4.12</span> Parallel Pitfalls</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.13</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">4.14</span> Further Reading</a></li>
   </ul>
 </nav>
     </div>
@@ -449,14 +450,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="4.7" class="anchored" data-anchor-id="task-parallelization-in-python"><span class="header-section-number">4.7</span> Task parallelization in Python</h2>
 <p>Python also provides a number of easy to use packages for concurrent processing. We will review two of these, <code>concurrent.futures</code> and <code>parsl</code>, to show just how easy it can be to parallelize your programs. <a href="https://docs.python.org/3/library/concurrent.futures.html"><code>concurrent.futures</code></a> is built right into the python3 release, and is a great starting point for learning concurrency.</p>
 <p>We’re going to start with a task that is a little expensive to compute, and define it in a function. All this <code>task(x)</code> function does is to use numpy to create a fairly large range of numbers, and then sum them.</p>
-<div id="3ef4da80" class="cell" data-execution_count="2">
+<div id="f51ef2ef" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> task(x):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> np.arange(x<span class="op">*</span><span class="dv">10</span><span class="op">**</span><span class="dv">8</span>).<span class="bu">sum</span>()</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can start by executing this task function serially ten times with varying inputs. In this case, we create a function <code>run_serial</code> that takes a list of inputs to be run, and it calls the <code>task</code> function for each of those inputs. The <code>@timethis</code> decorator is a simple way to wrap the function with timing code so that we can see how long it takes to execute.</p>
-<div id="a35e4dc4" class="cell" data-execution_count="3">
+<div id="2b30cff7" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
@@ -465,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>run_serial(np.arange(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>run_serial: 7156.259536743164 ms</code></pre>
+<pre><code>run_serial: 7197.09587097168 ms</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>[0,
@@ -483,7 +484,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In this case, it takes around <em>25 seconds</em> to execute 10 tasks, depending on what else is happening on the machine and network.</p>
 <p>So, can we make this faster using a multi-threaded parallel process? Let’s try with <code>concurrent.futures</code>. The main concept in this package is one of a <code>future</code>, which is a structure which represents the value that will be created in a computation in the future when the function completes execution. With <code>concurrent.futures</code>, tasks are scheduled and do not block while they await their turn to be executed. Instead, threads are created and executed <em>asynchronously</em>, meaning that the function returns it’s <code>future</code> potentially before the thread has actually been executed. Using this approach, the user schedules a series of tasks to be executed asynchronously, and keeps track of the futures for each task. When the future indicates that the execution has been completed, we can then retrieve the result of the computation.</p>
 <p>In practice this is a simple change from our serial implementation. We will use the <code>ThreadPoolExecutor</code> to create a pool of workers that are available to process tasks. Each worker is set up in its own thread, so it can execute in parallel with other workers. After setting up the pool of workers, we use concurrent.futures <code>map()</code> to schedule each task from our <code>task_list</code> (in this case, an input value from 1 to 10) to run on one of the workers. As for all map() implementations, we are asking for each value in <code>task_list</code> to be executed in the <code>task</code> function we defined above, but in this case it will be executed using one of the workers from the <code>executor</code> that we created.</p>
-<div id="6c8ac49d" class="cell" data-execution_count="4">
+<div id="58183b0a" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ThreadPoolExecutor</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
@@ -506,6 +507,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  319999999600000000,
  404999999550000000]</code></pre>
 <p>This execution took about <span class="emoji" data-emoji="tada">🎉</span> <em>4 seconds</em> <span class="emoji" data-emoji="tada">🎉</span>, which is about 6.25x faster than serial. Congratulations, you wrote your a multi-threaded python program!</p>
+<p>But you may have also seen the thread pool wasn’t much faster at all. In that case, you may be encountering the python Global Interpreter Lock (GIL), and would be better off with using parallel processes. Let’s do that with <code>ProcessPoolExecutor</code>.</p>
+<div id="196988ff" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ProcessPoolExecutor</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_processes(task_list):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> ProcessPoolExecutor(max_workers<span class="op">=</span><span class="dv">10</span>) <span class="im">as</span> executor:</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> executor.<span class="bu">map</span>(task, task_list)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> run_processes(np.arange(<span class="dv">10</span>))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>[x <span class="cf">for</span> x <span class="kw">in</span> results]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For me, that took about 8 seconds, about half the time of the serial case, but results can vary tremendously depending on what others are doing on the machine.</p>
 </section>
 <section id="exercise-parallel-downloads" class="level2" data-number="4.8">
 <h2 data-number="4.8" class="anchored" data-anchor-id="exercise-parallel-downloads"><span class="header-section-number">4.8</span> Exercise: Parallel downloads</h2>
@@ -521,7 +535,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>First, let’s download the data serially to set a benchmark. The data files are listed in a table with their filename and identifier, and can be downloaded directly from the Arctic Data Center using their identifier. To make things easier, we’ve already provided a data frame with the names and identifiers of each file that could be downloaded.</p>
-<div id="36213ac8" class="cell" data-execution_count="5">
+<div id="b2fc8abb" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
@@ -571,32 +585,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="serial" class="level3" data-number="4.8.1">
 <h3 data-number="4.8.1" class="anchored" data-anchor-id="serial"><span class="header-section-number">4.8.1</span> Serial</h3>
 <p>When you have a list of repetitive tasks, you may be able to speed it up by adding more computing power. If each task is completely independent of the others, then it is pleasingly parallel and a prime candidate for executing those tasks in parallel, each on its own core. For example, let’s build a simple loop that downloads the data files that we need for an analysis. First, we start with the serial implementation.</p>
-<div id="79b7471a" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_file(row):</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    service <span class="op">=</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/"</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    pid <span class="op">=</span> row[<span class="dv">1</span>][<span class="st">'identifier'</span>]</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> row[<span class="dv">1</span>][<span class="st">'filename'</span>]</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> service <span class="op">+</span> pid</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Downloading: "</span> <span class="op">+</span> filename)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    msg <span class="op">=</span> urllib.request.urlretrieve(url, filename)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> filename</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_serial(table):</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> [download_file(row) <span class="cf">for</span> row <span class="kw">in</span> table.iterrows()]</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> download_serial(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fc2deea8" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_file(row):</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    service <span class="op">=</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    pid <span class="op">=</span> row[<span class="dv">1</span>][<span class="st">'identifier'</span>]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> row[<span class="dv">1</span>][<span class="st">'filename'</span>]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> service <span class="op">+</span> pid</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Downloading: "</span> <span class="op">+</span> filename)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    msg <span class="op">=</span> urllib.request.urlretrieve(url, filename)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> filename</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_serial(table):</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> [download_file(row) <span class="cf">for</span> row <span class="kw">in</span> table.iterrows()]</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> download_serial(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2007.tif
 Downloading: SWI_2019.tif
 Downloading: SWI_2021.tif
 Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif
-download_serial: 102506.97588920593 ms
+download_serial: 118949.22089576721 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']</code></pre>
 </div>
 </div>
@@ -606,25 +620,25 @@ download_serial: 102506.97588920593 ms
 <section id="multi-threaded-with-concurrent.futures" class="level3" data-number="4.8.2">
 <h3 data-number="4.8.2" class="anchored" data-anchor-id="multi-threaded-with-concurrent.futures"><span class="header-section-number">4.8.2</span> Multi-threaded with <code>concurrent.futures</code></h3>
 <p>In this case, we’ll use the same <code>download_file</code> function from before, but let’s switch up and create a <code>download_threaded()</code> function to use <code>concurrent.futures</code> with a <code>ThreadPoolExecutor</code> just as we did earlier.</p>
-<div id="48d27e71" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ThreadPoolExecutor</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_threaded(table):</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> ThreadPoolExecutor(max_workers<span class="op">=</span><span class="dv">15</span>) <span class="im">as</span> executor:</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> executor.<span class="bu">map</span>(download_file, table.iterrows(), timeout<span class="op">=</span><span class="dv">60</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> results</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> download_threaded(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7c873544" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ThreadPoolExecutor</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_threaded(table):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> ThreadPoolExecutor(max_workers<span class="op">=</span><span class="dv">15</span>) <span class="im">as</span> executor:</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> executor.<span class="bu">map</span>(download_file, table.iterrows(), timeout<span class="op">=</span><span class="dv">60</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> results</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> download_threaded(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Downloading: SWI_2007.tif
 Downloading: SWI_2019.tif
 Downloading: SWI_2021.tif
 Downloading: SWI_2020.tif
 Downloading: SWI_2001.tif
-download_threaded: 18966.630458831787 ms
+download_threaded: 40392.88139343262 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -637,25 +651,25 @@ SWI_2001.tif</code></pre>
 <section id="multi-process-with-concurrent.futures" class="level3" data-number="4.8.3">
 <h3 data-number="4.8.3" class="anchored" data-anchor-id="multi-process-with-concurrent.futures"><span class="header-section-number">4.8.3</span> Multi-process with <code>concurrent.futures</code></h3>
 <p>You’ll remember from earlier that you can execute tasks concurrently by creating multiple threads within one process (multi-threaded), or by creating and executing muliple processes. The latter creates more independence, as each of the executing tasks has their own memory and process space, but it also takes longer to set up. With <code>concurrent.futures</code>, we can switch to a multi-process pool by using a <code>ProcessPoolExecutor</code>, analogously to how we used <code>ThreadPoolExecutor</code> previously. So, some simple changes, and we’re running multiple processes.</p>
-<div id="9b8d513d" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ProcessPoolExecutor</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_process(table):</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> ProcessPoolExecutor(max_workers<span class="op">=</span><span class="dv">15</span>) <span class="im">as</span> executor:</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> executor.<span class="bu">map</span>(download_file, table.iterrows(), timeout<span class="op">=</span><span class="dv">60</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> results</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> download_process(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cb8f2d43" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ProcessPoolExecutor</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_process(table):</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> ProcessPoolExecutor(max_workers<span class="op">=</span><span class="dv">15</span>) <span class="im">as</span> executor:</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> executor.<span class="bu">map</span>(download_file, table.iterrows(), timeout<span class="op">=</span><span class="dv">60</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> results</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> download_process(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading: SWI_2007.tifDownloading: SWI_2019.tifDownloading: SWI_2020.tifDownloading: SWI_2021.tif
-
-
-
+<pre><code>Downloading: SWI_2007.tifDownloading: SWI_2019.tifDownloading: SWI_2021.tif
 Downloading: SWI_2001.tif
-download_process: 17364.819288253784 ms
+Downloading: SWI_2020.tif
+
+
+download_process: 11409.16132926941 ms
 SWI_2007.tif
 SWI_2019.tif
 SWI_2021.tif
@@ -671,92 +685,182 @@ SWI_2001.tif</code></pre>
 <p><code>concurrent.futures</code> is great and powerful, but it has its limits. Particularly as you try to scale up into the thousands of concurrent tasks, other libraries like <a href="https://parsl-project.org/">Parsl</a> (<a href="https://parsl.readthedocs.io/">docs</a>), <a href="https://www.dask.org/">Dask</a>, <a href="https://www.ray.io/">Ray</a>, and others come into play. They all have their strengths, but Parsl makes it particularly easy to build parallel workflows out of existing python code through it’s use of decorators on existing python functions.</p>
 <p>In addition, Parsl supports a lot of different kinds of <a href="https://parsl.readthedocs.io/en/stable/userguide/execution.html#execution-providers">providers</a>, allowing the same python code to be easily run multi-threaded using a <code>ThreadPoolExecutor</code> and via multi-processing on many different cluster computing platforms using the <code>HighThroughputExecutor</code>. For example, Parsl includes providers supporting local execution, and on Slurm, Condor, Kubernetes, AWS, and other platforms. And Parsl handles data staging as well across these varied environments, making sure the data is in the right place when it’s needed for computations.</p>
 <p>Similarly to before, we start by configuring an executor in parsl, and loading it. We’ll use multiprocessing by configuring the <code>HighThroughputExecutor</code> to use our local resources as a cluster, and we’ll activate our virtual environment to be sure we’re executing in a consistent environment.</p>
-<div id="b0ff7624" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Required packages</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> parsl</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl <span class="im">import</span> python_app</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.config <span class="im">import</span> Config</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.executors <span class="im">import</span> HighThroughputExecutor</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.providers <span class="im">import</span> LocalProvider</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure the parsl executor</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>activate_env <span class="op">=</span> <span class="st">'workon scomp'</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>htex_local <span class="op">=</span> Config(</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    executors<span class="op">=</span>[</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        HighThroughputExecutor(</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>            max_workers<span class="op">=</span><span class="dv">15</span>,</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>            provider<span class="op">=</span>LocalProvider(</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                worker_init<span class="op">=</span>activate_env</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>parsl.load(htex_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e95d6b38" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Required packages</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> parsl</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl <span class="im">import</span> python_app</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.config <span class="im">import</span> Config</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.executors <span class="im">import</span> HighThroughputExecutor</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.providers <span class="im">import</span> LocalProvider</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure the parsl executor</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>activate_env <span class="op">=</span> <span class="st">'workon scomp'</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>htex_local <span class="op">=</span> Config(</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    executors<span class="op">=</span>[</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        HighThroughputExecutor(</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>            max_workers<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>            provider<span class="op">=</span>LocalProvider(</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>                worker_init<span class="op">=</span>activate_env</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>parsl.load(htex_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7fa749ae0460&gt;</code></pre>
+<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7f0917e50700&gt;</code></pre>
 </div>
 </div>
 <p>We now have a live parsl executor (<code>htex_local</code>) that is waiting to execute processes. We tell it to execute processes by annotating functions with decorators that indicate which tasks should be parallelized. Parsl then handles the scheduling and execution of those tasks based on the dependencies between them. In the simplest case, we’ll decorate our previous function for downloading a file with the <code>@python_app</code> decorator, which tells parsl that any function calls with this function should be run on the default executor (in this case, <code>htex_local</code>).</p>
-<div id="5f19d89b" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decorators seem to be ignored as the first line of a cell, so print something first</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Create decorated function"</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="at">@python_app</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_file_parsl(row):</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> urllib</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    service <span class="op">=</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/"</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    pid <span class="op">=</span> row[<span class="dv">1</span>][<span class="st">'identifier'</span>]</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> row[<span class="dv">1</span>][<span class="st">'filename'</span>]</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> service <span class="op">+</span> pid</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Downloading: "</span> <span class="op">+</span> filename)</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    msg <span class="op">=</span> urllib.request.urlretrieve(url, filename)</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> filename</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cfb3a2f7" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decorators seem to be ignored as the first line of a cell, so print something first</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Create decorated function"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="at">@python_app</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_file_parsl(row):</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> urllib</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    service <span class="op">=</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/"</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    pid <span class="op">=</span> row[<span class="dv">1</span>][<span class="st">'identifier'</span>]</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> row[<span class="dv">1</span>][<span class="st">'filename'</span>]</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> service <span class="op">+</span> pid</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Downloading: "</span> <span class="op">+</span> filename)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    msg <span class="op">=</span> urllib.request.urlretrieve(url, filename)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> filename</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Create decorated function</code></pre>
 </div>
 </div>
 <p>Now we just write regular python code that calls that function, and parsl handles the scheduling. Parsl app executors return an <a href="https://parsl.readthedocs.io/en/stable/userguide/futures.html#appfutures"><code>AppFuture</code></a>, and we can call the <code>AppFuture.done()</code> function to determine when the future result is ready without blocking. Or, we can just block on <code>AppFuture.result()</code> which waits for each of the executions to complete and then returns the result.</p>
-<div id="f1120f08" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#! eval: true</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Define our download_futures function"</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_futures(table):</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> []</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> table.iterrows():</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> download_file_parsl(row)</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(result)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        results.append(result)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>(results)</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wait_for_futures(table):</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> download_futures(table)</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    done <span class="op">=</span> [app_future.result() <span class="cf">for</span> app_future <span class="kw">in</span> results]</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(done)</span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>wait_for_futures(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f3bab9e2" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#! eval: true</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Define our download_futures function"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_futures(table):</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> []</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> table.iterrows():</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> download_file_parsl(row)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(result)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        results.append(result)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>(results)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="at">@timethis</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wait_for_futures(table):</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> download_futures(table)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    done <span class="op">=</span> [app_future.result() <span class="cf">for</span> app_future <span class="kw">in</span> results]</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(done)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>wait_for_futures(file_table[<span class="dv">0</span>:<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Define our download_futures function
-&lt;AppFuture at 0x7fa70479cd90 state=pending&gt;
-&lt;AppFuture at 0x7fa70479ceb0 state=pending&gt;
-&lt;AppFuture at 0x7fa70479f910 state=pending&gt;
-&lt;AppFuture at 0x7fa70479ea10 state=pending&gt;
-&lt;AppFuture at 0x7fa70475ec80 state=pending&gt;
-download_futures: 10.331869125366211 ms
+&lt;AppFuture at 0x7f09148aae30 state=pending&gt;
+&lt;AppFuture at 0x7f09148a98d0 state=pending&gt;
+&lt;AppFuture at 0x7f0917e51120 state=pending&gt;
+&lt;AppFuture at 0x7f0917e511e0 state=pending&gt;
+&lt;AppFuture at 0x7f09145288e0 state=pending&gt;
+download_futures: 10.675907135009766 ms
 ['SWI_2007.tif', 'SWI_2019.tif', 'SWI_2021.tif', 'SWI_2020.tif', 'SWI_2001.tif']
-wait_for_futures: 30859.310388565063 ms</code></pre>
+wait_for_futures: 43896.12054824829 ms</code></pre>
 </div>
 </div>
 <p>When we’re done, be sure to clean up and shutdown the <code>htex_local</code> executor, or it will continue to persist in your environment and utilize resources. Generally, an executor should be created when setting up your environment, and then it can be used repeatedly for many different tasks.</p>
-<div id="7f8b83ab" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>htex_local.executors[<span class="dv">0</span>].shutdown()</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7afc4beb" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>htex_local.executors[<span class="dv">0</span>].shutdown()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="when-to-parallelize" class="level2" data-number="4.10">
-<h2 data-number="4.10" class="anchored" data-anchor-id="when-to-parallelize"><span class="header-section-number">4.10</span> When to parallelize</h2>
+<section id="are-we-done-yet" class="level2" data-number="4.10">
+<h2 data-number="4.10" class="anchored" data-anchor-id="are-we-done-yet"><span class="header-section-number">4.10</span> Are we done yet?</h2>
+<p>Parsl and other concurrency libraries generally provide both <strong>blocking</strong> and <strong>non-blocking</strong> methods for accessing the results of asycnchronous method calls. By blocking, we are referring to methods that wait for the asynchronous opearation to complete before returning results, which blocks execution of the rest of a program. By non-blocking, we are referring to methods that return the result if it is available, but not if the async method hasn’t completed yet. In that case, it lets the rest of the program to continue execution.</p>
+<p>In practice this means that we can either 1) wait for all async calls to complete, and then process them using the blocking methods, or 2) query with a non-blocking method to see if each async call is complete, and only then retrieve the results for that method. We illustrate this approach below with parsl.</p>
+<div id="476b276f" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Required packages</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> parsl</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl <span class="im">import</span> python_app</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.config <span class="im">import</span> Config</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.executors <span class="im">import</span> HighThroughputExecutor</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> parsl.providers <span class="im">import</span> LocalProvider</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure the parsl executor</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>activate_env <span class="op">=</span> <span class="st">'workon scomp'</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>htex_local <span class="op">=</span> Config(</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    executors<span class="op">=</span>[</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        HighThroughputExecutor(</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>            max_workers<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>            provider<span class="op">=</span>LocalProvider(</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                worker_init<span class="op">=</span>activate_env</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>parsl.clear()</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>parsl.load(htex_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>&lt;parsl.dataflow.dflow.DataFlowKernel at 0x7f0959b47c10&gt;</code></pre>
+</div>
+</div>
+<p>Define the task we want to run.</p>
+<div id="2807f541" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="at">@python_app</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> do_stuff(x):</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> time</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x<span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And now execute the tasks with some sleeps to see which are blocking and which are completed.</p>
+<div id="db4ce2a3" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>all_futures <span class="op">=</span> []</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>):</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    future <span class="op">=</span> do_stuff(x)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    all_futures.append(future)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(future)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>time.sleep(<span class="dv">3</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> future <span class="kw">in</span> all_futures:</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Checking: "</span>, future)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (future.done()):</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Do more with result: "</span>, future.result())</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Sorry, come back later."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;AppFuture at 0x7f0914528fd0 state=pending&gt;
+&lt;AppFuture at 0x7f0917e51510 state=pending&gt;
+&lt;AppFuture at 0x7f091452abc0 state=pending&gt;
+&lt;AppFuture at 0x7f0914529450 state=pending&gt;
+&lt;AppFuture at 0x7f0914528e80 state=pending&gt;
+&lt;AppFuture at 0x7f091452a7a0 state=pending&gt;
+&lt;AppFuture at 0x7f091452ac20 state=pending&gt;
+&lt;AppFuture at 0x7f0914528c70 state=pending&gt;
+&lt;AppFuture at 0x7f0917e53e80 state=pending&gt;
+&lt;AppFuture at 0x7f09148aaa10 state=pending&gt;
+Checking:  &lt;AppFuture at 0x7f0914528fd0 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f0917e51510 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f091452abc0 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f0914529450 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f0914528e80 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f091452a7a0 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f091452ac20 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f0914528c70 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f0917e53e80 state=pending&gt;
+Sorry, come back later.
+Checking:  &lt;AppFuture at 0x7f09148aaa10 state=pending&gt;
+Sorry, come back later.</code></pre>
+</div>
+</div>
+<p>Notice in particular that about half of the jobs are not done yet.</p>
+</section>
+<section id="when-to-parallelize" class="level2" data-number="4.11">
+<h2 data-number="4.11" class="anchored" data-anchor-id="when-to-parallelize"><span class="header-section-number">4.11</span> When to parallelize</h2>
 <p>It’s not as simple as it may seem. While in theory each added processor would linearly increase the throughput of a computation, there is overhead that reduces that efficiency. For example, the code and, importantly, the data need to be copied to each additional CPU, and this takes time and bandwidth. Plus, new processes and/or threads need to be created by the operating system, which also takes time. This overhead reduces the efficiency enough that realistic performance gains are much less than theoretical, and usually do not scale linearly as a function of processing power. For example, if the time that a computation takes is short, then the overhead of setting up these additional resources may actually overwhelm any advantages of the additional processing power, and the computation could potentially take longer!</p>
 <p>In addition, not all of a task can be parallelized. Depending on the proportion, the expected speedup can be significantly reduced. Some propose that this may follow <a href="https://en.wikipedia.org/wiki/Amdahl%27s_law">Amdahl’s Law</a>, where the speedup of the computation (y-axis) is a function of both the number of cores (x-axis) and the proportion of the computation that can be parallelized (see colored lines):</p>
 <div class="quarto-figure quarto-figure-center">
@@ -767,8 +871,8 @@ wait_for_futures: 30859.310388565063 ms</code></pre>
 </div>
 <p>So, it is important to evaluate the computational efficiency of requests, and work to ensure that additional compute resources brought to bear will pay off in terms of increased work being done.</p>
 </section>
-<section id="parallel-pitfalls" class="level2" data-number="4.11">
-<h2 data-number="4.11" class="anchored" data-anchor-id="parallel-pitfalls"><span class="header-section-number">4.11</span> Parallel Pitfalls</h2>
+<section id="parallel-pitfalls" class="level2" data-number="4.12">
+<h2 data-number="4.12" class="anchored" data-anchor-id="parallel-pitfalls"><span class="header-section-number">4.12</span> Parallel Pitfalls</h2>
 <p>A set of tasks is considered ‘pleasingly parallel’ when large portions of the code can be executed indpendently of the other portions and have few or no dependencies on other parts of the execution. This situation is common, and we can frequently execute parallel tasks on independent subsets of our data. Nevertheless, dependencies among different parts of your computation can definitely create bottlenecks and slow down computations. Some of the challenges you may need to work around include:</p>
 <ul>
 <li><p><strong>Task dependencies</strong>: occur when one task in the code depends on the results of another task or computation in the code.</p></li>
@@ -777,12 +881,12 @@ wait_for_futures: 30859.310388565063 ms</code></pre>
 </ul>
 <p>Even when tasks exhibit strong dependencies, it is frequently possible to still optimize that code by parallelizing explicit code sections, sometimes bringing other concurrency tools into the mix, such as the Message Passing Interface (MPI). But simply improving the efficiency of pleasingly parallel tasks can be liberating.</p>
 </section>
-<section id="summary" class="level2" data-number="4.12">
-<h2 data-number="4.12" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.12</span> Summary</h2>
+<section id="summary" class="level2" data-number="4.13">
+<h2 data-number="4.13" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.13</span> Summary</h2>
 <p>In this lesson, we showed examples of computing tasks that are likely limited by the number of CPU cores that can be applied, and we reviewed the architecture of computers to understand the relationship between CPU processors and cores. Next, we reviewed the way in which traditional sequential loops can be rewritten as functions that are applied to a list of inputs both serially and in parallel to utilize multiple cores to speed up computations. We reviewed the challenges of optimizing code, where one must constantly examine the bottlenecks that arise as we improve cpu-bound, I/O bound,and memory bound computations.</p>
 </section>
-<section id="further-reading" class="level2" data-number="4.13">
-<h2 data-number="4.13" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">4.13</span> Further Reading</h2>
+<section id="further-reading" class="level2" data-number="4.14">
+<h2 data-number="4.14" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">4.14</span> Further Reading</h2>
 <p>Ryan Abernathey &amp; Joe Hamman. 2020. <a href="https://medium.com/pangeo/closed-platforms-vs-open-architectures-for-cloud-native-earth-system-analytics-1ad88708ebb6">Closed Platforms vs.&nbsp;Open Architectures for Cloud-Native Earth System Analytics.</a> Medium.</p>
 
 
