@@ -69,6 +69,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="style.css">
@@ -219,7 +222,24 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#what-is-a-quarto-dashboard" id="toc-what-is-a-quarto-dashboard" class="nav-link" data-scroll-target="#what-is-a-quarto-dashboard"><span class="header-section-number">10.1</span> What is a Quarto Dashboard?</a></li>
+  <li><a href="#dashboard-components-overview" id="toc-dashboard-components-overview" class="nav-link" data-scroll-target="#dashboard-components-overview"><span class="header-section-number">10.2</span> Dashboard Components Overview</a>
+  <ul class="collapse">
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="header-section-number">10.2.1</span> Examples</a></li>
+  </ul></li>
+  <li><a href="#basic-structure" id="toc-basic-structure" class="nav-link" data-scroll-target="#basic-structure"><span class="header-section-number">10.3</span> Basic Structure</a></li>
+  <li><a href="#further-layout-customization-with-attributes" id="toc-further-layout-customization-with-attributes" class="nav-link" data-scroll-target="#further-layout-customization-with-attributes"><span class="header-section-number">10.4</span> Further Layout customization with attributes</a></li>
+  <li><a href="#adding-components" id="toc-adding-components" class="nav-link" data-scroll-target="#adding-components"><span class="header-section-number">10.5</span> Adding Components</a></li>
+  <li><a href="#deploying-your-dashboard" id="toc-deploying-your-dashboard" class="nav-link" data-scroll-target="#deploying-your-dashboard"><span class="header-section-number">10.6</span> Deploying your Dashboard</a></li>
+  <li><a href="#demo-creating-a-quarto-dashboard" id="toc-demo-creating-a-quarto-dashboard" class="nav-link" data-scroll-target="#demo-creating-a-quarto-dashboard"><span class="header-section-number">10.7</span> Demo: Creating a Quarto Dashboard</a></li>
+  <li><a href="#dashboard-vs-shiny" id="toc-dashboard-vs-shiny" class="nav-link" data-scroll-target="#dashboard-vs-shiny"><span class="header-section-number">10.8</span> Dashboard vs Shiny</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -228,9 +248,328 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<!--{{< include /sections/visualization-quarto-dashboards.qmd >}}-->
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Create and design customized dashboards using Quarto Dashboards</li>
+<li>Become familiar with different components of a dashboard and it’s syntax <!---   Apply Markdown syntax, Shiny elements, and additional R packages like plotly to create visually appealing and interactive Quarto dashboards. --></li>
+</ul>
+</section>
+<section id="what-is-a-quarto-dashboard" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="what-is-a-quarto-dashboard"><span class="header-section-number">10.1</span> What is a Quarto Dashboard?</h2>
+<p>It a tool that aims to make it simple to create compelling interactive dashboards in R (and/or Python, Julia and Observable) (<a href="https://quarto.org/docs/dashboards/">quarto.org</a>. These dashboards are designed to be easy to create, and support a wide variety of visualizations and interactive components. We can incorporate Shiny widgets and functionality into a dashboards, making it a powerful tool for creating interactive visualizations and outcomes that can be shared with others.</p>
+<p>Quarto Dashboards are inherit form <a href="https://pkgs.rstudio.com/flexdashboard/"><code>flexdashboards</code></a>, an R package to create interactive dashboard using RMarkdown.</p>
+<ul>
+<li>They are composed in charts, these charts are the atomic unit of a dashboard.</li>
+<li>You can custom the layout incorporating pages, tabsets and sidebars and more.</li>
+</ul>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Quart Dashboards run only in Quarto version 1.4
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Check you quarto version by running <code>quarto check</code> in the terminal. This prints a message that starts indication the quarto version installed in your system.</p>
+<pre><code>Quarto 1.4.551
+[✓] Checking versions of quarto binary dependencies...
+      Pandoc version 3.1.11: OK
+      Dart Sass version 1.69.5: OK
+      Deno version 1.37.2: OK</code></pre>
+<p>You can download the latest version of Quarto <a href="https://quarto.org/docs/download/">here</a>.</p>
+</div>
+</div>
+</section>
+<section id="dashboard-components-overview" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="dashboard-components-overview"><span class="header-section-number">10.2</span> Dashboard Components Overview</h2>
+<table class="table">
+<colgroup>
+<col style="width: 55%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Navigation Bar</td>
+<td>Top page bar with icon, title, author and links to sub-pages (if added).</td>
+</tr>
+<tr class="even">
+<td>Pages, Rows, Columns, and Tabsets</td>
+<td>Pages, rows and columns are defined using markdown headings (with optional attributes to control height, width, etc.). Tabsets can be used to further divide content within a row or column.</td>
+</tr>
+<tr class="odd">
+<td>Cards, Sidebars, and Toolbars</td>
+<td>Cards are containers for plots, data display, and free form content. The content of cards typically maps to cells in your notebook or source document. Sidebars and toolbars are used to present inputs within interactive dashboards.</td>
+</tr>
+</tbody>
+</table>
+<p>Source: <a href="https://quarto.org/docs/dashboards/">Quarto.org/docs/dashboards</a></p>
+<section id="examples" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="examples"><span class="header-section-number">10.2.1</span> Examples</h3>
+<ol type="1">
+<li><p><a href="https://ivelasq.github.io/mortgage-dashboard/">Housing Market at a Glance</a></p></li>
+<li><p><a href="https://colorado.posit.co/rsc/nz-quakes/quakes.html">New Zealand Earthquakes</a></p></li>
+<li><p><a href="https://jjallaire.shinyapps.io/diamonds/">Diamonds Data</a> (with Shiny elements)</p></li>
+</ol>
+</section>
+</section>
+<section id="basic-structure" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="basic-structure"><span class="header-section-number">10.3</span> Basic Structure</h2>
+<p>Now let’s familiarize ourselves with how an <code>.qmd</code> is structured to create a Quarto Dashboard and how to create a dashboard in it’s simplest form.</p>
+<p>The first step is to indicate in our <code>.qmd</code> file YAML that we want to create a dashboard as the output of this file. Our YAML will look like this:</p>
+<p><img src="images/dashboard-yaml.png" class="img-fluid" style="width:50.0%"></p>
+<p>Now, remember that we said that we need to know/understand Markdown to provide structure to our dashboard. In it simplest form, the basic structure of a dashboard can be summarized in three lines:</p>
+<ul>
+<li><p>Each Level 1 header (#) corresponds to a new page.</p></li>
+<li><p>Every Level 2 header (##) introduces a new row.</p></li>
+<li><p>Every code chunk introduces a new column.</p></li>
+</ul>
+<p><strong>Note:</strong> The default layout setting is by rows. You can set the <code>orientiation</code> to be by column in the YAML. If that is the case, then the level 2 header would be a column and each code chunk a row in the column.</p>
+<p><strong>Note 2:</strong> Quarto will automatically divide the area into equally divided charts.</p>
+<p>Let’s see how this looks in practice.</p>
+<p><img src="images/dashboard-structure.png" class="img-fluid"> ::: callout-tip ## Text in heading is not required Dashboards use markdown headings to define the layout of rows and columns. However, the heading text itself is discarded. In this example we use headings Row and Column to introduce the basic components of the layout. You can use more descriptive headings if they help you navigate your source code.</p>
+<p>:::</p>
+</section>
+<section id="further-layout-customization-with-attributes" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="further-layout-customization-with-attributes"><span class="header-section-number">10.4</span> Further Layout customization with attributes</h2>
+<p>Some attributes to add to columns, rows, or boxes include:</p>
+<table class="table">
+<tbody>
+<tr class="odd">
+<td><strong><code>{width=}</code></strong> and <strong><code>{height=}</code></strong></td>
+<td>both of these attributes set the relative size of columns, rows, and boxes.</td>
+</tr>
+<tr class="even">
+<td><strong><code>{orientation=}</code></strong></td>
+<td>sets the dashboard layout to either rows or columns. This is a global option set in the <code>YAML</code>. However, if your dashboard has multiple pages and you want to specify the orientation for each page, remove <code>orientation:</code> from the <code>YAML</code> and use this attribute instead</td>
+</tr>
+<tr class="odd">
+<td><strong><code>{.tabset}</code></strong></td>
+<td>divide columns, rows, or charts into tabs</td>
+</tr>
+<tr class="even">
+<td><strong><code>{.sidebar}</code></strong></td>
+<td>creates a sidebar typically used to place Shiny inputs and is an optional step to add Shiny elements to your dashboard. See documentation <a href="https://quarto.org/docs/dashboards/inputs.html#sidebars">here</a></td>
+</tr>
+<tr class="odd">
+<td><strong><code>{.hidden}</code></strong></td>
+<td>excludes a specific page from the navigation bar</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>To <strong>add multiple attributes</strong> within a set of curly braces <code>{}</code> by separating the attributes by a space.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="adding-components" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="adding-components"><span class="header-section-number">10.5</span> Adding Components</h2>
+<p>The different components that can be added to a dashboard are:</p>
+<table class="table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>HTML</code> Widgets</td>
+<td>incorporates JavaScript data visualization tools and libraries into a dashboard. This includes features like interactive plots, maps and more. At this time there are 130 htmlwidgets available to use in R, check out the <a href="https://gallery.htmlwidgets.org/">gallery of widgets</a></td>
+</tr>
+<tr class="even">
+<td>R Graphics</td>
+<td>any chart, plot or graph that is created using any R package</td>
+</tr>
+<tr class="odd">
+<td>Tables</td>
+<td>add tables using <code>knitr::kable()</code> for simple tables or use the <code>DT</code> package for interactive tables. More information in the <a href="https://quarto.org/docs/dashboards/data-display.html#tables">official documentation</a></td>
+</tr>
+<tr class="even">
+<td>Value Boxes</td>
+<td>Create boxes to display single values along with a title and optional icon. More information about available icons and colors <a href="https://quarto.org/docs/dashboards/data-display.html#icon-and-color">here</a></td>
+</tr>
+<tr class="odd">
+<td>Text Content</td>
+<td>you can also include arbitrary markdown content anywhere within a dashboard. You can add at the top of the <code>qmd</code> file or in a determine space in your layout by using content cards <code>{.card}</code>.</td>
+</tr>
+<tr class="even">
+<td>Navigation Bar</td>
+<td>the navigation bar automatically includes the title, author, and date (if specified in the <code>YAML</code>). New pages are added to the navigation bar starting on the left side. There is also an option to add links to social media and the source code (specify this in the <code>YAML</code>)</td>
+</tr>
+<tr class="odd">
+<td>Pages</td>
+<td>You can introduce multiple pages to a single dashboard using level 1 header in Markdown (#), above the level 2 header used to define rows and columns within a page. The text of the level 1 headings will be used to link to the pages in the navigation bar.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Find more details on Quarto Dashboard components in the <a href="https://quarto.org/docs/dashboards/layout.html">Quarto Dashboard Documentation</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="deploying-your-dashboard" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="deploying-your-dashboard"><span class="header-section-number">10.6</span> Deploying your Dashboard</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/flexdashboard-publish-icon.png" class="img-fluid figure-img"></p>
+<figcaption>Publish Button in RStudio IDE</figcaption>
+</figure>
+</div>
+</div><div class="column" style="width:70%;">
+<p>If your Dashboard <strong>does not</strong> have any Shiny components you can publish your flexdashboard using:</p>
+<ul>
+<li><strong>RStudio IDE</strong> using the Publish Button and select a destination to publish to. <a href="https://docs.posit.co/connect/user/publishing/#:~:text=The%20blue%20Publishing%20icon%20in,viewer%20when%20viewing%20a%20document">See Posit’s documentation</a>.</li>
+<li><strong>GitHub Pages</strong>. See Chapter 7 <a href="https://learning.nceas.ucsb.edu/2024-03-ucsb-faculty/session_07.html">Publishing your analysis to the web with GitHub Pages</a>.</li>
+</ul>
+</div>
+</div>
+<p>If your Dashboard <strong>does have</strong> Shiny components you will need to publish to <a href="https://shinyapps.io/">shinyapps.io</a>. This can be done using:</p>
+<ul>
+<li><strong>RStudio IDE</strong> using the Publish Button.</li>
+<li>The <strong><code>rsconnect</code> package</strong> using <code>rsconnect::deployApp()</code>.</li>
+</ul>
+<div class="callout callout-style-simple callout-caution no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong><em>Note</em></strong>: <em>You will need to create shinyapps.io Account first to publish to shinyapps.io.</em></p>
+</div>
+</div>
+</div>
+</section>
+<section id="demo-creating-a-quarto-dashboard" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="demo-creating-a-quarto-dashboard"><span class="header-section-number">10.7</span> Demo: Creating a Quarto Dashboard</h2>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Fork the <a href="https://github.com/NCEAS/quarto-dashboard-demo-lh">NCEAS/quarto-dashboard-demo-lh repository</a> from the <a href="https://github.com/nceas">NCEAS GitHub organization</a> and use the materials in the Git repo to follow along with the demonstration of Quarto Dashboard examples.</p>
+</div>
+</div>
+<p>The demonstration will include examples that showcase different dashboard features:</p>
+<ol type="1">
+<li>Basic dashboard</li>
+<li>Multipage layout with interactive elements <!--3.  Reactive dashboard using `shiny` elements --></li>
+</ol>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise: Your turn!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the Themed Dashboard, use the <code>palmerpenguins</code> data to complete the following tasks:</p>
+<ol type="1">
+<li><strong>Fill in the boxes</strong>:
+<ol type="a">
+<li>In the Chart A &amp; B add <a href="https://quarto.org/docs/dashboards/data-display.html#value-boxes">value boxes</a>.</li>
+<li>In the Chart C add a static plot of your choice.</li>
+<li>In the Chart D box, add a table using either <code>kable()</code> or <code>DT</code>.</li>
+<li>In chart D add a the palmerpenguin scatterplot. Try addind interactivity using <code>htmlwidgets</code> like <code>plotly</code>. Hint: You can convert a ggplot into a plotly with the function <code>ggplotly</code>. Make sure to have the <code>plotly</code> package loaded.</li>
+</ol></li>
+<li><strong>Change the theme using Quarto themes</strong>.
+<ol type="a">
+<li>Go to the <a href="https://quarto.org/docs/dashboards/theming.html#overview">Quarto Theming</a> documentation.</li>
+<li>Explore the available themes.</li>
+<li>Choose one you like and try it out in your dashboard.</li>
+<li>Click “Render” and open the dashboard in a browser window to see the results.</li>
+</ol></li>
+<li><strong>Add a new page</strong> then create a second Page. Explore any layout that you’d like.</li>
+</ol>
+<p><strong><em>Note</em></strong>: You’re welcome to use the code from the demo so you can quickly start playing with the different flexdashboard features.</p>
+</div>
+</div>
+</section>
+<section id="dashboard-vs-shiny" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="dashboard-vs-shiny"><span class="header-section-number">10.8</span> Dashboard vs Shiny</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+When should I make a Dashboard?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dashboards are great for creating lightweight interactive output that require minimal coding expertise (must be familiar with Markdown!). Ultimately, it depends on what your final product is and what skillset your team has. Check out the diagram below and see what scenarios resonate best with you and your project goals.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">&lt;!-- #| fig-width: '100%' --&gt;
+&lt;!-- #| fig-height: '100%' --&gt;
+
+flowchart TD
+    A[Goal: Create a web-based application for data interaction]
+    A --&gt; B{Shiny App}
+    A --&gt; C{Quarto Dashboard}
+    C --&gt; D(Build a Dashboard if:)
+    B --&gt; E(Build a Shiny App if:)
+    D --&gt; F[Interested in quickly creating a dashboard prototype]
+    F --&gt; G[Have a preference for Quarto]
+    G --&gt; H[There are non-programmers who need to create or maintain dashboards]
+    H --&gt; I[Want to blend narrative text with interactivity]
+    I --&gt; J[Prefer a simpler, code-light approach]
+    J --&gt; K[Dashboard requirements are relatively static]
+    E --&gt; L[Dashboard requires a highly customized user interface]
+    L --&gt; M[Dashboard needs to perform complex data analysis with user inputs]
+    M --&gt; N[Dashboard requires real-time data updates]
+    N --&gt; O[There are programmers familiar with reactive programming in R to create or maintain dashboards]
+    O --&gt; P[Dashboard requires a multi-page app with navigation]
+    
+    
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<!--## Additional Resources
+
+-   [RStudio `flexdashboard` vingettes](https://pkgs.rstudio.com/flexdashboard/) (The articles under the "Articles" dropdown menu are particularly helpful!)
+-   [RStudio `flexdashboard` Examples](https://pkgs.rstudio.com/flexdashboard/articles/examples.html)
+-   [R Markdown: The Definitive Guide Chapter 5: Dashboards](https://bookdown.org/yihui/rmarkdown/dashboards.html) by Yihui Xie, J. J. Allaire, and Garrett Grolemund
+-   [htmlwidgets for R](https://www.htmlwidgets.org/index.html): Check out widgets featured either in the [gallery](https://gallery.htmlwidgets.org/) or the [showcase](https://www.htmlwidgets.org/showcase_leaflet.html)-->
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
