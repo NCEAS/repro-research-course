@@ -243,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../sections/docker-hpc-cloud.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Docker for HPC and Cloud</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Container orchestration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -373,7 +373,7 @@ Note
 </div>
 </div>
 </div>
-<p>First, under the <code>Virtual Machine</code> tab, configure it to use a reasonable amount of your local machine’s resources, say about 50 of the CPUs and memory. Second, deselect “Kubernetes” to disable the kubernetes distribution, which takes up a lot of resources if you’re not using it.</p>
+<p>First, under the <code>Virtual Machine</code> tab, configure it to use a reasonable amount of your local machine’s resources, say about 50% of the CPUs and memory. Second, deselect “Kubernetes” to disable the kubernetes distribution, which takes up a lot of resources if you’re not using it.</p>
 <div>
 
 </div>
@@ -735,7 +735,7 @@ Note
 </section>
 <section id="anatomy-of-image-layers" class="level2" data-number="15.9">
 <h2 data-number="15.9" class="anchored" data-anchor-id="anatomy-of-image-layers"><span class="header-section-number">15.9</span> Anatomy of image layers</h2>
-<p>Containers are ephemeral. Any data they create is lost when the container is deleted, unless you go to extra steps to preserve it. This is because the container is actually composed of a set of layers, each of which contains a filesystem with a set of files that gets merged with the files from the other layers to produce a union filesystem that contains all of the files. Each of the layers in an image is layered on top of the one before it, and so higher layers in the stack take precedence if they contain files at identical paths. Each of these layers from the image is read-only, but a top-most rad/write layer is set up to allow on container-specific changes, giving the appearance that the whole filesytem is writable.</p>
+<p>Containers are ephemeral. Any data they create is lost when the container is deleted, unless you go to extra steps to preserve it. This is because the container is actually composed of a set of layers, each of which contains a filesystem with a set of files that gets merged with the files from the other layers to produce a union filesystem that contains all of the files. Each of the layers in an image is layered on top of the one before it, and so higher layers in the stack take precedence if they contain files at identical paths. Each of these layers from the image is read-only, but a top-most read/write layer is set up to allow container-specific changes, giving the appearance that the whole filesytem is writable.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../images/docker-layers.webp" class="img-fluid figure-img"></p>
@@ -752,10 +752,10 @@ Note
 <p>You control the permissions on the files and folders that you mount, which determines whether the processes you run in a script can read from or write to the volume. Permission issues can easily arise when you first start using mounted volumes, but just a small amount of tweaking of your Dockerfile can set the permissions straight.</p>
 <section id="setup-a-local-directory-to-preserve-data" class="level3" data-number="15.10.1">
 <h3 data-number="15.10.1" class="anchored" data-anchor-id="setup-a-local-directory-to-preserve-data"><span class="header-section-number">15.10.1</span> Setup a local directory to preserve data</h3>
-<p>THe first step is to create a host directory on the local machine that contains files and daa that we want to mount. To start, create a directory <code>~/adc-course</code> in your HOME directory, and create <code>input</code>, <code>output</code>, and <code>scripts</code> as children.</p>
+<p>The first step is to create a host directory on the local machine that contains files and data that we want to mount. To start, create a directory <code>~/adc-course</code> in your HOME directory, and create <code>input</code>, <code>output</code>, and <code>scripts</code> as children.</p>
 <p>We’ll be using an sample river flow discharge data from the Arcctic Data Center:</p>
 <blockquote class="blockquote">
-<p>The Arctic Great Rivers Observatory. (2024). Arctic Great Rivers Observatory Biogeochemistry and Discharge Data, North America and Siberia, 2003 - 2024. Arctic Data Center. doi:10.18739/A2BC3SZ84.</p>
+<p>The Arctic Great Rivers Observatory. (2024). Arctic Great Rivers Observatory Biogeochemistry and Discharge Data, North America and Siberia, 2003 - 2024. Arctic Data Center. <a href="https://doi.org/10.18739/A2BC3SZ84">doi:10.18739/A2BC3SZ84</a>.</p>
 </blockquote>
 <p>Copy the discharge-data.csv file into the <code>input</code> directory you created, and copy the sample analysis script <code>max-discharge.py</code> into the <code>scripts</code> directory.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir ~/adc-course</span>
