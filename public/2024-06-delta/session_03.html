@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>UCSB Faculty Seminar Series: Grow Your Data &amp; Team Science Skills - 3&nbsp; Text Analysis in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./session_04.html" rel="next">
+<link href="./session_02.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_03.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Text Analysis in R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Text Analysis in R</span></h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Training Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/ucsb_nceas" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/nceas-training/tree/2024-03-ucsb-faculty" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the course</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Seminar Series Recap and Reproducibility</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Visualization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_03.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Text Analysis in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Accesing Survey Data Using a Reproducible Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Visualizing Spatial Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GitHub for Project Management</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Publishing to the Web</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Git Workflows</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Science Communication: Message Box</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Quarto Dashboards</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Practice Session</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Reproducibility and Provenance</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Check and Set your PAT</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview"><span class="header-section-number">3.1</span> Overview</a></li>
+  <li><a href="#introduction-to-stringr" id="toc-introduction-to-stringr" class="nav-link" data-scroll-target="#introduction-to-stringr"><span class="header-section-number">3.2</span> Introduction to <code>stringr</code></a>
+  <ul class="collapse">
+  <li><a href="#load-packages-and-data" id="toc-load-packages-and-data" class="nav-link" data-scroll-target="#load-packages-and-data"><span class="header-section-number">3.2.1</span> Load packages and data</a></li>
+  <li><a href="#intro-to-stringr-functions" id="toc-intro-to-stringr-functions" class="nav-link" data-scroll-target="#intro-to-stringr-functions"><span class="header-section-number">3.2.2</span> Intro to <code>stringr</code> functions</a></li>
+  <li><a href="#break-coral-data-into-sentences" id="toc-break-coral-data-into-sentences" class="nav-link" data-scroll-target="#break-coral-data-into-sentences"><span class="header-section-number">3.2.3</span> Break coral data into sentences</a></li>
+  <li><a href="#identify-sentences-with-numbers-in-them" id="toc-identify-sentences-with-numbers-in-them" class="nav-link" data-scroll-target="#identify-sentences-with-numbers-in-them"><span class="header-section-number">3.2.4</span> Identify sentences with numbers in them</a></li>
+  <li><a href="#other-examples-of-stringr-functionality" id="toc-other-examples-of-stringr-functionality" class="nav-link" data-scroll-target="#other-examples-of-stringr-functionality"><span class="header-section-number">3.2.5</span> Other examples of <code>stringr</code> functionality</a></li>
+  </ul></li>
+  <li><a href="#reading-text-from-pdfs-using-pdftools" id="toc-reading-text-from-pdfs-using-pdftools" class="nav-link" data-scroll-target="#reading-text-from-pdfs-using-pdftools"><span class="header-section-number">3.3</span> Reading text from pdfs using <code>pdftools</code></a>
+  <ul class="collapse">
+  <li><a href="#overview-1" id="toc-overview-1" class="nav-link" data-scroll-target="#overview-1"><span class="header-section-number">3.3.1</span> Overview</a></li>
+  <li><a href="#the-pdftools-package" id="toc-the-pdftools-package" class="nav-link" data-scroll-target="#the-pdftools-package"><span class="header-section-number">3.3.2</span> The <code>pdftools</code> package</a></li>
+  <li><a href="#getting-the-table-out-of-the-pdf" id="toc-getting-the-table-out-of-the-pdf" class="nav-link" data-scroll-target="#getting-the-table-out-of-the-pdf"><span class="header-section-number">3.3.3</span> Getting the table out of the PDF</a></li>
+  </ul></li>
+  <li><a href="#introduction-to-tidytext-and-sentiment-analysis" id="toc-introduction-to-tidytext-and-sentiment-analysis" class="nav-link" data-scroll-target="#introduction-to-tidytext-and-sentiment-analysis"><span class="header-section-number">3.4</span> Introduction to <code>tidytext</code> and sentiment analysis</a>
+  <ul class="collapse">
+  <li><a href="#read-in-the-newspaper-articles" id="toc-read-in-the-newspaper-articles" class="nav-link" data-scroll-target="#read-in-the-newspaper-articles"><span class="header-section-number">3.4.1</span> Read in the newspaper articles</a></li>
+  <li><a href="#word-count-analysis" id="toc-word-count-analysis" class="nav-link" data-scroll-target="#word-count-analysis"><span class="header-section-number">3.4.2</span> Word count analysis</a></li>
+  <li><a href="#sentiment-analysis" id="toc-sentiment-analysis" class="nav-link" data-scroll-target="#sentiment-analysis"><span class="header-section-number">3.4.3</span> Sentiment analysis</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Understand how to work with text data in R using functions from the <code>stringr</code> package</li>
+<li>Apply functions from the <code>tidytext</code> package to prepare text and pdf documents for word frequency analysis</li>
+<li>Perform a simple sentiment analysis using stop-word lexicons and sentiment lexicons from the <code>tidytext</code> package</li>
+</ul>
+</section>
+<section id="overview" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">3.1</span> Overview</h2>
+<p>Working with natural language text data, for example sentences and paragraphs, is quite different from working with tidy data frames of categorical and continuous variables. However, many packages have been developed to facilitate working with text in <span class="math inline">\(\textsf{R}\)</span>. In this tutorial, we will use the <code>stringr</code> package to detect, extract, and modify strings, and the <code>tidytext</code> package to break documents down into dataframes to make them easy to work with in our familiar <code>tidyverse</code> style.</p>
+</section>
+<section id="introduction-to-stringr" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="introduction-to-stringr"><span class="header-section-number">3.2</span> Introduction to <code>stringr</code></h2>
+<p>The first part of this tutorial will walk through an exercise in extracting specific information from untidily formatted blocks of text, i.e.&nbsp;sentences and paragraphs rather than a nice data frame or .csv.</p>
+<p>The example comes from a paper that examined species ranges from different datasets, and found some discrepancies that resulted from systematic errors. Many of the coral species ranges for IUCN rangemaps extended off the continental shelf into very deep waters; but most corals require shallower water and are dependent upon photosynthesis. However, the IUCN also included narrative text about the habitat preferences of each coral species to examine whether these corals, according to the IUCN’s own information, could be found in waters deeper than 200 meters.</p>
+<section id="load-packages-and-data" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="load-packages-and-data"><span class="header-section-number">3.2.1</span> Load packages and data</h3>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>stringr</code> package is part of the <code>tidyverse</code> meta-package. When you install <code>tidyverse</code> (e.g., <code>install.packages('tidyverse')</code>) the stringr package is installed with our other favorites like <code>dplyr</code>, <code>ggplot2</code>, and <code>readr</code>. When you attach the tidyverse package, <code>stringr</code> is automatically attached as well, so we don’t <em>have</em> to explicitly call <code>library(stringr)</code> - but because it is essential for the purposes of this tutorial, we’ll make it explicit anyway.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)       <span class="do">### for general tidy data practices</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)       <span class="do">### for general tidy data practices</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)       <span class="do">### for reading in data</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)       <span class="do">### toolkit for working with functions and vectors</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forcats)     <span class="do">### for working with factors</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)     <span class="do">### for manipulating strings</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)    <span class="do">### to support text analysis using tidy data methods</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pdftools)    <span class="do">### to extract text data from .pdf documents</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggwordcloud) <span class="do">### to generate a word cloud</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The data are narratives pulled from the IUCN API (http://apiv3.iucnredlist.org/) for coral species, in order to identify their maximum depth. We’ll also pull up a set of data on species areas, but mostly just because that data includes scientific names for the corals so we can refer to species rather than ID numbers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>coral_narrs <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/iucn_narratives.csv'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">### interested in species_id, habitat</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>coral_info <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/coral_spp_info.csv'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">### info for species mapped in both datasets</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">### create a dataframe with just ID, scientific name, and habitat</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>coral_habs_raw <span class="ot">&lt;-</span> coral_narrs <span class="sc">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(coral_info, <span class="at">by =</span> <span class="st">'iucn_sid'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iucn_sid, sciname, habitat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is an example of the text for the first species of coral. We can see the depth noted in the text; the challenge will be, how do we convert that into a useful format?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>coral_habs_raw<span class="sc">$</span>habitat[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>This species occurs in shallow, tropical reef environments. It is found only in subtidal turbid water, attached to wave washed rock. This species is found on subtidal rock and rocky reefs, the back slope, in lagoons, and on inter-reef rubble substrate. It may be found on the foreslope. This species is found to 10 m. <br><br><em>Oulastrea</em> is usually found in muddy areas on the shallow back reef and seldom occurs among dense coral on the fore reef (Wood 1983). It may be more abundant in degraded habitats where other coral species have disappeared, e.g., Jakarta Bay.</p>
+</blockquote>
+<p>In pseudocode, one possible strategy for extracting depth information from these narrative descriptions might be:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>coral_habs <span class="ot">&lt;-</span> coral_habs_raw <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  split into individual sentences <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  keep the sentences with numbers <span class="cf">in</span> them <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  isolate the numbers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="intro-to-stringr-functions" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="intro-to-stringr-functions"><span class="header-section-number">3.2.2</span> Intro to <code>stringr</code> functions</h3>
+<p>Before cracking open the coral text data, here we’ll play a little with some basic <code>stringr</code> functions, and pattern vs.&nbsp;vector of strings. Consider especially how we can use <code>str_split</code>, <code>str_detect</code>, <code>str_replace</code>; later we’ll see how to make effective use of <code>str_extract</code> as well.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="st">"Everybody's got something to hide except for me and my monkey"</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">### Manipulate string case (upper, lower, sentence, title)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>stringr<span class="sc">::</span><span class="fu">str_to_title</span>(x)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str_to_lower</span>(x)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">### Split strings into multiple pieces, based on some pattern</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">str_split</span>(x, <span class="st">'hide'</span>); <span class="fu">str_split</span>(x, <span class="st">'t'</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="do">### Replace a pattern in a string with a different pattern</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(x, <span class="st">'except for'</span>, <span class="st">'including'</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(x, <span class="st">' '</span>, <span class="st">'_'</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace_all</span>(x, <span class="st">' '</span>, <span class="st">'_'</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">### Detect whether a pattern is found within a string</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(x, <span class="st">'t'</span>); <span class="fu">str_detect</span>(x, <span class="st">'monk'</span>) <span class="do">### is pattern in the string? T/F</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="do">### Extract instances of patterns within a string.  Note: this is far more</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="do">### powerful and interesting when using wildcards in your pattern!</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(x, <span class="st">'t'</span>); <span class="fu">str_extract_all</span>(x, <span class="st">'y'</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="do">### Locate the start and endpoint of a pattern within a string</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">str_locate</span>(x, <span class="st">'t'</span>); <span class="fu">str_locate_all</span>(x, <span class="st">'y'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="break-coral-data-into-sentences" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="break-coral-data-into-sentences"><span class="header-section-number">3.2.3</span> Break coral data into sentences</h3>
+<p>First we can use <code>stringr::str_split()</code> to break down the habitat column into manageable chunks, i.e.&nbsp;sentences. What is an easily accessible delimiter we can use to separate a paragraph into sentences?</p>
+<p><strong>Take 1:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>coral_habs <span class="ot">&lt;-</span> coral_habs_raw <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hab_cut =</span> <span class="fu">str_split</span>(habitat, <span class="st">'.'</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>coral_habs<span class="sc">$</span>hab_cut[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Did that behave as expected? In a moment we’ll see that a period is actually a special character we will later use as a wild card in a “regular expression” or “regex” pattern. Some other characters have special uses as well; so if we want them to be interpreted literally, we need to “escape” them.</p>
+<p>Some languages use a single backslash to “escape” a character (i.e., turn a character into a special function, e.g.&nbsp;<code>\n</code> indicates a line break, and <code>\.</code> indicates a literal period instead of a regex wildcard). In R stringr functions, usually you end up having to use a double backslash for R to interpret the escape sequence properly (e.g.&nbsp;<code>\\n</code> or <code>\\.</code>).</p>
+<p>Also: why is splitting on just a period on its own probably a bad idea? Recall we are looking for numeric data, which might have a decimal point. But in a sentence, a period is usually followed by a space, while a decimal point is usually followed by another number - so we can slightly modify our pattern for splitting.</p>
+<p><strong>Take 2:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># coral_habs &lt;- coral_habs_raw %&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(hab_cut = str_split(habitat, '\. '))</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">### Error: '\.' is an unrecognized escape in character string starting "'\."</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>coral_habs <span class="ot">&lt;-</span> coral_habs_raw <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hab_cut =</span> <span class="fu">str_split</span>(habitat, <span class="st">'</span><span class="sc">\\</span><span class="st">. '</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">### creates a cell with a vector of broken up sentences!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/expert_regex.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<section id="use-unnest-to-separate-out-vector-into-rows" class="level4" data-number="3.2.3.1">
+<h4 data-number="3.2.3.1" class="anchored" data-anchor-id="use-unnest-to-separate-out-vector-into-rows"><span class="header-section-number">3.2.3.1</span> Use <code>unnest()</code> to separate out vector into rows</h4>
+<p>The <code>str_split</code> function leaves the chopped string in a difficult format - a vector within a dataframe cell. <code>unnest()</code> will unpack that vector into individual rows for us.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>coral_habs <span class="ot">&lt;-</span> coral_habs_raw <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hab_cut =</span> <span class="fu">str_split</span>(habitat, <span class="st">'</span><span class="sc">\\</span><span class="st">. '</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(hab_cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note the number of observations skyrocketed (562 –&gt; 2210! Each paragraph was a single observation (for one coral species); now each species description is separated out into multiple rows, each containing a sentence.</p>
+</section>
+</section>
+<section id="identify-sentences-with-numbers-in-them" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="identify-sentences-with-numbers-in-them"><span class="header-section-number">3.2.4</span> Identify sentences with numbers in them</h3>
+<p>We can use <code>str_detect()</code> to identify which observations contain a certain pattern, e.g., a number. We can use this in conjunction with <code>filter</code> to keep only those observations that match the pattern.</p>
+<p>Without wildcards, we’d have to identify each specific number. This would be annoying. Instead we can use some basic “regular expressions” or “regex” as wild card expressions. We put these in square brackets to create a list of everything we would want to match, e.g.&nbsp;<code>[aeiou]</code> would match any instance of lower case vowels. Ranges of numbers or letters can also be included, e.g., <code>[a-z]</code> is all lower-case letters (without diacritical marks like accents…), <code>[A-Z]</code> is all upper-case letters, <code>[0-9]</code> is all numeric characters. Combinations or subsets work as well: what would <code>[a-f]</code>, <code>[A-z]</code>, <code>[A-m3-9]</code> match?</p>
+<p>Helpful for testing regex: <a href="https://regex101.com/" class="uri">https://regex101.com/</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Without wildcards</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>coral_habs <span class="ot">&lt;-</span> coral_habs_raw <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hab_cut =</span> <span class="fu">str_split</span>(habitat, <span class="st">'</span><span class="sc">\\</span><span class="st">. '</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(hab_cut) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(hab_cut, <span class="st">'1'</span>) <span class="sc">|</span> <span class="fu">str_detect</span>(hab_cut, <span class="st">'2'</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">### With wildcards</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>coral_habs <span class="ot">&lt;-</span> coral_habs_raw <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hab_cut =</span> <span class="fu">str_split</span>(habitat, <span class="st">'</span><span class="sc">\\</span><span class="st">. '</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(hab_cut) <span class="sc">%&gt;%</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(hab_cut, <span class="st">'[0-9]'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="but-not-all-numbers-are-depths" class="level4" data-number="3.2.4.1">
+<h4 data-number="3.2.4.1" class="anchored" data-anchor-id="but-not-all-numbers-are-depths"><span class="header-section-number">3.2.4.1</span> But not all numbers are depths</h4>
+<p>How can we differentiate further to get at depth info?</p>
+<ul>
+<li>exclude years? Knowing a bit about corals, can probably exclude any four-digit numbers as their depth; problems with that?</li>
+<li>match pattern of number followed by ” m” as all depths are given in meters</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>coral_depth <span class="ot">&lt;-</span> coral_habs <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(hab_cut, <span class="st">'[0-9] m'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">depth =</span> <span class="fu">str_extract</span>(hab_cut, <span class="st">'[0-9] m'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Why didn’t that work???? Only matched the single digit next to the “m”!</p>
+<p>We need to use a regular expressions quantifier in our pattern:</p>
+<ul>
+<li><code>+</code> means one or more times</li>
+<li><code>*</code> means zero or more times</li>
+<li><code>?</code> means zero or one time</li>
+<li><code>{3}</code> means exactly three times</li>
+<li><code>{2,4}</code> means two to four times; <code>{2,}</code> means two or more times</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> coral_habs <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_extract</span>(hab_cut, <span class="st">'[0-9]{4}'</span>)) </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">### looks for four numbers together</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>coral_depth <span class="ot">&lt;-</span> coral_habs <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(hab_cut, <span class="st">'[0-9] m'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">depth =</span> <span class="fu">str_extract</span>(hab_cut, <span class="st">'[0-9]+ m'</span>)) </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="do">### looks for one or more numbers, followed by ' m'</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="do">### Still misses the ranges e.g. "3-30 m" - how to capture?</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="do">### let it also capture "-" in the brackets</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>coral_depth <span class="ot">&lt;-</span> coral_habs <span class="sc">%&gt;%</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(hab_cut, <span class="st">'[0-9] m'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">depth =</span> <span class="fu">str_extract</span>(hab_cut, <span class="st">'[0-9-]+ m'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Also can use a “not” operator inside the brackets:</p>
+<ul>
+<li><code>'[^a-z]'</code> matches “anything that is not a lower case letter”</li>
+<li>BUT: <code>'^[a-z]'</code> matches a start of a string, then a lower case letter.</li>
+<li>NOTE: <code>^</code> outside brackets means start of a string, inside brackets means “not”</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">### split 'em (using the "not" qualifier), convert to numeric, keep the largest</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>coral_depth <span class="ot">&lt;-</span> coral_habs <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(hab_cut, <span class="st">'[0-9] m'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">depth_char =</span> <span class="fu">str_extract</span>(hab_cut, <span class="st">'[0-9-]+ m'</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">depth_num =</span> <span class="fu">str_split</span>(depth_char, <span class="st">'[^0-9]'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(depth_num)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>coral_depth <span class="ot">&lt;-</span> coral_depth <span class="sc">%&gt;%</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">depth_num =</span> <span class="fu">as.numeric</span>(depth_num)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(depth_num)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(iucn_sid, sciname) <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">depth_num =</span> <span class="fu">max</span>(depth_num),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note, still some issues in here: some fields show size e.g.&nbsp;1 m diameter; other fields have slightly different formatting of depth descriptors; so it’s important to make sure the filters (a) get everything you want and (b) exclude everything you don’t want. We could keep going but we’ll move on for now…</p>
+</section>
+</section>
+<section id="other-examples-of-stringr-functionality" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="other-examples-of-stringr-functionality"><span class="header-section-number">3.2.5</span> Other examples of <code>stringr</code> functionality</h3>
+<section id="start-string-end-string-and-or-operator" class="level4" data-number="3.2.5.1">
+<h4 data-number="3.2.5.1" class="anchored" data-anchor-id="start-string-end-string-and-or-operator"><span class="header-section-number">3.2.5.1</span> start string, end string, and “or” operator</h4>
+<p>Combining multiple tests using “or”, and adding string start and end characters.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>coral_threats <span class="ot">&lt;-</span> coral_narrs <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iucn_sid, threats) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">threats =</span> <span class="fu">tolower</span>(threats),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">threats_cut =</span> <span class="fu">str_split</span>(threats, <span class="st">'</span><span class="sc">\\</span><span class="st">. '</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(threats_cut) <span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(threats_cut, <span class="st">'^a|s$'</span>)) </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="do">### </span><span class="al">NOTE</span><span class="do">: ^ outside brackets is start of a string, but inside brackets it's a negation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="cleaning-up-column-names-in-a-data-frame" class="level4" data-number="3.2.5.2">
+<h4 data-number="3.2.5.2" class="anchored" data-anchor-id="cleaning-up-column-names-in-a-data-frame"><span class="header-section-number">3.2.5.2</span> cleaning up column names in a data frame</h4>
+<p>Spaces and punctuation in column names can be a hassle, but often when reading in .csvs and Excel files, column names include extra stuff. Use regex and <code>str_replace</code> to get rid of these! (or <code>janitor::clean_names()</code>…)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>crappy_colname <span class="ot">&lt;-</span> <span class="st">'Per-capita income ($US) (2015 dollars)'</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tolower</span>(crappy_colname) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace_all</span>(<span class="st">'[^a-z0-9]+'</span>, <span class="st">'_'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="st">'^_|_$'</span>, <span class="st">''</span>) <span class="do">### in case any crap at the start or end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="lazy-vs.-greedy-evaluation" class="level4" data-number="3.2.5.3">
+<h4 data-number="3.2.5.3" class="anchored" data-anchor-id="lazy-vs.-greedy-evaluation"><span class="header-section-number">3.2.5.3</span> Lazy vs.&nbsp;greedy evaluation</h4>
+<p>When using quantifiers in regex patterns, we need to consider lazy vs.&nbsp;greedy evaluation of quantifiers. “Lazy” will find the shortest piece of a string that matches the pattern (gives up at its first opportunity); “greedy” will match the largest piece of a string that matches the pattern (takes as much as it can get). “Greedy” is the default behavior, but if we include a question mark after the quantifier we force it to evaluate in the lazy manner.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="st">"Everybody's got something to hide except for me and my monkey"</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">'b.+e'</span>, <span class="st">'...'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">str_replace</span>(<span class="st">'b.+?e'</span>, <span class="st">'...'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="lookaround-lookahead-and-lookbehind-assertions" class="level4" data-number="3.2.5.4">
+<h4 data-number="3.2.5.4" class="anchored" data-anchor-id="lookaround-lookahead-and-lookbehind-assertions"><span class="header-section-number">3.2.5.4</span> Lookaround (Lookahead and lookbehind) assertions</h4>
+<p>A little more advanced - Lookahead and lookbehind assertions are useful to match a pattern led by or followed by another pattern. The lookaround pattern is not included in the match, but helps to find the right neighborhood for the proper match.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="st">'one fish two fish red fish blue fish'</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y <span class="sc">%&gt;%</span> <span class="fu">str_locate</span>(<span class="st">'(?&lt;=two) fish'</span>)   <span class="do">### match " fish" immediately preceded by "two"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>y <span class="sc">%&gt;%</span> <span class="fu">str_locate</span>(<span class="st">'fish (?=blue)'</span>)   <span class="do">### match "fish " immediately followed by "blue"</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>y <span class="sc">%&gt;%</span> <span class="fu">str_replace_all</span>(<span class="st">'(?&lt;=two|blue) fish'</span>, <span class="st">'...'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="using-regex-in-list.files-to-automate-file-finding" class="level4" data-number="3.2.5.5">
+<h4 data-number="3.2.5.5" class="anchored" data-anchor-id="using-regex-in-list.files-to-automate-file-finding"><span class="header-section-number">3.2.5.5</span> Using regex in <code>list.files()</code> to automate file finding</h4>
+<p><code>list.files()</code> is a ridiculously handy function when working with tons of data sets. At its most basic, it simply lists all the non-hidden files in a given location. But if you have a folder with more folders with more folders with data you want to pull in, you can get fancy with it:</p>
+<ul>
+<li>use <code>recursive = TRUE</code> to find files in subdirectories</li>
+<li>use <code>full.names = TRUE</code> to catch the entire path to the file (otherwise just gets the basename of the file)</li>
+<li>use <code>all.files = TRUE</code> if you need to find hidden files (e.g.&nbsp;<code>.gitignore</code>)</li>
+<li>use <code>pattern = 'whatever'</code> to only select files whose basename matches the pattern - including regex!</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">'sample_files'</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">'sample_files'</span>, <span class="at">pattern =</span> <span class="st">'jpg$'</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">'~/github/text_workshop/sample_files'</span>, <span class="at">pattern =</span> <span class="st">'[0-9]{4}'</span>, </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>raster_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">'sample_files'</span>, <span class="at">pattern =</span> <span class="st">'^sample.+[0-9]{4}.tif$'</span>) </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="do">### note: should technically be '\\.tif$' - do you see why?</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">### then create a raster stack from the files in raster_files, or loop </span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="do">### over them, or whatever you need to do!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="reading-text-from-pdfs-using-pdftools" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="reading-text-from-pdfs-using-pdftools"><span class="header-section-number">3.3</span> Reading text from pdfs using <code>pdftools</code></h2>
+<section id="overview-1" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="overview-1"><span class="header-section-number">3.3.1</span> Overview</h3>
+<p>How often have you run across a published paper with awesome-looking data, but it is only available in PDF format? ARGHHH! But using the <code>pdftools</code> package and some <code>stringr</code> functions with regex patterns, we can get that data out and into a usable format.</p>
+</section>
+<section id="the-pdftools-package" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="the-pdftools-package"><span class="header-section-number">3.3.2</span> The <code>pdftools</code> package</h3>
+<p>The pdftools package basically has five functions:</p>
+<ul>
+<li><code>pdf_info(pdf, opw = "", upw = "")</code> to get metadata about the pdf itself</li>
+<li><code>pdf_text(pdf, opw = "", upw = "")</code> to get the text out of the pdf.</li>
+<li><code>pdf_fonts(pdf, opw = "", upw = "")</code> to find out what fonts are used (including embedded fonts)</li>
+<li><code>pdf_attachments(pdf, opw = "", upw = "")</code> umm attachments I guess?</li>
+<li><code>pdf_toc(pdf, opw = "", upw = "")</code> and a table of contents.</li>
+</ul>
+<p>Really we’ll just focus on <code>pdf_text()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pdf_smith <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">'pdfs/smith_wilen_2003.pdf'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>smith_text <span class="ot">&lt;-</span> <span class="fu">pdf_text</span>(pdf_smith)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>pdf_text()</code> returns a vector of strings, one for each page of the pdf. To enable us to mess with it in tidyverse style, let’s turn it into a dataframe, and keep track of the pages.</p>
+<p>Then we can use <code>stringr::str_split()</code> to break the pages up into individual lines. Each line of the pdf is concluded with a backslash-n, so we can split on this. We will also add a line number in addition to the page number.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>smith_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">text =</span> smith_text) <span class="co"># one row per page</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>smith_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">text =</span> smith_text) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">page =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">text_sep =</span> <span class="fu">str_split</span>(text, <span class="st">'</span><span class="sc">\\</span><span class="st">n'</span>)) <span class="sc">%&gt;%</span> <span class="co"># split by line, text_set=lists of lines </span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(text_sep) <span class="co"># separate lists into rows</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>smith_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">text =</span> smith_text) <span class="sc">%&gt;%</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">page =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">text_sep =</span> <span class="fu">str_split</span>(text, <span class="st">'</span><span class="sc">\\</span><span class="st">n'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(text_sep) <span class="sc">%&gt;%</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(page) <span class="sc">%&gt;%</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">line =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="co"># add line #s by page</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="getting-the-table-out-of-the-pdf" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="getting-the-table-out-of-the-pdf"><span class="header-section-number">3.3.3</span> Getting the table out of the PDF</h3>
+<p>Let’s look at the PDF: specifically we want to get the data in the table on page 8 of the document. More specifically, the table data is in lines 8 to 18 on page 8. This is a table comparing the number of active urchin divers to the number of patches in which they dove for urchins, from 1988 to 1999.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>smith_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(page <span class="sc">==</span> <span class="dv">8</span> <span class="sc">&amp;</span> <span class="fu">between</span>(line, <span class="dv">7</span>, <span class="dv">25</span>)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(text_sep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<pre><code>                                            Number of active divers, No. of patches       1988    1989       1990    1991   1992    1993       1994   1995   1996   1997   1998   1999, active in, 1                      50       60      146     139     139      99       107     49     37     36     43     43, 2                      44       51       72      72      62      65        67     48     44     45     33     39, 3                      20       19       59      60      52      46        45     30     25     33     27     24, 4                      10        8       36      32      36      32        25     21     21     22     18      9, 5                       4        0       20      23      38      18        13     15      0      7      5      9, 6                       1        0        6      12      13      15        13      3      4      3      3      1, 7                       0        0        2       8      15       9         2      1      0      0      1      0, 8                       0        0        0       4       3       0         0      1      0      0      0      0, 9                       0        0        1       3       0       0         0      0      0      0      0      0, 10                      0        0        0       0       0       0         0      0      0      0      0      0, 11                      0        0        0       0       0       0         0      0      0      0      0      0, , Total divers          129     138       342     353     358     284       272    168    131    146    130    125, , Weighted average     2.05     1.82      2.25    2.53    2.68    2.60      2.33   2.54   2.35   2.51   2.40   2.24, no. patches</code></pre>
+</blockquote>
+<ul>
+<li>The column headings are annoyingly just years, and R doesn’t like numbers as column names, so we’ll rename them as ‘y####’ for year.</li>
+<li>Break up the columns separated by (probably tabs but we can just use) spaces. We’ll use the <code>tidyr::separate</code> function to separate into columns by spaces. Note, one space and multiple spaces should count the same way - how can we do that in regex? (quantifiers!)</li>
+</ul>
+<section id="extract-the-table-not-run-in-workshop" class="level4" data-number="3.3.3.1">
+<h4 data-number="3.3.3.1" class="anchored" data-anchor-id="extract-the-table-not-run-in-workshop"><span class="header-section-number">3.3.3.1</span> extract the table (not run in workshop)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">### We want to extract data from the table on page 8</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>page8_df <span class="ot">&lt;-</span> smith_df <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(page <span class="sc">==</span> <span class="dv">8</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">### Let's just brute force cut out the table</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>col_lbls <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'n_patches'</span>, <span class="fu">paste0</span>(<span class="st">'y'</span>, <span class="dv">1988</span><span class="sc">:</span><span class="dv">1999</span>))</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>table1_df <span class="ot">&lt;-</span> page8_df <span class="sc">%&gt;%</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(line <span class="sc">%in%</span> <span class="dv">8</span><span class="sc">:</span><span class="dv">18</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> text_sep, <span class="at">into =</span> col_lbls, <span class="at">sep =</span> <span class="st">' +'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="format-the-extracted-table-not-run-in-workshop" class="level4" data-number="3.3.3.2">
+<h4 data-number="3.3.3.2" class="anchored" data-anchor-id="format-the-extracted-table-not-run-in-workshop"><span class="header-section-number">3.3.3.2</span> format the extracted table (not run in workshop)</h4>
+<p>Now we can ditch the <code>text</code>, <code>page</code>, and <code>line</code> columns, and pull the result into a tidy format (long format rather than wide) for easier operations.</p>
+<ul>
+<li>When we pull the ‘y####’ columns into a year column, let’s turn those into integers instead of a character</li>
+<li>Same goes for the number of patches and number of divers - they’re all character instead of integer (because it started out as text).</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>table1_tidy_df <span class="ot">&lt;-</span> table1_df <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>text, <span class="sc">-</span>line, <span class="sc">-</span>page) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(year, n_divers, <span class="fu">starts_with</span>(<span class="st">'y'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_replace</span>(year, <span class="st">'y'</span>, <span class="st">''</span>), <span class="do">### or str_extract(year, '[0-9]{4}')</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">year =</span> <span class="fu">as.integer</span>(year),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">n_patches =</span> <span class="fu">as.integer</span>(n_patches),</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">n_divers =</span> <span class="fu">as.integer</span>(n_divers))</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(table1_tidy_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-4dc6f356cecc187e95f5" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-4dc6f356cecc187e95f5">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132"],[null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9,null,null,1,2,3,4,5,6,7,8,9],[1988,1988,1988,1988,1988,1988,1988,1988,1988,1988,1988,1989,1989,1989,1989,1989,1989,1989,1989,1989,1989,1989,1990,1990,1990,1990,1990,1990,1990,1990,1990,1990,1990,1991,1991,1991,1991,1991,1991,1991,1991,1991,1991,1991,1992,1992,1992,1992,1992,1992,1992,1992,1992,1992,1992,1993,1993,1993,1993,1993,1993,1993,1993,1993,1993,1993,1994,1994,1994,1994,1994,1994,1994,1994,1994,1994,1994,1995,1995,1995,1995,1995,1995,1995,1995,1995,1995,1995,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1996,1997,1997,1997,1997,1997,1997,1997,1997,1997,1997,1997,1998,1998,1998,1998,1998,1998,1998,1998,1998,1998,1998,1999,1999,1999,1999,1999,1999,1999,1999,1999,1999,1999],[null,null,50,44,20,10,4,1,0,0,0,null,null,60,51,19,8,0,0,0,0,0,1988,null,146,72,59,36,20,6,2,0,1,1989,null,139,72,60,32,23,12,8,4,3,1990,null,139,62,52,36,38,13,15,3,0,1991,null,99,65,46,32,18,15,9,0,0,1992,null,107,67,45,25,13,13,2,0,0,1993,null,49,48,30,21,15,3,1,1,0,1994,null,37,44,25,21,0,4,0,0,0,1995,null,36,45,33,22,7,3,0,0,0,1996,null,43,33,27,18,5,3,1,0,0,1997,null,43,39,24,9,9,1,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>n_patches<\/th>\n      <th>year<\/th>\n      <th>n_divers<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"n_patches","targets":1},{"name":"year","targets":2},{"name":"n_divers","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>With <code>pdftools</code>, we extracted a data table, but we could also just extract the text itself if that’s what we really wanted…</p>
+</section>
+</section>
+</section>
+<section id="introduction-to-tidytext-and-sentiment-analysis" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="introduction-to-tidytext-and-sentiment-analysis"><span class="header-section-number">3.4</span> Introduction to <code>tidytext</code> and sentiment analysis</h2>
+<p>Sentiment analysis is a fairly basic way to get a sense of the mood of a piece of text. In an eco-data-science sense, we can use sentiment analysis to understand perceptions of topics in environmental policy.</p>
+<p>A good example is “Public Perceptions of Aquaculture: Evaluating Spatiotemporal Patterns of Sentiment around the World” by researchers Halley Froehlich, Becca Gentry, and Ben Halpern, in which they examine public perceptions of aquaculture by performing sentiment analyses on newspaper headlines from around the globe and government-solicited public comments on aquaculture policy and development. This paper is included in the ‘pdfs’ folder on Github, or <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0169281">available here.</a></p>
+<p>Another excellent example of sentiment analysis (among other text analyses) is an examination of then candidate Donald Trump’s tweets from 2016, which noted that tweets from an iPhone and an Android phone were markedly different in tone; the thought was that the Android account (with generally far more negative tweets) was run by Trump while the iPhone (with generally more positive tweets) was tweets from a staffer. <a href="http://varianceexplained.org/r/trump-tweets/">See here for details.</a></p>
+<p>Here we will apply word frequency analysis and sentiment analysis to a set of recent articles from the New York Times, each article discussing challenges and/or benefits of offshore wind energy development. On 3/21/2024, I searched the New York Times website for the term “offshore wind” and grabbed the text from the first six articles listed.</p>
+<section id="read-in-the-newspaper-articles" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="read-in-the-newspaper-articles"><span class="header-section-number">3.4.1</span> Read in the newspaper articles</h3>
+<p>These articles are in plain text format. We can use <code>list.files</code> to find the correct files, then use <code>purrr::map</code> to read each file in, then combine the files into a dataframe. To uniquely identify the articles, we will then extract the publication date from the file path using <code>stringr::str_extract</code> and some regex magic, and also assign the title (first full line) across all rows of the dataframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>nyt_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">'data'</span>, <span class="at">pattern =</span> <span class="st">'nytimes.+txt'</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>nyt_text <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_chr</span>(nyt_files, read_file)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>nyt_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">text =</span> nyt_text, <span class="at">file =</span> <span class="fu">basename</span>(nyt_files)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">### because the dates are in yyyy-mm-dd format (with dashes), extract with:</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">str_extract</span>(file, <span class="st">'[0-9-]+'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Isolate the title: keep everything up to the first carriage return</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">title =</span> <span class="fu">str_extract</span>(text, <span class="st">'^.+(?=(</span><span class="sc">\r</span><span class="st">|</span><span class="sc">\n</span><span class="st">))'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>That last regular expression looks like a cat walked across a keyboard! But it reads, from left to right:</p>
+<ul>
+<li><code>^</code>: start at the beginning of the string</li>
+<li><code>.</code>: match any character (period as wildcard)</li>
+<li><code>+</code>: repeat the previous match (in this case, any character) one or more times</li>
+<li><code>(?=(\r|\n))</code>: look ahead to see if there is either a <code>\r</code> or a <code>\n</code>:
+<ul>
+<li><code>(?=...)</code> starts a “lookahead assertion”</li>
+<li><code>(\r|\n)</code> matches either the carriage return <code>\r</code> OR (<code>|</code>) the end of line <code>\n</code>.</li>
+</ul></li>
+</ul>
+<p>So: start at the beginning, and match all characters until you see the designated pattern (in this case a carriage return or end-of-line) as the next character, and then stop matching (without matching that designated pattern).</p>
+</div>
+</div>
+<p>Each row is a single file, representing a single article. Time for some <code>tidytext</code>! From the <a href="https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html">vignette</a>:</p>
+<blockquote class="blockquote">
+<p>Using tidy data principles can make many text mining tasks easier, more effective, and consistent with tools already in wide use. Much of the infrastructure needed for text mining with tidy data frames already exists in packages like dplyr, broom, tidyr and ggplot2. In this package, we provide functions and supporting data sets to allow conversion of text to and from tidy formats, and to switch seamlessly between tidy tools and existing text mining packages.</p>
+</blockquote>
+<p>The package authors, Julia Silge and David Robinson, have also written a fantastic resource for text mining with R, cleverly titled: <a href="https://www.tidytextmining.com/">Text Mining with R</a>.</p>
+</section>
+<section id="word-count-analysis" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="word-count-analysis"><span class="header-section-number">3.4.2</span> Word count analysis</h3>
+<p>We can use <code>tidytext::unnest_tokens()</code> to take our full text data and break it down into different chunks, called “tokens” by those in the know. Tokens include individual words (default), sentence, paragraph, n-grams (combinations of <span class="math inline">\(n\)</span> words in a row, e.g., bigrams or trigrams are two- and three-word phrases). To perform a word frequency analysis and sentiment analysis, we will focus on words as our token of choice, though more complex analyses might involve bigrams, trigrams, or other methods entirely. Let’s tokenize our text and count up how frequently each word appears in each article.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>nyt_words_df <span class="ot">&lt;-</span> nyt_df <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word, <span class="at">input =</span> text, <span class="at">token =</span> <span class="st">'words'</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>nyt_wordcount <span class="ot">&lt;-</span> nyt_words_df <span class="sc">%&gt;%</span> </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date, word) <span class="sc">%&gt;%</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>…OK, but check out which words show up the most. There are a lot of numbers, and a bunch of words that don’t contain much interesting information. How can we limit those?</p>
+<section id="remove-stop-words" class="level4" data-number="3.4.2.1">
+<h4 data-number="3.4.2.1" class="anchored" data-anchor-id="remove-stop-words"><span class="header-section-number">3.4.2.1</span> Remove stop words</h4>
+<p>Those very common (and often uninteresting) words are called “stop words.” See <code>?stop_words</code> and <code>View(stop_words)</code> to look at documentation for stop words lexicons (from the <code>tidytext</code> package).</p>
+<p>We will <em>remove</em> stop words using <code>tidyr::anti_join()</code>, which will <em>omit</em> any words in our <code>nyt_words_df</code> dataframe that appear in <code>stop_words</code>. Let’s also remove numbers. Then let’s rerun our word count.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>nyt_words_clean <span class="ot">&lt;-</span> nyt_words_df <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">'word'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">'[0-9]'</span>))</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>nyt_wordcount <span class="ot">&lt;-</span> nyt_words_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date, word) <span class="sc">%&gt;%</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="find-the-top-5-words-from-each-article-by-date" class="level4" data-number="3.4.2.2">
+<h4 data-number="3.4.2.2" class="anchored" data-anchor-id="find-the-top-5-words-from-each-article-by-date"><span class="header-section-number">3.4.2.2</span> Find the top 5 words from each article (by date)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>top_5_words <span class="ot">&lt;-</span> nyt_wordcount <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> n, <span class="at">n =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> top_5_words, <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> word)) <span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>date, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_03_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Many of these words make perfect sense for articles about wind power! In addition to wind, power, project, and offshore, we see place names: Virginia, (New) Jersey, (New) York, and (Martha’s) Vineyard.</p>
+<p>Now let’s generate a wordcloud of the top 25 words in the first article, using <code>ggwordcloud::geom_text_wordcloud()</code> in conjunction with <code>ggplot()</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>top25 <span class="ot">&lt;-</span> nyt_wordcount <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">==</span> <span class="fu">first</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> n, <span class="at">n =</span> <span class="dv">25</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>word_cloud <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> top25, <span class="fu">aes</span>(<span class="at">label =</span> word)) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_wordcloud</span>(<span class="fu">aes</span>(<span class="at">color =</span> n, <span class="at">size =</span> n), <span class="at">shape =</span> <span class="st">"diamond"</span>) <span class="sc">+</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"darkgreen"</span>,<span class="st">"blue"</span>,<span class="st">"purple"</span>)) <span class="sc">+</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>word_cloud</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="session_03_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="384"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Lemmatization</strong></p>
+<p>Note in the above plots, we see the word “project” and the word “projects” separately - our code doesn’t differentiate between the singular and plural forms of the word. Similarly, if we dug further into our data, we would see different conjugations and tenses of various verbs (“write” vs “wrote” vs “writing”) and forms of adjectives.</p>
+<p>“Lemmatization” is the process of converting all these various forms to a single root word prior to the analysis. This would convert instances of “projects” to “project”, “writing” to “write”, etc. Then, the word count analysis would be able to sum across the lemmatized root word for a more accurate picture.</p>
+<p>Lemmatization is an important step in natural language processing, but it is beyond the scope for this introductory workshop.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sentiment-analysis" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="sentiment-analysis"><span class="header-section-number">3.4.3</span> Sentiment analysis</h3>
+<p>First, check out the sentiment lexicons, included in the <code>tidytext</code> package through the <code>get_sentiments()</code> function. From Julia Silge and David Robinson (https://www.tidytextmining.com/sentiment.html):</p>
+<blockquote class="blockquote">
+<p>The three general-purpose lexicons are</p>
+<ul>
+<li>AFINN from Finn Årup Nielsen,</li>
+<li>bing from Bing Liu and collaborators, and</li>
+<li>nrc (National Research Council Canada) from Saif Mohammad and Peter Turney</li>
+</ul>
+<p>All three of these lexicons are based on unigrams, i.e., single words. These lexicons contain many English words and the words are assigned scores for positive/negative sentiment, and also possibly emotions like joy, anger, sadness, and so forth. The nrc lexicon categorizes words in a binary fashion (“yes”/“no”) into categories of positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust. The bing lexicon categorizes words in a binary fashion into positive and negative categories. The AFINN lexicon assigns words with a score that runs between -5 and 5, with negative scores indicating negative sentiment and positive scores indicating positive sentiment. All of this information is tabulated in the sentiments dataset, and tidytext provides a function <code>get_sentiments()</code> to get specific sentiment lexicons without the columns that are not used in that lexicon.</p>
+</blockquote>
+<p>Let’s explore the sentiment lexicons. <code>bing</code> is included in <code>tidytext</code>, other lexicons (<code>afinn</code>, <code>nrc</code>, <code>loughran</code>) you’ll be prompted to to download.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Warning</strong>: These collections include some of the most offensive words you can think of.</p>
+</div>
+</div>
+<p>“afinn”: Words ranked from -5 (very negative) to +5 (very positive)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>afinn_lex <span class="ot">&lt;-</span> <span class="fu">get_sentiments</span>(<span class="at">lexicon =</span> <span class="st">"afinn"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="do">### you may be prompted to download an updated lexicon - say yes!</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's look at the pretty positive words:</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>afinn_pos <span class="ot">&lt;-</span> <span class="fu">get_sentiments</span>(<span class="st">"afinn"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For comparison, check out the bing lexicon:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>bing_lex <span class="ot">&lt;-</span> <span class="fu">get_sentiments</span>(<span class="at">lexicon =</span> <span class="st">"bing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And the nrc lexicon:https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm Includes bins for 8 emotions (anger, anticipation, disgust, fear, joy, sadness, surprise, trust) and positive / negative.</p>
+<p><strong>Citation for NRC lexicon</strong>: Crowdsourcing a Word-Emotion Association Lexicon, Saif Mohammad and Peter Turney, Computational Intelligence, 29 (3), 436-465, 2013.</p>
+<p>Now nrc:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>nrc_lex <span class="ot">&lt;-</span> <span class="fu">get_sentiments</span>(<span class="at">lexicon =</span> <span class="st">"nrc"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For this tutorial, let’s use the <code>bing</code> lexicon which ranks each word simply as positive or negative.</p>
+<p>First, bind words in <code>nyt_words_clean</code> to <code>bing</code> lexicon:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>nyt_bing <span class="ot">&lt;-</span> nyt_words_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing_lex, <span class="at">by =</span> <span class="st">'word'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s find some counts of positive vs negative:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>bing_counts <span class="ot">&lt;-</span> nyt_bing <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date, sentiment) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'date'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot them: </span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> bing_counts, <span class="fu">aes</span>(<span class="at">x =</span> sentiment, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_03_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Taking the ratio of positive to negative, rather than the total counts per chapter, adjusts for some articles just being longer than others. Highly negative articles would have a value between 0 and 1, highly positive could go from 1 to infinity, so that’s a problem. But plotting as log ratio, i.e., <span class="math inline">\(\ln\left(\frac{positive}{negative}\right)\)</span>, balances that so a chapter with 10:1 positive:negative ratio would have the same <em>absolute</em> value (<span class="math inline">\(\log(10) = 2.3\)</span>) as a chapter with 1:10 positive:negative ratio (<span class="math inline">\(\log(0.1) = -2.3\)</span>).</p>
+<p>Since all articles come from the same source (though not necessarily same author), we might also need to consider that the overall tone of the New York Times’s prose is darker or lighter, so let’s find the <em>overall</em> log ratio for the entire set of articles, and subtract that out. Similar adjustments might be made if comparing the sentiment across multiple chapters or books written by the same author, to account for the author’s overall tone.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">### find log ratio score overall:</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>bing_log_ratio_all <span class="ot">&lt;-</span> nyt_bing <span class="sc">%&gt;%</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n_pos =</span> <span class="fu">sum</span>(sentiment <span class="sc">==</span> <span class="st">'positive'</span>),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_neg =</span> <span class="fu">sum</span>(sentiment <span class="sc">==</span> <span class="st">'negative'</span>),</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">log_ratio =</span> <span class="fu">log</span>(n_pos <span class="sc">/</span> n_neg))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="do">### Find the log ratio score by article (date): </span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>bing_log_ratio_article <span class="ot">&lt;-</span> nyt_bing <span class="sc">%&gt;%</span> </span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date, title) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n_pos =</span> <span class="fu">sum</span>(sentiment <span class="sc">==</span> <span class="st">'positive'</span>),</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_neg =</span> <span class="fu">sum</span>(sentiment <span class="sc">==</span> <span class="st">'negative'</span>),</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">log_ratio =</span> <span class="fu">log</span>(n_pos <span class="sc">/</span> n_neg),</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_ratio_adjust =</span> log_ratio <span class="sc">-</span> bing_log_ratio_all<span class="sc">$</span>log_ratio) <span class="sc">%&gt;%</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pos_neg =</span> <span class="fu">ifelse</span>(log_ratio_adjust <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">'pos'</span>, <span class="st">'neg'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, let’s plot the log ratios, and also include the title of each article as a <code>geom_text()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> bing_log_ratio_article, </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> log_ratio_adjust,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="fu">fct_rev</span>(<span class="fu">factor</span>(date)),</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> pos_neg)) <span class="sc">+</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="fu">aes</span>(<span class="at">label =</span> title), <span class="at">hjust =</span> .<span class="dv">5</span>, <span class="at">vjust =</span> .<span class="dv">5</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Adjusted log(positive/negative)'</span>,</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Article'</span>) <span class="sc">+</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'pos'</span> <span class="ot">=</span> <span class="st">'slateblue'</span>, <span class="st">'neg'</span> <span class="ot">=</span> <span class="st">'darkred'</span>)) <span class="sc">+</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'none'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_03_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on those titles, the resulting balance of positive vs.&nbsp;negative seems pretty reasonable!</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This has been a very simple sentiment analysis. The <code>sentimentr</code> package (https://cran.r-project.org/web/packages/sentimentr/index.html) seems to be able to parse things at the sentence level, accounting for negations etc. (e.g.&nbsp;“I am not having a good day.”)</p>
+</div>
+</div>
+<section id="sentiment-analysis-with-afinn-not-run-in-workshop" class="level4" data-number="3.4.3.1">
+<h4 data-number="3.4.3.1" class="anchored" data-anchor-id="sentiment-analysis-with-afinn-not-run-in-workshop"><span class="header-section-number">3.4.3.1</span> Sentiment analysis with afinn (not run in workshop):</h4>
+<p>First, bind words in <code>nyt_words_clean</code> to <code>afinn</code> lexicon: ::: {.cell}</p>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>nyt_afinn <span class="ot">&lt;-</span> nyt_words_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(afinn_lex, <span class="at">by =</span> <span class="st">'word'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>:::</p>
+<p>Let’s find some counts (by sentiment ranking): ::: {.cell}</p>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>afinn_counts <span class="ot">&lt;-</span> nyt_afinn <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date, value) <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>())</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="do">### Plot them: </span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> afinn_counts, <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>date)</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the mean afinn score by article date: </span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>afinn_means <span class="ot">&lt;-</span> nyt_afinn <span class="sc">%&gt;%</span> </span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_afinn =</span> <span class="fu">mean</span>(value))</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> afinn_means, </span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_rev</span>(<span class="fu">factor</span>(date)),</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> mean_afinn)) <span class="sc">+</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Article date'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>:::</p>
+</section>
+<section id="sentiment-analysis-with-nrc-lexicon-not-run-in-workshop" class="level4" data-number="3.4.3.2">
+<h4 data-number="3.4.3.2" class="anchored" data-anchor-id="sentiment-analysis-with-nrc-lexicon-not-run-in-workshop"><span class="header-section-number">3.4.3.2</span> Sentiment analysis with NRC lexicon (not run in workshop)</h4>
+<p>Recall, this assigns words to sentiment bins. Let’s bind our article data to the NRC lexicon:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>nyt_nrc <span class="ot">&lt;-</span> nyt_words_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">get_sentiments</span>(<span class="st">"nrc"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s find the count of words by article and sentiment bin:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>nyt_nrc_counts <span class="ot">&lt;-</span> nyt_nrc <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date, sentiment) <span class="sc">%&gt;%</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> nyt_nrc_counts, <span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> sentiment)) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>date)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="do">### perhaps order or color the sentiments by positive/negative</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> nyt_nrc_counts, <span class="fu">aes</span>(<span class="at">x =</span> n, </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">y =</span> <span class="fu">factor</span>(date) <span class="sc">%&gt;%</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">fct_rev</span>())) <span class="sc">+</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>sentiment) <span class="sc">+</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Date of article'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./session_02.html" class="pagination-link" aria-label="Data Visualization">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Visualization</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./session_04.html" class="pagination-link" aria-label="Accesing Survey Data Using a Reproducible Workflow">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Accesing Survey Data Using a Reproducible Workflow</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
