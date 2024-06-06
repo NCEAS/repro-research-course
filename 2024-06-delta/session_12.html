@@ -384,7 +384,7 @@ Setup
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT) <span class="co"># interactive tables</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales) <span class="co"># scale functions for visualization</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># expedite cleaning and exploring data</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis) <span class="co"># colorblind friendly color pallet</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis) <span class="co"># colorblind friendly color palette</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>Load the data directly from the <a href="https://portal.edirepository.org/nis/mapbrowse?packageid=edi.587.1">EDI Data Repository: Sacramento-San Joaquin Delta Socioecological Monitoring</a>. Navigate to the link above, scroll down and under <em>Resources</em>, hover over the “Download” button for the “Socioecological monitoring data”, right click, and select “Copy Link Address”.</li>
@@ -405,10 +405,10 @@ Setup
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(delta_visits_raw)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">## From when to when</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(delta_visits_raw<span class="sc">$</span>date)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(delta_visits_raw<span class="sc">$</span>Date)</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Which time of day?</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(delta_visits_raw<span class="sc">$</span>time_of_day)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(delta_visits_raw<span class="sc">$</span>Time_of_Day)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -447,7 +447,7 @@ Side note on clean column names
 </div>
 </div>
 </div>
-<p>With the <a href="https://learning.nceas.ucsb.edu/2023-06-delta/session_09.html#tidy-data">tidy data principles</a> in mind. Is this data tidy?</p>
+<p>With the <a href="https://learning.nceas.ucsb.edu/2024-06-delta/session_06.html">tidy data principles</a> in mind. Is this data tidy?</p>
 <ol type="1">
 <li>Every column is a variable.</li>
 <li>Every row is an observation.</li>
@@ -489,7 +489,7 @@ Exercise
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>Calculate the daily visits by <code>visit_type</code> and <code>restore_loc</code>,</li>
+<li>Calculate the daily visits by <code>restore_loc</code>, <code>date</code>, and <code>visitor_type</code>.</li>
 </ul>
 </div>
 </div>
@@ -532,7 +532,7 @@ The basics
 <ol type="1">
 <li>Indicate we are using <code>ggplot()</code> (call the <code>ggplot2::ggplot()</code> function)</li>
 <li>What data do we want to plot? (<code>data = my_data</code>)</li>
-<li>What is my mapping aesthetics? What variables do we want to plot? (define using<code>aes()</code> function)</li>
+<li>What are the mapping aesthetics? What variables do we want to plot? (define using<code>aes()</code> function)</li>
 <li>Define the geometry of our plot. This specifies the type of plot we’re making (use <code>geom_*()</code> to indicate the type of plot e.g: point, bar, etc.)</li>
 </ol>
 <p><strong>Note</strong> To add layers to our plot, for example, additional geometries/aesthetics and theme elements or any <code>ggplot</code> object we use <code>+</code>.</p>
@@ -585,7 +585,7 @@ The basics
 <p>This can certainly be convenient, but use it carefully! Combining too many data-tidying or subsetting operations with your <code>ggplot</code> call can make your code more difficult to debug and understand.</p>
 </div>
 </div>
-<p>We will use the pipe operator to pass into <code>ggplot()</code> a filtered version of <code>daily_visit_loc</code>, and make a plot with different geometries.</p>
+<p>We will use the pipe operator to pass into <code>ggplot()</code> a filtered version of <code>daily_visits_loc</code>, and make a plot with different geometries.</p>
 <p><strong>Boxplot</strong> <em>Note: These examples are to demonstrate case uses of wrangling function prior to plotting. They are not necessarily plotting best practices.</em></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>daily_visits_loc <span class="sc">%&gt;%</span></span>
@@ -692,7 +692,7 @@ Keep in mind
 <div class="callout-body-container callout-body">
 <ul>
 <li><p>If you want to map a variable onto a graph aesthetic (e.g., point color should be based on a specific region), put it within <code>aes()</code>.</p></li>
-<li><p>If you want to update your plot base on a constant (e.g.&nbsp;“Make ALL the points BLUE”), you can add the information directly to the relevant geom_ layer.</p></li>
+<li><p>If you want to update your plot base with a constant (e.g.&nbsp;“Make ALL the points BLUE”), you can add the information directly to the relevant geom_ layer.</p></li>
 </ul>
 </div>
 </div>
@@ -846,8 +846,8 @@ Exercise
 </section>
 <section id="reordering-things" class="level4" data-number="12.3.3.2">
 <h4 data-number="12.3.3.2" class="anchored" data-anchor-id="reordering-things"><span class="header-section-number">12.3.3.2</span> Reordering things</h4>
-<p><code>ggplot()</code> loves putting things in alphabetical order. But more frequent than not, that’s not the order you actually want things to be plotted. One way to do this is to use the <code>fct_reorder()</code> function from the <code>forcats</code> package. <code>forcats</code> provide tools for working with categorical variables. In this case, we want to reorder or categorical variable of “Restoration Location” base on the total number of visits.</p>
-<p>The fist thing we need to do is to add a column to our data with the <em>total number of visits</em> by location. This will be our “sorting” variable.</p>
+<p><code>ggplot()</code> loves putting things in alphabetical order. But more frequent than not, that’s not the order you actually want things to be plotted. One way to do this is to use the <code>fct_reorder()</code> function from the <code>forcats</code> package. <code>forcats</code> provides tools for working with categorical variables. In this case, we want to reorder our categorical variable of <code>restore_loc</code> based on the total number of visits.</p>
+<p>The first thing we need to do is to add a column to our data with the <em>total number of visits</em> by location. This will be our “sorting” variable.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>daily_visits_totals <span class="ot">&lt;-</span> daily_visits_loc <span class="sc">%&gt;%</span> </span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(restore_loc) <span class="sc">%&gt;%</span></span>
@@ -921,7 +921,7 @@ Note how `coord_flip()` changes the parameters
 </section>
 <section id="colors" class="level4" data-number="12.3.3.3">
 <h4 data-number="12.3.3.3" class="anchored" data-anchor-id="colors"><span class="header-section-number">12.3.3.3</span> Colors</h4>
-<p>The last thing we will do to our plot is change the color. To do this we are going to use a functions from the <code>viridis</code> package. This package provides different color pallets that are designed to improve graph readability for readers with common forms of color blindness and/or color vision deficiency. As <code>viridis</code> there are multiple other color pallet packages or color pallets out there that you can use to customize your graphs. We could spend a whole session talking about colors in R! For the purpose of this lesson we are just going to keep it brief and show one function of the <code>viridis</code> package that will make our plot colors look better.</p>
+<p>The last thing we will do to our plot is change the color. To do this we are going to use a function from the <code>viridis</code> package. This package provides different color palettes that are designed to improve graph readability for readers with common forms of color blindness and/or color vision deficiency. With <code>viridis</code>, there are multiple other color palette packages or color palettes out there that you can use to customize your graphs. We could spend a whole session talking about colors in R! For the purpose of this lesson we are just going to keep it brief and show one function of the <code>viridis</code> package that will make our plot colors look better.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> daily_visits_totals,</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(restore_loc, <span class="fu">desc</span>(n)), <span class="at">y =</span> daily_visits,</span>
@@ -945,11 +945,12 @@ Note how `coord_flip()` changes the parameters
 </div>
 </div>
 </div>
-<p>Thing to keep in mind when choosing a color pallet is the number of variables you have and how many colors your pallet have. And if your need a discrete or a continuous color pallet. Find more information about colors in this <a href="https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf">R color cheatsheet</a>.</p>
+<p>Things to keep in mind when choosing a color palette are the number of variables you have and how many colors your palette has. And if you need a discrete or a continuous color palette. Find more information about colors in this <a href="https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf">R color cheatsheet</a>.</p>
 </section>
 <section id="saving-plots" class="level4" data-number="12.3.3.4">
 <h4 data-number="12.3.3.4" class="anchored" data-anchor-id="saving-plots"><span class="header-section-number">12.3.3.4</span> Saving plots</h4>
 <p>Saving plots using <code>ggplot</code> is easy! The <code>ggsave()</code> function will save either the last plot you created, or any plot that you have saved to an object. You can specify what output format you want, size, resolution, etc. See <code>?ggsave()</code> for documentation.</p>
+<p>For example, if we want to save our current plot to an existing folder named “figures”, we can do this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"figures/visit_restore_site_delta.jpg"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">units =</span> <span class="st">"in"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1023,13 +1024,13 @@ The `scales` package provides some nice helper functions to easily rescale and r
 6 Wildlands           38.3     -122.</code></pre>
 </div>
 </div>
-<p>The <code>dplyr::distinct()</code> function comes pretty handy when you want to filter unique values in a column. In this case we use the <code>.keep_all = T</code> argument to keep all the columns of our data frame so we can have the <code>lat</code> and <code>long</code> of each of the locations. If we don’t add this argument, we would end up with a data frame with only one column: <code>restore_loc</code> and 10 rows, one for each of the unique locations.</p>
+<p>The <code>dplyr::distinct()</code> function comes pretty handy when you want to filter unique values in a column. In this case we use the <code>.keep_all = T</code> argument to keep all the columns of our data frame so we can have the <code>latitude</code> and <code>longitude</code> of each of the locations. If we don’t add this argument, we would end up with a data frame with only one column: <code>restore_loc</code> and 10 rows, one for each of the unique locations.</p>
 <p>Now we can display this table as an interactive table using <code>datatable()</code> from the <code>DT</code> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(locations)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-3044101754cd36397518" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-3044101754cd36397518">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["Decker Island","SW Suisun Marsh","Grizzly Bay","Prospect","SJ River","Wildlands","North Delta","Honker Bay/Chipps Island","Twitchell Island","Sherman Island"],[38.105872,38.192684,38.11572,38.213087,38.053097,38.316412,38.184603,38.109048,38.096002,38.034339],[-121.70638,-121.912312,-122.030558,-121.667419,-121.842422,-121.693077,-121.661433,-121.708086,-121.674498,-121.761946]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>restore_loc<\/th>\n      <th>latitude<\/th>\n      <th>longitude<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"restore_loc","targets":1},{"name":"latitude","targets":2},{"name":"longitude","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-33dd9dfbc7b944bbe4d9" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-33dd9dfbc7b944bbe4d9">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["Decker Island","SW Suisun Marsh","Grizzly Bay","Prospect","SJ River","Wildlands","North Delta","Honker Bay/Chipps Island","Twitchell Island","Sherman Island"],[38.105872,38.192684,38.11572,38.213087,38.053097,38.316412,38.184603,38.109048,38.096002,38.034339],[-121.70638,-121.912312,-122.030558,-121.667419,-121.842422,-121.693077,-121.661433,-121.708086,-121.674498,-121.761946]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>restore_loc<\/th>\n      <th>latitude<\/th>\n      <th>longitude<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"restore_loc","targets":1},{"name":"latitude","targets":2},{"name":"longitude","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -1046,8 +1047,8 @@ The `scales` package provides some nice helper functions to easily rescale and r
 <span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">popup =</span> <span class="sc">~</span> restore_loc</span>
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-8a190a3d776f711770a5" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-8a190a3d776f711770a5">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[38.105872,38.192684,38.11572,38.213087,38.053097,38.316412,38.184603,38.109048,38.096002,38.034339],[-121.70638,-121.912312,-122.030558,-121.667419,-121.842422,-121.693077,-121.661433,-121.708086,-121.674498,-121.761946],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Decker Island","SW Suisun Marsh","Grizzly Bay","Prospect","SJ River","Wildlands","North Delta","Honker Bay/Chipps Island","Twitchell Island","Sherman Island"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[38.034339,38.316412],"lng":[-122.030558,-121.661433]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-9bfe9d89b3650dcd8f8b" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-9bfe9d89b3650dcd8f8b">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[38.105872,38.192684,38.11572,38.213087,38.053097,38.316412,38.184603,38.109048,38.096002,38.034339],[-121.70638,-121.912312,-122.030558,-121.667419,-121.842422,-121.693077,-121.661433,-121.708086,-121.674498,-121.761946],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Decker Island","SW Suisun Marsh","Grizzly Bay","Prospect","SJ River","Wildlands","North Delta","Honker Bay/Chipps Island","Twitchell Island","Sherman Island"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[38.034339,38.316412],"lng":[-122.030558,-121.661433]}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p><br></p>
@@ -1072,12 +1073,12 @@ The `scales` package provides some nice helper functions to easily rescale and r
 <span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"white"</span>,</span>
 <span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">opacity =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-0b97c0ee7e3d601b1db3" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-0b97c0ee7e3d601b1db3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addWMSTiles","args":["https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WmsServer",null,null,{"styles":"","format":"image/png","transparent":true,"version":"1.1.1","layers":"0"}]},{"method":"addCircleMarkers","args":[[38.105872,38.192684,38.11572,38.213087,38.053097,38.316412,38.184603,38.109048,38.096002,38.034339],[-121.70638,-121.912312,-122.030558,-121.667419,-121.842422,-121.693077,-121.661433,-121.708086,-121.674498,-121.761946],5,null,null,{"interactive":true,"className":"","stroke":true,"color":"white","weight":0.5,"opacity":1,"fill":true,"fillColor":"salmon","fillOpacity":1},null,null,["Decker Island","SW Suisun Marsh","Grizzly Bay","Prospect","SJ River","Wildlands","North Delta","Honker Bay/Chipps Island","Twitchell Island","Sherman Island"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[38.034339,38.316412],"lng":[-122.030558,-121.661433]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-3bbb0112c04b340c17a3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-3bbb0112c04b340c17a3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addWMSTiles","args":["https://basemap.nationalmap.gov/arcgis/services/USGSTopo/MapServer/WmsServer",null,null,{"styles":"","format":"image/png","transparent":true,"version":"1.1.1","layers":"0"}]},{"method":"addCircleMarkers","args":[[38.105872,38.192684,38.11572,38.213087,38.053097,38.316412,38.184603,38.109048,38.096002,38.034339],[-121.70638,-121.912312,-122.030558,-121.667419,-121.842422,-121.693077,-121.661433,-121.708086,-121.674498,-121.761946],5,null,null,{"interactive":true,"className":"","stroke":true,"color":"white","weight":0.5,"opacity":1,"fill":true,"fillColor":"salmon","fillOpacity":1},null,null,["Decker Island","SW Suisun Marsh","Grizzly Bay","Prospect","SJ River","Wildlands","North Delta","Honker Bay/Chipps Island","Twitchell Island","Sherman Island"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[38.034339,38.316412],"lng":[-122.030558,-121.661433]}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p><br></p>
-<p>We can also layer base maps. In this case the USGSImageryTopo base map with the USGSHydroCached base map. Note that the url where the map is retrived is very similar for each USGS base map.</p>
+<p>We can also layer base maps. In this case the USGSImageryTopo base map with the USGSHydroCached base map. Note that the url where the map is retrieved is very similar for each USGS base map.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>(locations) <span class="sc">%&gt;%</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addWMSTiles</span>(</span>
@@ -1102,8 +1103,8 @@ The `scales` package provides some nice helper functions to easily rescale and r
 <span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"white"</span>,</span>
 <span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">opacity =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-2e2b960d634213da480a" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-2e2b960d634213da480a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addWMSTiles","args":["https://basemap.nationalmap.gov/arcgis/services/USGSImageryTopo/MapServer/WmsServer",null,null,{"styles":"","format":"image/png","transparent":true,"version":"1.1.1","layers":"0"}]},{"method":"addWMSTiles","args":["https://basemap.nationalmap.gov/arcgis/services/USGSHydroCached/MapServer/WmsServer",null,null,{"styles":"","format":"image/png","transparent":true,"version":"1.1.1","layers":"0"}]},{"method":"addCircleMarkers","args":[[38.105872,38.192684,38.11572,38.213087,38.053097,38.316412,38.184603,38.109048,38.096002,38.034339],[-121.70638,-121.912312,-122.030558,-121.667419,-121.842422,-121.693077,-121.661433,-121.708086,-121.674498,-121.761946],5,null,null,{"interactive":true,"className":"","stroke":true,"color":"white","weight":0.5,"opacity":1,"fill":true,"fillColor":"salmon","fillOpacity":1},null,null,["Decker Island","SW Suisun Marsh","Grizzly Bay","Prospect","SJ River","Wildlands","North Delta","Honker Bay/Chipps Island","Twitchell Island","Sherman Island"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[38.034339,38.316412],"lng":[-122.030558,-121.661433]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-499d8ee607ae3d8914a9" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-499d8ee607ae3d8914a9">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addWMSTiles","args":["https://basemap.nationalmap.gov/arcgis/services/USGSImageryTopo/MapServer/WmsServer",null,null,{"styles":"","format":"image/png","transparent":true,"version":"1.1.1","layers":"0"}]},{"method":"addWMSTiles","args":["https://basemap.nationalmap.gov/arcgis/services/USGSHydroCached/MapServer/WmsServer",null,null,{"styles":"","format":"image/png","transparent":true,"version":"1.1.1","layers":"0"}]},{"method":"addCircleMarkers","args":[[38.105872,38.192684,38.11572,38.213087,38.053097,38.316412,38.184603,38.109048,38.096002,38.034339],[-121.70638,-121.912312,-122.030558,-121.667419,-121.842422,-121.693077,-121.661433,-121.708086,-121.674498,-121.761946],5,null,null,{"interactive":true,"className":"","stroke":true,"color":"white","weight":0.5,"opacity":1,"fill":true,"fillColor":"salmon","fillOpacity":1},null,null,["Decker Island","SW Suisun Marsh","Grizzly Bay","Prospect","SJ River","Wildlands","North Delta","Honker Bay/Chipps Island","Twitchell Island","Sherman Island"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[38.034339,38.316412],"lng":[-122.030558,-121.661433]}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p><br></p>
