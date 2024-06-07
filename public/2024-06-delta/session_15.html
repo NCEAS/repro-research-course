@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -74,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -249,20 +283,844 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#what-is-shiny" id="toc-what-is-shiny" class="nav-link" data-scroll-target="#what-is-shiny"><span class="header-section-number">15.1</span> What is Shiny?</a>
+  <ul class="collapse">
+  <li><a href="#why-build-a-shiny-app" id="toc-why-build-a-shiny-app" class="nav-link" data-scroll-target="#why-build-a-shiny-app">Why build a Shiny App?</a></li>
+  </ul></li>
+  <li><a href="#the-anatomy-of-a-shiny-app" id="toc-the-anatomy-of-a-shiny-app" class="nav-link" data-scroll-target="#the-anatomy-of-a-shiny-app"><span class="header-section-number">15.2</span> The Anatomy of a Shiny App</a>
+  <ul class="collapse">
+  <li><a href="#building-blocks" id="toc-building-blocks" class="nav-link" data-scroll-target="#building-blocks"><span class="header-section-number">15.2.1</span> Building blocks</a></li>
+  <li><a href="#what-will-go-in-each-section" id="toc-what-will-go-in-each-section" class="nav-link" data-scroll-target="#what-will-go-in-each-section"><span class="header-section-number">15.2.2</span> What will go in each section?</a></li>
+  <li><a href="#more-on-widgets-and-outputs" id="toc-more-on-widgets-and-outputs" class="nav-link" data-scroll-target="#more-on-widgets-and-outputs"><span class="header-section-number">15.2.3</span> More on widgets and outputs</a></li>
+  <li><a href="#reactivity-brief-intro" id="toc-reactivity-brief-intro" class="nav-link" data-scroll-target="#reactivity-brief-intro"><span class="header-section-number">15.2.4</span> Reactivity: brief intro</a></li>
+  </ul></li>
+  <li><a href="#how-to-organize-our-files-when-developing-a-shiny-app" id="toc-how-to-organize-our-files-when-developing-a-shiny-app" class="nav-link" data-scroll-target="#how-to-organize-our-files-when-developing-a-shiny-app"><span class="header-section-number">15.3</span> How to organize our files when developing a Shiny app</a></li>
+  <li><a href="#creating-a-shiny-app" id="toc-creating-a-shiny-app" class="nav-link" data-scroll-target="#creating-a-shiny-app"><span class="header-section-number">15.4</span> Creating a Shiny app</a>
+  <ul class="collapse">
+  <li><a href="#building-a-single-file-app" id="toc-building-a-single-file-app" class="nav-link" data-scroll-target="#building-a-single-file-app"><span class="header-section-number">15.4.1</span> Building a single-file-app</a></li>
+  <li><a href="#adding-text-to-the-ui-title-and-subtitle" id="toc-adding-text-to-the-ui-title-and-subtitle" class="nav-link" data-scroll-target="#adding-text-to-the-ui-title-and-subtitle"><span class="header-section-number">15.4.2</span> Adding text to the UI: Title and Subtitle</a></li>
+  <li><a href="#style-text-in-the-ui" id="toc-style-text-in-the-ui" class="nav-link" data-scroll-target="#style-text-in-the-ui"><span class="header-section-number">15.4.3</span> Style text in the UI</a></li>
+  <li><a href="#adding-intupts-and-outputs" id="toc-adding-intupts-and-outputs" class="nav-link" data-scroll-target="#adding-intupts-and-outputs">Adding intupts and outputs</a></li>
+  <li><a href="#tell-the-server-how-to-assemble-inputs-into-outputs-adding-reactive-scatterplot" id="toc-tell-the-server-how-to-assemble-inputs-into-outputs-adding-reactive-scatterplot" class="nav-link" data-scroll-target="#tell-the-server-how-to-assemble-inputs-into-outputs-adding-reactive-scatterplot">Tell the server how to assemble inputs into outputs: Adding reactive scatterplot</a></li>
+  <li><a href="#recap-steps-to-create-a-reactive-shiny-app" id="toc-recap-steps-to-create-a-reactive-shiny-app" class="nav-link" data-scroll-target="#recap-steps-to-create-a-reactive-shiny-app"><span class="header-section-number">15.4.4</span> Recap: Steps to create a reactive Shiny app</a></li>
+  </ul></li>
+  <li><a href="#your-turn" id="toc-your-turn" class="nav-link" data-scroll-target="#your-turn"><span class="header-section-number">15.5</span> Your turn</a></li>
+  <li><a href="#shini-cont" id="toc-shini-cont" class="nav-link" data-scroll-target="#shini-cont"><span class="header-section-number">15.6</span> Shini cont’</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
 
 
 
 
 
-<!-- {{< include /sections/collaboration-social-data-policies.qmd >}} -->
+<hr>
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Define the three fundamental components of a Shiny app</li>
+<li>Generate a single-file app with Shiny</li>
+<li>Use text formatting methods to style text in the UI using tags</li>
+<li>Practicing data wrangling and visualization outside of your shiny app</li>
+<li>Follow a general workflow for building reactive apps</li>
+<li>Running and quitting apps in RStudio</li>
+</ul>
+<!--Explore available Shiny layout options
+Create a Shiny app
+Describe (briefly) the purpose of deploying a Shiny app -->
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Acknowledgements
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This lesson was adapted from <a href="https://ucsb-meds.github.io/EDS-430-Intro-to-Shiny/">EDS-430 Intro to Shiny - Building reactive apps and dashboards</a> Course for the Bren School’s Master of Environmental Data Science program design and taught by <a href="https://samanthacsik.github.io/">Sam Csik</a>.</p>
+</div>
+</div>
+</section>
+<section id="what-is-shiny" class="level2 page-columns page-full" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="what-is-shiny"><span class="header-section-number">15.1</span> What is Shiny?</h2>
+<p>An R package that allows users to create an interactive web application using R code. This packages calls for HTML, JavaScript and CSS without you having to learn them.</p>
+<p>Think interactive web pages built by people who love to code in R, no JavaScript experience necessary.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="quarto-figure quarto-figure-right">
+<figure class="figure">
+<p><img src="images/shiny-hex.png" class="img-fluid quarto-figure quarto-figure-right figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div></div><blockquote class="blockquote">
+<p>“Shiny is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.” - Posit</p>
+</blockquote>
+<p>The big benefits of Shiny is that you create an interactive web application just by understanding the Shiny framework in R and present all the cool visualization you create using R packages in an interactive platform.</p>
+<section id="why-build-a-shiny-app" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="why-build-a-shiny-app">Why build a Shiny App?</h3>
+<p><br></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Rationale</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Share data in an engaging format, allowing your audience to interact with your data</td>
+<td><a href="https://danielkerstan.shinyapps.io/usgs_water_data/?_inputs_&amp;state=%22%22">HydroTech Helper</a> by Daniel Kerstan. An app to access real-time monitoring of USGS hydrology sites.</td>
+</tr>
+<tr class="even">
+<td>To make tools you create in R accessible to others. Particularly those who do not know R. Instead of sharing your code, you share your app and everyone can see the output</td>
+<td><a href="https://msiple.shinyapps.io/mmrefpoints/">Marine Mammal Bycatch Impacts App</a> by Dr.&nbsp;Margaret Siple. <a href="https://github.com/mcsiple/mmrefpoints">Source code</a></td>
+</tr>
+<tr class="odd">
+<td>Create resources for others to use</td>
+<td><a href="https://msiple.shinyapps.io/NovelGazingApp/">Novel-gazing App</a> by Dr.&nbsp;Margaret Siple. <a href="https://github.com/mcsiple/novelgazing">Source code</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="the-anatomy-of-a-shiny-app" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="the-anatomy-of-a-shiny-app"><span class="header-section-number">15.2</span> The Anatomy of a Shiny App</h2>
+<section id="building-blocks" class="level3" data-number="15.2.1">
+<h3 data-number="15.2.1" class="anchored" data-anchor-id="building-blocks"><span class="header-section-number">15.2.1</span> Building blocks</h3>
+<p>Shiny apps are composed in two parts:</p>
+<ol type="1">
+<li>A web page that displays the app to a user (i.e.&nbsp;the user interface, or UI for short - frontend), and</li>
+<li>A computer that powers the app (i.e.&nbsp;the server - backend)</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/basic_shiny_app.png" class="img-fluid figure-img"></p>
+<figcaption>Source: Intro to Shiny - Building reactive apps and dashboards, MEDS, UCSB</figcaption>
+</figure>
+</div>
+<p><br></p>
+<p>The <strong>UI</strong> controls the layout and appearance of your app and is written in HTML (but we use functions from the <code>{shiny}</code> package to write that HTML). The <strong>server</strong> handles the logic of the app – in other words, it is a set of instructions that tells the web page what to display when a user interacts with it.</p>
+<p>Let’s take a look at how the code for a <em>very simple</em> Shiny app would look like to get a sense of the fundamental architecture of this tool.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the UI</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-4" class="code-annotation-target"><a href="#annotated-cell-1-4" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> shiny<span class="sc">::</span><span class="fu">fluidPage</span>(</span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Hello there!"</span></span>
+<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="annotated-cell-1-7"><a href="#annotated-cell-1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-1-8"><a href="#annotated-cell-1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the server</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-9" class="code-annotation-target"><a href="#annotated-cell-1-9" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output){ }</span>
+<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-1-11"><a href="#annotated-cell-1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the app</span></span>
+<span id="annotated-cell-1-12"><a href="#annotated-cell-1-12" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="4" data-code-annotation="1">The <code>fluidPage</code> is a function that generates a page. It is important for allowing flexibility in UI layout which we’ll dive deeper later.</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="9" data-code-annotation="2">The server is actually a function with input and output as arguments. , where you’ll add all the code related to the computations.Because this app has no inputs or outputs, it doesn’t need anything in the ‘server’ component (though it still does require an “empty server”)</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>If we run the code above, we should see an app that is a blank white page with “Hello there!” written in the top left in plain text.</p>
+<p><img src="images/very-basic-app.png" class="img-fluid" style="width:80.0%"></p>
+<p>With this code we have essentially built a Shiny app. More complicated apps will certainly have more content in the UI and server sections but all Shiny apps will have this tripartite structure (Define UI, Define the Server and Generate the app).</p>
+</section>
+<section id="what-will-go-in-each-section" class="level3" data-number="15.2.2">
+<h3 data-number="15.2.2" class="anchored" data-anchor-id="what-will-go-in-each-section"><span class="header-section-number">15.2.2</span> What will go in each section?</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Component</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>UI</strong></td>
+<td><ul>
+<li><p>Inputs - or <strong>widgets</strong> ways the user can interact with (e.g.&nbsp;toggle, slide) and provide values to your app.</p></li>
+<li><p>Outputs - The R objects that your user sees (e.g.&nbsp;tables, plots). Outputs respond when a user interacts with or changes an input value.</p></li>
+<li><p><a href="https://shiny.posit.co/r/articles/build/layout-guide/">Layout</a> - how the different components of the app are arranged.</p></li>
+<li><p><a href="https://shiny.posit.co/r/articles/build/themes/index.html">Theme</a> - defines the overall appearance of your app.</p></li>
+</ul></td>
+</tr>
+<tr class="even">
+<td><strong>Server</strong></td>
+<td><ul>
+<li>Computations - code that will create the outputs displayed in your app (values, tables, plots, etc).</li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+<p>Today we are going to focus on understanding how the inputs and outputs work on the UI and how the sever operates to react based on inputs and display the outputs.</p>
+<p><br></p>
+</section>
+<section id="more-on-widgets-and-outputs" class="level3" data-number="15.2.3">
+<h3 data-number="15.2.3" class="anchored" data-anchor-id="more-on-widgets-and-outputs"><span class="header-section-number">15.2.3</span> More on widgets and outputs</h3>
+<blockquote class="blockquote">
+<p>Widgets are web elements that users can interact with via the UI.</p>
+</blockquote>
+<p>Widgets collect information from the user which is then used to update outputs created in the server. Shiny provides a set of <a href="https://shiny.posit.co/r/gallery/">standard widgets</a> (see image below), but you can also explore widget extensions using a variety of other packages (e.g.&nbsp;<code>{shinyWidgets}</code>, <code>{DT}</code>, <code>{plotly}</code>) <br></p>
+<p><img src="images/basic-widgets.png" class="img-fluid" style="width:80.0%"></p>
+<p><br></p>
+<p><strong>Outputs</strong> are R objects you will display on your app. This can be plots, tables, values, or others. Generally, these outputs are going to react to as the user interact with the inputs.</p>
+<p>Example of input widgets and an output plot.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/input-output-app.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Source: Intro to Shiny - Building reactive apps and dashboards, MEDS, UCSB</figcaption>
+</figure>
+</div>
+</section>
+<section id="reactivity-brief-intro" class="level3" data-number="15.2.4">
+<h3 data-number="15.2.4" class="anchored" data-anchor-id="reactivity-brief-intro"><span class="header-section-number">15.2.4</span> Reactivity: brief intro</h3>
+<p>Reactivity is <strong>what makes Shiny apps responsive</strong> i.e.&nbsp;it lets the app instantly update itself whenever the user makes a change. At a very basic level, it looks something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/reactivity-intro.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Source: Intro to Shiny - Building reactive apps and dashboards, MEDS, UCSB</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How to understand reactivity?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Check out Garrett Grolemund’s article, <a href="https://shiny.posit.co/r/articles/build/understanding-reactivity/"><em>How to understand reactivity</em></a> in R for a more detailed overview of Shiny reactivity.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="how-to-organize-our-files-when-developing-a-shiny-app" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="how-to-organize-our-files-when-developing-a-shiny-app"><span class="header-section-number">15.3</span> How to organize our files when developing a Shiny app</h2>
+<p>Before we jump into RStudio to create a Shiny app there a couple things worth mentioning about the structure of an app. First, when creating an app you have the option of either creating a <strong>single-file app</strong> or a <strong>two-file app</strong>. In both cases, the app looks the same, however the difference is you either have all the code for you app (ui + server) in one script named <code>app.R</code> or you have 2 files, one for ui (<code>ui.R</code>) and one for then server (<code>server.R</code>)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/one-vs-two.png" class="img-fluid figure-img"></p>
+<figcaption>Source: Intro to Shiny - Building reactive apps and dashboards, MEDS, UCSB</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Which one to choose?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It largely comes down to personal preference. A single-file format is best for smaller apps or when creating a reproducible example (<a href="https://mastering-shiny.org/action-workflow.html#getting-help">reprex</a>). While the two-file format is beneficial when writing large, complex apps where breaking apart code can make things a bit more navigable / maintainable.</p>
+</div>
+</div>
+<p><br></p>
+<p>Second, as we have learned through this course, it is always a good idea to create a GitHub repository + an <code>Rproj</code> to house all the moving pieces of our app. The image below presents a general repo structure to stay organized. We will follow this structure for the apps we will create during this lesson.</p>
+<p><br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/repo-structure-details.png" class="img-fluid figure-img"></p>
+<figcaption>Source: Intro to Shiny - Building reactive apps and dashboards, MEDS, UCSB</figcaption>
+</figure>
+</div>
+</section>
+<section id="creating-a-shiny-app" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="creating-a-shiny-app"><span class="header-section-number">15.4</span> Creating a Shiny app</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Set up: Create GitHub Repo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Create a repo to house our soon-to-be app(s). Navigate to your GitHub account, go to Your repositories &gt; Click on New repository. Named it <code>shiny-app-example</code> Remember to initiate your repo with a README and choose R as the language for the default <code>.gitignore</code>.</p></li>
+<li><p>Clone your repo into your RStudio Session in the server. Click on the green “&lt; &gt;Code” button &gt; Copy the HTTPS url and then go to RStudio</p></li>
+<li><p>In RStudio Create a new project. Go to File &gt; New Project &gt; Version Control with Git &gt; paste Repository url &gt; Create Project</p></li>
+</ol>
+<p>The GIF bellow shows each of these steps as a visual reference. Thank you <a href="https://samanthacsik.github.io/">Sam Csik</a>, who created this great resource!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/create-repo.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>You can create a single-file app using RStudio’s built-in Shiny app template (e.g.&nbsp;File &gt; New Project &gt; New Directory &gt; Shiny Application), but it’s just as easy to create it from scratch (and you’ll memorize the structure faster!). Let’s do that now.</p>
+<p><br></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Set up: Your first Shiny app
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol start="4" type="1">
+<li><p>In your project repo, create a sub-directory to house your app. Name it <code>single-file-app</code>.</p></li>
+<li><p>Create a new R script inside <code>single-file-app/</code> and name it <code>app.R</code> – you must name your script <code>app.R</code>.</p></li>
+<li><p>Copy or type the following code into <code>app.R</code>, or use the <code>shinyapp</code> <a href="https://rstudio.github.io/rstudio-extensions/rstudio_snippets.html">snippet</a> to automatically generate a shiny app template.</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages ----</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># server instructions ----</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># combine UI &amp; server into an app ----</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Tip:</strong> Use code sections (denoted by <code># some text ----</code>) to make navigating different sections of your app code a bit easier. Code sections will appear in your document <strong>Outline</strong> (find the button at the top right corner of the script/editor panel).</p>
+</div>
+</div>
+<p>Once you have saved your <code>app.R</code> file, the “Run” code button should turn into a “Run App” button. Click that button to run your app (alternatively, run <code>runApp("directory-name")</code> in your console.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runApp</span>(<span class="st">"single-file-app"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You won’t see much yet, as we have only built a blank app (but a functioning app, nonetheless!).</p>
+<p>You should also notice a red stop sign appear in the top right corner of your console indicating that R is busy – this is because your R session is currently acting as your Shiny app server and listening for any user interaction with your app. Because of this, you won’t be able to run any commands in the console until you quit your app. To quit the app you have to press the stop button.</p>
+<section id="building-a-single-file-app" class="level3" data-number="15.4.1">
+<h3 data-number="15.4.1" class="anchored" data-anchor-id="building-a-single-file-app"><span class="header-section-number">15.4.1</span> Building a single-file-app</h3>
+<p>We are now going to add elements to our base app. We will use data from <code>{palmerpenguin}</code> package and add the following features to our app:</p>
+<ol type="1">
+<li>A title and subtitle</li>
+<li>A slider widget for users to select a range of penguin body masses</li>
+<li>A reactive scatterplot that updates based on user-supplied values</li>
+</ol>
+<p><br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/reactive-app-v1.gif" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Source: Intro to Shiny - Building reactive apps and dashboards, MEDS, UCSB</figcaption>
+</figure>
+</div>
+<p><br></p>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+About <code>{palmerpenguin}</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <a href="https://allisonhorst.github.io/palmerpenguins/"><code>palmerpenguins</code> data</a> contains size measurements for three penguin species (Chinstrap, Gentoo and Adelie) observed on three islands in the Palmer Archipelago, Antarctica (Torgersen, Biscoe, and Dream).</p>
+</div>
+</div>
+</section>
+<section id="adding-text-to-the-ui-title-and-subtitle" class="level3" data-number="15.4.2">
+<h3 data-number="15.4.2" class="anchored" data-anchor-id="adding-text-to-the-ui-title-and-subtitle"><span class="header-section-number">15.4.2</span> Adding text to the UI: Title and Subtitle</h3>
+<p>We will do this in the <strong>UI</strong> withing <code>fluidPage()</code>. Remember this is a layout function that creates the basic visual structure of your app page.</p>
+<p>Let’s add a title and subtitle to our app. Make sure they are separated with a coma!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># app title ----</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"My App Title"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># app subtitle ----</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Exploring Antarctic Penguin Data"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="style-text-in-the-ui" class="level3 unnumberd" data-number="15.4.3">
+<h3 class="unnumberd anchored" data-number="15.4.3" data-anchor-id="style-text-in-the-ui"><span class="header-section-number">15.4.3</span> Style text in the UI</h3>
+<p>The <strong>UI</strong> is actually an HTML document. We can style our text by adding static HTML elements using <a href="https://shiny.rstudio.com/articles/tag-glossary.html">tags</a> – a list of functions that parallel common HTML tags (e.g.&nbsp;<code>&lt;h1&gt;</code> == <code>tags$h1()</code>) The most common tags also have wrapper functions (e.g.&nbsp;<code>h1()</code>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># app title ----</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">h1</span>(<span class="st">"My App Title"</span>), <span class="co"># alternatively, you can use the `h1()` wrapper function</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># app subtitle ----</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">h4</span>(<span class="fu">strong</span>(<span class="st">"Exploring Antarctic Penguin Data"</span>)) <span class="co"># alternatively, `tags$h4(tags$strong("text"))`</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="adding-intupts-and-outputs" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="adding-intupts-and-outputs">Adding intupts and outputs</h3>
+<p>Next, we will begin to add some inputs and outputs to our <strong>UI</strong> inside <code>fluidPage()</code>. Anything that you put into <code>fluidPage()</code> will appear in our app’s user interface. We want inputs and outputs to show up there.</p>
+<section id="step-1-add-an-input-to-your-app-slider-widget" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="step-1-add-an-input-to-your-app-slider-widget">Step 1: add an input to your app (slider widget)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># app title ----</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">h1</span>(<span class="st">"My App Title"</span>), <span class="co"># alternatively, you can use the `h1()` wrapper function</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># app subtitle ----</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">h4</span>(<span class="fu">strong</span>(<span class="st">"Exploring Antarctic Penguin Data"</span>)), <span class="co"># alternatively, `tags$h4(tags$strong("text"))`</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass slider input ----</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"body_mass_input"</span>, <span class="at">label =</span> <span class="st">"Select a range of body masses (g):"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">min =</span> <span class="dv">2700</span>, <span class="at">max =</span> <span class="dv">6300</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">3000</span>, <span class="dv">4000</span>))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-2-add-an-output-placeholder-in-the-ui" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="step-2-add-an-output-placeholder-in-the-ui">Step 2: add an output “placeholder” in the UI</h4>
+<p>Outputs in the UI create <strong>placeholders</strong> which are later filled by the server function.</p>
+<p>Similar to input functions, all output functions take the same first argument, <code>outputId</code> (note Id not ID), <strong>which connects the front end UI with the back end server</strong>. For example, if your UI contains an output function with an <code>outputId = "plot"</code>, the server function will access it (or in other words, know to place the plot in that particular placeholder) using the syntax <code>output$plot</code>. <br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># app title ----</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">h1</span>(<span class="st">"My App Title"</span>), <span class="co"># alternatively, you can use the `h1()` wrapper function</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># app subtitle ----</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">h4</span>(<span class="fu">strong</span>(<span class="st">"Exploring Antarctic Penguin Data"</span>)), <span class="co"># alternatively, `tags$h4(tags$strong("text"))`</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass slider input ----</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"body_mass_input"</span>, <span class="at">label =</span> <span class="st">"Select a range of body masses (g):"</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">min =</span> <span class="dv">2700</span>, <span class="at">max =</span> <span class="dv">6300</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">3000</span>, <span class="dv">4000</span>)),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass plot ouput ----</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="at">outputId =</span> <span class="st">"bodyMass_scatterplot_output"</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Okay, it looks like nothing changed?? Remember, <code>*Output()</code> functions <strong>create placeholders, but we have not yet written the server instructions on how to fill and update those placeholders</strong>. We can inspect the HTML and see that there is, in fact, a placeholder area awaiting our eventual output, which will be a plot named “bodyMass_scatterplot_output”:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/output-placeholder.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption>Source: Intro to Shiny - Building reactive apps and dashboards, MEDS, UCSB</figcaption>
+</figure>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="tell-the-server-how-to-assemble-inputs-into-outputs-adding-reactive-scatterplot" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="tell-the-server-how-to-assemble-inputs-into-outputs-adding-reactive-scatterplot">Tell the server how to assemble inputs into outputs: Adding reactive scatterplot</h3>
+<p>Now that we’ve designed our input / output in the UI, we need to write the server instructions (i.e.&nbsp;write the server function) on how to use the input value(s) (i.e.&nbsp;penguin body mass range via a slider input) to update the output (scatter plot).</p>
+<p>The <strong>server function</strong> is defined with two arguments, <code>input</code> and <code>output</code>, both of which are list-like objects. You must define both of these arguments within the server function. <code>input</code> contains the values of all the different inputs at any given time, while <code>output</code> is where you’ll save output objects to be displayed in the app.</p>
+<p><strong>RULES</strong></p>
+<ol type="1">
+<li><p>Save objects you want to display to <code>output$&lt;id&gt;</code></p></li>
+<li><p>Build reactive objects using a <code>render*()</code> function</p></li>
+<li><p>Access input values with input$<id></id></p></li>
+</ol>
+<section id="rule-1-save-objects-you-want-to-display-to-outputid" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="rule-1-save-objects-you-want-to-display-to-outputid">Rule 1: Save objects you want to display to <code>output$&lt;id&gt;</code></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages ----</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ~ previous code omitted for brevity ~</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass slider ----</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"body_mass_input"</span>, <span class="at">label =</span> <span class="st">"Select a range of body masses (g):"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">min =</span> <span class="dv">2700</span>, <span class="at">max =</span> <span class="dv">6300</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">3000</span>, <span class="dv">4000</span>)),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass plot output ----</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="at">outputId =</span> <span class="st">"bodyMass_scatterplot_output"</span>) </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># server instructions ----</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># render penguin scatter plot ----</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>bodyMass_scatterplot_output <span class="ot">&lt;-</span> <span class="co"># code to generate plot here</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Note:</strong> In the UI, our <code>outputId</code> is quoted (“bodyMass_scatterplot_output”), <strong>but not</strong> in the server (bodyMass_scatterplot_output).</p>
+</section>
+<section id="rule-2-build-reactive-objects-with-render" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="rule-2-build-reactive-objects-with-render">Rule 2: Build reactive objects with <code>render*()</code></h4>
+<p>Each <code>*Output()</code> function in the UI is coupled with a <code>render*()</code> function in the server, which contains the “instructions” for creating the output based on user inputs (or in other words, the instructions for making your output reactive).</p>
+<p><br></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Output function</th>
+<th>Render function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dataTableOutput()</code></td>
+<td><code>renderDataTable()</code></td>
+</tr>
+<tr class="even">
+<td><code>imageOutput()</code></td>
+<td><code>renderImage()</code></td>
+</tr>
+<tr class="odd">
+<td><code>plotOutput()</code></td>
+<td><code>renderPlot()</code></td>
+</tr>
+<tr class="even">
+<td><code>tableOutput()</code></td>
+<td><code>renderTable()</code></td>
+</tr>
+<tr class="odd">
+<td><code>textOutput()</code></td>
+<td><code>renderText()</code></td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages ----</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ~ previous code omitted for brevity ~</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass slider ----</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"body_mass_input"</span>, <span class="at">label =</span> <span class="st">"Select a range of body masses (g):"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">min =</span> <span class="dv">2700</span>, <span class="at">max =</span> <span class="dv">6300</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">3000</span>, <span class="dv">4000</span>)),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass plot output ----</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="at">outputId =</span> <span class="st">"bodyMass_scatterplot_output"</span>) </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># server instructions ----</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># render penguin scatter plot ----</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>bodyMass_scatterplot_output <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>     <span class="co"># code to generate plot here</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  }) </span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Aside: Write the code for the output objects in separate script first
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is generally easier to experiment with the R objects you wan to show in your app (e.g.&nbsp;plots) in a separate script first and then copy the code over to your app. For example, if we want to make a scatter plot showing the relationship between flipper length and bill length for the different penguin species on <code>palmerpenguins</code> we would start by opening a new R script and write the code for this plot.</p>
+<p>In RStudio, go to File &gt; New File &gt; RScript. Save this file as <code>practice-script.R</code> into the scratch folder. Now let’s copy and paste the code below. This code creates our scatter plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages ----</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create scatterplot ----</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">na.omit</span>(penguins), </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> bill_length_mm, </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> species, <span class="at">shape =</span> species)) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span> <span class="ot">=</span> <span class="st">"darkorange"</span>, <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="st">"purple"</span>, <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="st">"cyan4"</span>)) <span class="sc">+</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span> <span class="ot">=</span> <span class="dv">19</span>, <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="dv">15</span>)) <span class="sc">+</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Flipper length (mm)"</span>, <span class="at">y =</span> <span class="st">"Bill length (mm)"</span>, </span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Penguin species"</span>, <span class="at">shape =</span> <span class="st">"Penguin species"</span>) <span class="sc">+</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.2</span>),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"white"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_15_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<section id="next-copy-your-plot-code-into-the-server" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="next-copy-your-plot-code-into-the-server">Next, copy your plot code into the server</h4>
+<p>Copy your code over to your app, placing it inside the <code>{}</code> (and make sure to add any additional required packages to the top of your <code>app.R</code> script). Run your app. What do you notice?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages ----</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ~ previous code omitted for brevity ~</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass slider ----</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"body_mass_input"</span>, <span class="at">label =</span> <span class="st">"Select a range of body masses (g):"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">min =</span> <span class="dv">2700</span>, <span class="at">max =</span> <span class="dv">6300</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">3000</span>, <span class="dv">4000</span>)),</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass plot output ----</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="at">outputId =</span> <span class="st">"bodyMass_scatterplot_output"</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co"># server instructions ----</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># render penguin scatter plot ----</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>bodyMass_scatterplot_output <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({ </span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">na.omit</span>(penguins),</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> bill_length_mm,</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> species, <span class="at">shape =</span> species)) <span class="sc">+</span> </span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span> <span class="ot">=</span> <span class="st">"#FEA346"</span>, <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="st">"#B251F1"</span>, <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="st">"#4BA4A4"</span>)) <span class="sc">+</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span> <span class="ot">=</span> <span class="dv">19</span>, <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="dv">15</span>)) <span class="sc">+</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Flipper length (mm)"</span>, <span class="at">y =</span> <span class="st">"Bill length (mm)"</span>, </span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"Penguin species"</span>, <span class="at">shape =</span> <span class="st">"Penguin species"</span>) <span class="sc">+</span> </span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.2</span>), </span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>              <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"white"</span>)) </span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</div>
+</div>
+<p><br></p>
+<p>Great! We have plot! But… It is not reactive. We have not yet told the server how to update the plot based on user inputs via the <code>sliderInput()</code> in the UI. Let’s do that next.</p>
+<p><br></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Aside: Practice filtering data in a separate script
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Go back to out practice script <code>practice-script.R</code> and create a new data frame where we filter the <code>body_mass_g column</code> for observations within a specific range of values (in this example, values ranging from 3000 - 4000).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filter penguins df for observations where body_mass_g &gt;= 3000 &amp; &lt;= 4000 ----</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>body_mass_df <span class="ot">&lt;-</span> penguins <span class="sc">%&gt;%</span>  </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(body_mass_g <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3000</span><span class="sc">:</span><span class="dv">4000</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, plot the new filtered data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot new, filtered data ----</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">na.omit</span>(body_mass_df), <span class="co"># plot 'body_mass_df' rather than 'penguins' df</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> bill_length_mm, </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> species, <span class="at">shape =</span> species)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span> <span class="ot">=</span> <span class="st">"#FEA346"</span>, <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="st">"#B251F1"</span>, <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="st">"#4BA4A4"</span>)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span> <span class="ot">=</span> <span class="dv">19</span>, <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="dv">15</span>)) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Flipper length (mm)"</span>, <span class="at">y =</span> <span class="st">"Bill length (mm)"</span>, </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Penguin species"</span>, <span class="at">shape =</span> <span class="st">"Penguin species"</span>) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.2</span>),</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"white"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p><br></p>
+<p><strong>Which part of our code needs to be updated when a user changes the slider range input?</strong></p>
+<p>For example if someone inputs the following range:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/2857-5903.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+<p>The code has to do something like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>body_mass_df <span class="ot">&lt;-</span> penguins <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(body_mass_g <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2857</span><span class="sc">:</span><span class="dv">5903</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section>
+<section id="rule-3-access-input-values-with-inputid" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="rule-3-access-input-values-with-inputid">Rule 3: Access input values with <code>input$&lt;id&gt;</code></h4>
+<p>Remember that in our <strong>UI</strong> we we gave the <code>slidrInput()</code> an <code>inputID = body_mass_input</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># body mass slider ----</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"body_mass_input"</span>, <span class="at">label =</span> <span class="st">"Select a range of body masses (g):"</span>, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">min =</span> <span class="dv">2700</span>, <span class="at">max =</span> <span class="dv">6300</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">3000</span>, <span class="dv">4000</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we need to add the input piece on the server side. We can access the values of that slider input in the server using the syntax, <code>input$body_mass_input</code>. If you want your output to change according to the input values, substitute hard-coded values (e.g.&nbsp;2857:5903) with the input values from the UI. For example, <code>c(input$body_mass_input[1]:input$body_mass_input[2]</code></p>
+<p><br></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Reactive Data Frame
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We need to create a reactive data frame that is able to update according to the input. For this we use the <code>reactive()</code> function.</p>
+<p>When you call your reactive data frame in your ggplot, the data frame name must be followed by ()</p>
+</div>
+</div>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages ----</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># user interface ----</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ~ previous code omitted for brevity ~</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass slider ----</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"body_mass_input"</span>, <span class="at">label =</span> <span class="st">"Select a range of body masses (g):"</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">min =</span> <span class="dv">2700</span>, <span class="at">max =</span> <span class="dv">6300</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">3000</span>, <span class="dv">4000</span>)),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># body mass plot output ----</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="at">outputId =</span> <span class="st">"bodyMass_scatterplot_output"</span>)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co"># server instructions ----</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filter body masses ----</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  body_mass_df <span class="ot">&lt;-</span> <span class="fu">reactive</span>({ </span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    penguins <span class="sc">%&gt;%</span>  </span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(body_mass_g <span class="sc">%in%</span> <span class="fu">c</span>(input<span class="sc">$</span>body_mass_input[<span class="dv">1</span>]<span class="sc">:</span>input<span class="sc">$</span>body_mass_input[<span class="dv">2</span>])) </span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># render penguin scatter plot ----</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>bodyMass_scatterplot_output <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({ </span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">na.omit</span>(<span class="fu">body_mass_df</span>()),</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> bill_length_mm,</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> species, <span class="at">shape =</span> species)) <span class="sc">+</span> </span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span> <span class="ot">=</span> <span class="st">"#FEA346"</span>, <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="st">"#B251F1"</span>, <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="st">"#4BA4A4"</span>)) <span class="sc">+</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span> <span class="ot">=</span> <span class="dv">19</span>, <span class="st">"Chinstrap"</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">"Gentoo"</span> <span class="ot">=</span> <span class="dv">15</span>)) <span class="sc">+</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Flipper length (mm)"</span>, <span class="at">y =</span> <span class="st">"Bill length (mm)"</span>, </span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"Penguin species"</span>, <span class="at">shape =</span> <span class="st">"Penguin species"</span>) <span class="sc">+</span> </span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.2</span>), </span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>              <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"white"</span>)) </span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let’s tun the app! We should now see a reactive Shiny app. Note that reactivity automatically occurs whenever you use an <strong>input value</strong> to <strong>render</strong> an <strong>output object</strong>.</p>
+</section>
+</section>
+<section id="recap-steps-to-create-a-reactive-shiny-app" class="level3" data-number="15.4.4">
+<h3 data-number="15.4.4" class="anchored" data-anchor-id="recap-steps-to-create-a-reactive-shiny-app"><span class="header-section-number">15.4.4</span> Recap: Steps to create a reactive Shiny app</h3>
+<ol type="1">
+<li><p>We created an <code>app.R</code> file in it’s own directory and began our app with the template, though you can also create a <em>two-file Shiny app</em> by using separate <code>ui.R</code> and <code>server.R</code> files.</p></li>
+<li><p>We added an input to the <code>fluidPage()</code> in our <strong>UI</strong> using an <code>*Input()</code> function and gave it a unique <code>inputId</code> (e.g.&nbsp;<code>inputId = "unique_input_Id_name"</code>)</p></li>
+<li><p>We created a placeholder for our reactive object by using an <code>*Output()</code> function in the <code>fluidPage()</code> of our <strong>UI</strong> and gave it an <code>outputId</code> (e.g.&nbsp;<code>outputId = "output_Id_name"</code>)</p></li>
+<li><p>We wrote the <strong>server</strong> instructions for how to assemble inputs into outputs, following these rules:</p></li>
+</ol>
+<ul>
+<li><p>Save objects that you want to display to <code>output$&lt;id&gt;</code></p></li>
+<li><p>Build reactive objects using a <code>render*(</code>) function (and similarly, build reactive data frames using <code>reactive()</code> )</p></li>
+<li><p>Access input values with <code>input$&lt;id&gt;</code></p></li>
+</ul>
+<p>And… we saw that reactivity automatically occurs whenever we use an <strong>input value</strong> to <strong>render</strong> an <strong>output object</strong>.</p>
+</section>
+</section>
+<section id="your-turn" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="your-turn"><span class="header-section-number">15.5</span> Your turn</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Add another reactive widget
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Working alone or in groups, add a reactive <code>DT</code> datatable to your app with a <code>checkboxGroupInput</code> (widget) that allows users to select which year(s) to include in the table. Configure your <code>checkboxGroupInput</code> so that the years 2007 and 2008 are pre-selected.</p>
+</div>
+</div>
+<p>Remember that the <code>DT</code> package allows you to create interactive tables where you can filter, sort, and do lots of other neat things tables in HTML format.</p>
+<p>Once you’ve added the new feature your app should look like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/app1.gif" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Source: Intro to Shiny - Building reactive apps and dashboards, MEDS, UCSB</figcaption>
+</figure>
+</div>
+<p><br></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tips
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Use <code>?checkboxGroupInput</code> to learn more about which arguments you need (remember, all inputs require an <code>inputId</code> and oftentimes a <code>label</code>, but there are others required to make this work as well)</p></li>
+<li><p>Both <code>{shiny}</code> and <code>{DT}</code> packages have functions named <code>dataTableOutput(</code>) and <code>renderDataTable()</code> – <code>DT::renderDataTable()</code> allows you to create both server-side and ui-side DataTables and supports additional DataTables features while <code>shiny::renderDataTable()</code> only provides server-side DataTables. Be sure to use the one from the <code>{DT}</code> package using the syntax <code>packageName::functionName()</code>.</p></li>
+<li><p>There are lots of ways to customize DT tables, but to create a basic one, all you need is <code>DT::dataTable(your_dataframe)</code></p></li>
+</ul>
+<p><strong>Remember</strong> to follow the steps outlined on the previous slides:</p>
+<ol type="1">
+<li><p>Add an input (e.g.&nbsp;<code>checkboxGroupInput</code>) to the UI that users can interact with.</p></li>
+<li><p>Add an output (e.g.&nbsp;<code>DT::datatableOutput</code>) to the UI that creates a placeholder space to fill with our eventual reactive output.</p></li>
+<li><p>Tell the server how to assemble inputs into outputs following 3 rules:</p></li>
+</ol>
+<ul>
+<li><p>Save objects you want to display to <code>output$&lt;id&gt;</code></p></li>
+<li><p>Build reactive objects using a <code>render*()</code> function</p></li>
+<li><p>Access input values with <code>input$&lt;id&gt;</code></p></li>
+</ul>
+</div>
+</div>
+<p>NOTE: Clarify which functions to use in the server side of things vs which function to usi on the UI when creating a DT object!</p>
+<p>Additional Boilerplate apps / templates</p>
+</section>
+<section id="shini-cont" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="shini-cont"><span class="header-section-number">15.6</span> Shini cont’</h2>
+<ul>
+<li>2 file app (live code and follow) – Palmer penguin or Dog app? (40 min)</li>
+<li>Exercise (15 min)</li>
+<li>Deploy App (25)</li>
+<li>Q&amp;A (10 min)</li>
+</ul>
 <!-- {{< include /sections/fair-care-principles.qmd >}} -->
 <!-- {{< include /sections/research-data-publising-ethics.qmd >}} -->
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
