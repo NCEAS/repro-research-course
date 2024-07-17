@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.54">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6&nbsp; Tidy Data – NCEAS coreR for Delta Science Program</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./session_07.html" rel="next">
+<link href="./session_05.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_06.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Tidy Data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Tidy Data</span></h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Training Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/ucsb_nceas" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/nceas-training/tree/2024-06-delta" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the course</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome: Let’s Talk About Reproducibility</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Git and GitHub Setup</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Intro to Git and GitHub</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_06.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Tidy Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Practice Session I</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Collaborating with Git and GitHub</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Data Management Essentials</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Publishing your Analysis to the Web</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Data Visualization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Spatial Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Practice Session II</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Introduction to Shiny</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Reproducibility and Provenance</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Appendix: Install R and Git in your Computer</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Appendix: Intro to R &amp; RStudio</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#tidy-data" id="toc-tidy-data" class="nav-link" data-scroll-target="#tidy-data"><span class="header-section-number">6.1</span> Tidy Data</a>
+  <ul class="collapse">
+  <li><a href="#what-is-tidy-data" id="toc-what-is-tidy-data" class="nav-link" data-scroll-target="#what-is-tidy-data"><span class="header-section-number">6.1.1</span> What is tidy data?</a></li>
+  <li><a href="#values-variables-observations-and-entities" id="toc-values-variables-observations-and-entities" class="nav-link" data-scroll-target="#values-variables-observations-and-entities"><span class="header-section-number">6.1.2</span> Values, variables, observations, and entities</a></li>
+  <li><a href="#assessing-tidy-data-principles" id="toc-assessing-tidy-data-principles" class="nav-link" data-scroll-target="#assessing-tidy-data-principles"><span class="header-section-number">6.1.3</span> Assessing Tidy Data Principles</a></li>
+  <li><a href="#recognizing-untidy-data" id="toc-recognizing-untidy-data" class="nav-link" data-scroll-target="#recognizing-untidy-data"><span class="header-section-number">6.1.4</span> Recognizing untidy data</a></li>
+  <li><a href="#why-tidy-data" id="toc-why-tidy-data" class="nav-link" data-scroll-target="#why-tidy-data"><span class="header-section-number">6.1.5</span> Why Tidy Data?</a></li>
+  </ul></li>
+  <li><a href="#data-normalization" id="toc-data-normalization" class="nav-link" data-scroll-target="#data-normalization"><span class="header-section-number">6.2</span> Data Normalization</a>
+  <ul class="collapse">
+  <li><a href="#what-is-data-normalization" id="toc-what-is-data-normalization" class="nav-link" data-scroll-target="#what-is-data-normalization"><span class="header-section-number">6.2.1</span> What is data normalization?</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="header-section-number">6.2.2</span> Example</a></li>
+  </ul></li>
+  <li><a href="#relational-data-models" id="toc-relational-data-models" class="nav-link" data-scroll-target="#relational-data-models"><span class="header-section-number">6.3</span> Relational Data Models</a>
+  <ul class="collapse">
+  <li><a href="#what-are-relational-data-models" id="toc-what-are-relational-data-models" class="nav-link" data-scroll-target="#what-are-relational-data-models"><span class="header-section-number">6.3.1</span> What are relational data models?</a></li>
+  <li><a href="#primary-and-foreign-keys" id="toc-primary-and-foreign-keys" class="nav-link" data-scroll-target="#primary-and-foreign-keys"><span class="header-section-number">6.3.2</span> Primary and foreign keys</a></li>
+  <li><a href="#example-3" id="toc-example-3" class="nav-link" data-scroll-target="#example-3"><span class="header-section-number">6.3.3</span> Example</a></li>
+  <li><a href="#compound-keys" id="toc-compound-keys" class="nav-link" data-scroll-target="#compound-keys"><span class="header-section-number">6.3.4</span> Compound keys</a></li>
+  </ul></li>
+  <li><a href="#joins" id="toc-joins" class="nav-link" data-scroll-target="#joins"><span class="header-section-number">6.4</span> Joins</a>
+  <ul class="collapse">
+  <li><a href="#inner-join" id="toc-inner-join" class="nav-link" data-scroll-target="#inner-join"><span class="header-section-number">6.4.1</span> Inner Join</a></li>
+  <li><a href="#left-join" id="toc-left-join" class="nav-link" data-scroll-target="#left-join"><span class="header-section-number">6.4.2</span> Left Join</a></li>
+  <li><a href="#right-join" id="toc-right-join" class="nav-link" data-scroll-target="#right-join"><span class="header-section-number">6.4.3</span> Right Join</a></li>
+  <li><a href="#full-outer-join" id="toc-full-outer-join" class="nav-link" data-scroll-target="#full-outer-join"><span class="header-section-number">6.4.4</span> Full Outer Join</a></li>
+  <li><a href="#entity-relationship-models" id="toc-entity-relationship-models" class="nav-link" data-scroll-target="#entity-relationship-models"><span class="header-section-number">6.4.5</span> Entity-Relationship models</a></li>
+  </ul></li>
+  <li><a href="#best-practices-summary" id="toc-best-practices-summary" class="nav-link" data-scroll-target="#best-practices-summary"><span class="header-section-number">6.5</span> Best Practices Summary</a></li>
+  <li><a href="#more-on-data-management" id="toc-more-on-data-management" class="nav-link" data-scroll-target="#more-on-data-management"><span class="header-section-number">6.6</span> More on Data Management</a></li>
+  <li><a href="#activity" id="toc-activity" class="nav-link" data-scroll-target="#activity"><span class="header-section-number">6.7</span> Activity</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1identifying-tidy-data" id="toc-exercise-1identifying-tidy-data" class="nav-link" data-scroll-target="#exercise-1identifying-tidy-data"><span class="header-section-number">6.7.1</span> Exercise 1:Identifying Tidy Data</a></li>
+  <li><a href="#excersice-2-relational-databases" id="toc-excersice-2-relational-databases" class="nav-link" data-scroll-target="#excersice-2-relational-databases"><span class="header-section-number">6.7.2</span> Excersice 2: Relational Databases</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<p>Learn how to design and create effective data tables by:</p>
+<ul>
+<li>applying tidy and normalized data principles,</li>
+<li>following best practices to format data tables’ content,</li>
+<li>relating tables following relational data models principles, and</li>
+<li>understanding how to perform table joins.</li>
+</ul>
+</section>
+<section id="tidy-data" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="tidy-data"><span class="header-section-number">6.1</span> Tidy Data</h2>
+<section id="what-is-tidy-data" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="what-is-tidy-data"><span class="header-section-number">6.1.1</span> What is tidy data?</h3>
+<p>Tidy data is a standardized way of organizing data tables that allows us to manage and analyze data efficiently, because it makes it straightforward to understand the corresponding variable and observation of each value. The <a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html" target="_blank"> <strong>tidy data principles</strong> </a> are:</p>
+<ol type="1">
+<li>Every column is a variable.</li>
+<li>Every row is an observation.</li>
+<li>Every cell is a single value.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tidy Data: A way of life
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Tidy data is not a language or tool specific.</li>
+<li>Tidy data is not an R thing.</li>
+<li>Tidy data is not a <code>tidyverse</code> thing.</li>
+</ul>
+<p><strong>Tidy Data is a way to organize data that will make life easier for people working with data.</strong></p>
+<p>(Allison Horst &amp; Julia Lowndes)</p>
+</div>
+</div>
+</section>
+<section id="values-variables-observations-and-entities" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="values-variables-observations-and-entities"><span class="header-section-number">6.1.2</span> Values, variables, observations, and entities</h3>
+<p>First, let’s get acquainted with our building blocks.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 86%">
+<col style="width: 2%">
+<col style="width: 2%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Concept</th>
+<th>Definition</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Variables</td>
+<td><p>A characteristic the is being measured, counted or described with data.</p>
+<p>Example: car type, salinity, year, height, mass.</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Observations</td>
+<td><p>A single “data point” for which the measure, count or description of one or more variables is recorded.</p>
+<p>Example: If you are collecting variables <em>height</em>, <em>species</em>, and <em>location</em> of plants, then <strong>each plant</strong> is an observation.</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Value</td>
+<td><p>The record measured, count or description of a variable.</p>
+<p>Example: 3 ft</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Entity</td>
+<td><p>Each type of observation is an entity.</p>
+<p>Example: If you are collecting variables <em>height</em>, <em>species</em>, and <em>location</em> and <em>site name</em> of plants and where they are observed, then <strong>plants</strong> is an entity and <strong>site</strong> is an entity.</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="assessing-tidy-data-principles" class="level3" data-number="6.1.3">
+<h3 data-number="6.1.3" class="anchored" data-anchor-id="assessing-tidy-data-principles"><span class="header-section-number">6.1.3</span> Assessing Tidy Data Principles</h3>
+<p>The following is an example of tidy data - it’s easy to see the three tidy data principles apply.</p>
+<p><img src="images/tidy-data-images/tidy_data/tidy_data.png" class="img-fluid"></p>
+<p><img src="images/tidy-data-images/tidy_data/tidy_variables.png" class="img-fluid"></p>
+<p><img src="images/tidy-data-images/tidy_data/tidy_observations.png" class="img-fluid"></p>
+<p><img src="images/tidy-data-images/tidy_data/tidy_values.png" class="img-fluid"></p>
+</section>
+<section id="recognizing-untidy-data" class="level3" data-number="6.1.4">
+<h3 data-number="6.1.4" class="anchored" data-anchor-id="recognizing-untidy-data"><span class="header-section-number">6.1.4</span> Recognizing untidy data</h3>
+<p>Anything that does not follow the three tidy data principles is <strong>untidy data</strong>.</p>
+<p>There are <em>many</em> ways in which data can become untidy, some can be noticed right away, while others are more subtle. In this section we will look at some examples of common untidy data situations.</p>
+<section id="example-1" class="level4" data-number="6.1.4.1">
+<h4 data-number="6.1.4.1" class="anchored" data-anchor-id="example-1"><span class="header-section-number">6.1.4.1</span> Example 1</h4>
+<p>The following is a screenshot of an actual dataset that came across NCEAS. We have all seen spreadsheets that look like this - and it is fairly obvious that whatever this is, it isn’t very tidy. Let’s dive deeper into why we consider it untidy data.</p>
+<p><img src="images/tidy-data-images/tidy_data/excel-org-01.png" class="img-fluid"></p>
+<section id="multiple-tables" class="level5" data-number="6.1.4.1.1">
+<h5 data-number="6.1.4.1.1" class="anchored" data-anchor-id="multiple-tables"><span class="header-section-number">6.1.4.1.1</span> Multiple tables</h5>
+<p>To begin with, notice there are actually three smaller tables within this table. Although for our human brain it is easy to see and interpret this, it is extremely difficult to get a computer to see it this way.</p>
+<p><img src="images/tidy-data-images/tidy_data/excel-org-02.png" class="img-fluid"></p>
+<p>Having multiple tables within the same table will create headaches down the road should you try to read in this information using R or another programming language. <strong>Having multiple tables immediately breaks the tidy data principles</strong>, as we will see next.</p>
+</section>
+<section id="inconsistent-columns" class="level5" data-number="6.1.4.1.2">
+<h5 data-number="6.1.4.1.2" class="anchored" data-anchor-id="inconsistent-columns"><span class="header-section-number">6.1.4.1.2</span> Inconsistent columns</h5>
+<p>In tidy data, <strong>each column corresponds to a single variable</strong>. If you look down a column, and see that multiple variables exist in the table, the data is not tidy. A good test for this can be to see if you think the column consists of only one unit type.</p>
+<p><img src="images/tidy-data-images/tidy_data/excel-org-04.png" class="img-fluid"></p>
+</section>
+<section id="inconsistent-rows" class="level5" data-number="6.1.4.1.3">
+<h5 data-number="6.1.4.1.3" class="anchored" data-anchor-id="inconsistent-rows"><span class="header-section-number">6.1.4.1.3</span> Inconsistent rows</h5>
+<p>The second principle of tidy data is: <strong>every column must be a single observation</strong>. If you look across a single row, and you notice that there are clearly multiple observations in one row, the data are likely not tidy.</p>
+<p><img src="images/tidy-data-images/tidy_data/excel-org-03.png" class="img-fluid"></p>
+</section>
+<section id="marginal-sums-and-statistics" class="level5" data-number="6.1.4.1.4">
+<h5 data-number="6.1.4.1.4" class="anchored" data-anchor-id="marginal-sums-and-statistics"><span class="header-section-number">6.1.4.1.4</span> Marginal sums and statistics</h5>
+<p><strong>Marginal sums and statistics are not considered tidy</strong>. They break principle one, “Every column is a variable”, because a marginal statistic does not represent the same variable as the values it is summarizing. They also break principle two, “Every row is an observation”, because they represent a combination of observations, rather than a single one.</p>
+<p><img src="images/tidy-data-images/tidy_data/excel-org-05.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="example-2" class="level4" data-number="6.1.4.2">
+<h4 data-number="6.1.4.2" class="anchored" data-anchor-id="example-2"><span class="header-section-number">6.1.4.2</span> Example 2</h4>
+<p>Consider the following table. It’s a single one this time! It shows data about species observed at a specific site and date. The column headers refer to the following:</p>
+<ul>
+<li><em>date</em>: date when a species was observed</li>
+<li><em>site</em>: site where a species was observed</li>
+<li><em>name</em>: site’s name</li>
+<li><em>altitude</em>: site’s altitude</li>
+<li><em>sp1code</em>, <em>sp2code</em>: species code for two plants observed</li>
+<li><em>sp1height</em>, <em>sp2height</em>: height of the plants observed</li>
+</ul>
+<p>Take a moment to see why this is not tidy data.</p>
+<p><img src="images/tidy-data-images/tidy_data/untidy_1.png" class="img-fluid"></p>
+<section id="multiple-observations" class="level5" data-number="6.1.4.2.1">
+<h5 data-number="6.1.4.2.1" class="anchored" data-anchor-id="multiple-observations"><span class="header-section-number">6.1.4.2.1</span> Multiple Observations</h5>
+<p>Remember that an observation is all the values measured for an individual <strong>entity</strong>.</p>
+<p>If our entity is a single observed plant, then the values we measured are date and site of observation, the altitude, and the species code and height. This table breaks the second tidy data principles: Every row is an observation.</p>
+<p><img src="images/tidy-data-images/tidy_data/untidy_2.png" class="img-fluid"></p>
+<p>People often refer to this as “<em>wide</em> format”, because the observations are spread across a wide number of columns. Note that, should one encounter a new species in the survey, we would have to add new columns to the table. This is difficult to analyze, understand, and maintain. To solve this problem, we can create a single column for species code and a single column for species height as in the following table.</p>
+<p><img src="images/tidy-data-images/tidy_data/tidy_not_normal.png" class="img-fluid"></p>
+</section>
+</section>
+</section>
+<section id="why-tidy-data" class="level3" data-number="6.1.5">
+<h3 data-number="6.1.5" class="anchored" data-anchor-id="why-tidy-data"><span class="header-section-number">6.1.5</span> Why Tidy Data?</h3>
+<ul>
+<li><strong>Efficiency:</strong> less re-creating the wheel. Easier to apply the same tools to different datasets.</li>
+<li><strong>Collaboration:</strong> Makes it easier to work with others as you can work with the same tools in the same ways.</li>
+<li><strong>Reuse:</strong> It makes it easier to apply similar techniques and analysis across different or new datasets.</li>
+<li><strong>Generalizability:</strong> Tools built for one tidy data set can be used to multiple other datasets. Opening posibilities of data you can work with.</li>
+</ul>
+<blockquote class="blockquote">
+<p>“There is a specific advantage to placing varables in columns becasuse it allows R’s vectorized nature to shine. …most buit-in R functions work with vactors of values. That makes transforming tidy data feel particularly natural. (R for Data Science by Grolemund and Wickham)</p>
+</blockquote>
+</section>
+</section>
+<section id="data-normalization" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="data-normalization"><span class="header-section-number">6.2</span> Data Normalization</h2>
+<section id="what-is-data-normalization" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="what-is-data-normalization"><span class="header-section-number">6.2.1</span> What is data normalization?</h3>
+<p><strong>Data normalization</strong> is the process of creating <strong>normalized data</strong>, which are datasets free from data redundancy to simplify query, analysis, storing, and maintenance. In normalized data we organize data so that :</p>
+<ul>
+<li>Each table follows the tidy data principles</li>
+<li>We have separate tables for each type of entity measured</li>
+<li>Observations (rows) are all unique</li>
+<li>Each column represents either an identifying variable or a measured variable</li>
+</ul>
+<p>In <strong>denormalized data</strong> observations about different entities are combined. A good indication that a data table is denormalized and needs normalization is seeing the same column values repeated across multiple rows.</p>
+</section>
+<section id="example" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="example"><span class="header-section-number">6.2.2</span> Example</h3>
+<p>In the previous data table the row values for the last three columns are repeated.</p>
+<p><img src="images/tidy-data-images/data_normalization/denormalized.png" class="img-fluid"></p>
+<p>This means the data is denormalized and it happens because each row has values about more than one entity:</p>
+<ul>
+<li>1st entity: individual plants found at that site, and</li>
+<li>2nd entity: sites at which the plants were observed.</li>
+</ul>
+<p><img src="images/tidy-data-images/data_normalization/two_entities.png" class="img-fluid"></p>
+<p>If we use this information to normalize our data, we should end up with:</p>
+<ul>
+<li>one tidy table for each entity observed, and</li>
+<li>additional columns for identifying variables (such as site ID).</li>
+</ul>
+<p>Here’s how our normalized data would look like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidy-data-images/data_normalization/normalized.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+<p>Notice that each table also satisfies the tidy data principles.</p>
+<p>Normalizing data by separating it into multiple tables often makes researchers really uncomfortable. This is understandable! The person who designed this study collected all of these measurements for a reason - so that they could analyze the measurements together. Now that our site and plant information are in separate tables, how would we use site altitude as a predictor variable for species composition, for example? We will go over a solution in the next section.</p>
+</section>
+</section>
+<section id="relational-data-models" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="relational-data-models"><span class="header-section-number">6.3</span> Relational Data Models</h2>
+<blockquote class="blockquote">
+<p>It’s rare that a data analysis involves only a single table of data. Typically you have many tables of data, and you must combine them to answer the questions that you’re interested in. Collectively, multiple tables of data are called relational data because it is the relations, not just the individual datasets, that are important. (R for Data Science <a href="https://r4ds.had.co.nz/relational-data.html">Chapter 13 Relational Data</a>)</p>
+</blockquote>
+<section id="what-are-relational-data-models" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="what-are-relational-data-models"><span class="header-section-number">6.3.1</span> What are relational data models?</h3>
+<p>A <strong>relational data model</strong> is a way of encoding links between multiple tables in a database. A database organized following a relational data model is a <strong>relational database</strong>. A few of the advantages of using a relational data model are:</p>
+<ul>
+<li>Enabling powerful search and filtering</li>
+<li>Ability to handle large, complex data sets</li>
+<li>Enforcing data integrity</li>
+<li>Decreasing errors from redundant updates</li>
+</ul>
+<p>Relational data models are used by relational databases (like mySQL, MariaDB, Oracle, or Microsoft Access) to organize tables. However, you don’t have to be using a relational database or handling large and complex data to enjoy the benefits of using a relational data model.</p>
+<p>When working with relational data, we generally don’t work with tables separately. We will need to <strong>join</strong> the information from different tables to run our analysis. To join two or more tables we need to learn about keys.</p>
+</section>
+<section id="primary-and-foreign-keys" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="primary-and-foreign-keys"><span class="header-section-number">6.3.2</span> Primary and foreign keys</h3>
+<p>The main way in which relational data models encode relationships between different tables is by using keys. Keys are variables whose values uniquely identify observations. For tidy data, where variables and columns are equivalent, a column is a key if it has a different value in each row. This allows us to use keys as unique identifiers that reference particular observations and create links across tables.</p>
+<p>Two types of keys are common within relational data models:</p>
+<ul>
+<li><strong>Primary Key</strong>: chosen key for a table, uniquely identifies each observation in the table,</li>
+<li><strong>Foreign Key</strong>: reference to a primary key in another table, used to create links between tables.</li>
+</ul>
+</section>
+<section id="example-3" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="example-3"><span class="header-section-number">6.3.3</span> Example</h3>
+<p>On our previously normalized data for plants and sites, let’s choose primary keys for these tables and then identify any foreign keys.</p>
+<p><strong>Primary keys</strong></p>
+<p>First, notice that the columns ‘date’, ‘site’ and ‘sp_code’ cannot be primary keys because they have repeated values across rows. The columns ‘sp_height’ and ‘id’ both have different values in each row, so both are candidates for primary keys. However, the decimal values of ‘sp_height’ don’t make it as useful to use it to reference observations. So we chose ‘id’ as the primary key for this table.</p>
+<p>For the sites table, all three columns could be keys. We chose ‘site’ as the primary key because it is the most succinct and it also allows us to link the sites table with the plants table.</p>
+<p><strong>Foreign keys</strong></p>
+<p>The ‘site’ column is the <em>primary key</em> of that table because it uniquely identifies each row of the table as a unique observation of a site. In the first table, however, the ‘site’ column is a <em>foreign key</em> that references the primary key from the second table. This linkage tells us that the first height measurement for the DAPU observation occurred at the site with the name Taku.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidy-data-images/relational_data_models/primary_foreign_keys.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</section>
+<section id="compound-keys" class="level3" data-number="6.3.4">
+<h3 data-number="6.3.4" class="anchored" data-anchor-id="compound-keys"><span class="header-section-number">6.3.4</span> Compound keys</h3>
+<!-- ### Surrogate, natural, and compound keys
+
+In the sites data table from the previous example, we noticed that ‘site’ and ‘name’ are variables whose values uniquely identify the rows. In other words, ‘site’ and ‘name’ are keys. However, ‘site’ and ‘name’ are very different keys since the values in ‘site’ are “made up”, while ‘name’ has values that are used in the external world, unrelated to the table. This leads us to the following key types:
+
+- **Surrogate Key**:  a key whose values do not exist in the real world,
+- **Natural Key**: a key whose values exist in the real world.
+
+A surrogate key is often simpler, and can be a better choice than a natural key to become the primary key of a data table.
+
+![](images/tidy-data-images/relational_data_models/surrogate_natural_keys.png){fig-align="center" width=70%} -->
+<!--Finally,-->
+<p>It can also be the case that a variable is not a key, but by combining it with a second variable we get that the combined values uniquely identify the rows. This is called a</p>
+<ul>
+<li><strong>Compound Key</strong>: a key that is made up of more than one variable.</li>
+</ul>
+<p>For example, the ‘site’ and ‘sp_code’ columns in the plants table cannot be keys on their own, since each has repeated values. However, when we look at their combined values (1-DAPU, 1-DAMA, 2-DAMA, 2-DAPU) we see each row has a unique value. So ‘site’ and ‘sp_code’ together form a compound key.</p>
+<p><img src="images/tidy-data-images/relational_data_models/compound_key.png" class="img-fluid"></p>
+<p>There are also other types of keys, like a natural key or a surrogate key. Each type of key has advantages and disadvantages. You can read more about this in <a href="https://www.databasestar.com/database-keys/" target="_blank"> this article</a>.</p>
+</section>
+</section>
+<section id="joins" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="joins"><span class="header-section-number">6.4</span> Joins</h2>
+<p>Frequently, analysis of data will require merging these separately managed tables back together. There are multiple ways to join the observations in two tables, based on how the rows of one table are merged with the rows of the other. Regardless of the join we will perform, we need to start by identifying the primary key in each table and how these appear as foreign keys in other tables.</p>
+<p>When conceptualizing merges, one can think of two tables, one on the <em>left</em> and one on the <em>right</em>.</p>
+<p><img src="images/tidy-data-images/merging_data/join-diagrams-separate.png" class="img-fluid"></p>
+<section id="inner-join" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="inner-join"><span class="header-section-number">6.4.1</span> Inner Join</h3>
+<p>An <em>INNER JOIN</em> is when you merge the subset of rows that have matches in both the left table and the right table.</p>
+<p><img src="images/tidy-data-images/merging_data/join-diagrams-inner.png" class="img-fluid"></p>
+</section>
+<section id="left-join" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="left-join"><span class="header-section-number">6.4.2</span> Left Join</h3>
+<p>A <em>LEFT JOIN</em> takes all of the rows from the left table, and merges on the data from matching rows in the right table. Keys that don’t match from the left table are still provided with a missing value (na) from the right table.</p>
+<p><img src="images/tidy-data-images/merging_data/join-diagrams-left.png" class="img-fluid"></p>
+</section>
+<section id="right-join" class="level3" data-number="6.4.3">
+<h3 data-number="6.4.3" class="anchored" data-anchor-id="right-join"><span class="header-section-number">6.4.3</span> Right Join</h3>
+<p>A <em>RIGHT JOIN</em> is the same as a left join, except that all of the rows from the right table are included with matching data from the left, or a missing value. Notice that left and right joins can ultimately be the same depending on the positions of the tables</p>
+<p><img src="images/tidy-data-images/merging_data/join-diagrams-right.png" class="img-fluid"></p>
+</section>
+<section id="full-outer-join" class="level3" data-number="6.4.4">
+<h3 data-number="6.4.4" class="anchored" data-anchor-id="full-outer-join"><span class="header-section-number">6.4.4</span> Full Outer Join</h3>
+<p>Finally, a <em>FULL OUTER JOIN</em> includes all data from all rows in both tables, and includes missing values wherever necessary.</p>
+<p><img src="images/tidy-data-images/merging_data/join-diagrams-full.png" class="img-fluid"></p>
+<p>Sometimes people represent joins as Venn diagrams, showing which parts of the left and right tables are included in the results for each join. This representation is useful, however, they miss part of the story related to where the missing value comes from in each result.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidy-data-images/merging_data/join-venn.png" class="img-fluid figure-img"></p>
+<figcaption>Image source: R for Data Science, Wickham &amp; Grolemund.</figcaption>
+</figure>
+</div>
+<p>We suggest reading<a href="https://r4ds.had.co.nz/relational-data.html#join-problems" target="_blank"> the Relational Data chapter in the “R for Data Science” book </a> for more examples and best practices about joins.</p>
+</section>
+<section id="entity-relationship-models" class="level3" data-number="6.4.5">
+<h3 data-number="6.4.5" class="anchored" data-anchor-id="entity-relationship-models"><span class="header-section-number">6.4.5</span> Entity-Relationship models</h3>
+<p>An <strong>Entity-Relationship model (E-R model)</strong>, also known as an E-R diagram, is a way to draw a compact diagram that reflects the structure and relationships of the tables in a relational database. These can be particularly useful for big databases that have many tables and complex relationships between them.</p>
+<p>We will explain the steps to drawing a simplified E-R model with our previous plants and sites tables.</p>
+<p><em>Step 1: Identify the entities in the relational database and add each one in a box.</em> In our case, entities are [plants] and [sites], since we are gathering observations about both of these.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidy-data-images/relational_data_models/ER_diagram_1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p><em>Step 2: Add variables for each entity and identify keys.</em> Add the variables as a list inside each box. Then, identify the primary and foreign keys in each of the boxes. To visualize this, we have indicated</p>
+<ul>
+<li>the <font color="red"> primary key </font> (of each entity) in <font color="red"> red </font> and</li>
+<li>any <font color="blue"> foreign keys </font> in <font color="blue"> blue </font>.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidy-data-images/relational_data_models/ER_diagram_2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p><em>Step 3: Add relationships between entities.</em></p>
+<ul>
+<li><p>Draw a line between the boxes of any two entities that have a relationship.</p></li>
+<li><p>Identify which box has the primary key of the other as a foreign key. Let’s call the box that has the foreign key [box1] and the other box [box2]. Using the previous diagram we can see that “site” is the primary key of [sites] and appears as a foreign key in [plants]. So [plants] is [box1] and [sites] is [box2].</p></li>
+<li><p>Add a word describing how [box1] is related to [box2] above the line connecting the two boxes. So, for example, we need to describe how [plants] is related to [sites]. The relation is “a plant is located in a site”, so we write “located” above the line indicating the relationship between [plants] and [sites].</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidy-data-images/relational_data_models/ER_diagram_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p><em>Step 4: Add cardinality to every relationship in the diagram.</em> At this step we want to quantify how many items in an entity are related to another entity. This is easiest if we reuse the description we found in the previous step. For example, “a plant is located in one site”. Then we add the symbol for “one” at the end of the line going from [plants] to [sites].</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidy-data-images/relational_data_models/ER_diagram_4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>To finish, we also indicate how many plants are related to a single site. Since “a site has many plants”, we add the symbol for “many” at the end of the line going from [sites] to [plants]</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tidy-data-images/relational_data_models/ER_diagram_5.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>That’s it!</p>
+<section id="edr-crows-foot" class="level4" data-number="6.4.5.1">
+<h4 data-number="6.4.5.1" class="anchored" data-anchor-id="edr-crows-foot"><span class="header-section-number">6.4.5.1</span> EDR Crow’s Foot</h4>
+<p>The symbols we used at the end of the lines are called <strong>ERD “crow’s foot”</strong>. You can see all the existing ones together with an example in the next diagram.</p>
+<p><img src="images/tidy-data-images/relational_data_models/ERD_Relationship_Symbols_Quick_Reference.png" class="img-fluid"></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you need to produce a publishable E-R model such as the one above, <a href="https://mermaid.js.org/intro/" target="_blank"> Mermaid </a> is a great option. Read more about how to use this tool to create diagrams <a href="https://mermaid.js.org/syntax/entityRelationshipDiagram.html" target="_blank"> here </a>.</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="best-practices-summary" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="best-practices-summary"><span class="header-section-number">6.5</span> Best Practices Summary</h2>
+<p>This is a summary of what we have covered, and some extra advice!</p>
+<p>The <strong>tidy data principles</strong> are:</p>
+<ol type="1">
+<li>Every column is a variable.</li>
+<li>Every row is an observation.</li>
+<li>Every cell is a single value.</li>
+</ol>
+<p>In <strong>normalized data</strong> we organize data so that :</p>
+<ul>
+<li>We have separate tables for each type of entity measured</li>
+<li>Observations (rows) are all unique</li>
+<li>Each column represents either an identifying variable or a measured variable</li>
+<li>Each table follows the tidy data principles</li>
+</ul>
+<p>Creating <strong>relational data models</strong> by assigning <strong>primary and foreign keys</strong> to each table allows us to maintain relationships between separate normalized tables. Choose the primary key for each table based on your understanding of the data and take efficiency into account. Once you choose a column as the primary key, make sure that all the values in that column are there!</p>
+<p>For a big relational database, an <strong>Entity-Relationship model</strong> can be an effective way to explain how different tables and their keys are related to each other. If we need to merge tables we can do it using different types of <strong>joins</strong>.</p>
+</section>
+<section id="more-on-data-management" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="more-on-data-management"><span class="header-section-number">6.6</span> More on Data Management</h2>
+<p>Tidy data is one very important step to data management best practices. However there is more to consider. Here we provide some <strong>extra advice</strong> from a great paper called <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/0012-9623-90.2.205" target="_blank"> ‘Some Simple Guidelines for Effective Data Management’</a>.</p>
+<ul>
+<li>Design tables to add rows, not columns</li>
+<li>Use a scripted program (like R!)</li>
+<li>Non-proprietary file formats are preferred (eg: csv, txt)</li>
+<li>Keep a raw version of data</li>
+<li>Use descriptive files and variable names (without spaces!)</li>
+<li>Include a header line in your tabular data files</li>
+<li>Use plain ASCII text</li>
+</ul>
+<p>In the Cleaning &amp; Wrangling chapter we will cover more best practices for cleaning irregular and missing data and how to implement them using R.</p>
+</section>
+<section id="activity" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="activity"><span class="header-section-number">6.7</span> Activity</h2>
+<p>In groups of 3-4 we will do two activities that will help us put into practice the concepts of tidy data, identifying keys and structuring relational data.</p>
+<section id="exercise-1identifying-tidy-data" class="level3" data-number="6.7.1">
+<h3 data-number="6.7.1" class="anchored" data-anchor-id="exercise-1identifying-tidy-data"><span class="header-section-number">6.7.1</span> Exercise 1:Identifying Tidy Data</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Does the table follow the tidy data principles?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Look at the tables on <a href="files/recognizing-tidy-data-activity.pdf">this file</a> and determine if they follow the three tidy data principles. If not, which ones aren’t met?</p></li>
+<li><p>How would you wrangle the data to make it tidy? Describe the steps you would take to tidy the data.</p></li>
+<li><p>Sketch how would the tidy version look like.</p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="excersice-2-relational-databases" class="level3" data-number="6.7.2">
+<h3 data-number="6.7.2" class="anchored" data-anchor-id="excersice-2-relational-databases"><span class="header-section-number">6.7.2</span> Excersice 2: Relational Databases</h3>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<blockquote class="blockquote">
+<p>Our funding agency requires that we take surveys of individuals who complete our training courses so that we can report on the demographics of our trainees and how effective they find our courses to be.</p>
+</blockquote>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Design data collection tables
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>In your small groups, design a set of tables that will capture information collected in a participant survey that would apply to many courses.</p></li>
+<li><p>Don’t focus on designing a comprehensive set of questions for the survey, one or two simple questions would be sufficient (eg: “Did the course meet your expectations?”, “What could be improved?”, “To what degree did your knowledge increase?”).</p></li>
+<li><p>Include variables (columns) with basic set of information from the surveys and about the courses, such as the date of the course and name of the course, etc.</p></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Create entity relationsip model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After you have thought about what kind of information you care collecting, let’s break it down and build the entity-relationship model.</p>
+<ol type="1">
+<li><p>Identify the <strong>entities</strong> in the relational database and add each one in a box.</p></li>
+<li><p>Add <strong>variables</strong> for each entity.</p></li>
+<li><p>Identify the primary and foreign <strong>keys</strong> for those entities that relate to each other.</p></li>
+<li><p>Add “words” describing how each entity relates</p></li>
+<li><p>Add cardinality to every relationship in the diagram. This mean, use the <strong>EDR Crow’s Foot</strong> <a href="https://learning.nceas.ucsb.edu/2024-02-arctic/session_07.html#edr-crows-foot">Quick Reference</a> to quantify how many items in an entity are related to another entity.</p></li>
+</ol>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./session_05.html" class="pagination-link" aria-label="Intro to Git and GitHub">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Intro to Git and GitHub</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./session_07.html" class="pagination-link" aria-label="Cleaning and Wrangling Data">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
