@@ -619,5 +619,148 @@
       "Week 3",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Science Communication: The Message Box</span>"
     ]
+  },
+  {
+    "objectID": "session_09.html",
+    "href": "session_09.html",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "",
+    "text": "9.1 Learning Objectives",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#learning-objectives",
+    "href": "session_09.html#learning-objectives",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "",
+    "text": "Introduce the sf package in R for working with spatial data\nWalk through a conceptual framework on how you can create a map of the US and its territories\nExplore how you can combine different layers of spatial data in one plot\nProvide additional resources for your to explore and be able to achieve the plots you want",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#big-idea",
+    "href": "session_09.html#big-idea",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.2 Big Idea",
+    "text": "9.2 Big Idea\nThe primary purpose of this workshop is to demonstrate how to use R to visualize spatial data. Particularly how to create a map of the U.S and its main territories. We will briefly review the basic concepts of working with geospatial data. Therefore we may not cover key concepts when doing spatial data analysis. For more in-depth learning on spatial analysis in R, you can check out the online book “Geocomputation with R” by Lovelace et al. (2024).",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#introduction-to-spatial-data-with-sf",
+    "href": "session_09.html#introduction-to-spatial-data-with-sf",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.3 Introduction to spatial data with sf",
+    "text": "9.3 Introduction to spatial data with sf\nFrom the sf vignette:\n\nSimple features or simple feature access refers to a formal standard (ISO 19125-1:2004) that describes how objects in the real world can be represented in computers, with emphasis on the spatial geometry of these objects. It also describes how such objects can be stored in and retrieved from databases, and which geometrical operations should be defined for them.\n\nThe sf package is an R implementation of Simple Features. This package incorporates:\n\nA new spatial data class system in R\nFunctions for reading and writing spatial data\nTools for spatial operations on vectors\nMost of the functions in this package starts with prefix st_ which stands for spatial and temporal.",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#about-this-lesson",
+    "href": "session_09.html#about-this-lesson",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.4 About this lesson",
+    "text": "9.4 About this lesson\nIn this lesson we will walk through how to plot the a map of the continental US with additional insets of US territories. For this example we use the shift_geometry() function from the tigris package to plot the continental US, Alaska, Hawaii and Puerto Rico in one map.\n\n\n tigris is an R package that allows users to directly download and use TIGER/Line shapefiles from the US Census Bureau.\nThe idea of this script is to present an example of how to work with spatial data in R using the sf package and introduce tools and techniques that will help you create the maps you like for your project.\n\n\n\n\n\n\nSpatial Data\n\n\n\nLarge spatial data files can take some time to process and plot.If you are running this code on your local machine, be patient! Your session can freeze or take some time to see the desired outcome.",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#set-up",
+    "href": "session_09.html#set-up",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.5 Set up",
+    "text": "9.5 Set up\nWe will start by loading the packages we will be using to create our map.\n\nlibrary(tigris)\nlibrary(sf)\nlibrary(dplyr)\nlibrary(ggplot2)\nlibrary(janitor)\nlibrary(readr)\nlibrary(stringr)\nlibrary(ggrepel)\nlibrary(patchwork)",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#read-data",
+    "href": "session_09.html#read-data",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.6 Read data",
+    "text": "9.6 Read data\nNext step is to read the data we are going to be using today. In this case we will use 4 data sources.\n\nThe US state boundaries that we can load directly from the tigris package.\nThe continental US EPA Ecoregions used in the National Aquatic Resource Surveys.\nThe Level 3 EPA Ecoregions by state for the state od Alaska\nList of states and their corresponding CASC region (this data set was manually created, see us-casc-regions.R script)\n\n\n9.6.1 1. Load US map from tigris\n\n## read data\n# cb = T + 20m resol, removes American Samoa, Maraina Islands, Guam and Virgin Islands\nus_states &lt;- states(cb = TRUE, \n                    resolution = \"20m\")\n\n## shift geometries for easy plotting\nus_states_shift &lt;- us_states %&gt;% \n  shift_geometry()\n\n\n\n9.6.2 2. Read in Ecoregions\na) Continental US\nFor the continental US we are using the aggregated ecoregions used in the National Aquatic Resource Surveys. You can download this data at the EPA website.\nThese data divides the continental US in 9 ecoregions.\nNote: We downloade the data and saved in to the data folder in our Rproj.\n\n## read data\necoregions_cont_us &lt;- read_sf(\"data/Aggr_Ecoregions_2015.shp\")\n\nunique(ecoregions_cont_us$WSA9_NAME)\nst_crs(ecoregions_cont_us) #Albers, NAD83\n\nb) Alaska L3 Ecoregions\nTo add additional territories, we will have to download individual files for each area. Here an example for Alaska. In this case we are downloading the shapefiles for Level III EPA ecoregions for Alaska.\nNote: We downloade the data and saved in to the data folder in our Rproj.\n\n## Read data\necoregion_ak_l3 &lt;- read_sf(\"data/ak_eco_l3.shp\")\nst_crs(ecoregion_ak_l3) # EPSG\",3338, Alaska Albers\nplot(ecoregion_ak_l3$geometry)\n\n\n\n9.6.3 3. US major cities\nShapefile indicating the locatio of the major cities across the US. Data downloaded form here\nNote: We downloade the data and saved in to the data folder in our Rproj.\n\n## read\nus_cities &lt;- read_sf(\"data/USA_Major_Cities.shp\")\nst_crs(us_cities) #WGS 84 / Pseudo-Mercator\nplot(us_cities$geometry)\n\n## transform to desired crs\nus_cities_nad83 &lt;- st_transform(us_cities,\n                                crs = st_crs(us_states))\nst_crs(us_cities_nad83)\nplot(us_cities_nad83$geometry)\n\n## shift geometries for easy plotting\nus_cities_shift &lt;- us_cities_nad83 %&gt;% \n  shift_geometry()\n\nplot(us_cities_shift$geometry)\n\n\n9.6.3.1 4. States by CASC region\nThis data was created using the code on this script.\n\n## read data\nus_state_casc &lt;- read_csv(\"data/state_by_casc_region.csv\")\n\n## merge polygons to get CASC region areas\ncasc_shp &lt;- us_states %&gt;% \n  left_join(us_state_casc, by= c(\"GEOID\", \"STUSPS\", \"NAME\")) %&gt;% \n  group_by(casc_region) %&gt;% \n  summarise(geometry = st_union(geometry))\n\nplot(casc_shp$geometry)\n\n## shift geometries for easy plotting\ncasc_shift &lt;- casc_shp %&gt;% \n  shift_geometry()\n\nplot(casc_shift$geometry)",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#cleaning-ecoregion-data",
+    "href": "session_09.html#cleaning-ecoregion-data",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.7 Cleaning Ecoregion data",
+    "text": "9.7 Cleaning Ecoregion data\nTo be able to plot all the regions in one map, we need to get both ecoregions files in the same format. This means column names should match so we can bind both files.\n\n## Rename columns to a generic name\necoregions_cont_us_clean &lt;- ecoregions_cont_us %&gt;% \n  rename(code = WSA9,\n         name = WSA9_NAME)\n  \n## Select two main colums from Alaska ecoregion file and rename to match continental file + transforming to the smae CRS than continental file.\n## note: choosing L1 because it is the mos broad ecoregion (4 ecoregions for alaska)\necoregion_ak_clean &lt;- ecoregion_ak_l3 %&gt;% \n  select(code = NA_L1CODE,\n         name = NA_L1NAME) %&gt;% \n  mutate(name = str_to_sentence(name)) %&gt;% \n  st_transform(st_crs(ecoregions_cont_us_clean))\n\n##checking outcomes\nunique(ecoregion_ak_clean$name)\nst_crs(ecoregion_ak_clean)\nplot(ecoregion_ak_clean$geometry)",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#bind-ecoregions-data-into-one-file",
+    "href": "session_09.html#bind-ecoregions-data-into-one-file",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.8 Bind ecoregions data into one file",
+    "text": "9.8 Bind ecoregions data into one file\nWe use the dplyr::bind_rows() function to combine both data frames into one with all the ecoregions. One We have all the information in one place we apply the shift_geometry() to get the polygons in the projection we want for plotting.\n\necoregions_all &lt;- bind_rows(ecoregions_cont_us_clean, \n                            ecoregion_ak_clean)\n\n\n# shift geom\necoregions_shift &lt;- ecoregions_all %&gt;% \n  shift_geometry()\n\nplot(ecoregions_shift$geometry)",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#plot-ecoregions-cities-casc",
+    "href": "session_09.html#plot-ecoregions-cities-casc",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.9 Plot ecoregions + cities + casc",
+    "text": "9.9 Plot ecoregions + cities + casc\nBelow is the initial plot that shows how we can layer different sf objects in s ggplot by using the geom_sf() function.\n\nus_plot &lt;-  ggplot()+\n  geom_sf(data = ecoregions_shift,\n          aes(fill = name))+\n  geom_sf(data = us_states_shift,\n          fill = NA,\n          color = \"darkgray\")+\n  geom_sf(data = us_cities_shift)+\n  geom_sf(data = casc_shift,\n          color = \"red\",\n          fill = NA)+\n  theme_void()+\n  scale_fill_viridis_d()\n\nus_plot",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#customize-map",
+    "href": "session_09.html#customize-map",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.10 Customize map",
+    "text": "9.10 Customize map\nFinally, we are adding some customization to our plot to make it look “publication-grade”. Note that these are just a few ways we could customize this plot. ggplot2 and all the packages around ggplot provide endless possibilities on how to go about your plots. There is lot’s of documentation about ggplot2 online, feel free to search other possibilities to add or modify from this plot.\n\nfinalized_plot &lt;-  ggplot()+\n  geom_sf(data = ecoregions_shift,\n          aes(fill = name),\n          alpha = 0.5)+\n  geom_sf(data = us_states_shift,\n          fill = NA,\n          color = \"darkgray\")+\n  geom_sf(data = us_cities_shift,\n          alpha = 0.3)+\n  geom_sf(data = casc_shift,\n          color = \"black\",\n          size = 6,\n          fill = NA)+\n  #an alternative to label your can use geom_sf_text, plots just the text not the rectagle aroud it.\n  geom_sf_label(data = casc_shift[c(1:7), ],\n               aes(label = casc_region),\n               size = 3)+\n  geom_label_repel(\n    data = casc_shift[c(8:10), ],\n    aes(label = casc_region, \n        geometry = geometry),\n    stat = \"sf_coordinates\",\n    size = 3,\n    min.segment.length = 2)+\n    # colour = \"magenta\",\n    # segment.colour = \"magenta\")+\n  theme_void()+\n  scale_fill_viridis_d(name = \"Ecoregion\")+\n  labs(title = \"Cities across Ecoregions in the US\",\n       subtitle = \"Map is devided into CASC regions\")+\n  theme(plot.title = element_text(hjust = 0.5),\n        plot.subtitle = element_text(hjust = 0.5))\n\n\nfinalized_plot",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#additional-information",
+    "href": "session_09.html#additional-information",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.11 Additional Information",
+    "text": "9.11 Additional Information\nMore on shift_geometry()\nThere are different option of output for this function. Remember you can always search for the the help by running ?shift_geometry() in the console and get more details about how this function works. Let’s see other possible outcomes when using this function.\n\n## Alaska, Hawaii and Puerto Rico \"outside\" of the continental US as opposed to below.\nus_states_outside &lt;- us_states %&gt;% \n  shift_geometry(position = \"outside\")\n\nplot(us_states_outside$geometry)\n\nWe can also set preserve_area = TRUE to keep the area of each territory the relative size compared to the continental US.\n\nus_states_area &lt;- us_states %&gt;% \n  shift_geometry(preserve_area = TRUE)\n\nplot(us_states_area$geometry)\n\nOr, combine both options presented above.\n\nus_states_outside_area &lt;- us_states %&gt;% \n  shift_geometry(preserve_area = TRUE,\n                 position = \"outside\")\n\nplot(us_states_outside_area$geometry)\n\nExploring other ways to plot the US and its territorises\nBreak down one of the sf data frames with a shift_geometry() to inspect in more details the CRS for each territory.\n\n## Filtering each data set to plot independently\nalaska &lt;- us_states_shift %&gt;% \n  filter(NAME == \"Alaska\")\n\nhawaii &lt;- us_states_shift %&gt;% \n  filter(NAME == \"Hawaii\")\n\npuerto_rico &lt;- us_states_shift %&gt;% \n  filter(NAME == \"Puerto Rico\")\n\ncontinent &lt;- us_states_shift %&gt;% \n  filter(!NAME %in% c(\"Alaska\", \"Hawaii\", \"Puerto Rico\"))\n\nExploring other ways of plotting the US and its territories using patchwork\n\nalaska_plot &lt;- ggplot()+\n  geom_sf(data = alaska)+\n  theme_void()\n\nhawaii_plot &lt;- ggplot()+\n  geom_sf(data = hawaii)+\n  theme_void()\n\npr_plot &lt;- ggplot()+\n  geom_sf(data = puerto_rico)+\n  theme_void()\n\n\ncont_plot &lt;- ggplot()+\n  geom_sf(data = continent)+\n  theme_void()\n\n\n## combined plot\ncont_plot + {\n  alaska_plot | hawaii_plot | pr_plot +\n    plot_layout(ncol = 3)\n  } +\n  plot_layout(ncol = 1)",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
+  },
+  {
+    "objectID": "session_09.html#resurces",
+    "href": "session_09.html#resurces",
+    "title": "9  Creating a map of the US and its territories",
+    "section": "9.12 Resurces",
+    "text": "9.12 Resurces\npatchwork\n\nggplot multiple plots made ridiculuous simple using patchwork R package\nPatchwork documentation on controlling layouts\n\nSpatial Data Visualization\n\nVisualizing Spatial Data, NCEAS Learning Hub Lesson by Rachel King\nVisualizing geospatial data by Claus Wilke\nMapping Census data in R by Kyle Walker (author of the tigirs package)\nggcart, an interesting package to look into. “The goal of ggcart is to include Puerto Rico, the Virgin Islands and Guam in the traditional Albers maps”\nBlog on geom_sf_text() and geom_sf_label()",
+    "crumbs": [
+      "Week 3",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Creating a map of the US and its territories</span>"
+    ]
   }
 ]
