@@ -394,11 +394,15 @@ Example 1
 </tr>
 </tbody>
 </table>
-<p>The <code>dplyr</code> R library provides a fast and powerful way to do this calculation in a few lines of code:</p>
+<p>Before thinking about the code, let’s think about the steps we need to take to get to the answer (aka pseudocode).</p>
+<p>Now, how would we code this? The <code>dplyr</code> R library provides a fast and powerful way to do this calculation in a few lines of code:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>length_data <span class="sc">%&gt;%</span> </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_length_cm =</span> <span class="fu">mean</span>(length_cm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </div>
 </div>
@@ -455,10 +459,16 @@ Example 2
 </tbody>
 </table>
 <p>You are probably familiar with data in the above format, where values of the variable being observed are spread out across columns. In this example we have a different column per year. This wide format works well for data entry and sometimes works well for analysis but we quickly outgrow it when using R (and know it is not tidy data!). For example, how would you fit a model with year as a predictor variable? In an ideal world, we’d be able to just run <code>lm(length ~ year)</code>. But this won’t work on our wide data because <code>lm()</code> needs <code>length</code> and <code>year</code> to be columns in our table.</p>
+<p>What steps would you take to get this data frame in a long format?</p>
 <p>The <code>tidyr</code> package allows us to quickly switch between wide format and long format using the <code>pivot_longer()</code> function:</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>site_data <span class="sc">%&gt;%</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>site, <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"length"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>site, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"length"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <table class="caption-top table">
 <thead>
@@ -696,7 +706,7 @@ Exercise
 </section>
 <section id="data-exploration" class="level2" data-number="9.3">
 <h2 data-number="9.3" class="anchored" data-anchor-id="data-exploration"><span class="header-section-number">9.3</span> Data exploration</h2>
-<p>Similar to what we did in our <a href="https://learning.nceas.ucsb.edu/2024-06-delta/session_04.html">Literate Analysis</a> lesson, it is good practice to skim through the data you just read in.</p>
+<p>Similar to what we did in our <a href="https://learning.nceas.ucsb.edu/2024-10-coreR/session_05.html">Literate Analysis</a> lesson, it is good practice to skim through the data you just read in.</p>
 <p>Doing so is important to make sure the data is read as you were expecting and to familiarize yourself with the data.</p>
 <p>Some of the basic ways to explore your data are:</p>
 <div class="cell">
