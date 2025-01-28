@@ -297,7 +297,7 @@ div.csl-indent {
   <li><a href="#using-normalized-data" id="toc-using-normalized-data" class="nav-link" data-scroll-target="#using-normalized-data"><span class="header-section-number">8.6</span> Using normalized data</a></li>
   <li><a href="#entity-relationship-model-er" id="toc-entity-relationship-model-er" class="nav-link" data-scroll-target="#entity-relationship-model-er"><span class="header-section-number">8.7</span> Entity-Relationship Model (ER)</a></li>
   <li><a href="#merging-data" id="toc-merging-data" class="nav-link" data-scroll-target="#merging-data"><span class="header-section-number">8.8</span> Merging data</a></li>
-  <li><a href="#data-modeling-exercise" id="toc-data-modeling-exercise" class="nav-link" data-scroll-target="#data-modeling-exercise"><span class="header-section-number">8.9</span> Data modeling exercise</a></li>
+  <li><a href="#exercise-data-modeling-for-course-surveys" id="toc-exercise-data-modeling-for-course-surveys" class="nav-link" data-scroll-target="#exercise-data-modeling-for-course-surveys"><span class="header-section-number">8.9</span> Exercise: Data modeling for course surveys</a></li>
   <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="header-section-number">8.10</span> Resources</a></li>
   </ul>
 </nav>
@@ -564,15 +564,115 @@ Answer
 <p><img src="images/sql-joins.png" class="img-fluid"></p>
 <p>In the figure above, the blue regions show the set of rows that are included in the result. For the INNER join, the rows returned are all rows in A that have a matching row in B.</p>
 </section>
-<section id="data-modeling-exercise" class="level2" data-number="8.9">
-<h2 data-number="8.9" class="anchored" data-anchor-id="data-modeling-exercise"><span class="header-section-number">8.9</span> Data modeling exercise</h2>
+<section id="exercise-data-modeling-for-course-surveys" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="exercise-data-modeling-for-course-surveys"><span class="header-section-number">8.9</span> Exercise: Data modeling for course surveys</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
 <li>Break into groups</li>
 </ul>
 <p>Our funding agency requires that we take surveys of individuals who complete our training courses so that we can report on the demographics of our trainees and how effective they find our courses to be. In your small groups, design a set of tables that will capture information collected in a participant survey that would apply to many courses.</p>
 <p>Don’t focus on designing a comprehensive set of questions for the survey, one or two simple stand ins (eg: “Did the course meet your expectations?”, “What could be improved?”, “To what degree did your knowledge increase?”) would be sufficient.</p>
-<p>Include as variables (columns) a basic set of information not only from the surveys, but about the courses, such as the date of the course and name of the course.</p>
+<p>Include as variables (columns) a basic set of information not only from the surveys (such as survey question responses), but about the courses, such as the date of the course and name of the course. Try to account for the same person participating in multiple courses, multiple courses being held each year, and the same survey questions can be asked of the participants for those different courses.</p>
 <p>Draw your entity-relationship model for your tables.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>We can start by creating one box for each type of entity that we want to collection data about. Each box represents a data table in our design. As we are collecting survey responses, we might start with a table for <code>Response</code> that would contian one observation for each survey response that we want to store. That Response is about a particular course, so we can add another table for information about that <code>Course</code>, and link those two tables.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">erDiagram
+    Response ||--|| Course : about
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Next, we can change the cardinality of the relationship to indicate that each course can contain multiple responses. We can also add a new table to hold the details for each <code>Participant</code> that <code>takes</code> each <code>Course</code>, and that each <code>Participant</code> provides a <code>Response</code> when filling out a survey. And lastly, because questions might be reused across surveys, we create a linkage from the <code>Response</code> table to a new <code>Question</code> table that has one row for each unique question.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">erDiagram
+    Response |{--|| Course : about
+    Participant |{--|{ Course : takes
+    Participant ||--|| Response : provides
+    Response |{--|| Question : for
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Finally, we can add the attributes that we would have for each table, indicating which are primary keys and which are foreign keys.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">erDiagram
+    Response |{--|| Course : about
+    Participant |{--|{ Course : takes
+    Participant ||--|| Response : provides
+    Response |{--|| Question : for
+
+    Response {
+        string response_id PK
+        string participant_id FK
+        string course_id FK
+        string question_id FK
+        string response_value
+    }
+    Participant {
+        string participant_id PK
+        string name_first
+        string name_last
+        string email
+    }
+    Course {
+        string course_id PK
+        string course_name
+        date date_start
+        date date_end
+    }
+    Question {
+        string question_id PK
+        string question_text
+    }
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="resources" class="level2" data-number="8.10">
 <h2 data-number="8.10" class="anchored" data-anchor-id="resources"><span class="header-section-number">8.10</span> Resources</h2>
