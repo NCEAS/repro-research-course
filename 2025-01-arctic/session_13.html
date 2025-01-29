@@ -329,8 +329,8 @@ div.csl-indent {
   </ul></li>
   <li><a href="#common-text-analysis-and-text-mining-methods" id="toc-common-text-analysis-and-text-mining-methods" class="nav-link" data-scroll-target="#common-text-analysis-and-text-mining-methods"><span class="header-section-number">13.6</span> Common Text Analysis and Text Mining Methods</a>
   <ul class="collapse">
-  <li><a href="#exercise-basic-topic-modeling" id="toc-exercise-basic-topic-modeling" class="nav-link" data-scroll-target="#exercise-basic-topic-modeling"><span class="header-section-number">13.6.1</span> Exercise: Basic topic modeling</a></li>
-  <li><a href="#steps" id="toc-steps" class="nav-link" data-scroll-target="#steps"><span class="header-section-number">13.6.2</span> Steps</a></li>
+  <li><a href="#exercise-basic-sentiment-analysis" id="toc-exercise-basic-sentiment-analysis" class="nav-link" data-scroll-target="#exercise-basic-sentiment-analysis"><span class="header-section-number">13.6.1</span> Exercise: Basic sentiment analysis</a></li>
+  <li><a href="#exercise-basic-topic-modeling" id="toc-exercise-basic-topic-modeling" class="nav-link" data-scroll-target="#exercise-basic-topic-modeling"><span class="header-section-number">13.6.2</span> Exercise: Basic topic modeling</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -386,8 +386,8 @@ Acknowledgements
 <p>Here is a list of text data or text analysis terms we’ll be referring to throughout this lesson. Note this is not a comprehensive list of text analysis terms that are used beyond this lesson.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 8%">
-<col style="width: 91%">
+<col style="width: 33%">
+<col style="width: 66%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -397,41 +397,40 @@ Acknowledgements
 </thead>
 <tbody>
 <tr class="odd">
+<td>String</td>
+<td>Specific type of data whose values are enclosed within a set of quotes. Typically values or elements are characters (e.g.&nbsp;“Hello World!”).</td>
+</tr>
+<tr class="even">
 <td>Corpus (corpora, plural)</td>
 <td>Collection or database of text or multiple texts. These types of objects typically contain raw strings annotated with additional metadata and details.</td>
 </tr>
-<tr class="even">
-<td>Document-feature matrix (DFM)</td>
-<td>Represents the relationship between features and documents, where each row is a document and each column corresponds to a set of features. Features are not limited to terms and can include a variety of attributes that describe the documents. Each cell in the matrix contains a value that represents the presence, absence, or some quantitative measure of a specific feature in a particular document.</td>
-</tr>
 <tr class="odd">
-<td>Document-term matrix (DTM)</td>
-<td>Represents the relationship between terms and documents, where each row stands for a document and each column represents a term, and an entry is the number of occurrences of the term in the document.</td>
+<td>Token</td>
+<td>A meaningful unit of text, such as a word, to use for analysis.</td>
 </tr>
 <tr class="even">
-<td>Natural Language Processing (NLP)</td>
-<td>NLP is an interdisciplinary field used in computer science, data science, linguistics, and others to analyze, categorize, and work with computerized text.</td>
-</tr>
-<tr class="odd">
-<td>Sparse matrix</td>
-<td><p>A matrix where the majority of the entries are zero.</p>
-<p>Both DFM and DTM are sparse matrices and this is normal. Typically, the bigger the DTM or DFM, the more zeros you’ll see.</p></td>
-</tr>
-<tr class="even">
-<td>String</td>
-<td>Specific type of data whose values are enclosed within a set of quotes. Typically values or elements are characters (e.g.&nbsp;“Hello World!”).</td>
+<td>Tokenization</td>
+<td>The process of splitting text into tokens.</td>
 </tr>
 <tr class="odd">
 <td>Text analysis</td>
 <td>The process of deriving high-quality information or patterns from text through evaluation and interpretation of the output. Also referred to as “text mining” or “text analytics”.</td>
 </tr>
 <tr class="even">
-<td>Token</td>
-<td>A meaningful unit of text, such as a word, to use for analysis.</td>
+<td>Natural Language Processing (NLP)</td>
+<td>NLP is an interdisciplinary field used in computer science, data science, linguistics, and others to analyze, categorize, and work with computerized text.</td>
 </tr>
 <tr class="odd">
-<td>Tokenization</td>
-<td>The process of splitting text into tokens.</td>
+<td>Document-feature matrix (DFM)</td>
+<td>Represents the relationship between features and documents, where each row is a document and each column corresponds to a set of features. Features are not limited to terms and can include a variety of attributes that describe the documents. Each cell in the matrix contains a value that represents the presence, absence, or some quantitative measure of a specific feature in a particular document.</td>
+</tr>
+<tr class="even">
+<td>Document-term matrix (DTM)</td>
+<td>Represents the relationship between terms and documents, where each row stands for a document and each column represents a term, and an entry is the number of occurrences of the term in the document.</td>
+</tr>
+<tr class="odd">
+<td>Sparse matrix</td>
+<td>A matrix where the majority of the entries are zero. Both DFM and DTM are sparse matrices and this is normal. Typically, the bigger the DTM or DFM, the more zeros you’ll see.</td>
 </tr>
 </tbody>
 </table>
@@ -495,7 +494,7 @@ Environmental researchers have used text data to:
 <figcaption>Source: Silge &amp; Robinson</figcaption>
 </figure>
 </div>
-<p>We are going to use the <code>gutenbergr</code> package to access public domain texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a> (a library of free eBooks). We’ll then use the <code>tidytext</code>, <code>dyplr</code> and <code>ggplot2</code> packages to practice the tidy text workflow.</p>
+<p>We are going to use the <code>gutenbergr</code> package to access public domain texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a> (a library of free eBooks). We’ll then use the <code>tidytext</code>, <code>dplyr</code> and <code>ggplot2</code> packages to practice the tidy text workflow.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -511,10 +510,10 @@ Setup
 <li><p>Create a new code chunk and attach the following libraries:</p></li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gutenbergr) <span class="co"># access public domain texts from Project Gutenberg</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext) <span class="co"># text mining using tidy tools</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># wrangle data</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># plot data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># wrangle data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># plot data</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext) <span class="co"># text mining using tidy tools</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gutenbergr) <span class="co"># access public domain texts from Project Gutenberg</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
 <li>Depending on which group you’re in, use one of the following public domain texts:</li>
@@ -527,13 +526,13 @@ Setup
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Wonderful Wizard of Oz"</span>)  <span class="co"># id: 55</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Group C</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Phantom of the Opera"</span>) <span class="co"># phantom text</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"The Phantom of the Opera"</span>) <span class="co"># id: 175</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 <section id="questions" class="level3" data-number="13.3.1">
 <h3 data-number="13.3.1" class="anchored" data-anchor-id="questions"><span class="header-section-number">13.3.1</span> Questions</h3>
-<p>The answers in the code chunks are using the text of <em>Heidi</em>.</p>
+<p>The answers in the code chunks below are using the text of <em>Heidi</em>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -544,9 +543,10 @@ Question 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Get the id number from the <code>gutenberg_works()</code> function so that you can download the text as a corpus using the function <code>gutenberg_download()</code>. Save the corpus to an object called <code>{book-title}_corp</code>. View the object - is the data in a tidy format?</p>
+<p>Get the id number from the <code>gutenberg_works()</code> function so that you can download the text as a corpus using the function <code>gutenberg_download()</code>. Save the corpus to an object called <code>txt_corp</code>. View the object - is the data in a tidy format?</p>
 </div>
 </div>
+<!-- Note: When compiling this document, we'll load from local files rather than pulling over the internet -->
 <div class="cell">
 <details class="code-fold">
 <summary>Answer</summary>
@@ -573,7 +573,7 @@ Question 2
 <div class="cell">
 <details class="code-fold">
 <summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tidy text data - unnest and remove stop words</span></span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tidy data - unnest</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>txt_tidy <span class="ot">&lt;-</span> txt_corp <span class="sc">%&gt;%</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(word, text)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -684,14 +684,14 @@ Question 5
 <summary>Bar Plot Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> txt_count, <span class="fu">aes</span>(n, <span class="fu">reorder</span>(word, n))) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Count"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Token"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Count"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> <span class="st">"Token"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="session_13_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="session_13_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -700,7 +700,7 @@ Question 5
 <details class="code-fold">
 <summary>Base Lollipop Plot Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initial lollipop plot</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> txt_count, <span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> txt_count, <span class="fu">aes</span>(<span class="at">x =</span> word, <span class="at">y =</span> n)) <span class="sc">+</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n)) <span class="sc">+</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
@@ -710,7 +710,7 @@ Question 5
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="session_13_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="session_13_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -735,22 +735,23 @@ Question 6
 <details class="code-fold">
 <summary>Custom Lollipop Plot Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ascending order pretty lollipop plot</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> txt_count, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(word, n), <span class="at">y=</span>n)) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"cyan4"</span>) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n), <span class="at">color=</span><span class="st">"cyan4"</span>) <span class="sc">+</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Ten Words in The Phantom of the Opera"</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> txt_count, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"cyan4"</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"cyan4"</span>) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Ten Words in The Phantom of the Opera"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="session_13_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="session_13_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -892,64 +893,46 @@ Setup
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
-<li>Depending on which group you’re in, read in one of the following chapters of the Delta Plan. Access and download the chapters of the Delta Plan from <a href="https://deltacouncil.ca.gov/delta-plan/">Delta Stewardship Council website</a>.</li>
+<li>Load a publication stored in the Arctic Data Center within the data package <a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2ZW18T65">Assessing Knowledge, Resilience &amp; Adaptation and Policy Needs in Northern Russian Villages Experiencing Unprecedented Climate Change</a>. To get the link to a specific paper that you’ll read into R, manually visit the page linked above, hover over the “Download” button for the on of the PDF reports, right click, and select “Copy Link”. Then in R you can read in the associated PDF document over the web using the <code>pdftools</code> package.</li>
 </ol>
+<p>Here we demonstrate using <em>Crate_Current_Anthropology 2008.pdf</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pdf_url <span class="ot">&lt;-</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Aea1c26fa-e91c-4f33-9993-4e86d00818d8"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>anthro_pdf <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(pdf_url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p><strong>Notes for quick exploration of data:</strong></p>
 <ul>
 <li>Check the <code>class()</code> of the pdf you just read in - is it what you expected? How does the object appear in the Global Environment?</li>
 <li>Call the object in the Console. What does your data look like? What can you infer from how it’s structured?</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 3</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/dsc-plan-ch3.pdf"</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dp_ch3 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 4</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/dsc-plan-ch4.pdf"</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>dp_ch4 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 5</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/dsc-plan-ch5.pdf"</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>dp_ch5 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 6</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/dsc-plan-ch6.pdf"</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>dp_ch6 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>We will demonstrate using Chapter 8.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>path_df <span class="ot">&lt;-</span> <span class="st">"data/text/dsc-plan-ch8.pdf"</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dp_ch8 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(path_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <ol start="4" type="1">
 <li>Using the <code>quanteda</code> package, turn the unstructured pdf text data into a corpus.</li>
 </ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>anthro_corpus <span class="ot">&lt;-</span> quanteda<span class="sc">::</span><span class="fu">corpus</span>(anthro_pdf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p><strong>Notes for quick exploration of data:</strong></p>
 <ul>
 <li>Check the <code>class()</code> of the corpus you created - is it what you expected? How does the object appear in the Global Environment?</li>
 <li>Call the object in the Console. What does your data look like? How does this structure compare to the pdf object?</li>
 <li>Run <code>summary()</code> of the corpus in the Console. What insights can you glean?</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dp_ch8_corpus <span class="ot">&lt;-</span> quanteda<span class="sc">::</span><span class="fu">corpus</span>(dp_ch8)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <ol start="5" type="1">
 <li>Using <code>tidy()</code> from <code>tidytext</code>, make the corpus a tidy object.</li>
 </ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>anthro_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(anthro_corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p><strong>Notes for quick exploration of data:</strong></p>
 <ul>
 <li>Check the <code>class()</code> of the corpus you created - is it what you expected? How does the object appear in the Global Environment?</li>
 <li>Call the object in the Console or use <code>View()</code>. What does your data look like? Is it what you expected?</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ch 8 is used for demonstration and testing</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dp_ch8_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(dp_ch8_corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </div>
 </div>
 <section id="questions-1" class="level3" data-number="13.5.1">
 <h3 data-number="13.5.1" class="anchored" data-anchor-id="questions-1"><span class="header-section-number">13.5.1</span> Questions</h3>
-<p>Work independently or in groups for Question 1-5. The code solutions are based on the text data from Chapter 8 of the Delta Plan.</p>
+<p>Work independently or in groups for Question 1-5. The code solutions are based on the text data from the publication we loaded above.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -966,9 +949,9 @@ Question 1
 <div class="cell">
 <details class="code-fold">
 <summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dp_ch8_unnest <span class="ot">&lt;-</span> dp_ch8_tidy <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word,</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">input =</span> text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>anthro_unnest <span class="ot">&lt;-</span> anthro_tidy <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">input =</span> text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -987,8 +970,8 @@ Question 2
 <div class="cell">
 <details class="code-fold">
 <summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dp_ch8_words <span class="ot">&lt;-</span> dp_ch8_unnest <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">anti_join</span>(stop_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>anthro_words <span class="ot">&lt;-</span> anthro_unnest <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">anti_join</span>(stop_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1007,9 +990,9 @@ Question 3
 <div class="cell">
 <details class="code-fold">
 <summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dp_ch8_count <span class="ot">&lt;-</span> dp_ch8_words <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(word) <span class="sc">%&gt;%</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>anthro_count <span class="ot">&lt;-</span> anthro_words <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(word) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1028,35 +1011,14 @@ Question 4
 <div class="cell">
 <details class="code-fold">
 <summary>Bar Plot Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dp_ch8_count, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Most Frequently Occurring Words in Chapter 8 of the Delta Plan"</span>,</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"count"</span>) <span class="sc">+</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="session_13_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Lollipop Plot Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lollipop plot</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> dp_ch8_count, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(word, n), <span class="at">y=</span>n)) <span class="sc">+</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n)) <span class="sc">+</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Most Frequently Occurring Words in Chapter 8 of the Delta Plan"</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(anthro_count, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Most Frequently Occurring Words"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"count"</span>) <span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1068,15 +1030,36 @@ Question 4
 </div>
 <div class="cell">
 <details class="code-fold">
-<summary>Wordcloud Plot Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># wordcloud</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(<span class="at">words =</span> dp_ch8_count<span class="sc">$</span>word,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">freq =</span> dp_ch8_count<span class="sc">$</span>n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>Lollipop Plot Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lollipop plot</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> anthro_count, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>word, <span class="at">xend=</span>word, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span>n)) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Most Frequently Occurring Words"</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="session_13_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Wordcloud Plot Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># wordcloud</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(<span class="at">words =</span> anthro_count<span class="sc">$</span>word,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">freq =</span> anthro_count<span class="sc">$</span>n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1178,14 +1161,195 @@ Question 5
 </tr>
 </tbody>
 </table>
-<section id="exercise-basic-topic-modeling" class="level3" data-number="13.6.1">
-<h3 data-number="13.6.1" class="anchored" data-anchor-id="exercise-basic-topic-modeling"><span class="header-section-number">13.6.1</span> Exercise: Basic topic modeling</h3>
+<section id="exercise-basic-sentiment-analysis" class="level3" data-number="13.6.1">
+<h3 data-number="13.6.1" class="anchored" data-anchor-id="exercise-basic-sentiment-analysis"><span class="header-section-number">13.6.1</span> Exercise: Basic sentiment analysis</h3>
+<p>Let’s return to the Heidi text we examined earlier, and do some quick &amp; dirty analysis of how sentiment changes throughout the book.</p>
+<p>To do this, we’ll use the sentiment lexicon from Bing Liu and collaborators <span class="citation" data-cites="hu2004">(<a href="#ref-hu2004" role="doc-biblioref">Hu and Liu 2004</a>)</span>. This lexicon, which is distributed in the <code>tidytext</code> package, includes nearly 7,000 english words manually labeled as either positive or negative sentiment.</p>
+<p>Here’s the plan:</p>
+<ol type="1">
+<li>Number every line in the book</li>
+<li>Tokenize the text into a tidy format, preserving the source line of each word</li>
+<li>Join on the Bing lexicon to retain only words with labeled sentiment</li>
+<li>For sequential chunks of 25 lines, count the number of positive words and the number of negative words</li>
+<li>Calculate a simple sentiment score as the difference between the positive word count and the negative word count</li>
+</ol>
+<p>And here’s how that looks in code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(topicmodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>bing <span class="ot">&lt;-</span> <span class="fu">get_sentiments</span>(<span class="st">"bing"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>lines_per_chunk <span class="ot">&lt;-</span> <span class="dv">25</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>txt_sentiment <span class="ot">&lt;-</span> txt_corp <span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">line =</span> <span class="fu">row_number</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(word, text) <span class="sc">%&gt;%</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(bing, <span class="at">by=</span><span class="st">"word"</span>, <span class="at">relationship =</span> <span class="st">"many-to-many"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(<span class="at">chunk =</span> line <span class="sc">%/%</span> lines_per_chunk, sentiment) <span class="sc">%&gt;%</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sentiment, <span class="at">values_from =</span> n, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">sentiment =</span> positive <span class="sc">-</span> negative)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>To get a better feel for what’s happening in the code above, try running it one line at a time to understand how the data is transformed by each operation.</p>
+<p>Let’s plot these scores and see how sentiment changes throughout the book, in chunks of 25 lines at a time. (As an exercise, you may want to try running the code and visualization for different values of <code>lines_per_chunk</code>; there’s certainly nothing magical about 25 lines!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(txt_sentiment, <span class="fu">aes</span>(chunk, sentiment, <span class="at">fill=</span>sentiment)) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="fu">paste0</span>(<span class="st">"Text chunk ("</span>, lines_per_chunk, <span class="st">" lines each)"</span>)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="st">"Sentiment"</span>) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">mid=</span><span class="st">"gray50"</span>, <span class="at">high=</span><span class="st">"green"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">guide=</span><span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For fun, let’s extract the chunk with the most negative score, then pull that section of the book to see whether the low score makes sense to us.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>chunk_index <span class="ot">&lt;-</span> txt_sentiment <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_min</span>(sentiment, <span class="at">n=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(chunk)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>txt_corp <span class="sc">%&gt;%</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(chunk_index <span class="sc">*</span> lines_per_chunk <span class="sc">&lt;=</span> <span class="fu">row_number</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(text) <span class="sc">%&gt;%</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(lines_per_chunk) <span class="sc">%&gt;%</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">n=</span>lines_per_chunk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 25 × 1
+   text                                                               
+   &lt;chr&gt;                                                              
+ 1 "shed for them.\""                                                 
+ 2 ""                                                                 
+ 3 "All of a sudden Peter leaped to his feet and ran hastily after"   
+ 4 "the goats. Heidi followed him as fast as she could, for she was"  
+ 5 "too eager to know what had happened to stay behind. Peter dashed" 
+ 6 "through the middle of the flock towards that side of the"         
+ 7 "mountain where the rocks fell perpendicularly to a great depth"   
+ 8 "below, and where any thoughtless goat, if it went too near, might"
+ 9 "fall over and break all its legs. He had caught sight of the"     
+10 "inquisitive Greenfinch taking leaps in that direction, and he was"
+11 "only just in time, for the animal had already sprung to the edge" 
+12 "of the abyss. All Peter could do was to throw himself down and"   
+13 "seize one of her hind legs. Greenfinch, thus taken by surprise,"  
+14 "began bleating furiously, angry at being held so fast and"        
+15 "prevented from continuing her voyage of discovery. She struggled" 
+16 "to get loose, and endeavored so obstinately to leap forward that" 
+17 "Peter shouted to Heidi to come and help him, for he could not get"
+18 "up and was afraid of pulling out the goat's leg altogether."      
+19 ""                                                                 
+20 "Heidi had already run up and she saw at once the danger both"     
+21 "Peter and the animal were in. She quickly gathered a bunch of"    
+22 "sweet-smelling leaves, and then, holding them under Greenfinch's" 
+23 "nose, said coaxingly, \"Come, come, Greenfinch, you must not be"  
+24 "naughty! Look, you might fall down there and break your leg, and" 
+25 "that would give you dreadful pain!\""                             </code></pre>
+</div>
+</div>
+<p>And same for the chunk with the most positive score. What do you think? Does this seem like a more positive passage compared with the one above?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## What's the most positive chunk?</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>chunk_index <span class="ot">&lt;-</span> txt_sentiment <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(sentiment, <span class="at">n=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(chunk)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>txt_corp <span class="sc">%&gt;%</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(chunk_index <span class="sc">*</span> lines_per_chunk <span class="sc">&lt;=</span> <span class="fu">row_number</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(text) <span class="sc">%&gt;%</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(lines_per_chunk) <span class="sc">%&gt;%</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="at">n=</span>lines_per_chunk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 25 × 1
+   text                                                               
+   &lt;chr&gt;                                                              
+ 1 "invalid chair."                                                   
+ 2 ""                                                                 
+ 3 "They had not far to go to reach the field of flowers, and could"  
+ 4 "already catch sight of the cistus flowers glowing gold in the"    
+ 5 "sun. As they came to the bushes of the blue bell flowers, with"   
+ 6 "sunny, inviting patches of warm ground between them, Clara said," 
+ 7 "\"Mightn't we sit down here for a while?\""                       
+ 8 ""                                                                 
+ 9 "This was just what Heidi enjoyed, and so the children sat down"   
+10 "in the midst of the flowers, Clara for the first time on the dry,"
+11 "warm mountain grass, and she found it indescribably delightful."  
+12 "Around her were the blue flowers softly waving to and fro, and"   
+13 "beyond the gleaming patches of the cistus flowers and the red"    
+14 "centaury, while the sweet scent of the brown blossoms and of the" 
+15 "fragrant prunella enveloped her as she sat. Everything was so"    
+16 "lovely! so lovely! And Heidi, who was beside her, thought she"    
+17 "had never seen it so perfectly beautiful up here before, and she" 
+18 "did not know herself why she felt so glad at heart that she"      
+19 "longed to shout for joy. Then she suddenly remembered that Clara" 
+20 "was cured; that was the crowning delight of all that made life so"
+21 "delightful in the midst of all this surrounding beauty. Clara sat"
+22 "silent, overcome with the enchantment of all that her eye rested" 
+23 "upon, and with the anticipation of all the happiness that was now"
+24 "before her. There seemed hardly room in her heart for all her"    
+25 "joyful emotions, and these and the ecstasy aroused by the"        </code></pre>
+</div>
+</div>
+<!--
+
+
+::: {.cell}
+
+```{.r .cell-code}
+txt_corp %>%
+    filter(lines_per_chunk * chunk_index <= row_number()) %>%
+    head(lines_per_chunk) %>%
+    unnest_tokens(input=text, output=word) %>%
+    anti_join(stop_words) %>%
+    inner_join(bing) %>%
+    count(word, sentiment, sort=TRUE)
+```
+:::
+
+
+-->
+<!--
+
+
+::: {.cell}
+
+```{.r .cell-code}
+tmp <- txt_corp %>%
+    unnest_tokens(input=text, output=word) %>%
+    anti_join(stop_words) %>%
+    count(word, sort=TRUE) %>%
+    inner_join(bing) %>%
+    filter(10 <= n) %>%
+    mutate(n = ifelse(sentiment=="positive", n, -n)) %>%
+    arrange(desc(n))
+
+tmp %>%
+    mutate(row = row_number(),
+         sentiment = ifelse(0<n, "Positive", "Negative")) %>%
+    ggplot(aes(row, n)) +
+        ggrepel::geom_text_repel(aes(label=word, colour=sentiment),
+                                 max.overlaps=75) +
+        scale_color_manual(values=c(Positive="green", Negative="red"))
+```
+:::
+
+
+-->
 </section>
-<section id="steps" class="level3" data-number="13.6.2">
-<h3 data-number="13.6.2" class="anchored" data-anchor-id="steps"><span class="header-section-number">13.6.2</span> Steps</h3>
+<section id="exercise-basic-topic-modeling" class="level3" data-number="13.6.2">
+<h3 data-number="13.6.2" class="anchored" data-anchor-id="exercise-basic-topic-modeling"><span class="header-section-number">13.6.2</span> Exercise: Basic topic modeling</h3>
+<p>Now let’s switch back to the northern Russia village assessment we looked at earlier, published by Susan Crate. This time we’ll add two more publications from that package, and do some basic topic modeling.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Step 0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before we get going, let’s load the <code>topicmodels</code> package.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(topicmodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1196,16 +1360,16 @@ Step 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Get some PDFs from the Delta Stewardship Council</p>
+<p>Now read in two additional publications from the the Arctic Data Center entry <a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA2ZW18T65">here</a>. In particular, let’s get the URLs for <em>Crate_Weather Climate Society 2011.pdf</em> and <em>Crate_Human Ecology Review 2008.pdf</em>.</p>
 </div>
 </div>
+<!-- Note: When compiling this document, we'll load from local files rather than pulling over the internet -->
 <div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>delta_url <span class="ot">&lt;-</span> <span class="st">"https://deltacouncil.ca.gov/pdf/delta-plan/"</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dp_ch3 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(<span class="fu">paste0</span>(delta_url, <span class="st">"2018-04-26-amended-chapter-3.pdf"</span>))</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>dp_ch4 <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(<span class="fu">paste0</span>(delta_url, <span class="st">"2022-06-29-chapter-4-protect-restore-and-enhance-the-delta-ecosystem.pdf"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pdf_url <span class="ot">&lt;-</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Ad7aedbec-8404-4194-a303-b6730065f499"</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>climate_pdf <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(pdf_url)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>pdf_url <span class="ot">&lt;-</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Ac78be0d8-9b22-4bc0-8e16-0e3823212250"</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>human_pdf <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(pdf_url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1217,29 +1381,27 @@ Step 2
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Tidy the data using word tokens, remove stop words, and combine both into one dataframe.</p>
+<p>For each newly loaded PDF document, tidy the data using word tokens, then remove stop words. This should start to feel familiar by now! As an added step, we’ll combine all three tidied datasets into one dataframe using the <code>dplyr::bind_rows()</code> function, while adding a simple <code>document</code> label to keep trap of where all the text game from.</p>
 </div>
 </div>
 <div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>dp_ch3_words <span class="ot">&lt;-</span> dp_ch3 <span class="sc">%&gt;%</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">corpus</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text) <span class="sc">%&gt;%</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>dp_ch4_words <span class="ot">&lt;-</span> dp_ch4 <span class="sc">%&gt;%</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  quanteda<span class="sc">::</span><span class="fu">corpus</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text) <span class="sc">%&gt;%</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words)</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>dp_words <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  dp_ch3_words <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">document=</span><span class="st">"Chapter3"</span>),</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  dp_ch4_words <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">document=</span><span class="st">"Chapter4"</span>)</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>climate_words <span class="ot">&lt;-</span> climate_pdf <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    quanteda<span class="sc">::</span><span class="fu">corpus</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(word, text) <span class="sc">%&gt;%</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anti_join</span>(stop_words)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>human_words <span class="ot">&lt;-</span> human_pdf <span class="sc">%&gt;%</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    quanteda<span class="sc">::</span><span class="fu">corpus</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(word, text) <span class="sc">%&gt;%</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anti_join</span>(stop_words)</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>crate_words <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    anthro_words <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">document=</span><span class="st">"Anthropology"</span>),</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    human_words <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">document=</span><span class="st">"Human"</span>),</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    climate_words <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">document=</span><span class="st">"Climate"</span>)</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1251,16 +1413,25 @@ Step 3
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Create a document-term matrix.</p>
+<p>This time, we’re going to put a little more effort into the data preprocessing. In particular, let’s:</p>
+<ol type="1">
+<li>Remove all terms (words) that start with a digit (0-9).</li>
+<li>Remove terms “pp” and “volume”, which are distracting from our goal of identifying substantative topics.</li>
+<li>Find all places where the words “climate” and “change” appear in sequence, and replace these with a compound “climate_change” term.</li>
+</ol>
 </div>
 </div>
 <div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dp_dtm <span class="ot">&lt;-</span> dp_words <span class="sc">%&gt;%</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(document, word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cast_dtm</span>(document, word, n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove words starting with a digit</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>crate_words <span class="ot">&lt;-</span> crate_words <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(word, <span class="st">"^[0-9]"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>word <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"pp"</span>, <span class="st">"volume"</span>))</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co"># combine "climate" and "change" into "climate_change"!</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>crate_words <span class="ot">&lt;-</span> crate_words <span class="sc">%&gt;%</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">word =</span> <span class="fu">ifelse</span>(word<span class="sc">==</span><span class="st">"climate"</span> <span class="sc">&amp;</span> <span class="fu">lead</span>(word)<span class="sc">==</span><span class="st">"change"</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"climate_change"</span>, word)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>(word<span class="sc">==</span><span class="st">"change"</span> <span class="sc">|</span> <span class="fu">lag</span>(word)<span class="sc">==</span><span class="st">"climate_change"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1272,52 +1443,13 @@ Step 4
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Run topic modeling using Latent Dirichlet allocation (LDA).</p>
+<p>Now that we have a nicely preprocessed (and tidy!) dataframe with our documents and terms, we’re ready to convert this into a document-term matrix for input into the topic model. After you create this in your session, have a look at the object. Does its structure make sense?</p>
 </div>
 </div>
 <div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>dp_lda <span class="ot">&lt;-</span> <span class="fu">LDA</span>(dp_dtm, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="dv">1234</span>))</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>dp_topics <span class="ot">&lt;-</span> <span class="fu">tidy</span>(dp_lda, <span class="at">matrix =</span> <span class="st">"beta"</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>dp_top_terms <span class="ot">&lt;-</span> dp_topics <span class="sc">%&gt;%</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(topic) <span class="sc">%&gt;%</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(beta, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(topic, <span class="sc">-</span>beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Step 4
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>What are the top terms?</p>
-</div>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>dp_top_terms <span class="sc">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">term =</span> <span class="fu">reorder_within</span>(term, beta, topic)) <span class="sc">%&gt;%</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(beta, term, <span class="at">fill =</span> <span class="fu">factor</span>(topic))) <span class="sc">+</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> topic, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reordered</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="session_13_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>crate_dtm <span class="ot">&lt;-</span> crate_words <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(document, word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cast_dtm</span>(document, word, n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1329,33 +1461,172 @@ Step 5
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>What <em>are</em> these two topics, as expressed using the words most strongly associated with each one?</p>
+<p>Now that the prep work is all done, it’s time to do the topic model itself – in just one line of code!</p>
+<p>Here we are using <strong>Latent Dirichlet Allocation</strong> (LDA). LDA is a commonly used topic model that assumes (a) each document is composed of some set of topics, and (2) each topic is composed of a set of words. More precisely, it assumes each document is a particular <em>probability distribution</em> over topics, and each topic is a <em>probability distribution</em> over words. If you’re new to this stuff, that might sound like a mouthful, but we’ll see some probabilities later, so it’s worth mentioning it now.</p>
+<p>Like many traditional models, note that LDA treats documents as <em>bags of words</em>, discarding information about word order, word proximity, and other high level semantic structures. But the trade-off is that running an LDA is fast and cheap!</p>
+<p>One of the hyperparameters of LDA – i.e., things we have to choose as analysts - is how many topics to model across all of the documents. LDA is not capable of figuring this out on its own. There are ways to tune this parameter, but for this exercise we’ll just used a fixed set of 4 topics, specified by the argument <code>k</code> below.</p>
 </div>
 </div>
 <div class="cell">
-<details class="code-fold">
-<summary>Answer</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>beta_wide <span class="ot">&lt;-</span> dp_topics <span class="sc">%&gt;%</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">topic =</span> <span class="fu">paste0</span>(<span class="st">"topic"</span>, topic)) <span class="sc">%&gt;%</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> topic, <span class="at">values_from =</span> beta) <span class="sc">%&gt;%</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(topic1 <span class="sc">&gt;</span> .<span class="dv">001</span> <span class="sc">|</span> topic2 <span class="sc">&gt;</span> .<span class="dv">001</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_ratio =</span> <span class="fu">log2</span>(topic2 <span class="sc">/</span> topic1))</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>beta_wide <span class="sc">%&gt;%</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">term=</span><span class="fu">reorder</span>(term, log_ratio)) <span class="sc">%&gt;%</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="fu">abs</span>(log_ratio), <span class="at">n=</span><span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  ggplot <span class="sc">+</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(term, log_ratio)) <span class="sc">+</span></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>crate_lda <span class="ot">&lt;-</span> <span class="fu">LDA</span>(crate_dtm, <span class="at">k =</span> <span class="dv">4</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="dv">99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Step 6
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using the LDA output, we can ask some questions of the fitted model.</p>
+<p>For starters, for each topic, what are the estimated probabilities of each word? In rough terms, this is a measure of the strength of association between each word and each topic. The <code>tidy</code> function let’s us extract these so-called <em>beta</em> values very easily from the fitted LDA object. Below, we’ll extract the 20 highest probability words for each of our 4 topics.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>crate_term_topics <span class="ot">&lt;-</span> <span class="fu">tidy</span>(crate_lda, <span class="at">matrix =</span> <span class="st">"beta"</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>crate_top_terms <span class="ot">&lt;-</span> crate_term_topics <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(topic) <span class="sc">%&gt;%</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(beta, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(topic, <span class="sc">-</span>beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Step 7
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using these top terms per topic, we can plot a bar chart that helps us figure out what <em>are</em> these four inferred topics, as described using the words most strongly associated with each one.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>crate_top_terms <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">topic =</span> <span class="fu">paste</span>(<span class="st">"Topic"</span>, topic),</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">term =</span> <span class="fu">reorder_within</span>(term, beta, topic)) <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(beta, term, <span class="at">fill =</span> topic)) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_x_continuous</span>(<span class="st">"Probability"</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_y_reordered</span>(<span class="st">"Term"</span>) <span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="sc">~</span> topic, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="session_13_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="session_13_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Step 8
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now let’s get a sense of the relationship between each document and the inferred topics. To do this, we’ll again use the <code>tidy()</code> function, but this time with the “gamma” argument to extract document-topic probabilities. In rough terms, these measure the strength of association between each document and each topic.</p>
+<p>With only 3 documents and 4 topics, it’s straightforward to look at the extracted probabilities directly, but let’s still use <code>ggplot</code> to make a simple heat map to show the pattern visually.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>crate_doc_topics <span class="ot">&lt;-</span> <span class="fu">tidy</span>(crate_lda, <span class="at">matrix =</span> <span class="st">"gamma"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>crate_doc_topics <span class="sc">%&gt;%</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_tile</span>(<span class="fu">aes</span>(document, topic, <span class="at">fill =</span> gamma)) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_fill_gradient</span>(<span class="st">"Probability"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">low =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"tomato2"</span>,</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Document"</span>, <span class="at">y =</span> <span class="st">"Topic"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Step 9
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Below, we’ll extract the highest probability document for each topic, join it back to the top words, and visualize those top words in a faceted chart labeling the most strongly associated document (and its estimate probability). Whew!</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>crate_top_doc_topics <span class="ot">&lt;-</span> crate_doc_topics <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(topic) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">order_by =</span> gamma, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>gamma), <span class="st">"%"</span>),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">document =</span> <span class="fu">paste0</span>(document, <span class="st">" ("</span>, percent, <span class="st">")"</span>))</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>crate_top_doc_topics <span class="sc">%&gt;%</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(crate_top_terms, <span class="at">by =</span> <span class="st">"topic"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">term =</span> <span class="fu">reorder_within</span>(term, beta, topic)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(beta, term, <span class="at">fill =</span> <span class="fu">factor</span>(topic))) <span class="sc">+</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_x_continuous</span>(<span class="st">"Probability"</span>,</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_y_reordered</span>(<span class="st">"Term"</span>) <span class="sc">+</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_fill_discrete</span>(<span class="st">"Topic"</span>) <span class="sc">+</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="sc">~</span> document, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There we have it! What do you think about these topics? Do they kind of make sense? An interesting property of LDA is that it allows terms to participate in multiple topics. The topics here have a lot of overlap, which probably makes sense given that these papers have a lot in common. However, you should be able to get a sense for how the topics differ based on their term composition, and hence a corresponding flavor for each of the corresponding documents.</p>
+<!--
+::: callout-note
+#### Step 4
+
+What are the top terms?
+:::
+
+
+
+::: {.cell}
+
+```{.r .cell-code  code-fold="true" code-summary="Answer"}
+beta_wide <- crate_term_topics %>%
+    mutate(topic = paste0("topic", topic)) %>%
+    tidyr::pivot_wider(names_from = topic, values_from = beta) %>%
+    filter(topic1 > .001 | topic2 > .001) %>%
+    mutate(log_ratio = log2(topic2 / topic1))
+
+beta_wide %>%
+    mutate(term=reorder(term, log_ratio)) %>%
+    slice_max(abs(log_ratio), n = 20) %>%
+    ggplot +
+        geom_col(aes(term, log_ratio)) +
+        coord_flip()
+```
+
+::: {.cell-output-display}
+![](session_13_files/figure-html/unnamed-chunk-44-1.png){width=672}
+:::
+:::
+
+
+-->
 <div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1388,6 +1659,9 @@ Farrell, Maxwell J., Liam Brierley, Anna Willoughby, Andrew Yates, and Nicole Mi
 </div>
 <div id="ref-froehlich2017" class="csl-entry" role="listitem">
 Froehlich, Halley E., Rebecca R. Gentry, Michael B. Rust, Dietmar Grimm, and Benjamin S. Halpern. 2017. <span>“Public Perceptions of Aquaculture: Evaluating Spatiotemporal Patterns of Sentiment Around the World.”</span> Edited by Christopher M. Somers. <em>PLOS ONE</em> 12 (1): e0169281. <a href="https://doi.org/10.1371/journal.pone.0169281">https://doi.org/10.1371/journal.pone.0169281</a>.
+</div>
+<div id="ref-hu2004" class="csl-entry" role="listitem">
+Hu, Minqing, and Bing Liu. 2004. <span>“Mining and Summarizing Customer Reviews.”</span> In <em>Proceedings of the Tenth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 168–77. KDD ’04. New York, NY, USA: ACM. <a href="https://doi.org/10.1145/1014052.1014073">https://doi.org/10.1145/1014052.1014073</a>.
 </div>
 <div id="ref-vanhoutan2020" class="csl-entry" role="listitem">
 Van Houtan, Kyle S., Tyler Gagne, Clinton N. Jenkins, and Lucas Joppa. 2020. <span>“Sentiment Analysis of Conservation Studies Captures Successes of Species Reintroductions.”</span> <em>Patterns</em> 1 (1): 100005. <a href="https://doi.org/10.1016/j.patter.2020.100005">https://doi.org/10.1016/j.patter.2020.100005</a>.
