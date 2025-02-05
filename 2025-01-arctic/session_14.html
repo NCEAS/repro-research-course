@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.586">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Fundamentals in Data Management for Qualitative and Quantitative Arctic Research - 14&nbsp; U.S Census Data in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./session_15.html" rel="next">
+<link href="./session_13.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title d-none d-lg-block"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Training Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="sidebar-tool px-1"><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/ucsb_nceas" title="" class="sidebar-tool px-1"><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/nceas-training/tree/2025-01-arctic" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">About the course</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_01.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to the Arctic Data Center</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_02.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_03.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to R Programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_04.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Thinking Preferences &amp; Social Aspects of Collaboration</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_05.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Writing Data Management Plans</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_06.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_07.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Practice: Literate Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_08.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling / Tidy Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_09.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_10.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Intro to Data Visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_11.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ethical Data Collection</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_12.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R Practice: Cleaning and Wrangling</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_13.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_14.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_15.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Metadata Best Practices and Data Publishing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_16.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating Data Portals</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_17.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reproducible Survey Workflow</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_18.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Provenance and Reproducibility</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#introduction-to-tidycensus" id="toc-introduction-to-tidycensus" class="nav-link" data-scroll-target="#introduction-to-tidycensus"> <span class="header-section-number">14.1</span> Introduction to <code>tidycensus</code></a>
+  <ul class="collapse">
+  <li><a href="#general-structure" id="toc-general-structure" class="nav-link" data-scroll-target="#general-structure"> <span class="header-section-number">14.1.1</span> General Structure</a></li>
+  </ul></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"> <span class="header-section-number">14.2</span> Getting Started</a></li>
+  <li><a href="#quering-data-focus-on-2020-decennial-data" id="toc-quering-data-focus-on-2020-decennial-data" class="nav-link" data-scroll-target="#quering-data-focus-on-2020-decennial-data"> <span class="header-section-number">14.3</span> Quering data (focus on 2020 decennial data)</a>
+  <ul class="collapse">
+  <li><a href="#the-2020-decennial-data" id="toc-the-2020-decennial-data" class="nav-link" data-scroll-target="#the-2020-decennial-data"> <span class="header-section-number">14.3.1</span> The 2020 Decennial Data</a></li>
+  <li><a href="#getting-census-data" id="toc-getting-census-data" class="nav-link" data-scroll-target="#getting-census-data"> <span class="header-section-number">14.3.2</span> Getting census data</a></li>
+  </ul></li>
+  <li><a href="#getting-census-data-ready-for-analysis" id="toc-getting-census-data-ready-for-analysis" class="nav-link" data-scroll-target="#getting-census-data-ready-for-analysis"> <span class="header-section-number">14.4</span> Getting Census Data ready for analysis</a></li>
+  <li><a href="#notes-on-get_acs" id="toc-notes-on-get_acs" class="nav-link" data-scroll-target="#notes-on-get_acs"> <span class="header-section-number">14.5</span> Notes on <code>get_acs()</code></a></li>
+  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"> <span class="header-section-number">14.6</span> Resources</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+
+
+
+
+<section id="learning-objectives" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Provide an overview of US Census data</li>
+<li>Introduce the main functions of the <code>tidycensus</code> package to be able to work with census data</li>
+<li>Review data wrangling function to get census data ready for analysis</li>
+<li>Plot census data using <code>ggplot2</code></li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Acknowledgement
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This lesson is based on <a href="https://walker-data.com/census-r/index.html">Analyzing US Census Data: Methods, Maps, and Models in R</a>, (Chapter 1 through 4) by Kyle Walker. And Walker’s workshop “Analyzing 2020 Census Data with R and <code>tidycensus</code>” for University of Michigan (2022). GitHub repository <a href="https://github.com/walkerke/umich-workshop-2022">here</a>.</p>
+</div>
+</div>
+<!--## Overview
+
+"While the decennial US Census and American Community Survey are the most popular and widely used datasets produced by the US Census Bureau, the Bureau conducts hundreds of other surveys and disseminates data on a wide range of subjects to the public. These datasets include economic and business surveys, housing surveys, international data, population estimates and projections, and much more; a full listing is available on the Census website." -->
+</section>
+<section id="introduction-to-tidycensus" class="level2 page-columns page-full" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="introduction-to-tidycensus"><span class="header-section-number">14.1</span> Introduction to <code>tidycensus</code></h2>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="quarto-figure quarto-figure-right">
+<figure class="figure">
+<p><img src="images/tidycensus_logo.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div></div><p>When working with census data, the general workflow would be to go to <a href="data.census.gov">data.census.gov</a>, filter data and queries based on variables and geographies, and then download the data into a spreadsheet. People that work with census data do this over and over again.</p>
+<p>The <code>tidycensus</code> package (<span class="citation" data-cites="tidycensus2021">Walker and Matt (<a href="#ref-tidycensus2021" role="doc-biblioref">2021</a>)</span>) was developed to systematize this process and do this systematization using R. In 2012 the US Census Bureau released the Census Application Programming Interface (API) as a way to disseminate government data resources to the public. This interface now provides programmatic access to hundreds of data resources from the Census Bureau. The vision behind this package was to incorporate the API access into an R package to facilitate access to census data using R.</p>
+<p>Note there are other R packages that interact with the census APIs, such as <a href="https://cran.r-project.org/web/packages/censusapi/index.html"><code>censusapi</code></a> and <a href="https://cran.r-project.org/web/packages/acs/index.html"><code>acs</code></a>. In this lesson, we are going to focus on the <code>tidycensus</code> package, given that is continuously maintained by the authors, has good documentation and it makes it easy to work with other <code>tidyverse</code> functions.</p>
+<p>From Walkers Book:</p>
+<blockquote class="blockquote">
+<p>“The <code>tidycensus</code> is an R package that provides an interface to access and work with the United States Census Bureau data. It simplifies the process of retrieving and analyzing census data by allowing users to query data directly from the Census Bureau’s APIs and then organize the data into a tidy format for easy manipulation and analysis.”</p>
+</blockquote>
+<p>Note that this lesson is just an introduction to this package. Here we aim to providing the basic tools for you to understand how the core functions of this package work so you can adapt to your specific census data needs.</p>
+<section id="general-structure" class="level3" data-number="14.1.1">
+<h3 data-number="14.1.1" class="anchored" data-anchor-id="general-structure"><span class="header-section-number">14.1.1</span> General Structure</h3>
+<p><code>tidycensus</code> takes an opinionated approach to accessing a selected number of census APIs. The main goal is to facilitate access to a few census APIs through R.</p>
+<p>Data files you can access through this package are named and described in the table below.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Survey Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Decennial census</td>
+<td>Complete enumeration of the US population to assist with apportionment. It asks a limited set of questions on race, ethnicity, age, sex, and housing tenure. Data from 2000, 2010, available data from 2020</td>
+</tr>
+<tr class="even">
+<td>American Community Survey (ACS)</td>
+<td>Detailed demographic information about US population. Annual data updates. 1-year ACS greater, and the 5-year ACS, which is a moving average of data over a 5-year period that covers geographies down to the Census block group. ACS data represent estimates rather than precise counts. Data includes margin of error.</td>
+</tr>
+<tr class="odd">
+<td>Population estimate program</td>
+<td>These datasets include yearly estimates of population characteristics by state, county, and metropolitan area, along with components of change demographic estimates like births, deaths, and migration rates.</td>
+</tr>
+<tr class="even">
+<td>ACS Public Use Microdata</td>
+<td>Anonymized individual-level records from the ACS organized by households</td>
+</tr>
+<tr class="odd">
+<td>Migration Flows</td>
+<td>Information about in and outflows from several geographies from the 5-year ACS samples.</td>
+</tr>
+</tbody>
+</table>
+<p>The idea behind this package is to make the tedious process of working with Census data more concise. It pulls data from the census API and returns it to the user in a “tidy” format.</p>
+<p>Can easily merge census geometries to data for mapping. Which apparently can be a very time-consuming task. Unfortunately, for this session, we will not get into mapping. Check out Analyzing Census Data <a href="https://walker-data.com/census-r/mapping-census-data-with-r.html">Chapter 6: Mapping Census Data with R</a> for more details on this subject.</p>
+<p>Other features of this package:</p>
+<ul>
+<li>Includes tools for handling margins of errors in the ACS and working with survey weights in the ACS Public Use Microdata.</li>
+<li>You can request data from states and counties by name instead of FIPS codes.</li>
+</ul>
+</section>
+</section>
+<section id="getting-started" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">14.2</span> Getting Started</h2>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol start="0" type="1">
+<li><p>Make sure you’re in the right project (<code>training_{USERNAME}</code>) and use the <code>Git</code> workflow by <code>Pull</code>ing to check for any changes. Then, create a new Quarto document, delete the default text, and save this document.</p></li>
+<li><p>Load the packages we’ll need:</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>Get an API key to connect our session with the census data and be able to retrieve data</li>
+</ol>
+<ul>
+<li>Go to <a href="https://api.census.gov/data/key_signup.html" class="uri">https://api.census.gov/data/key_signup.html</a></li>
+<li>Fill out the form</li>
+<li>Check your email for your key.</li>
+<li>Make sure to ACTIVATE your key</li>
+</ul>
+<ol start="3" type="1">
+<li>Use the <code>census_api_key()</code> function to set your key. Note: <code>install = TRUE</code> forces r to write this key to a file in our R environment that will be read every time you use R. This means, by setting this argument to <code>TRUE</code>, you only have to do it once in any computer you are working. If you see this argument as <code>FALSE</code>, R will not remember this key next time you come back.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">census_api_key</span>(<span class="st">"YOUR KEY GOES HERE"</span>, <span class="at">install =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li><p>Restart R</p></li>
+<li><p>Run the library chunk again.</p></li>
+</ol>
+</div>
+</div>
+<p>Note 1: As we are working on the server, the package is already installed in our system. But when you go work on your own computers, you will have to install the package using <code>install.package("tidycensus")</code>, if you haven’t done that already.</p>
+<p>Note 2: The API key you received in your email is good to use in other instances too. Keep this email! We are using the key to connect your included-crab session with the US Census data. You can use the same key to connect your personal/work computer too.</p>
+</section>
+<section id="quering-data-focus-on-2020-decennial-data" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="quering-data-focus-on-2020-decennial-data"><span class="header-section-number">14.3</span> Quering data (focus on 2020 decennial data)</h2>
+<section id="the-2020-decennial-data" class="level3" data-number="14.3.1">
+<h3 data-number="14.3.1" class="anchored" data-anchor-id="the-2020-decennial-data"><span class="header-section-number">14.3.1</span> The 2020 Decennial Data</h3>
+<p>Before we dive into retrieving data from the 2020 decennial census, we need to mention a couple of things. Based on all the challenges of running a decennial census during a pandemic, the Census Bureau had to make decisions and provide new and different functionalists. The pandemic also delayed the release of the 2020 census data. You can check <a href="https://www2.census.gov/programs-surveys/decennial/2020/program-management/2010_20_data_product_release_dates.pdf">here</a> what data products have been released until now, and the Bureau’s timeline to release more data.</p>
+<p>One of the main files from the 2020 census is the PL94-171 Redistricting Summary File which is used for congressional appointments and redistricting. Variable available in this file are:</p>
+<ul>
+<li>Total counts (population &amp; households)</li>
+<li>Occupied/vacant housing unit</li>
+<li>Total and voting age population breakdown by race &amp; ethnicity</li>
+<li>Group quarter status</li>
+</ul>
+<p>Demographic and Housing Characteristics Summary Files (Different to summary file 1 form 2010). Contains age and sex breakdowns and detailed race and ethnicity data.</p>
+</section>
+<section id="getting-census-data" class="level3" data-number="14.3.2">
+<h3 data-number="14.3.2" class="anchored" data-anchor-id="getting-census-data"><span class="header-section-number">14.3.2</span> Getting census data</h3>
+<p>The main functions from <code>tidycensus</code> represent the select number of datasets that this package provides access to. The following table provides the description for each of the core functions from <a href="https://walker-data.com/census-r/an-introduction-to-tidycensus.html#decennial-census">Walker’s book</a>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>get_decennial()</code></td>
+<td>Retrieves data from the US Decennial Census APIs for 2000, 2010, and 2020.</td>
+</tr>
+<tr class="even">
+<td><code>get_acs()</code></td>
+<td>Requests data from the 1-year and 5-year American Community Survey samples. Data are available from the 1-year ACS back to 2005 and the 5-year ACS back to 2005-2009.</td>
+</tr>
+<tr class="odd">
+<td><code>get_estimates()</code></td>
+<td>Allows you to get the Population Estimates. These datasets include yearly estimates of population characteristics by state, county, and metropolitan area, along with components of change demographic estimates like births, deaths, and migration rates.</td>
+</tr>
+<tr class="even">
+<td><code>get_pums()</code></td>
+<td>Accesses data from the ACS Public Use Microdata Sample APIs. These samples include anonymized individual-level records from the ACS organized by household and are highly useful for many different social science analyses</td>
+</tr>
+<tr class="odd">
+<td><code>get_flows()</code></td>
+<td>an interface to the ACS Migration Flows APIs. Includes information on in- and out-flows from various geographies for the 5-year ACS samples, enabling origin-destination analyses.</td>
+</tr>
+</tbody>
+</table>
+<p>Here we are going to focus on getting started with using <code>get_decennial()</code> as a way of understanding how this package works.</p>
+<p>With <code>get_decennial()</code>, you can query data from 2000, 2010 and 2020 decennial census. The 3 necessary arguments you need to provide are:</p>
+<ul>
+<li>Geography</li>
+<li>Variable</li>
+<li>Year</li>
+</ul>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Specifying a summary file
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Another argument form <code>get_decennial()</code> is <code>sumfile =</code>.</p>
+<p>“The Census summary file; if NULL, defaults to”pl” when the year is 2020 and “sf1” for 2000 and 2010. Not all summary files are available for each decennial Census year. Make sure you are using the correct summary file for your requested variables, as variable IDs may be repeated across summary files and represent different topics”</p>
+</div>
+</div>
+<p>So, to get the total population for 2020 by state the code would look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pop_2020 <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"state"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="st">"P1_001N"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The resulting data frame you get from this query is a tibble in “tidy” format with 4 columns:</p>
+<ul>
+<li>GEOID = Code for the geographic unit (in this case FIP codes)</li>
+<li>variable = census code for the variable (eg. P1_001N is the code for the total population in the 2020 population redistricting file)</li>
+<li>value = population count</li>
+</ul>
+<p>This table provides data for one single variable. In this case the variable is <code>P1_001N</code> which refers to total population. Because those codes are relatively hard to keep track of, tidycensus provides a way to easily rename the variables when you request them by passing in a named vector for the requested variables, where each name is used rather than the census code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pop_2020_named <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"state"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="fu">c</span>(<span class="at">total_pop =</span> <span class="st">"P1_001N"</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="dv">2020</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pop_2020_named)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/tidycensus-totalpop.png" class="img-fluid"></p>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Message
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><img src="images/get_decennial_message.png" class="img-fluid"></p>
+<p>You get this message the first time you run <code>get_decennial()</code> in your session. It first makes sure your are retrieving the correct data. Then it mentions the fact that the 2020 census “Introduces errors differential privacy”.</p>
+<p>In the past other privacy methods have been used to preserve confidentiality. Differential privacy is a method that purposely introduces noise or error into the data in order to make it impossible or at least very difficult to reverse engineer the census and track where the responses are coming from. This has an impact on small area counts (e.g.: block with children but not adults). This is something to be aware if you are working with small population geographies.</p>
+<p>Only the population data is differentially infused. The household data are not.</p>
+</div>
+</div>
+<p>Note that to get total population data for the 2010 decennial census the variable code is different than the 2020 census (even though the arguments of the functions are the same). In this case the variable code would be different, but we can still name it <code>total_pop</code> to make it clear:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pop_2010 <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"state"</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">total_pop =</span> <span class="st">"P001001"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2010</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When using <code>get_decennial()</code>, you can also specify a specific table instead of only one variable. A table of data contains multiple variables. The code for getting the “P2” table from 2020 would look like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>table_p2_2020 <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"state"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">table =</span> <span class="st">"P2"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Table P2 is one of the tables of the 2020 census, which provides counts by Race with Hispanic origins.</p>
+<p>Let’s check which variables we have in the P2 table.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(table_p2_2020<span class="sc">$</span>variable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>One of the hardest things to wrap your head around when using <code>tidycensus</code> is understanding the difference between files, tables, and variables and how they work.</p>
+<p>Let’s take a look on how this works. Data is released in files. Each file is a data product from the Census Bureau (find details of the Census data products <a href="https://www.census.gov/programs-surveys/decennial-census/decade/2020/planning-management/release/about-2020-data-products.html#redistricting">here</a>), for example, PL 94-171 is one of the files for the 2020 Decennial Census. Each of these files contains many tables (P1, P2 .. P5). Each table covers a specific topic. For example, P2 provides counts by race by Hispanic origins. Then each table has multiple variables. The variable code seems to, for the most part, start with the table code. For example, the unique codes values we printed from table P2 all start with P2_.</p>
+<p>How do we navigate all these codes? There is no straightforward way. In part, this dilemma is part of working with census data, which in itself is complicated. However, <code>tidycensus</code> provides some help with a function called <code>load_variables()</code></p>
+<p>This function scrapes the variables’ names from the census website and gives you a data frame that you can interact with. This variable requires you to input a year and a file name.</p>
+<p>So let’s run this function and create an object named <code>vars_pl_2020</code> This will give us all the variable codes and definitions for the PL 94-171 redistricting file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>vars_pl_2020 <span class="ot">&lt;-</span>  <span class="fu">load_variables</span>(<span class="dv">2020</span>, <span class="st">"pl"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## for 20210</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>vars_pl_2010 <span class="ot">&lt;-</span>  <span class="fu">load_variables</span>(<span class="dv">2010</span>, <span class="st">"pl"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, let’s take a look at this data frame. And interactively search for the variables in this file. This data frame has 3 columns, variable’s name, label, and concept, which represent the table’s name.</p>
+<p>For example, here we can see the variable “P1_001N” that we used earlier to retrieve the total population by state. We can also scroll down and see that all variables that start with P2, belong to the P2 table “HISPANIC OR LATINO, AND NOT HISPANIC OR LATINO BY RACE”. We can also see the variable codes for the H1 table for Occupancy or Housing.</p>
+<p>Tables available in the 2020 Census PL file:</p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Table Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>H1</td>
+<td>Occupancy status (housing)</td>
+</tr>
+<tr class="even">
+<td>P1</td>
+<td>Race by Hispanic origin</td>
+</tr>
+<tr class="odd">
+<td>P2</td>
+<td>Hispanic or Latino, and not Hispanic or Latino by Race</td>
+</tr>
+<tr class="even">
+<td>P3</td>
+<td>Race for the population 18+</td>
+</tr>
+<tr class="odd">
+<td>P4</td>
+<td>Hispanic or Latino, and not Hispanic or Latino by Race for the Population 18 Years and Over</td>
+</tr>
+<tr class="even">
+<td>P5</td>
+<td>Group quarters status</td>
+</tr>
+</tbody>
+</table>
+<p>Note: “Group quarters are places where people live or stay, in a group living arrangement, that is owned or managed by an entity or organization providing housing and/or services for the residents.” (<a href="https://www.census.gov/glossary/?term=Group+quarters+population">US Census Bureau Glossary</a>)</p>
+<p>We won’t get into much more detail, but, you can query any of the available files for the 2020 census data. Like the Demographic and Housing Characteristics File (DHC) by running the following code. This is a much larger file with much more tables than the PL file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>vars_dhc_2020 <span class="ot">&lt;-</span>  <span class="fu">load_variables</span>(<span class="dv">2020</span>, <span class="st">"dhc"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Note you have to specify the file with sumfile =</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>household_2020 <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"state"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="st">"H10_001N"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="dv">2020</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sumfile =</span> <span class="st">"dhc"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The idea behind <code>load_variables()</code> is for you to be able to search for the variable code for the variable you need.</p>
+<p>Now that we’ve talked about variables let’s talk a little bit about geography and how <code>tidycensus</code> makes it easy to query data within census geographies. Census data is tabulated in enumeration units. These units are specific geographies including legal entities such as states and counties, and statistical entities that are not official jurisdictions but used to standardize data. The graphic below, provided by <a href="https://www.census.gov/programs-surveys/geography/guidance/hierarchy.html">census.gov</a> shows the standard hierarchy of census geographic entities.</p>
+<p><img src="images/census_geos.png" class="img-fluid"></p>
+<p>The parameter <code>geography =</code> in <code>get_acs()</code> and <code>get_decennial()</code> allows us to request data from common enumeration units. This mean we can name the specific geography we want data from. For example, let’s get data for Native population the different counties in Alaska.</p>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>alaska_native <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"county"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"AK"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="fu">c</span>(<span class="st">"Anchorage"</span>, <span class="st">"Bristol Bay"</span>, <span class="st">"Juneau"</span>, <span class="st">"Bethel"</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"P2_007N"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To learn more about the arguments for geography for each core function of <code>tidycensus</code>, check out the documentation <a href="https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus">here</a>.</p>
+<section id="quering-for-multiple-variables" class="level4" data-number="14.3.2.1">
+<h4 data-number="14.3.2.1" class="anchored" data-anchor-id="quering-for-multiple-variables"><span class="header-section-number">14.3.2.1</span> Quering for multiple variables</h4>
+<p>The <code>variable</code> argument can take a vector of variables as an input, allowing to query for more than one variable at the time. We can create a vector and then call that vector as the input of the <code>variable</code> argument, or we can use the concatenate function <code>c()</code> and request data from multiple variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Vector with race variables codes</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>race_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Hispanic =</span> <span class="st">"P2_002N"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">White =</span> <span class="st">"P2_005N"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Black =</span> <span class="st">"P2_006N"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Native =</span> <span class="st">"P2_007N"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Asian =</span> <span class="st">"P2_008N"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">HIPI =</span> <span class="st">"P2_009N"</span>) <span class="do">## Native Hawaiian and other Pacific Islander</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>alaska_race <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"county"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"AK"</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="fu">c</span>(<span class="st">"Anchorage"</span>, <span class="st">"Bristol Bay"</span>, <span class="st">"Juneau"</span>, <span class="st">"Bethel"</span>),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> race_vars,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">summary_var =</span> <span class="st">"P2_001N"</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note how this table returns the variable name we assigned in the vector above instead of the variable code! This is a handy option, given that the codes can be hard to remember what is what.</p>
+<p>Also, note that we added one more argument to our request <code>summary_var = "P2_001N</code>. This adds one more column to our output data frame, one with the summary variable value.</p>
+<p>In every table you can generally find a variable that is an appropriate denominators for a group of variables. Following the example above, the P2 table, which provides population by race with Hispanic origin, the variable “P2_001N” represents the total population. Because this variable is an an appropriate denominator for the other variables in the table, it helps to have it in a different column to make it easier to calculate proportions or percentage.</p>
+</section>
+</section>
+</section>
+<section id="getting-census-data-ready-for-analysis" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="getting-census-data-ready-for-analysis"><span class="header-section-number">14.4</span> Getting Census Data ready for analysis</h2>
+<p>Once we access the data we want, we can apply our data wrangling skills to get the data in the format that we want.</p>
+<p>Let’s demonstrate this with an example. Let’s compare the distribution of percentage White population and percentage Native population by census track in four Alaska counties.</p>
+<p>The first step is to get the data.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Exercise 1: <code>get_decennial()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Make a query to get White and Native population data for 3 Alaska counties <strong>by tract</strong> from the 2020 Decennial Census. Include the total population summary variable (<code>summary_var = "P2_001N"</code>).</li>
+</ol>
+<p>Hint: variable codes are:</p>
+<ul>
+<li>Total Native population = P2_007N</li>
+<li>Total White population = P2_005N</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>alaska_tract_nw <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">native =</span> <span class="st">"P2_007N"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">white =</span> <span class="st">"P2_005N"</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">summary_var =</span> <span class="st">"P2_001N"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"AK"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="fu">c</span>(<span class="st">"Anchorage"</span>, <span class="st">"Bristol Bay"</span>, <span class="st">"Juneau"</span>, <span class="st">"Bethel"</span>),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We can check our data by calling the <code>View(alaska_tract_nw)</code> function in the console.</p>
+<ol start="2" type="1">
+<li>Now that we have our data, next thing we will do is calculate the percentage of White and Native population in each track. Given that we have the summary variable within our data set we can easily add a new column with the percentage. And then, we will also clean the <code>NAMES</code> column and separate track, county and state into it’s own column (hint: <code>tidyr::separate()</code>).</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>alaska_tract_nw_clean <span class="ot">&lt;-</span> alaska_tract_nw <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> (value <span class="sc">/</span> summary_value)) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(NAME, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"tract"</span>, <span class="st">"county"</span>, <span class="st">"state"</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">", "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Note that we can apply all other <code>dplyr</code> functions we have learned to this dataset depending on what we want to achieve. One of the main goals of <code>tidycensus</code> is to make the output data frames compatible with <code>tidyverse</code> functions.</p>
+<ol start="3" type="1">
+<li>Now that we have or “clean” data, with all the variables we need. Let’s plot this data to <strong>compare the distribution of percentage</strong> White population and percentage Native population by census tract vary among Counties in Alaska.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alaska_tract_nw_clean,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> county, <span class="at">y =</span> value, <span class="at">fill =</span> variable)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>, <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">guide =</span> <span class="fu">guide_legend</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightblue2"</span>, <span class="st">"gold2"</span>)) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Native/White Population"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Subset of 4 Alaska Counties"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"Race"</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Decennial Census 2020 | tidycensus R package"</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">""</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">""</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Another geom to check out (note: Bristol Bay has only one tract therefore is not plotted)</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(alaska_tract_nw_clean, </span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> percent, <span class="at">fill =</span> county)) <span class="sc">+</span> </span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)<span class="sc">+</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable)<span class="sc">+</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</div>
+<!-- ## Visualizing Census Data with `ggplot2`
+
+Applying all what we learned earlier this week, we are going to use `ggplot2` to create some wonderful plots! -->
+</section>
+<section id="notes-on-get_acs" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="notes-on-get_acs"><span class="header-section-number">14.5</span> Notes on <code>get_acs()</code></h2>
+<ul>
+<li>The functions operates very similar to <code>get_decennial()</code></li>
+<li>The main differences is that is access a different survey so the options for each argument change.</li>
+<li>The two required arguments are <code>geography</code> and <code>variables</code>. The function defaults to the 2017-2021 5-year ACS</li>
+<li>1-year ACS data are more current, but are only available for geographies of population 65,000 and greater</li>
+<li>Access 1-year ACS data with the argument <code>survey = "acs1"</code>; defaults to “acs5”</li>
+<li>Example code to get median income for Alaska by county</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 1-year survey</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>median_income_1yr <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"county"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"B19013_001"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"AK"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2021</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">survey =</span> <span class="st">"acs1"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 5-year survey. Defaults to the 2017-2021 5-year ACS</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>median_income_5yr <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"county"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"B19013_001"</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"AK"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>You can access to different variables in a survey with the <code>load_variables()</code> function</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## variables for 5-year 2017-2021 ACS</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">load_variables</span>(<span class="dv">2021</span>, <span class="st">"acs5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Exercise 2: <code>get_acs()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Load variables for “acs5”, year 2021.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>vars_acs5_21 <span class="ot">&lt;-</span> <span class="fu">load_variables</span>(<span class="dv">2021</span>, <span class="st">"acs5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li><p>Find code for total median gross rent.</p></li>
+<li><p>Get acs data for median gross rent by county in Alaska.</p></li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ak_rent <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"county"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"B25031_001"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"AK"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2021</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="4" type="1">
+<li>Visualize estimate by county using <code>geom_point</code>. (Hint: use y = reorder(NAME, estimate) to order counties by estimates)</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ak_rent, <span class="fu">aes</span>(<span class="at">x =</span> estimate, <span class="at">y =</span> <span class="fu">reorder</span>(NAME, estimate))) <span class="sc">+</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="5" type="1">
+<li>Add the following layer, one by one, to your plot. Discuss with your neighbor what each line of code is doing.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Answer</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> estimate <span class="sc">-</span> moe, <span class="at">xmax =</span> estimate <span class="sc">+</span> moe),</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">label_dollar</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+
+</div>
+<ol start="6" type="1">
+<li>Enhance you plot adding a theme_*, changing the color of the points, renaming the labels, adding a title, or any other modification you want to make.</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="resources" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="resources"><span class="header-section-number">14.6</span> Resources</h2>
+<ul>
+<li><a href="files/census-data.pdf">Lesson’s slides</a></li>
+<li><a href="https://www.census.gov/">U.S Census Bureau</a></li>
+<li>Access Canadian Census data with <a href="https://cran.r-project.org/web/packages/cancensus/vignettes/cancensus.html">cancensus</a> R package</li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-tidycensus2021" class="csl-entry" role="doc-biblioentry">
+Walker, Kyle, and Herman Matt. 2021. <span>“Tidycensus: Load US Census Boundary and Attribute Data as ’Tidyverse’ and ’Sf’ -Ready Data Frames.”</span> <a href="https://github.com/walkerke/tidycensus." class="uri">https://github.com/walkerke/tidycensus.</a>
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./session_13.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./session_15.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Metadata Best Practices and Data Publishing</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

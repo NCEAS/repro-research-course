@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.586">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Fundamentals in Data Management for Qualitative and Quantitative Arctic Research - 9&nbsp; Cleaning and Wrangling Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./session_10.html" rel="next">
+<link href="./session_08.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><link rel="stylesheet" href="style.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">
+<span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span>
+</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><header id="title-block-header" class="quarto-title-block default page-columns page-full"><div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title d-none d-lg-block">
+<span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span>
+</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Training Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="sidebar-tool px-1"><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/ucsb_nceas" title="" class="sidebar-tool px-1"><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/nceas-training/tree/2025-01-arctic" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">About the course</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_01.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to the Arctic Data Center</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_02.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_03.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to R Programming</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_04.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Thinking Preferences &amp; Social Aspects of Collaboration</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_05.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Writing Data Management Plans</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_06.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_07.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Practice: Literate Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_08.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling / Tidy Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_09.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_10.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Intro to Data Visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_11.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ethical Data Collection</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_12.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R Practice: Cleaning and Wrangling</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_13.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_14.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_15.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Metadata Best Practices and Data Publishing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_16.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating Data Portals</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_17.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reproducible Survey Workflow</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./session_18.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Provenance and Reproducibility</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"> <span class="header-section-number">9.1</span> Introduction</a></li>
+  <li><a href="#data-cleaning-basics" id="toc-data-cleaning-basics" class="nav-link" data-scroll-target="#data-cleaning-basics"> <span class="header-section-number">9.2</span> Data cleaning basics</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"> <span class="header-section-number">9.3</span> Data exploration</a></li>
+  <li><a href="#about-the-pipe-operator" id="toc-about-the-pipe-operator" class="nav-link" data-scroll-target="#about-the-pipe-operator"> <span class="header-section-number">9.4</span> About the pipe (<code>%&gt;%</code>) operator</a></li>
+  <li><a href="#selecting-or-removing-columns-using-select" id="toc-selecting-or-removing-columns-using-select" class="nav-link" data-scroll-target="#selecting-or-removing-columns-using-select"> <span class="header-section-number">9.5</span> Selecting or removing columns using <code>select()</code></a></li>
+  <li><a href="#quality-check" id="toc-quality-check" class="nav-link" data-scroll-target="#quality-check"> <span class="header-section-number">9.6</span> Quality check</a></li>
+  <li><a href="#changing-column-content-using-mutate" id="toc-changing-column-content-using-mutate" class="nav-link" data-scroll-target="#changing-column-content-using-mutate"> <span class="header-section-number">9.7</span> Changing column content using <code>mutate()</code></a></li>
+  <li><a href="#changing-shape-using-pivot_longer-and-pivot_wider" id="toc-changing-shape-using-pivot_longer-and-pivot_wider" class="nav-link" data-scroll-target="#changing-shape-using-pivot_longer-and-pivot_wider"> <span class="header-section-number">9.8</span> Changing shape using <code>pivot_longer()</code> and <code>pivot_wider()</code></a></li>
+  <li><a href="#renaming-columns-with-rename" id="toc-renaming-columns-with-rename" class="nav-link" data-scroll-target="#renaming-columns-with-rename"> <span class="header-section-number">9.9</span> Renaming columns with <code>rename()</code></a></li>
+  <li><a href="#adding-columns-using-mutate" id="toc-adding-columns-using-mutate" class="nav-link" data-scroll-target="#adding-columns-using-mutate"> <span class="header-section-number">9.10</span> Adding columns using <code>mutate()</code></a></li>
+  <li><a href="#summary-statistics-using-group_by-and-summarize" id="toc-summary-statistics-using-group_by-and-summarize" class="nav-link" data-scroll-target="#summary-statistics-using-group_by-and-summarize"> <span class="header-section-number">9.11</span> Summary statistics using <code>group_by()</code> and <code>summarize()</code></a></li>
+  <li><a href="#filtering-rows-using-filter" id="toc-filtering-rows-using-filter" class="nav-link" data-scroll-target="#filtering-rows-using-filter"> <span class="header-section-number">9.12</span> Filtering rows using <code>filter()</code></a></li>
+  <li><a href="#sorting-your-data-using-arrange" id="toc-sorting-your-data-using-arrange" class="nav-link" data-scroll-target="#sorting-your-data-using-arrange"> <span class="header-section-number">9.13</span> Sorting your data using <code>arrange()</code></a></li>
+  <li><a href="#splitting-a-column-using-separate-and-unite" id="toc-splitting-a-column-using-separate-and-unite" class="nav-link" data-scroll-target="#splitting-a-column-using-separate-and-unite"> <span class="header-section-number">9.14</span> Splitting a column using <code>separate()</code> and <code>unite()</code></a></li>
+  <li><a href="#now-all-together" id="toc-now-all-together" class="nav-link" data-scroll-target="#now-all-together"> <span class="header-section-number">9.15</span> Now, all together!</a></li>
+  <li><a href="#write-out-the-results-with-readrwrite_csv" id="toc-write-out-the-results-with-readrwrite_csv" class="nav-link" data-scroll-target="#write-out-the-results-with-readrwrite_csv"> <span class="header-section-number">9.16</span> Write out the results with <code>readr::write_csv()</code></a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content"><section id="learning-objectives" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
+<ul>
+<li>Introduce <code>dplyr</code> and <code>tidyr</code> functions to clean and wrangle data for analysis</li>
+<li>Learn about the Split-Apply-Combine strategy and how it applies to data wrangling</li>
+<li>Describe the difference between wide vs.&nbsp;long table formats and how to convert between them</li>
+</ul></section><section id="introduction" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="introduction">
+<span class="header-section-number">9.1</span> Introduction</h2>
+<p>The data we get to work with are rarely, if ever, in the format we need to do our analyses. It’s often the case that one package requires data in one format, while another package requires the data to be in another format. To be efficient analysts, we should have good tools for reformatting data for our needs so we can do further work like making plots and fitting models. The <code>dplyr</code> and <code>tidyr</code> R packages provide a fairly complete and extremely powerful set of functions for us to do this reformatting quickly. Learning these tools well will greatly increase your efficiency as an analyst.</p>
+<p>Let’s look at two motivating examples.</p>
+<div class="callout-note callout callout-style-simple no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Suppose you have the following <code>data.frame</code> called <code>length_data</code> with data about salmon length and want to calculate the average length per year.</p>
+<table class="table">
+<thead><tr class="header">
+<th style="text-align: right;">year</th>
+<th style="text-align: right;">length_cm</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1990</td>
+<td style="text-align: right;">5.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1991</td>
+<td style="text-align: right;">3.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1991</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1992</td>
+<td style="text-align: right;">4.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1992</td>
+<td style="text-align: right;">5.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1992</td>
+<td style="text-align: right;">4.9</td>
+</tr>
+</tbody>
+</table>
+<p>Before thinking about the code, let’s think about the steps we need to take to get to the answer (aka pseudocode).</p>
+<p>Now, how would we code this? The <code>dplyr</code> R library provides a fast and powerful way to do this calculation in a few lines of code:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">length_data</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">summarize</span><span class="op">(</span>mean_length_cm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">length_cm</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-simple no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Another process we often need to do is to “reshape” our data. Consider the following table that is in what we call “wide” format:</p>
+<table class="table">
+<thead><tr class="header">
+<th>site</th>
+<th>1990</th>
+<th>1991</th>
+<th>…</th>
+<th>1993</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>gold</td>
+<td>101</td>
+<td>109</td>
+<td>…</td>
+<td>112</td>
+</tr>
+<tr class="even">
+<td>lake</td>
+<td>104</td>
+<td>98</td>
+<td>…</td>
+<td>102</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td>dredge</td>
+<td>144</td>
+<td>118</td>
+<td>…</td>
+<td>145</td>
+</tr>
+</tbody>
+</table>
+<p>You are probably familiar with data in the above format, where values of the variable being observed are spread out across columns. In this example we have a different column per year. This wide format works well for data entry and sometimes works well for analysis but we quickly outgrow it when using R (and know it is not tidy data!). For example, how would you fit a model with year as a predictor variable? In an ideal world, we’d be able to just run <code>lm(length ~ year)</code>. But this won’t work on our wide data because <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> needs <code>length</code> and <code>year</code> to be columns in our table.</p>
+<p>What steps would you take to get this data frame in a long format?</p>
+<p>The <code>tidyr</code> package allows us to quickly switch between wide format and long format using the <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code> function:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">site_data</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">pivot_longer</span><span class="op">(</span><span class="op">-</span><span class="va">site</span>, </span>
+<span>               names_to <span class="op">=</span> <span class="st">"year"</span>, </span>
+<span>               values_to <span class="op">=</span> <span class="st">"length"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<table class="table">
+<thead><tr class="header">
+<th>site</th>
+<th>year</th>
+<th style="text-align: right;">length</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>gold</td>
+<td>1990</td>
+<td style="text-align: right;">101</td>
+</tr>
+<tr class="even">
+<td>lake</td>
+<td>1990</td>
+<td style="text-align: right;">104</td>
+</tr>
+<tr class="odd">
+<td>dredge</td>
+<td>1990</td>
+<td style="text-align: right;">144</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td style="text-align: right;">…</td>
+</tr>
+<tr class="odd">
+<td>dredge</td>
+<td>1993</td>
+<td style="text-align: right;">145</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This lesson will cover examples to learn about the functions you’ll most commonly use from the <code>dplyr</code> and <code>tidyr</code> packages:</p>
+<table class="table">
+<caption>Common <code>dplyr</code> functions</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead><tr class="header">
+<th>Function name</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code></td>
+<td>Creates modify and deletes columns</td>
+</tr>
+<tr class="even">
+<td><code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code></td>
+<td>Groups data by one or more variables</td>
+</tr>
+<tr class="odd">
+<td><code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code></td>
+<td>Summaries each group down to one row</td>
+</tr>
+<tr class="even">
+<td><code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code></td>
+<td>Keep or drop columns using their names</td>
+</tr>
+<tr class="odd">
+<td><code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code></td>
+<td>Keeps rows that matches conditions</td>
+</tr>
+<tr class="even">
+<td><code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code></td>
+<td>order rows using columns variable</td>
+</tr>
+<tr class="odd">
+<td><code><a href="https://dplyr.tidyverse.org/reference/rename.html">rename()</a></code></td>
+<td>Rename a column</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<caption>Common <code>tidyr</code> functions</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 75%">
+</colgroup>
+<thead><tr class="header">
+<th>Function name</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code></td>
+<td>transforms data from a wide to a long format</td>
+</tr>
+<tr class="even">
+<td><code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider()</a></code></td>
+<td>transforms data from a long to a wide format</td>
+</tr>
+<tr class="odd">
+<td><code><a href="https://tidyr.tidyverse.org/reference/unite.html">unite()</a></code></td>
+<td>Unite multiple columns into one by pasting strings together</td>
+</tr>
+<tr class="even">
+<td><code><a href="https://tidyr.tidyverse.org/reference/separate.html">separate()</a></code></td>
+<td>Separate a character column into multiple columns with a regular expression or numeric locations</td>
+</tr>
+</tbody>
+</table></section><section id="data-cleaning-basics" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="data-cleaning-basics">
+<span class="header-section-number">9.2</span> Data cleaning basics</h2>
+<p>To demonstrate, we’ll be working with a tidied up version of a data set from <a href="https://knb.ecoinformatics.org/#view/df35b.304.2">Alaska Department of Fish &amp; Game containing commercial catch data from 1878-1997</a>. The data set and reference to the original source can be found at its <a href="https://knb.ecoinformatics.org/#view/df35b.304.2">public archive</a>.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>First, open a new Quarto document. Delete everything below the setup chunk, and add a library chunk that calls <code>dplyr</code>, <code>tidyr</code>, and <code>readr</code></p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+A note on loading packages
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You may have noticed the following messages pop up when you ran your library chunk.</p>
+<pre><code>Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union</code></pre>
+<p>These are important messages. They are letting you know that certain functions from the <code>stats</code> and <code>base</code> packages (which are loaded by default when you start R) are masked by <em>different functions</em> with the same name in the <code>dplyr</code> package. It turns out, the order that you load the packages in matters. Since we loaded <code>dplyr</code> after <code>stats</code>, R will assume that if you call <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>, you mean the <code>dplyr</code> version unless you specify otherwise.</p>
+<p>Being specific about which version of <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>, for example, you call is easy. To explicitly call a function by its unambiguous name, we use the syntax <code>package_name::function_name(...)</code>. So, if we wanted to call the <code>stats</code> version of <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> in this Rmarkdown document, I would use the syntax <code>stats::filter(...)</code>.</p>
+</div>
+</div>
+<div class="callout-caution callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Remove messages and warnings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Messages and warnings are important, but we might not want them in our final document. After you have read the packages in, <strong>adjust the chunk settings in your library chunk</strong> to suppress warnings and messages by adding <code>#| message: false</code> or <code>#| warning: false</code>. Both of these chunk options, when set to false, prevents messages or warnings from appearing in the rendered file.</p>
+</div>
+</div>
+<p>Now that we have introduced some data wrangling libraries, let’s get the data that we are going to use for this lesson.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Setup
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Go to <a href="https://knb.ecoinformatics.org/view/df35b.304.2">KNB Data Package Alaska commercial salmon catches by management region (1886- 1997)</a></p></li>
+<li><p>Find the data file <code>df35b.302.1</code>. Right click the “Download” button and select “Copy Link Address”</p></li>
+<li><p>Paste the copied URL into the <code><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv()</a></code> function</p></li>
+</ol>
+<p>The code chunk you use to read in the data should look something like this:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_original</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<!-- I think this is not true, at least on my Windows machine - is this a holdover from `read.csv` instead of `read_csv`? -->
+<!-- **Note for Windows users:** Keep in mind, if you want to replicate this workflow in your local computer you also need to use the `url()` function here with the argument `method = "libcurl"`.  -->
+<!-- It would look like this: -->
+<!-- ```{r} -->
+<!-- #| eval: false -->
+<!-- catch_original <- read.csv(url("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1", method = "libcurl")) -->
+<!-- ``` -->
+</div>
+</div>
+<p>This data set is relatively clean and easy to interpret as-is. While it may be clean, it’s in a shape that makes it hard to use for some types of analyses so we’ll want to fix that first.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before we get too much further, spend a minute or two outlining your Quarto document so that it includes the following sections and steps:</p>
+<ul>
+<li>Data Sources
+<ul>
+<li>Read in the data</li>
+<li>Explore data</li>
+</ul>
+</li>
+<li>Clean and Reshape data
+<ul>
+<li>Using <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> function</li>
+<li>Check column types</li>
+<li>Replace values in a column with <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>
+</li>
+<li>Reshape data with <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider()</a></code>
+</li>
+<li>Rename columns <code><a href="https://dplyr.tidyverse.org/reference/rename.html">rename()</a></code>
+</li>
+<li>Add columns with <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>
+</li>
+<li>Summary stats using <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code>
+</li>
+<li>Filtering rows using <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>
+</li>
+<li>Sort data using <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code>
+</li>
+<li>Split and combine values in columns with <code><a href="https://tidyr.tidyverse.org/reference/separate.html">separate()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/unite.html">unite()</a></code>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="data-exploration" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="data-exploration">
+<span class="header-section-number">9.3</span> Data exploration</h2>
+<p>Similar to what we did in our <a href="https://learning.nceas.ucsb.edu/2024-10-coreR/session_05.html">Literate Analysis</a> lesson, it is good practice to skim through the data you just read in.</p>
+<p>Doing so is important to make sure the data is read as you were expecting and to familiarize yourself with the data.</p>
+<p>Some of the basic ways to explore your data are:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Prints the column names of my data frame</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">catch_original</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## First 6 lines of the data frame</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">catch_original</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Summary of each column of data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">catch_original</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Prints unique values in a column (in this case, the region)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">catch_original</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Opens data frame in its own tab to see each row and column of the data (do in console)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">catch_original</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="about-the-pipe-operator" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="about-the-pipe-operator">
+<span class="header-section-number">9.4</span> About the pipe (<code>%&gt;%</code>) operator</h2>
+<p>Before we jump into learning <code>tidyr</code> and <code>dplyr</code>, we first need to explain the pipeline operator <code>%&gt;%</code>.</p>
+<p>Both the <code>tidyr</code> and the <code>dplyr</code> packages use the pipe operator (<code>%&gt;%</code>), which may look unfamiliar. The pipe is a powerful way to efficiently chain together operations. The pipe will take the output of a previous statement, and use it as the input to the next statement.</p>
+<p>Say you want to both <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> out rows of a data set, and <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> certain columns.</p>
+<p>Instead of writing:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="va">df_selected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">df_filtered</span>, <span class="va">...</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>You can write:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_cleaned</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>If you think of the assignment operator (<code>&lt;-</code>) as reading like “gets”, then the pipe operator would read like “then”.</p>
+<p>So you might think of the above chunk being translated as:</p>
+<blockquote class="blockquote">
+<p>The cleaned data frame <strong>gets</strong> the original data, and <strong>then</strong> a filter (of the original data), and <strong>then</strong> a select (of the filtered data).</p>
+</blockquote>
+<p>The benefits to using pipes are that you don’t have to keep track of (or overwrite) intermediate data frames. The drawbacks are that it can be more difficult to explain the reasoning behind each step, especially when many operations are chained together. It is good to strike a balance between writing efficient code (chaining operations), while ensuring that you are still clearly explaining, both to your future self and others, what you are doing and why you are doing it.</p>
+<div class="callout-caution callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Quick Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>RStudio has a keyboard shortcut for <code>%&gt;%</code></p>
+<ul>
+<li>Windows: <code>Ctrl</code> + <code>Shift</code> + <code>M</code>
+</li>
+<li>Mac: <code>cmd</code> + <code>shift</code> + <code>M</code>
+</li>
+</ul>
+</div>
+</div>
+</section><section id="selecting-or-removing-columns-using-select" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="selecting-or-removing-columns-using-select">
+<span class="header-section-number">9.5</span> Selecting or removing columns using <code>select()</code>
+</h2>
+<p>We’re ready to go back to our salmon dataset. The first issue is the extra columns <code>All</code> and <code>notesRegCode</code>. Let’s select only the columns we want, and assign this to a variable called <code>catch_data</code>.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_data</span> <span class="op">&lt;-</span> <span class="va">catch_original</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Year</span>, <span class="va">Chinook</span>, <span class="va">Sockeye</span>, <span class="va">Coho</span>, <span class="va">Pink</span>, <span class="va">Chum</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">catch_data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Much better!</p>
+<p>The <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> function also allows you to say which columns you <em>don’t</em> want, by passing unquoted column names preceded by minus (<code>-</code>) signs:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_data</span> <span class="op">&lt;-</span> <span class="va">catch_original</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">All</span>,<span class="op">-</span><span class="va">notesRegCode</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="quality-check" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="quality-check">
+<span class="header-section-number">9.6</span> Quality check</h2>
+<p>Now that we have the data we are interested in using, we should do a little quality check to see that everything seems as expected. One nice way of doing this is the <code><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse()</a></code> function.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">catch_data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Examine the output of the <code><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse()</a></code> function call. Does anything seem amiss with this data set that might warrant fixing?</p>
+<details><summary><strong>Answer:</strong>
+</summary>
+The Chinook catch data are <code>character</code> class. Let’s fix it using the function <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> before moving on.
+</details>
+</div>
+</div>
+</section><section id="changing-column-content-using-mutate" class="level2" data-number="9.7"><h2 data-number="9.7" class="anchored" data-anchor-id="changing-column-content-using-mutate">
+<span class="header-section-number">9.7</span> Changing column content using <code>mutate()</code>
+</h2>
+<p>We can use the <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> function to change a column, or to create a new column. First, let’s try to convert the Chinook catch values to <code>numeric</code> type using the <code><a href="https://rdrr.io/r/base/numeric.html">as.numeric()</a></code> function, and overwrite the old Chinook column.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_clean</span> <span class="op">&lt;-</span> <span class="va">catch_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Chinook <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Chinook</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">catch_clean</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We get a warning <code>"NAs introduced by coercion"</code> which is R telling us that it couldn’t convert every value to an integer and, for those values it couldn’t convert, it put an <code>NA</code> in its place. This is behavior we commonly experience when cleaning data sets and it’s important to have the skills to deal with it when it comes up.</p>
+<p>To investigate, let’s isolate the issue. We can find out which values are <code>NA</code>s with a combination of <code><a href="https://rdrr.io/r/base/NA.html">is.na()</a></code> and <code><a href="https://rdrr.io/r/base/which.html">which()</a></code>, and save that to a variable called <code>i</code>.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">catch_clean</span><span class="op">$</span><span class="va">Chinook</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">i</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>It looks like there is only one problem row, lets have a look at it in the original data.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_data</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Well that’s odd: The value in <code>Chinook</code> is the letter <code>I</code>. It turns out that this data set is from a PDF which was automatically converted into a <code>csv</code> and this value of <code>I</code> is actually a 1.</p>
+<p>Let’s fix it by incorporating the <code><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else()</a></code> function to our <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> call, which will change the value of the <code>Chinook</code> column to 1 if the value is equal to <code>I</code>, then will use <code><a href="https://rdrr.io/r/base/numeric.html">as.numeric()</a></code> to turn the character representations of numbers into numeric typed values.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_clean</span> <span class="op">&lt;-</span> <span class="va">catch_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Chinook <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span>condition <span class="op">=</span> <span class="va">Chinook</span> <span class="op">==</span> <span class="st">"I"</span>, </span>
+<span>                             true <span class="op">=</span> <span class="st">"1"</span>, </span>
+<span>                             false <span class="op">=</span> <span class="va">Chinook</span><span class="op">)</span>,</span>
+<span>           Chinook <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Chinook</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">##check</span></span>
+<span><span class="va">catch_clean</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="changing-shape-using-pivot_longer-and-pivot_wider" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="changing-shape-using-pivot_longer-and-pivot_wider">
+<span class="header-section-number">9.8</span> Changing shape using <code>pivot_longer()</code> and <code>pivot_wider()</code>
+</h2>
+<p>The next issue is that the data are in a wide format and we want the data in a long format instead. The function <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code> from the <code>tidyr</code> package helps us do this conversion. If you do not remember all the arguments that go into <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code> you can always call the <code>help</code> page by typing <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">?pivot_longer</a></code> in the console.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_long</span> <span class="op">&lt;-</span> <span class="va">catch_clean</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="co">#pivot longer all columns except Region and Year</span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span></span>
+<span>        cols <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Year</span><span class="op">)</span>,</span>
+<span>        names_to <span class="op">=</span> <span class="st">"species"</span>,</span>
+<span>        values_to <span class="op">=</span> <span class="st">"catch"</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">catch_long</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The syntax we used above for <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code> might be a bit confusing so let’s walk though it.</p>
+<ul>
+<li><p>The first argument to <code>pivot_longer</code> is the columns over which we are pivoting. You can select these by listing either the names of the columns you do want to pivot, or in this case, the names of the columns you are not pivoting over.</p></li>
+<li><p>The <code>names_to</code> argument: this is the name of the column that you are creating from the column <strong>names</strong> of the columns you are pivoting over.</p></li>
+<li><p>The <code>values_to</code> argument: the name of the column that you are creating from the <strong>values</strong> in the columns you are pivoting over.</p></li>
+</ul>
+<p>The opposite of <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code> is the <code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider()</a></code> function. It works in a similar declarative fashion:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_wide</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">species</span>,</span>
+<span>                values_from <span class="op">=</span> <span class="va">catch</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">catch_wide</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Same than we did above we can pull up the documentation of the function to remind ourselves what goes in which argument. Type <code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">?pivot_wider</a></code> in the console.</p>
+</section><section id="renaming-columns-with-rename" class="level2" data-number="9.9"><h2 data-number="9.9" class="anchored" data-anchor-id="renaming-columns-with-rename">
+<span class="header-section-number">9.9</span> Renaming columns with <code>rename()</code>
+</h2>
+<p>If you scan through the data, you may notice the values in the <code>catch</code> column are very small (these are supposed to be annual catches). If we look at <a href="https://knb.ecoinformatics.org/#view/df35b.304.2">the metadata</a> we can see that the <code>catch</code> column is in thousands of fish, so let’s convert it before moving on.</p>
+<p>Let’s first rename the <code>catch</code> column to be called <code>catch_thousands</code>:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_long</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>catch_thousands <span class="op">=</span> <span class="va">catch</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">catch_long</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+<code><a href="https://rdrr.io/r/base/names.html">names()</a></code> versus <code><a href="https://dplyr.tidyverse.org/reference/rename.html">rename()</a></code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Many people use the base R function <code><a href="https://rdrr.io/r/base/names.html">names()</a></code> to rename columns, often in combination with column indexing that relies on columns being in a particular order. Column indexing is often also used to select columns instead of the <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> function from <code>dplyr</code>. Although these methods work just fine, they do have one major drawback: in most implementations they rely on you knowing exactly the column order your data is in.</p>
+<p><strong>To illustrate why your knowledge of column order isn’t reliable enough for these operations, considering the following scenario:</strong></p>
+<p>Your colleague emails you letting you know that she has an updated version of the conductivity-temperature-depth data from this year’s research cruise, and sends it along. Excited, you re-run your scripts that use this data for your phytoplankton research. You run the script and suddenly all of your numbers seem off. You spend hours trying to figure out what is going on.</p>
+<p>Unbeknownst to you, your colleagues bought a new sensor this year that measures dissolved oxygen. Because of the new variables in the data set, the column order is different. Your script which previously renamed the fourth column, <code>SAL_PSU</code> to <code>salinity</code> now renames the fourth column, <code>O2_MGpL</code> to <code>salinity</code>. No wonder your results looked so weird, good thing you caught it!</p>
+<p>If you had written your code so that it doesn’t rely on column order, but instead renames columns using the <code><a href="https://dplyr.tidyverse.org/reference/rename.html">rename()</a></code> function, the code would have run just fine (assuming the name of the original salinity column didn’t change, in which case the code would have thrown an error in an obvious way). This is an example of a <em>defensive coding strategy</em>, where you try to anticipate issues before they arise, and write your code in such a way as to keep the issues from happening.</p>
+</div>
+</div>
+</section><section id="adding-columns-using-mutate" class="level2" data-number="9.10"><h2 data-number="9.10" class="anchored" data-anchor-id="adding-columns-using-mutate">
+<span class="header-section-number">9.10</span> Adding columns using <code>mutate()</code>
+</h2>
+<p>Now let’s use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> again to create a new column called <code>catch</code> with units of fish (instead of thousands of fish).</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_long</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>catch <span class="op">=</span> <span class="va">catch_thousands</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">catch_long</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Let’s remove the <code>catch_thousands</code> column for now since we don’t need it. Note that here we have added to the expression we wrote above by adding another function call (mutate) to our expression. This takes advantage of the pipe operator by grouping together a similar set of statements, which all aim to clean up the <code>catch_clean</code> data frame.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_long</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>catch <span class="op">=</span> <span class="va">catch_thousands</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">catch_thousands</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">catch_long</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We’re now ready to start analyzing the data.</p>
+</section><section id="summary-statistics-using-group_by-and-summarize" class="level2 page-columns page-full" data-number="9.11"><h2 data-number="9.11" class="anchored" data-anchor-id="summary-statistics-using-group_by-and-summarize">
+<span class="header-section-number">9.11</span> Summary statistics using <code>group_by()</code> and <code>summarize()</code>
+</h2>
+<p>Suppose we are now interested in getting the average catch per region. In our initial data exploration we saw there are 18 regions, we can easily see their names again:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">catch_original</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Think about how we would calculate the average catch per region “by hand”. It would be something like this:</p>
+<ol start="0" type="1">
+<li><p>We start with our table and notice there are multiple regions in the “Regions” column.</p></li>
+<li><p>We split our original table to group all observations from the same region together.</p></li>
+<li><p>We calculate the average catch for each of the groups we form.</p></li>
+<li><p>Then we combine the values for average catch per region into a single table.</p></li>
+</ol>
+<div class="column-body-outset">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/regions-split-apply-combine.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<p>Analyses like this conform to what is known as the <strong>Split-Apply-Combine strategy</strong>. This strategy follows the three steps we explained above:</p>
+<ol type="1">
+<li>
+<strong>Split</strong>: Split the data into logical groups (e.g., region, species, etc.)</li>
+<li>
+<strong>Apply</strong>: Calculate some summary statistic on each group (e.g.&nbsp;mean catch <em>by</em> year, number of individuals <em>per</em> species)</li>
+<li>
+<strong>Combine</strong>: Combine the statistic calculated on each group back together into a single table</li>
+</ol>
+<p>The <code>dplyr</code> library lets us easily employ the Split-Apply-Combine strategy by using the <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code> functions:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mean_region</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Region</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean_catch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">catch</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mean_region</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Let’s see how the previous code implements the Split-Apply-Combine strategy:</p>
+<ol type="1">
+<li><p><code>group_by(Region)</code>: this is telling R to <strong>split</strong> the dataframe and create a group for each different value in the column <code>Region</code>. R just keeps track of the groups, it doesn’t return separate dataframes per region.</p></li>
+<li><p><code>mean(catch)</code>: here <code>mean</code> is the function we want to <strong>apply</strong> to the column <code>catch</code> in each group.</p></li>
+<li><p><code>summarize(catch = mean(catch))</code> the function <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code> is used to <strong>combine</strong> the results of <code>mean(catch)</code> in each group into a single table. The argument <code>mean_catch = mean(catch)</code> indicates that the column having the results of <code>mean(catch)</code> will be named <code>mean_catch</code>.</p></li>
+</ol>
+<p>Another common use of <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> followed by <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code> is to count the number of rows in each group. We have to use a special function from <code>dplyr</code>, <code><a href="https://dplyr.tidyverse.org/reference/context.html">n()</a></code>.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">n_region</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Region</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">n_region</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-caution callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Try using <code><a href="https://dplyr.tidyverse.org/reference/count.html">count()</a></code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you are finding that you are reaching for this combination of <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code> and <code><a href="https://dplyr.tidyverse.org/reference/context.html">n()</a></code> a lot, there is a helpful <code>dplyr</code> function <code><a href="https://dplyr.tidyverse.org/reference/count.html">count()</a></code> that accomplishes this in one function!</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Find another grouping and statistic to calculate for each group.</li>
+<li>Find out if you can group by multiple variables.</li>
+</ul>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## for example:</span></span>
+<span><span class="va">catch_year_sp</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Year</span>, <span class="va">species</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>total_year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">catch</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</div>
+</section><section id="filtering-rows-using-filter" class="level2" data-number="9.12"><h2 data-number="9.12" class="anchored" data-anchor-id="filtering-rows-using-filter">
+<span class="header-section-number">9.12</span> Filtering rows using <code>filter()</code>
+</h2>
+<p>We use the <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> function to filter our <code>data.frame</code> to rows matching some condition. It’s similar to <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> from base R.</p>
+<p>Let’s go back to our original <code>data.frame</code> and do some <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code>ing:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sse_catch</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Region</span> <span class="op">==</span> <span class="st">"SSE"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sse_catch</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+<code>==</code> and <code>%in%</code> operators
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> function performs a logical test across all the rows of a dataframe, and if that test is <code>TRUE</code> for a given row, it keeps that row. The <code>==</code> operator tests whether the left hand side and right hand side match - in the example above, does the value of the <code>Region</code> variable match the value <code>"SSE"</code>?</p>
+<p>But if you want to test whether a variable’s value is within a set of possible values, <em>do not</em> use the <code>==</code> operator - it will very likely give false results! Instead, use the <code>%in%</code> operator: ::: {.cell}</p>
+<details><summary>Answer</summary><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Region</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SSE"</span>, <span class="st">"ALU"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Region</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SSE"</span>, <span class="st">"ALU"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+<p>This is because the <code>==</code> version “recycles” the vector of allowed values, so it tests whether the first row matches <code>"SSE"</code> (yep!), whether the second matches <code>"ALU"</code> (nope! this row gets dropped!), and then whether the third is <code>"SSE"</code> again and so on.</p>
+<p>Note that the <code>%in%</code> operator actually works for single values too, so you can never go wrong with that! :::</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Filter to just catches of over one million fish</li>
+<li>Filter to just Chinook from the SSE region</li>
+</ul>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Catches over a million fish</span></span>
+<span><span class="va">catch_million</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">catch</span> <span class="op">&gt;</span> <span class="fl">1000000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Chinook from SSE data</span></span>
+<span><span class="va">chinook_sse</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Region</span> <span class="op">==</span> <span class="st">"SSE"</span>,</span>
+<span>           <span class="va">species</span> <span class="op">==</span> <span class="st">"Chinook"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## OR combine tests with &amp; ("and") or | ("or")... also, we can swap == for %in%</span></span>
+<span><span class="va">chinook_sse</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Region</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="st">"SSE"</span> <span class="op">&amp;</span> <span class="va">species</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="st">"Chinook"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</div>
+</section><section id="sorting-your-data-using-arrange" class="level2" data-number="9.13"><h2 data-number="9.13" class="anchored" data-anchor-id="sorting-your-data-using-arrange">
+<span class="header-section-number">9.13</span> Sorting your data using <code>arrange()</code>
+</h2>
+<p>The <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code> function is used to sort the rows of a <code>data.frame</code>. Two common cases to use <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code> are:</p>
+<ul>
+<li>To calculate a cumulative sum (with <code><a href="https://rdrr.io/r/base/cumsum.html">cumsum()</a></code>) so row order matters</li>
+<li>To display a table (like in an <code>.qmd</code> document) in sorted order</li>
+</ul>
+<p>Let’s re-calculate mean catch by region, and then <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code> the output by mean catch:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mean_region</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Region</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean_catch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">catch</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">mean_catch</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mean_region</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The default sorting order of <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code> is to sort in ascending order. To reverse the sort order, wrap the column name inside the <code><a href="https://dplyr.tidyverse.org/reference/desc.html">desc()</a></code> function:</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mean_region</span> <span class="op">&lt;-</span> <span class="va">catch_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Region</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean_catch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">catch</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">mean_catch</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mean_region</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="splitting-a-column-using-separate-and-unite" class="level2" data-number="9.14"><h2 data-number="9.14" class="anchored" data-anchor-id="splitting-a-column-using-separate-and-unite">
+<span class="header-section-number">9.14</span> Splitting a column using <code>separate()</code> and <code>unite()</code>
+</h2>
+<p>The <code><a href="https://tidyr.tidyverse.org/reference/separate.html">separate()</a></code> function allow us to easily split a single column into numerous. Its complement, the <code><a href="https://tidyr.tidyverse.org/reference/unite.html">unite()</a></code> function, allows us to combine multiple columns into a single one.</p>
+<p>This can come in really handy when we need to split a column into two pieces by a consistent separator (like a dash).</p>
+<p>Let’s make a new <code>data.frame</code> with fake data to illustrate this. Here we have a set of site identification codes with information about the island where the site is (the first 3 letters) and a site number (the 3 numbers). If we want to group and summarize by island, we need a column with just the island information.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sites_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>site <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"HAW-101"</span>,</span>
+<span>                                <span class="st">"HAW-103"</span>,</span>
+<span>                                <span class="st">"OAH-320"</span>,</span>
+<span>                                <span class="st">"OAH-219"</span>,</span>
+<span>                                <span class="st">"MAU-039"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sites_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html">separate</a></span><span class="op">(</span><span class="va">site</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"island"</span>, <span class="st">"site_number"</span><span class="op">)</span>, <span class="st">"-"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Split the <code>city</code> column in the data frame <code>cities_df</code> into <code>city</code> and <code>state_code</code> columns</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## create `cities_df`</span></span>
+<span><span class="va">cities_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>city <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Juneau AK"</span>,</span>
+<span>                                 <span class="st">"Sitka AK"</span>,</span>
+<span>                                 <span class="st">"Anchorage AK"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">cities_df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cities_clean</span> <span class="op">&lt;-</span> <span class="va">cities_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html">separate</a></span><span class="op">(</span><span class="va">city</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"city"</span>, <span class="st">"state_code"</span><span class="op">)</span>, <span class="st">" "</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</div>
+<p>The <code><a href="https://tidyr.tidyverse.org/reference/unite.html">unite()</a></code> function does just the reverse of <code><a href="https://tidyr.tidyverse.org/reference/separate.html">separate()</a></code>. If we have a <code>data.frame</code> that contains columns for year, month, and day, we might want to unite these into a single date column.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dates_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>    year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1930"</span>,</span>
+<span>             <span class="st">"1930"</span>,</span>
+<span>             <span class="st">"1930"</span><span class="op">)</span>,</span>
+<span>    month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"12"</span>,</span>
+<span>              <span class="st">"12"</span>,</span>
+<span>              <span class="st">"12"</span><span class="op">)</span>,</span>
+<span>    day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"14"</span>,</span>
+<span>            <span class="st">"15"</span>,</span>
+<span>            <span class="st">"16"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dates_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unite.html">unite</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="now-all-together" class="level2" data-number="9.15"><h2 data-number="9.15" class="anchored" data-anchor-id="now-all-together">
+<span class="header-section-number">9.15</span> Now, all together!</h2>
+<p>We just ran through the various things we can do with <code>dplyr</code> and <code>tidyr</code> but if you’re wondering how this might look in a real analysis. Let’s look at that now:</p>
+<div class="cell" data-catch="true">
+<details><summary>Answer</summary><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">catch_original</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mean_region</span> <span class="op">&lt;-</span> <span class="va">catch_original</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">All</span>, <span class="op">-</span><span class="va">notesRegCode</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Chinook <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">Chinook</span> <span class="op">==</span> <span class="st">"I"</span>, <span class="st">"1"</span>, <span class="va">Chinook</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Chinook <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Chinook</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Year</span><span class="op">)</span>, </span>
+<span>               names_to <span class="op">=</span> <span class="st">"species"</span>, </span>
+<span>               values_to <span class="op">=</span> <span class="st">"catch"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>catch <span class="op">=</span> <span class="va">catch</span> <span class="op">*</span> <span class="fl">1000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Region</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>mean_catch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">catch</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">mean_catch</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mean_region</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="write-out-the-results-with-readrwrite_csv" class="level2" data-number="9.16"><h2 data-number="9.16" class="anchored" data-anchor-id="write-out-the-results-with-readrwrite_csv">
+<span class="header-section-number">9.16</span> Write out the results with <code>readr::write_csv()</code>
+</h2>
+<p>Now that we have performed all this data wrangling, we can save out the results for future use using <code><a href="https://readr.tidyverse.org/reference/write_delim.html">readr::write_csv()</a></code>.</p>
+<div class="cell">
+<details><summary>Answer</summary><div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span><span class="va">mean_region</span>, <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"data/mean_catch_by_region.csv"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We have completed our lesson on Cleaning and Wrangling data. Before we break, let’s practice our Git workflow.</p>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Steps
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Save the <code>.qmd</code> you have been working on for this lesson.</p></li>
+<li><p>Render the Quarto file. This is a way to test everything in your code is working.</p></li>
+<li><p><code>Stage (Add) &gt; Commit &gt; Pull &gt; Push</code></p></li>
+</ol>
+</div>
+</div>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./session_08.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling / Tidy Data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./session_10.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Intro to Data Visualization</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
