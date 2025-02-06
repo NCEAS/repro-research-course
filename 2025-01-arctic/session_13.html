@@ -2,21 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.586">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Fundamentals in Data Management for Qualitative and Quantitative Arctic Research - 13&nbsp; Working with Text Data in R</title>
+<title>13&nbsp; Working with Text Data in R – Fundamentals in Data Management for Qualitative and Quantitative Arctic Research</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-span.underline{text-decoration: underline;}
-div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -27,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -41,48 +47,20 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+/* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
-.hanging div.csl-entry {
+.hanging-indent div.csl-entry {
   margin-left:2em;
   text-indent:-2em;
 }
@@ -96,8 +74,7 @@ div.csl-right-inline {
 }
 div.csl-indent {
   margin-left: 2em;
-}
-</style>
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -114,17 +91,23 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-72c93205fb41c15e2e398b4f9a505ee2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -133,8 +116,10 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -145,12 +130,17 @@ div.csl-indent {
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./session_13.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -159,7 +149,7 @@ div.csl-indent {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></h1>
+      <h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></h1>
                       </div>
   </div>
     
@@ -167,165 +157,187 @@ div.csl-indent {
   <div class="quarto-title-meta">
 
       
+    
       
     </div>
     
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Training Materials</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="sidebar-tool px-1"><i class="bi bi-house-door-fill"></i></a>
-    <a href="https://twitter.com/ucsb_nceas" title="" class="sidebar-tool px-1"><i class="bi bi-twitter"></i></a>
-    <a href="https://github.com/NCEAS/nceas-training/tree/2025-01-arctic" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+    <a href="https://www.nceas.ucsb.edu/learning-hub" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/ucsb_nceas" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/nceas-training/tree/2025-01-arctic" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">About the course</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About the course</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_01.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to the Arctic Data Center</span></a>
+  <a href="./session_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to the Arctic Data Center</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_02.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></a>
+  <a href="./session_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">RStudio Server Setup</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_03.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to R Programming</span></a>
+  <a href="./session_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to R Programming</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_04.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Thinking Preferences &amp; Social Aspects of Collaboration</span></a>
+  <a href="./session_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Thinking Preferences &amp; Social Aspects of Collaboration</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_05.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Writing Data Management Plans</span></a>
+  <a href="./session_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Writing Data Management Plans</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_06.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></a>
+  <a href="./session_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Literate Analysis with Quarto</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_07.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Practice: Literate Analysis</span></a>
+  <a href="./session_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R Practice: Literate Analysis</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_08.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling / Tidy Data</span></a>
+  <a href="./session_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Modeling / Tidy Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_09.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></a>
+  <a href="./session_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Cleaning and Wrangling Data</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_10.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Intro to Data Visualization</span></a>
+  <a href="./session_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Intro to Data Visualization</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_11.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ethical Data Collection</span></a>
+  <a href="./session_11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Ethical Data Collection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_12.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R Practice: Cleaning and Wrangling</span></a>
+  <a href="./session_12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R Practice: Cleaning and Wrangling</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_13.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></a>
+  <a href="./session_13.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Working with Text Data in R</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_14.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></a>
+  <a href="./session_14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_15.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Metadata Best Practices and Data Publishing</span></a>
+  <a href="./session_15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Metadata Best Practices and Data Publishing</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_16.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating Data Portals</span></a>
+  <a href="./session_16.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Creating Data Portals</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_17.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reproducible Survey Workflow</span></a>
+  <a href="./session_17.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Reproducible Survey Workflow</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./session_18.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Provenance and Reproducibility</span></a>
+  <a href="./session_18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Provenance and Reproducibility</span></span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc">
+        <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
-  <li><a href="#what-is-text-data" id="toc-what-is-text-data" class="nav-link" data-scroll-target="#what-is-text-data"> <span class="header-section-number">13.1</span> What is text data?</a>
+  <li><a href="#what-is-text-data" id="toc-what-is-text-data" class="nav-link" data-scroll-target="#what-is-text-data"><span class="header-section-number">13.1</span> What is text data?</a>
   <ul class="collapse">
-  <li><a href="#how-do-we-talk-about-text-data" id="toc-how-do-we-talk-about-text-data" class="nav-link" data-scroll-target="#how-do-we-talk-about-text-data"> <span class="header-section-number">13.1.1</span> How do we talk about text data?</a></li>
-  <li><a href="#how-is-text-data-used-in-the-environmental-field" id="toc-how-is-text-data-used-in-the-environmental-field" class="nav-link" data-scroll-target="#how-is-text-data-used-in-the-environmental-field"> <span class="header-section-number">13.1.2</span> How is text data used in the environmental field?</a></li>
+  <li><a href="#how-do-we-talk-about-text-data" id="toc-how-do-we-talk-about-text-data" class="nav-link" data-scroll-target="#how-do-we-talk-about-text-data"><span class="header-section-number">13.1.1</span> How do we talk about text data?</a></li>
+  <li><a href="#how-is-text-data-used-in-the-environmental-field" id="toc-how-is-text-data-used-in-the-environmental-field" class="nav-link" data-scroll-target="#how-is-text-data-used-in-the-environmental-field"><span class="header-section-number">13.1.2</span> How is text data used in the environmental field?</a></li>
   </ul></li>
-  <li><a href="#what-is-tidy-text-data" id="toc-what-is-tidy-text-data" class="nav-link" data-scroll-target="#what-is-tidy-text-data"> <span class="header-section-number">13.2</span> What is tidy text data?</a>
+  <li><a href="#what-is-tidy-text-data" id="toc-what-is-tidy-text-data" class="nav-link" data-scroll-target="#what-is-tidy-text-data"><span class="header-section-number">13.2</span> What is tidy text data?</a>
   <ul class="collapse">
-  <li><a href="#what-is-the-tidytext-r-package" id="toc-what-is-the-tidytext-r-package" class="nav-link" data-scroll-target="#what-is-the-tidytext-r-package"> <span class="header-section-number">13.2.1</span> What is the <code>tidytext</code> R package?</a></li>
+  <li><a href="#what-is-the-tidytext-r-package" id="toc-what-is-the-tidytext-r-package" class="nav-link" data-scroll-target="#what-is-the-tidytext-r-package"><span class="header-section-number">13.2.1</span> What is the <code>tidytext</code> R package?</a></li>
   </ul></li>
-  <li><a href="#exercise-tidy-text-workflow" id="toc-exercise-tidy-text-workflow" class="nav-link" data-scroll-target="#exercise-tidy-text-workflow"> <span class="header-section-number">13.3</span> Exercise: Tidy Text Workflow</a>
+  <li><a href="#exercise-tidy-text-workflow" id="toc-exercise-tidy-text-workflow" class="nav-link" data-scroll-target="#exercise-tidy-text-workflow"><span class="header-section-number">13.3</span> Exercise: Tidy Text Workflow</a>
   <ul class="collapse">
-  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"> <span class="header-section-number">13.3.1</span> Questions</a></li>
-  <li><a href="#bonus-question" id="toc-bonus-question" class="nav-link" data-scroll-target="#bonus-question"> <span class="header-section-number">13.3.2</span> Bonus Question</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions"><span class="header-section-number">13.3.1</span> Questions</a></li>
+  <li><a href="#bonus-question" id="toc-bonus-question" class="nav-link" data-scroll-target="#bonus-question"><span class="header-section-number">13.3.2</span> Bonus Question</a></li>
   </ul></li>
-  <li><a href="#tidy-text-to-non-tidy-text-workflows" id="toc-tidy-text-to-non-tidy-text-workflows" class="nav-link" data-scroll-target="#tidy-text-to-non-tidy-text-workflows"> <span class="header-section-number">13.4</span> Tidy Text to Non-tidy Text Workflows</a></li>
-  <li><a href="#exercise-explore-unstructured-text-data-from-a-pdf" id="toc-exercise-explore-unstructured-text-data-from-a-pdf" class="nav-link" data-scroll-target="#exercise-explore-unstructured-text-data-from-a-pdf"> <span class="header-section-number">13.5</span> Exercise: Explore Unstructured Text Data from a PDF</a>
+  <li><a href="#tidy-text-to-non-tidy-text-workflows" id="toc-tidy-text-to-non-tidy-text-workflows" class="nav-link" data-scroll-target="#tidy-text-to-non-tidy-text-workflows"><span class="header-section-number">13.4</span> Tidy Text to Non-tidy Text Workflows</a></li>
+  <li><a href="#exercise-explore-unstructured-text-data-from-a-pdf" id="toc-exercise-explore-unstructured-text-data-from-a-pdf" class="nav-link" data-scroll-target="#exercise-explore-unstructured-text-data-from-a-pdf"><span class="header-section-number">13.5</span> Exercise: Explore Unstructured Text Data from a PDF</a>
   <ul class="collapse">
-  <li><a href="#questions-1" id="toc-questions-1" class="nav-link" data-scroll-target="#questions-1"> <span class="header-section-number">13.5.1</span> Questions</a></li>
-  <li><a href="#bonus-question-1" id="toc-bonus-question-1" class="nav-link" data-scroll-target="#bonus-question-1"> <span class="header-section-number">13.5.2</span> Bonus Question</a></li>
+  <li><a href="#questions-1" id="toc-questions-1" class="nav-link" data-scroll-target="#questions-1"><span class="header-section-number">13.5.1</span> Questions</a></li>
+  <li><a href="#bonus-question-1" id="toc-bonus-question-1" class="nav-link" data-scroll-target="#bonus-question-1"><span class="header-section-number">13.5.2</span> Bonus Question</a></li>
   </ul></li>
-  <li><a href="#common-text-analysis-and-text-mining-methods" id="toc-common-text-analysis-and-text-mining-methods" class="nav-link" data-scroll-target="#common-text-analysis-and-text-mining-methods"> <span class="header-section-number">13.6</span> Common Text Analysis and Text Mining Methods</a>
+  <li><a href="#common-text-analysis-and-text-mining-methods" id="toc-common-text-analysis-and-text-mining-methods" class="nav-link" data-scroll-target="#common-text-analysis-and-text-mining-methods"><span class="header-section-number">13.6</span> Common Text Analysis and Text Mining Methods</a>
   <ul class="collapse">
-  <li><a href="#exercise-basic-sentiment-analysis" id="toc-exercise-basic-sentiment-analysis" class="nav-link" data-scroll-target="#exercise-basic-sentiment-analysis"> <span class="header-section-number">13.6.1</span> Exercise: Basic sentiment analysis</a></li>
-  <li><a href="#exercise-basic-topic-modeling" id="toc-exercise-basic-topic-modeling" class="nav-link" data-scroll-target="#exercise-basic-topic-modeling"> <span class="header-section-number">13.6.2</span> Exercise: Basic topic modeling</a></li>
+  <li><a href="#exercise-basic-sentiment-analysis" id="toc-exercise-basic-sentiment-analysis" class="nav-link" data-scroll-target="#exercise-basic-sentiment-analysis"><span class="header-section-number">13.6.1</span> Exercise: Basic sentiment analysis</a></li>
+  <li><a href="#exercise-basic-topic-modeling" id="toc-exercise-basic-topic-modeling" class="nav-link" data-scroll-target="#exercise-basic-topic-modeling"><span class="header-section-number">13.6.2</span> Exercise: Basic topic modeling</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
+
 
 
 
@@ -338,12 +350,12 @@ div.csl-indent {
 <li>Describe non-tidy text formats and how to convert between tidy text and non-tidy text formats</li>
 <li>Become familiar with text analysis (or text mining) methods and when to use them</li>
 </ul>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Acknowledgements
 </div>
 </div>
@@ -359,7 +371,7 @@ Acknowledgements
 <section id="what-is-text-data" class="level2" data-number="13.1">
 <h2 data-number="13.1" class="anchored" data-anchor-id="what-is-text-data"><span class="header-section-number">13.1</span> What is text data?</h2>
 <p>Text data is information stored as character or string data types. It comes in various different forms including books, research articles, social media posts, interview transcripts, newspapers, government reports, and much more.</p>
-<div class="callout-warning callout callout-style-simple no-icon">
+<div class="callout callout-style-simple callout-warning no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -372,7 +384,7 @@ Acknowledgements
 <section id="how-do-we-talk-about-text-data" class="level3" data-number="13.1.1">
 <h3 data-number="13.1.1" class="anchored" data-anchor-id="how-do-we-talk-about-text-data"><span class="header-section-number">13.1.1</span> How do we talk about text data?</h3>
 <p>Here is a list of text data or text analysis terms we’ll be referring to throughout this lesson. Note this is not a comprehensive list of text analysis terms that are used beyond this lesson.</p>
-<table class="table">
+<table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 66%">
@@ -427,12 +439,12 @@ Acknowledgements
 <h3 data-number="13.1.2" class="anchored" data-anchor-id="how-is-text-data-used-in-the-environmental-field"><span class="header-section-number">13.1.2</span> How is text data used in the environmental field?</h3>
 <p>As our knowledge about the environmental world grows, researchers will need new computational approaches for working with text data because reading and identifying all the relevant literature for literature syntheses is becoming an increasingly difficult task.</p>
 <p>Beyond literature syntheses, quantitative text analysis tools are extremely valuable for efficiently extracting information from texts and other text mining or text analysis tasks.</p>
-<div class="callout-caution callout callout-style-default no-icon callout-captioned">
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Environmental researchers have used text data to:
 </div>
 </div>
@@ -464,7 +476,7 @@ Environmental researchers have used text data to:
 <div class="column" style="width:30%;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/tidytext-logo.png" class="img-fluid figure-img"></p>
+<p><img src="images/tidytext-logo.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 </div><div class="column" style="width:70%;">
@@ -479,16 +491,16 @@ Environmental researchers have used text data to:
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/tidytext-tidy-workflow.png" class="img-fluid figure-img"></p>
-<p></p><figcaption aria-hidden="true" class="figure-caption">Source: Silge &amp; Robinson</figcaption><p></p>
+<figcaption>Source: Silge &amp; Robinson</figcaption>
 </figure>
 </div>
 <p>We are going to use the <code>gutenbergr</code> package to access public domain texts from <a href="https://www.gutenberg.org/">Project Gutenberg</a> (a library of free eBooks). We’ll then use the <code>tidytext</code>, <code>dplyr</code> and <code>ggplot2</code> packages to practice the tidy text workflow.</p>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Setup
 </div>
 </div>
@@ -521,12 +533,12 @@ Setup
 <section id="questions" class="level3" data-number="13.3.1">
 <h3 data-number="13.3.1" class="anchored" data-anchor-id="questions"><span class="header-section-number">13.3.1</span> Questions</h3>
 <p>The answers in the code chunks below are using the text of <em>Heidi</em>.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 1
 </div>
 </div>
@@ -536,7 +548,7 @@ Question 1
 </div>
 <!-- Note: When compiling this document, we'll load from local files rather than pulling over the internet -->
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get id number</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(title <span class="sc">==</span> <span class="st">"Heidi"</span>)  <span class="co"># id: 1448</span></span>
@@ -545,15 +557,12 @@ Question 1
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>txt_corp <span class="ot">&lt;-</span> <span class="fu">gutenberg_download</span>(<span class="dv">1448</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell">
-
-</div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 2
 </div>
 </div>
@@ -562,7 +571,7 @@ Question 2
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tidy data - unnest</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>txt_tidy <span class="ot">&lt;-</span> txt_corp <span class="sc">%&gt;%</span></span>
@@ -582,12 +591,12 @@ Question 2
 6         1448 i       </code></pre>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 3
 </div>
 </div>
@@ -597,7 +606,7 @@ Question 3
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove stop words</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>txt_tidy <span class="ot">&lt;-</span> txt_tidy <span class="sc">%&gt;%</span></span>
@@ -617,12 +626,12 @@ Question 3
 6         1448 alm     </code></pre>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 4
 </div>
 </div>
@@ -631,7 +640,7 @@ Question 4
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate top 10 most frequent words</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>txt_count <span class="ot">&lt;-</span> txt_tidy <span class="sc">%&gt;%</span></span>
@@ -656,12 +665,12 @@ Question 4
 10 uncle         151</code></pre>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 5
 </div>
 </div>
@@ -671,7 +680,7 @@ Question 5
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Bar Plot Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> txt_count, <span class="fu">aes</span>(n, <span class="fu">reorder</span>(word, n))) <span class="sc">+</span></span>
@@ -680,11 +689,15 @@ Question 5
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> <span class="st">"Token"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Base Lollipop Plot Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initial lollipop plot</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> txt_count, <span class="fu">aes</span>(<span class="at">x =</span> word, <span class="at">y =</span> n)) <span class="sc">+</span></span>
@@ -695,18 +708,22 @@ Question 5
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="bonus-question" class="level3" data-number="13.3.2">
 <h3 data-number="13.3.2" class="anchored" data-anchor-id="bonus-question"><span class="header-section-number">13.3.2</span> Bonus Question</h3>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 6
 </div>
 </div>
@@ -715,7 +732,7 @@ Question 6
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Custom Lollipop Plot Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ascending order pretty lollipop plot</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> txt_count, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
@@ -732,7 +749,11 @@ Question 6
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -742,13 +763,12 @@ Question 6
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/tidytext-nontidy-workflow.png" class="img-fluid figure-img"></p>
-<p></p><figcaption aria-hidden="true" class="figure-caption">A flowchart of a typical text analysis that combines <code>tidytext</code> with other tools and data formats, particularly the <code>tm</code> or <code>quanteda</code> packages. Source: Silge &amp; Robinson</figcaption><p></p>
+<figcaption>A flowchart of a typical text analysis that combines <code>tidytext</code> with other tools and data formats, particularly the <code>tm</code> or <code>quanteda</code> packages. Source: Silge &amp; Robinson</figcaption>
 </figure>
 </div>
 <p>In the <a href="#exercise-tidy-text-workflow">Tidy Text Workflow Exercise</a>, we converted our corpus into a data table that has “one-token-per-row”. However, the tidy text format of one-token-per-row is not a common format for other R packages that work with text data or perform text analysis. Packages like <code>tm</code>, <code>quanteda</code>, <code>topicmodels</code>.</p>
 <p>Many text analysis methods, in particular NLP techniques (e.g.&nbsp;topic models) require text data to be stored in a mathematical format. <strong>A common approach is to create a matrix, such as a: sparse matrix, a document term matrix (DTM), or a document-feature matrix (DFM)</strong>. In a matrix format, algorithms are able to more easily compare one document to many other documents to identify patterns.</p>
 <p>Silge and Robinson kept this in mind as they built the <code>tidytext</code> package, and included helpful <code>cast()</code> functions to turn a tidy text object (again a table with one-token-per-row) into a matrix.</p>
-
 <!---
 
 ### Use `cast()` to Convert tidy-text to a Matrix (Non-tidy) Format
@@ -756,6 +776,8 @@ Question 6
 In these examples, we'll be using multiple books as our text: *The Phantom of the Opera*, *The Strange Case of Dr. Jekyll and Mr. Hyde*, and *Frankenstein; Or, The Modern Prometheus*.
 
 We'll access these texts using `gutenbergr`'s `gutenberg_download()` function, and we'll make sure to include the titles in the download.
+
+
 
 ::: {.cell}
 
@@ -768,7 +790,11 @@ all_books_corp <- gutenberg_download(c(175, # phantom of the opera
 ```
 :::
 
+
+
 This code chunk is formatting our corpus into the tidy text format, and it is counting the number of times each word occurs in each book.
+
+
 
 ::: {.cell}
 
@@ -782,7 +808,11 @@ all_books_tidy <- all_books_corp %>%
 ```
 :::
 
+
+
 This code chunk is converting our corpus of all books into a sparse matrix.
+
+
 
 ::: {.cell}
 
@@ -796,7 +826,11 @@ all_books_sparse <- all_books_tidy %>%
 ```
 :::
 
+
+
 This code chunk is converting our corpus of all books into a document-term matrix object from the `tm` package.
+
+
 
 ::: {.cell}
 
@@ -810,7 +844,11 @@ all_books_dtm <- all_books_tidy %>%
 ```
 :::
 
+
+
 This code chunk is converting our corpus of all books into a document-feature matrix object from the `quanteda` package.
+
+
 
 ::: {.cell}
 
@@ -824,17 +862,19 @@ all_books_dfm <- all_books_tidy %>%
 ```
 :::
 
+
+
 -->
 </section>
 <section id="exercise-explore-unstructured-text-data-from-a-pdf" class="level2" data-number="13.5">
 <h2 data-number="13.5" class="anchored" data-anchor-id="exercise-explore-unstructured-text-data-from-a-pdf"><span class="header-section-number">13.5</span> Exercise: Explore Unstructured Text Data from a PDF</h2>
 <p>Frequently the text data we want to analyzed is in PDF format. In the next exercise we walk through how to read in a PDF file into R to be able to programmatically analyze the text.</p>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Setup
 </div>
 </div>
@@ -859,9 +899,6 @@ Setup
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pdf_url <span class="ot">&lt;-</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Aea1c26fa-e91c-4f33-9993-4e86d00818d8"</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>anthro_pdf <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(pdf_url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-
 </div>
 <p><strong>Notes for quick exploration of data:</strong></p>
 <ul>
@@ -896,12 +933,12 @@ Setup
 <section id="questions-1" class="level3" data-number="13.5.1">
 <h3 data-number="13.5.1" class="anchored" data-anchor-id="questions-1"><span class="header-section-number">13.5.1</span> Questions</h3>
 <p>Work independently or in groups for Question 1-5. The code solutions are based on the text data from the publication we loaded above.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 1
 </div>
 </div>
@@ -910,19 +947,19 @@ Question 1
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>anthro_unnest <span class="ot">&lt;-</span> anthro_tidy <span class="sc">%&gt;%</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest_tokens</span>(<span class="at">output =</span> word,</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">input =</span> text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 2
 </div>
 </div>
@@ -931,18 +968,18 @@ Question 2
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>anthro_words <span class="ot">&lt;-</span> anthro_unnest <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">anti_join</span>(stop_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 3
 </div>
 </div>
@@ -951,19 +988,19 @@ Question 3
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Answer</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>anthro_count <span class="ot">&lt;-</span> anthro_words <span class="sc">%&gt;%</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(word) <span class="sc">%&gt;%</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 4
 </div>
 </div>
@@ -972,7 +1009,7 @@ Question 4
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Bar Plot Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(anthro_count, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
@@ -984,11 +1021,15 @@ Question 4
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Lollipop Plot Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lollipop plot</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> anthro_count, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
@@ -1001,29 +1042,37 @@ Question 4
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Wordcloud Plot Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># wordcloud</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(<span class="at">words =</span> anthro_count<span class="sc">$</span>word,</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">freq =</span> anthro_count<span class="sc">$</span>n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="bonus-question-1" class="level3" data-number="13.5.2">
 <h3 data-number="13.5.2" class="anchored" data-anchor-id="bonus-question-1"><span class="header-section-number">13.5.2</span> Bonus Question</h3>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Question 5
 </div>
 </div>
@@ -1036,11 +1085,11 @@ Question 5
 <section id="common-text-analysis-and-text-mining-methods" class="level2" data-number="13.6">
 <h2 data-number="13.6" class="anchored" data-anchor-id="common-text-analysis-and-text-mining-methods"><span class="header-section-number">13.6</span> Common Text Analysis and Text Mining Methods</h2>
 <p>The text analysis tools, methods, and packages depend greatly on your specific text analysis goals and the nature of your text data. You may end up only using one method or one package, or many in combination.</p>
-<table class="table">
+<table class="caption-top table">
 <colgroup>
 <col style="width: 24%">
-<col style="width: 32%">
-<col style="width: 43%">
+<col style="width: 31%">
+<col style="width: 42%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1147,7 +1196,11 @@ Question 5
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_gradient2</span>(<span class="at">low=</span><span class="st">"red"</span>, <span class="at">mid=</span><span class="st">"gray50"</span>, <span class="at">high=</span><span class="st">"green"</span>,</span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">guide=</span><span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>For fun, let’s extract the chunk with the most negative score, then pull that section of the book to see whether the low score makes sense to us.</p>
@@ -1233,6 +1286,8 @@ Question 5
 </div>
 </div>
 <!--
+
+
 ::: {.cell}
 
 ```{.r .cell-code}
@@ -1245,8 +1300,12 @@ txt_corp %>%
     count(word, sentiment, sort=TRUE)
 ```
 :::
+
+
 -->
 <!--
+
+
 ::: {.cell}
 
 ```{.r .cell-code}
@@ -1268,17 +1327,19 @@ tmp %>%
         scale_color_manual(values=c(Positive="green", Negative="red"))
 ```
 :::
+
+
 -->
 </section>
 <section id="exercise-basic-topic-modeling" class="level3" data-number="13.6.2">
 <h3 data-number="13.6.2" class="anchored" data-anchor-id="exercise-basic-topic-modeling"><span class="header-section-number">13.6.2</span> Exercise: Basic topic modeling</h3>
 <p>Now let’s switch back to the northern Russia village assessment we looked at earlier, published by Susan Crate. This time we’ll add two more publications from that package, and do some basic topic modeling.</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 0
 </div>
 </div>
@@ -1289,12 +1350,12 @@ Step 0
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(topicmodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 1
 </div>
 </div>
@@ -1310,15 +1371,12 @@ Step 1
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>pdf_url <span class="ot">&lt;-</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Ac78be0d8-9b22-4bc0-8e16-0e3823212250"</span></span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>human_pdf <span class="ot">&lt;-</span> pdftools<span class="sc">::</span><span class="fu">pdf_text</span>(pdf_url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
-
-</div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 2
 </div>
 </div>
@@ -1345,12 +1403,12 @@ Step 2
 <span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    climate_words <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">document=</span><span class="st">"Climate"</span>)</span>
 <span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 3
 </div>
 </div>
@@ -1375,12 +1433,12 @@ Step 3
 <span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"climate_change"</span>, word)) <span class="sc">%&gt;%</span></span>
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>(word<span class="sc">==</span><span class="st">"change"</span> <span class="sc">|</span> <span class="fu">lag</span>(word)<span class="sc">==</span><span class="st">"climate_change"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 4
 </div>
 </div>
@@ -1393,12 +1451,12 @@ Step 4
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(document, word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cast_dtm</span>(document, word, n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 5
 </div>
 </div>
@@ -1412,12 +1470,12 @@ Step 5
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>crate_lda <span class="ot">&lt;-</span> <span class="fu">LDA</span>(crate_dtm, <span class="at">k =</span> <span class="dv">4</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="dv">99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 6
 </div>
 </div>
@@ -1435,12 +1493,12 @@ Step 6
 <span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(topic, <span class="sc">-</span>beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 7
 </div>
 </div>
@@ -1459,15 +1517,19 @@ Step 7
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_y_reordered</span>(<span class="st">"Term"</span>) <span class="sc">+</span></span>
 <span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="sc">~</span> topic, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 8
 </div>
 </div>
@@ -1487,15 +1549,19 @@ Step 8
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">label =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()) <span class="sc">+</span></span>
 <span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Document"</span>, <span class="at">y =</span> <span class="st">"Topic"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Step 9
 </div>
 </div>
@@ -1520,7 +1586,11 @@ Step 9
 <span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_fill_discrete</span>(<span class="st">"Topic"</span>) <span class="sc">+</span></span>
 <span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="sc">~</span> document, <span class="at">scales =</span> <span class="st">"free_y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="session_13_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>There we have it! What do you think about these topics? Do they kind of make sense? An interesting property of LDA is that it allows terms to participate in multiple topics. The topics here have a lot of overlap, which probably makes sense given that these papers have a lot in common. However, you should be able to get a sense for how the topics differ based on their term composition, and hence a corresponding flavor for each of the corresponding documents.</p>
@@ -1530,6 +1600,8 @@ Step 9
 
 What are the top terms?
 :::
+
+
 
 ::: {.cell}
 
@@ -1552,13 +1624,15 @@ beta_wide %>%
 ![](session_13_files/figure-html/unnamed-chunk-44-1.png){width=672}
 :::
 :::
+
+
 -->
-<div class="callout-caution callout callout-style-default no-icon callout-captioned">
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 R Text Mining Tools and Analysis Packages Resources
 </div>
 </div>
@@ -1579,17 +1653,17 @@ However, both languages have a vast array of libraries and packages, and large, 
 It's important to note that with tools like Jupyter Notebook and Quarto you're not longer limited to just one language. With tools that support both `R` and `python` code, you have the capability to leverage the strengths of both languages. For example, you can build a NLP model using `python` and then create a visualization using `R`. -->
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
-<div id="ref-farrell2022" class="csl-entry" role="doc-biblioentry">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-farrell2022" class="csl-entry" role="listitem">
 Farrell, Maxwell J., Liam Brierley, Anna Willoughby, Andrew Yates, and Nicole Mideo. 2022. <span>“Past and Future Uses of Text Mining in Ecology and Evolution.”</span> <em>Proceedings of the Royal Society B: Biological Sciences</em> 289 (1975). <a href="https://doi.org/10.1098/rspb.2021.2721">https://doi.org/10.1098/rspb.2021.2721</a>.
 </div>
-<div id="ref-froehlich2017" class="csl-entry" role="doc-biblioentry">
+<div id="ref-froehlich2017" class="csl-entry" role="listitem">
 Froehlich, Halley E., Rebecca R. Gentry, Michael B. Rust, Dietmar Grimm, and Benjamin S. Halpern. 2017. <span>“Public Perceptions of Aquaculture: Evaluating Spatiotemporal Patterns of Sentiment Around the World.”</span> Edited by Christopher M. Somers. <em>PLOS ONE</em> 12 (1): e0169281. <a href="https://doi.org/10.1371/journal.pone.0169281">https://doi.org/10.1371/journal.pone.0169281</a>.
 </div>
-<div id="ref-hu2004" class="csl-entry" role="doc-biblioentry">
+<div id="ref-hu2004" class="csl-entry" role="listitem">
 Hu, Minqing, and Bing Liu. 2004. <span>“Mining and Summarizing Customer Reviews.”</span> In <em>Proceedings of the Tenth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 168–77. KDD ’04. New York, NY, USA: ACM. <a href="https://doi.org/10.1145/1014052.1014073">https://doi.org/10.1145/1014052.1014073</a>.
 </div>
-<div id="ref-vanhoutan2020" class="csl-entry" role="doc-biblioentry">
+<div id="ref-vanhoutan2020" class="csl-entry" role="listitem">
 Van Houtan, Kyle S., Tyler Gagne, Clinton N. Jenkins, and Lucas Joppa. 2020. <span>“Sentiment Analysis of Conservation Studies Captures Successes of Species Reintroductions.”</span> <em>Patterns</em> 1 (1): 100005. <a href="https://doi.org/10.1016/j.patter.2020.100005">https://doi.org/10.1016/j.patter.2020.100005</a>.
 </div>
 </div>
@@ -1599,6 +1673,24 @@ Van Houtan, Kyle S., Tyler Gagne, Clinton N. Jenkins, and Lucas Joppa. 2020. <sp
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1606,12 +1698,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
     }
-  });
-  clipboard.on('success', function(e) {
+    return false;
+  }
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1620,17 +1715,71 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1640,55 +1789,319 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      let href = ref.getAttribute('href');
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./session_12.html" class="pagination-link">
+      <a href="./session_12.html" class="pagination-link" aria-label="R Practice: Cleaning and Wrangling">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R Practice: Cleaning and Wrangling</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./session_14.html" class="pagination-link">
+      <a href="./session_14.html" class="pagination-link" aria-label="U.S Census Data in R">
         <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">U.S Census Data in R</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
