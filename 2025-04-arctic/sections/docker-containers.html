@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>15&nbsp; Docker Containers – Scalable and Computationally Reproducible Approaches to Arctic Research</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../sections/software-design-2.html" rel="next">
+<link href="../sections/zarr.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2ce9fc9ac8b614e7ffef13962cc12eaf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/docker-containers.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Docker Containers</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Course Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://arcticdata.io" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/arcticdatactr" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/scalable-computing-course" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/adc-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome and Overview</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/remote-computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Remote and Cloud Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/python-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Programming on Clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parallel-programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pleasingly Parallel Programming</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/data-structures-netcdf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Structures and Formats for Large Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parallel-with-dask.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Group Project: Preprocessing and Rasterizing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/data-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Ethics for Scalable Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/geopandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/geoscience-and-ai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">AI in Arctic Science</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Visualization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/software-design-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Software Design I: Functions and Concurrency</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/adc-data-publishing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Documenting and Publishing Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/zarr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Zarr for Cloud Data Storage</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/docker-containers.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Docker Containers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/software-design-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/docker-hpc-cloud.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Docker for HPC and Cloud</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/reproducibility-containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility and Containers</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">15.1</span> Learning Objectives</a></li>
+  <li><a href="#just-what-is-a-container" id="toc-just-what-is-a-container" class="nav-link" data-scroll-target="#just-what-is-a-container"><span class="header-section-number">15.2</span> Just what is a container?</a></li>
+  <li><a href="#hands-on-with-containers-and-docker" id="toc-hands-on-with-containers-and-docker" class="nav-link" data-scroll-target="#hands-on-with-containers-and-docker"><span class="header-section-number">15.3</span> Hands-on with Containers and Docker</a></li>
+  <li><a href="#how-about-python" id="toc-how-about-python" class="nav-link" data-scroll-target="#how-about-python"><span class="header-section-number">15.4</span> How about python?</a></li>
+  <li><a href="#exploring-image-registries" id="toc-exploring-image-registries" class="nav-link" data-scroll-target="#exploring-image-registries"><span class="header-section-number">15.5</span> Exploring image registries</a></li>
+  <li><a href="#custom-images-with-dockerfiles" id="toc-custom-images-with-dockerfiles" class="nav-link" data-scroll-target="#custom-images-with-dockerfiles"><span class="header-section-number">15.6</span> Custom images with Dockerfiles</a>
+  <ul class="collapse">
+  <li><a href="#adding-software" id="toc-adding-software" class="nav-link" data-scroll-target="#adding-software"><span class="header-section-number">15.6.1</span> Adding software</a></li>
+  <li><a href="#add-a-user-account" id="toc-add-a-user-account" class="nav-link" data-scroll-target="#add-a-user-account"><span class="header-section-number">15.6.2</span> Add a user account</a></li>
+  <li><a href="#add-a-python-venv" id="toc-add-a-python-venv" class="nav-link" data-scroll-target="#add-a-python-venv"><span class="header-section-number">15.6.3</span> Add a python venv</a></li>
+  </ul></li>
+  <li><a href="#volume-mounts" id="toc-volume-mounts" class="nav-link" data-scroll-target="#volume-mounts"><span class="header-section-number">15.7</span> Volume mounts</a></li>
+  <li><a href="#sharing-images-to-registries" id="toc-sharing-images-to-registries" class="nav-link" data-scroll-target="#sharing-images-to-registries"><span class="header-section-number">15.8</span> Sharing images to registries</a>
+  <ul class="collapse">
+  <li><a href="#anatomy-of-an-image" id="toc-anatomy-of-an-image" class="nav-link" data-scroll-target="#anatomy-of-an-image"><span class="header-section-number">15.8.1</span> Anatomy of an image</a></li>
+  <li><a href="#oci" id="toc-oci" class="nav-link" data-scroll-target="#oci"><span class="header-section-number">15.8.2</span> OCI</a></li>
+  </ul></li>
+  <li><a href="#container-lifecycle" id="toc-container-lifecycle" class="nav-link" data-scroll-target="#container-lifecycle"><span class="header-section-number">15.9</span> Container lifecycle</a>
+  <ul class="collapse">
+  <li><a href="#spinning-up-ubuntu" id="toc-spinning-up-ubuntu" class="nav-link" data-scroll-target="#spinning-up-ubuntu"><span class="header-section-number">15.9.1</span> Spinning up ubuntu</a></li>
+  </ul></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="header-section-number">15.10</span> Exercise</a></li>
+  <li><a href="#bonus-info-running-containers-locally" id="toc-bonus-info-running-containers-locally" class="nav-link" data-scroll-target="#bonus-info-running-containers-locally"><span class="header-section-number">15.11</span> Bonus info: Running containers locally</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Docker Containers</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-objectives" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">15.1</span> Learning Objectives</h2>
+<ul>
+<li>What is docker anyway?</li>
+<li>Think about dependency management, reproducibility, and software</li>
+<li>Become familiar with containers as a tool to improve computational reproducibility</li>
+<li>Build and run docker containers to create reproducible python environments</li>
+</ul>
+</section>
+<section id="just-what-is-a-container" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="just-what-is-a-container"><span class="header-section-number">15.2</span> Just what is a container?</h2>
+<p>And why might I want one? In short, as a very lightweight way to create a reproducible computing environment. Containers have some desirable properties:</p>
+<ul>
+<li><strong>Declarative</strong>: The are defined by a clear procedure making it possible to reliably rebuild an identical container in a variety of environments, promototing reproducibility</li>
+<li><strong>Portable</strong>: Containers are designed to run on a container runtime which works identically across systems, so you can launch a container from a Mac, Linux, or Windows and get the same output every time</li>
+<li><strong>Lightweight</strong>: Containers contain only the exact files and data needed for a specific application, without all of the extra operating system baggage found in virtual machines</li>
+<li><strong>Scalable</strong>: Containers can be launched multiple times from their source image, and thus can be horizontally scaled across a compute cluster to parallelize operations</li>
+</ul>
+<p>From the following figure, one can see that a container is much more lightweight than both a bare metal server and a virtual machine, in that it contains only the files needed for a specific application.</p>
+<p><img src="../images/virtualization.png" class="img-fluid"></p>
+<p><strong>Images</strong> <em>An image is a snapshot of a computing environment.</em> It contains all of the files and data needed to execute a particular application or service, along with the instructions on which service should be run. But it is not executed per se. As a snapshot, an image represents a template that can be used to create one or more containers (each of which is an instantiation of the contents of the image). Images are also built using a layered file system, which allows multiple images to be layered together to create a composite that provides rich services without as much duplication.</p>
+<p><strong>Containers</strong> <em>A container represents in instance of an image that can be run.</em> Containers are executed in a Container Runtime such as <a href="https://containerd.io/"><code>containerd</code></a> or <a href="https://docs.docker.com/engine/">Docker Engine</a>. Like virtual machines, containers provide mechanisms to create images that can be executed by a container runtime, and which provide stronger isolation among deployments. But they are also more lightweight, as the container only contains the libraries and executables needed to execute a target application, and not an entire guest operating system. This means that applications run with fewer resources, start up and shut down more quickly, and can be migrated easily to other hosts in a network.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[40,60]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 40.0%;justify-content: center;">
+<p><img src="../images/docker-small-logo.png" class="img-fluid"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 60.0%;justify-content: flex-start;">
+<p>The <a href="https://docker.com">Docker</a> system was one of the first widespread implementations of containers, and its popularity drove much of the terminology around containers. After it’s inception, the software ecosystem around contaianers has been standardized and maintained by the <a href="https://opencontainers.org">Open Container Intitiative (OCI)</a>, which defines the image specification, runtime specification, and distribution specification followed by most vendors. So, we might often use the ‘docker’ terminology, but we are referring to OCI-compliant images and containers.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hands-on-with-containers-and-docker" class="level2 page-columns page-full" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="hands-on-with-containers-and-docker"><span class="header-section-number">15.3</span> Hands-on with Containers and Docker</h2>
+<p>Let’s get started. At it’s simplest, you can use docker to run an image that somebody else created. Let’s do that with a simple Hello World app. Open a terminal (on a machine with docker installed), and run:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run hello-world</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Hello from Docker!</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>This message shows that your installation appears to be working correctly.</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>To generate this message, Docker took the following steps:</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a> 1. The Docker client contacted the Docker daemon.</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a> 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    (arm64v8)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a> 3. The Docker daemon created a new container from that image which runs the</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    executable that produces the output you are currently reading.</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a> 4. The Docker daemon streamed that output to the Docker client, which sent it</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    to your terminal.</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>To try something more ambitious, you can run an Ubuntu container with:</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a> $ docker run -it ubuntu bash</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>Share images, automate workflows, and more with a free Docker ID:</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a> https://hub.docker.com/</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>For more examples and ideas, visit:</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a> https://docs.docker.com/get-started/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In a nutshell, the <code>docker run</code> command will take an image from your local machine, and execute it as a container instance.</p>
+<p><img src="../images/docker-run.png" class="img-fluid"></p>
+<p>You can manage your local containers and images using the docker client. Start by listing your local images:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker image ls</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">REPOSITORY</span>                                          TAG       IMAGE ID       CREATED         SIZE</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">hello-world</span>                                         latest    ee301c921b8a   10 months ago   9.14kB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And you can list the containers that are running. Because containers are somewhat analogous to processes, list them with:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There is no output there, because no containers are currently running. You can see the containers that were run previously by adding the <code>-a</code> (all) option. Only long-running containers will generally be visible with <code>docker ps</code> without the <code>-a</code> flag.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND    CREATED          STATUS                      PORTS     NAMES</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">f0a2c6c27af7</span>   hello-world   <span class="st">"/hello"</span>   12 minutes ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">12</span> minutes ago             nervous_vaughan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So from that listing, we can see the <code>hello-world</code> image (with id <code>f0a2c6c27af7</code>) was run 12 minutes ago. We could run it again with either the container identifier (using <code>docker start -i f0a2c6c27af7</code>), or with the container name, which was assigned automatically (<code>docker start -i nervous_vaughan</code>). Using <code>start</code>, we are running the same container instance (<code>f0a2c6c27af7</code>) as previously, rather than creating a new one (which we could do by calling <code>docker run</code> again).</p>
+<p>Once you are finished with a container you can remove the container, but note that the image will still be present locally.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND    CREATED          STATUS                     PORTS     NAMES</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">f0a2c6c27af7</span>   hello-world   <span class="st">"/hello"</span>   22 minutes ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">6</span> minutes ago             nervous_vaughan</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker rm f0a2c6c27af7</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ex">f0a2c6c27af7</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND    CREATED      STATUS                  PORTS     NAMES</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker image ls</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">REPOSITORY</span>                                          TAG       IMAGE ID       CREATED         SIZE</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="ex">hello-world</span>                                         latest    ee301c921b8a   10 months ago   9.14kB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So the image is still on your local machine and could be run again to create a new container anytime.</p>
+</section>
+<section id="how-about-python" class="level2 page-columns page-full" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="how-about-python"><span class="header-section-number">15.4</span> How about python?</h2>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[70,30]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 70.0%;justify-content: flex-start;">
+<p>We’ve been using python 3.10, which is installed on the server. What if you wanted to run a newer version of python? It’s a command away with docker:</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 30.0%;justify-content: center;">
+<p><img src="../images/python-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<div class="column-page-right">
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> python:3.12</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Unable</span> to find image <span class="st">'python:3.12'</span> locally</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">3.12:</span> Pulling from library/python</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">6ee0baa58a3d:</span> Pull complete </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">992a857ef575:</span> Pull complete </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ex">3861a6536e4e:</span> Pull complete </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ex">e5e6faea05ea:</span> Pull complete </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">91c9495e7b5a:</span> Pull complete </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ex">9001688a971d:</span> Pull complete </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="ex">ad27ab4515af:</span> Pull complete </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">b152d3b07485:</span> Pull complete </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Digest:</span> sha256:336461f63f4eb1100e178d5acbfea3d1a5b2a53dea88aa0f9b8482d4d02e981c</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="ex">Status:</span> Downloaded newer image for python:3.12</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="ex">Python</span> 3.12.2 <span class="er">(</span><span class="ex">main,</span> Mar 12 2024, 08:01:18<span class="kw">)</span> <span class="ex">[GCC</span> 12.2.0] on linux</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">"help"</span>, <span class="st">"copyright"</span>, <span class="st">"credits"</span> or <span class="st">"license"</span> for more information.</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> print<span class="kw">(</span><span class="st">"Hello from python!"</span><span class="kw">)</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="ex">Hello</span> from python!</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can even use this image to run commands at the command prompt. The <code>-i</code> interactive and <code>-t</code> terminal options allow you to run a command interactively with terminal output. Let’s run a quick command to print the python version:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> <span class="at">--rm</span> python:3.12 python <span class="at">-V</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Python</span> 3.12.2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and we could run a little python command-line calculation from the image:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> <span class="at">--rm</span> python:3.12 python <span class="at">-c</span> <span class="st">'print(f"Four plus one is {4+1}")'</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Four</span> plus one is 5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you were to run commands like this frequently, you’d build up a lot of container instances from your image, so instead we passed the <code>--rm</code> option to tell docker to delete the container (but not the image) when it is done executing each time. So, at times you’ll need to clean up. I’ve run the commands a few times interactively without remembering the <code>--rm</code> option, so now I can list and remove the containers that I don’t need hanging around any more.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND     CREATED             STATUS                           PORTS     NAMES</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">d3f717354ed5</span>   python:3.12   <span class="st">"python3"</span>   About an hour ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">59</span> minutes ago                  laughing_borg</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">e882d6a89f2c</span>   python:3.12   <span class="st">"python3"</span>   About an hour ago   Exited <span class="er">(</span><span class="ex">130</span><span class="kw">)</span> <span class="ex">About</span> an hour ago             interesting_elgamal</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">9d984d596e4e</span>   python:3.12   <span class="st">"python3"</span>   About an hour ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">About</span> an hour ago               adoring_jang</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">b015e761fbab</span>   hello-world   <span class="st">"/hello"</span>    7 days ago          Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">7</span> days ago                      compassionate_wozniak</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">1bf3a36a924c</span>   hello-world   <span class="st">"/hello"</span>    7 days ago          Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">7</span> days ago                      jolly_goldwasser</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker rm laughing_borg interesting_elgamal adoring_jang compassionate_wozniak</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">laughing_borg</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="ex">interesting_elgamal</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="ex">adoring_jang</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ex">compassionate_wozniak</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE         COMMAND    CREATED      STATUS                  PORTS     NAMES</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="ex">1bf3a36a924c</span>   hello-world   <span class="st">"/hello"</span>   7 days ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">7</span> days ago             jolly_goldwasser</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exploring-image-registries" class="level2 page-columns page-full" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="exploring-image-registries"><span class="header-section-number">15.5</span> Exploring image registries</h2>
+<p>Now that version of python is available on your machine. When you list the image, you’ll see that the python version is provided as the <code>tag</code>.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker image ls</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">REPOSITORY</span>                                          TAG       IMAGE ID       CREATED         SIZE</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span>                                              3.12      ff82813aa87b   6 weeks ago     1.02GB</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">hello-world</span>                                         latest    ee301c921b8a   10 months ago   9.14kB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>TAG</code> associated with an image is typically used to indicate the version of the image. We downloaded this image from the DockerHub image registry. If you inspect the <a href="https://hub.docker.com/_/python">DockerHub python page</a>, you’ll see that this is an ‘official’ image from the python project, and that it is one of many different images that can be downloaded. So, images are a fantastic way to be able to reliably return to a specific version of software that you might want to use.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Be careful with images that you download from the internet – they might contain anything, including malware. Because you are running the code locally, you never know what mischief might be managed, and you probably don’t want to find out. So it is best to only run images from trusted sources. Generally, the ‘official’ images for projects are marked in image registries, and there are procedures to ensure they are from those trusted sources. But, it’s also easy to spoof something that looks official, so put on your tinfoil hat when running unfamiliar images.</p>
+</div>
+</div>
+</div></div><p><img src="../images/dockerhub-python.png" class="img-fluid"></p>
+<p>Of course, python is just the start. You can find images for just about any software you need, including machine learning libraries like <strong>TensorFlow</strong> (<a href="https://hub.docker.com/r/tensorflow/tensorflow">tensorflow/tensorflow</a>), databases like <strong>Postresql</strong> (<a href="https://hub.docker.com/r/bitnami/postgresql">bitnami/postgresql</a>), search systems like <strong>Solr</strong> (<a href="https://hub.docker.com/_/solr">solr</a>), and web servers like <strong>nginx</strong> (<a href="https://hub.docker.com/_/nginx">nginx</a>). Take a few mintues to explore the thousands of applications available at these image registries:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><a href="https://hub.docker.com"><img src="../images/dockerhub-logo.png" class="img-fluid"></a></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><a href="https://artifacthub.io/"><img src="../images/artifacthub-logo.png" class="img-fluid"></a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="custom-images-with-dockerfiles" class="level2 page-columns page-full" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="custom-images-with-dockerfiles"><span class="header-section-number">15.6</span> Custom images with Dockerfiles</h2>
+<p>While pre-built images are highly useful, even more importantly, you can build your own custom images with the precise collection of software needed to run an analysis, a model, or visualize your data. This use of images to build custom containers creates portable and highly repeatible analyses because it allows us to declare the exact set of software needed in your computing environment. Basically, it allows you to take your pre-defined computing environment anywhere needed for execution, from your local laptop to the largest supercomputers in the world.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../images/docker-build.png" class="img-fluid"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>Images can be built by declaring their contents in a <code>Dockerfile</code>, which is a simple text file containing instructions on how to build the image and what it contains. In general, you can customize an existing image by adding folders and files contianing software and data that you need. To create an image, you can start by creating a <code>Dockerfile</code> that contains a <code>FROM</code> directive listing an existing image you want to build from. In our case, let’s start by building an image based on the stock Ubuntu operating system.</p>
+</div>
+</div>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dockerfile for ADC Scalable Computing Course</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ubuntu:22.04</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In that file, the <code>FROM</code> command is the first directive, and it indicates that we want to build an image that extends the existing <code>ubuntu:22.04</code> image. So our image will start with everything that is present in Ubuntu. Technically, that is all we need to get started. Let’s build and run the image to see what’s there. We pass <code>docker build</code> the <code>-t</code> tag we’d like to use in the form of <code>name:version</code>, and the <code>.</code> to indicate that it should look for a <code>Dockerfile</code> in the current directory.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker build <span class="at">-t</span> adccourse:0.1 .</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> Building 0.0s <span class="er">(</span><span class="ex">5/5</span><span class="kw">)</span> <span class="ex">FINISHED</span>                                                                                                                                    docker:default</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">internal</span><span class="pp">]</span> load .dockerignore                                                                                                                                             0.0s</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> transferring context: 2B                                                                                                                                               0.0s</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">internal</span><span class="pp">]</span> load build definition from Dockerfile                                                                                                                          0.0s</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> transferring dockerfile: 191B                                                                                                                                          0.0s</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">internal</span><span class="pp">]</span> load metadata for docker.io/library/ubuntu:22.04                                                                                                               0.0s</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> CACHED <span class="pp">[</span><span class="ss">1/1</span><span class="pp">]</span> FROM docker.io/library/ubuntu:22.04                                                                                                                          0.0s</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> exporting to image                                                                                                                                                        0.0s</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> exporting layers                                                                                                                                                       0.0s</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> writing image sha256:7dbc68b81268657c977e24cfe712e6907f1cb76c08aaf6397f94a3149db11069                                                                                  0.0s</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> naming to docker.io/library/adccourse:0.1                                                                                                                              0.0s</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> adccourse:0.1</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="ex">root@76529c3b3358:/#</span> pwd</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="ex">/</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="ex">root@76529c3b3358:/#</span> ls</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="ex">bin</span>  boot  dev  etc  home  lib  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="ex">root@76529c3b3358:/#</span> exit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><span class="emoji" data-emoji="tada">🎉</span> <strong>We have a working image, declared from our Dockerfile!</strong> <span class="emoji" data-emoji="tada">🎉</span></p>
+<section id="adding-software" class="level3 page-columns page-full" data-number="15.6.1">
+<h3 data-number="15.6.1" class="anchored" data-anchor-id="adding-software"><span class="header-section-number">15.6.1</span> Adding software</h3>
+<p>Now let’s extend it to add some software we might need. For example, let’s add python and some utilities. First, we’ll use the <code>SHELL</code> directive to indicate that we want all future commmands from the Dockerfile to be run using the Bash shell, and the <code>WORKDIR</code> directive to set up our working directory to a better location than <code>/</code>. In this case, we will be building an application for the scalable computing (scomp) course, so we’ll put our working files in a typical linux HOME directory location, <code>/home/scomp</code>.</p>
+<p>The <code>RUN</code> directive can be used to run any shell command that is needed to modify the image. In this example, we will use it to run the <code>apt update</code> and <code>apt install</code> commands to install the python package and some standard utilities on the system. Note how we use the <code>&amp;&amp;</code> operator to combine two bash commands into a single <code>RUN</code> invocation. When using <code>apt</code> in an image, you typically need to run <code>apt update</code> first to get the full list of software package sources that can be installed.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dockerfile for ADC Scalable Computing Course</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ubuntu:22.04</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SHELL</span> [<span class="st">"/bin/bash"</span>, <span class="st">"-c"</span>]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/scomp</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt</span> update <span class="kw">&amp;&amp;</span> <span class="ex">apt</span> <span class="at">-y</span> install python3 pip virtualenvwrapper vim nano iproute2 tree</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Build it again with <code>docker build -t adccourse:0.2 .</code>, and then let’s inspect it by running <code>docker run -it adccourse:0.2</code>. Note now that our working directory is <code>/home/scomp</code>, and you can now run the python3 command, which shows we have python 3.10 installed:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> adccourse:0.2</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">root@e9566a19e24b:/home/scomp#</span> pwd</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/scomp</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">root@e9566a19e24b:/home/scomp#</span> python3 <span class="at">-V</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Python</span> 3.10.12</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ex">root@e9566a19e24b:/home/scomp#</span> exit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When we’’ve been running these containers, we have not been using the <code>--rm</code> flag from before. So, you’ll note that they are building up in our container list. We can clean them up with <code>docker rm</code> as we don’t really intend to reuse these containers as we work through building up our image. And let’s use <code>--rm</code> for future runs to prevent this from happening.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps <span class="at">-a</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE           COMMAND       CREATED          STATUS                            PORTS     NAMES</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">e9566a19e24b</span>   adccourse:0.2   <span class="st">"/bin/bash"</span>   3 minutes ago    Exited <span class="er">(</span><span class="ex">127</span><span class="kw">)</span> <span class="ex">About</span> a minute ago             affectionate_swanson</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">d493605cfb60</span>   adccourse:0.2   <span class="st">"/bin/bash"</span>   5 minutes ago    Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">4</span> minutes ago                    sharp_elbakyan</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ex">a9ab223669ac</span>   adccourse:0.2   <span class="st">"/bin/bash"</span>   5 minutes ago    Exited <span class="er">(</span><span class="ex">127</span><span class="kw">)</span> <span class="ex">5</span> minutes ago                  wonderful_chaum</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ex">76529c3b3358</span>   adccourse:0.1   <span class="st">"/bin/bash"</span>   22 minutes ago   Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">8</span> minutes ago                    heuristic_nash</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="ex">1bf3a36a924c</span>   hello-world     <span class="st">"/hello"</span>      8 days ago       Exited <span class="er">(</span><span class="ex">0</span><span class="kw">)</span> <span class="ex">8</span> days ago                       jolly_goldwasser</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker rm e9566a19e24b d493605cfb60 a9ab223669ac 76529c3b3358</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="ex">e9566a19e24b</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="ex">d493605cfb60</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="ex">a9ab223669ac</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="ex">76529c3b3358</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="add-a-user-account" class="level3" data-number="15.6.2">
+<h3 data-number="15.6.2" class="anchored" data-anchor-id="add-a-user-account"><span class="header-section-number">15.6.2</span> Add a user account</h3>
+<p>When we ran our images previously, we noted that the image was running as the <code>root</code> user, and the default working directory was <code>/</code>. By setting <code>WORKDIR</code>, we are now working within the <code>/home/scomp</code> directory, but still as the user <code>root</code>. Best practice would be to create a dedicated user account that doesn’t have the administrative priveledges of root. So, we’ll create an account <code>scomp</code> and group <code>scomp</code> that will own all of the files we create and will run our processes. We need to be sure the user has the same <code>uid</code> as you on your local machine, so run the <code>id</code> command on theserver to determine your <code>uid</code>, and substitute it in the Dockerfile:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@included-crab:~$</span> id</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="va">uid</span><span class="op">=</span>1003<span class="kw">(</span><span class="ex">jones</span><span class="kw">)</span> <span class="va">gid</span><span class="op">=</span>1003<span class="kw">(</span><span class="ex">jones</span><span class="kw">)</span> <span class="va">groups</span><span class="op">=</span>1003<span class="kw">(</span><span class="ex">jones</span><span class="kw">)</span><span class="ex">,</span> 126<span class="er">(</span><span class="ex">docker</span><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dockerfile for ADC Scalable Computing Course</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ubuntu:22.04</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SHELL</span> [<span class="st">"/bin/bash"</span>, <span class="st">"-c"</span>]</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/scomp</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt</span> update <span class="kw">&amp;&amp;</span> <span class="ex">apt</span> <span class="at">-y</span> install python3 pip virtualenvwrapper vim nano iproute2 tree</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">groupadd</span> <span class="at">--gid</span> 1003 <span class="at">-r</span> scomp <span class="kw">&amp;&amp;</span> <span class="ex">useradd</span> <span class="at">--uid</span> 1003 <span class="at">-r</span> <span class="at">-g</span> scomp scomp</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">mkdir</span> <span class="at">-p</span> /home/scomp <span class="kw">&amp;&amp;</span> <span class="fu">chown</span> scomp.scomp /home/scomp</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">mkdir</span> <span class="at">-p</span> /var/data <span class="kw">&amp;&amp;</span> <span class="fu">chown</span> scomp.scomp /var/data</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="kw">USER</span> scomp:scomp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Rebuild the image (<code>docker build -t adccourse:0.3 .</code>) and run it, and you’ll see that we are now running as the <code>scomp</code> user in the <code>/home/scomp</code> directory. This time, when we run it, we’ll also use the <code>-h</code> hostname option to create a bit more readable hostname, rather than the container identifier.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> <span class="at">--rm</span> <span class="at">-h</span> adccourse adccourse:0.3</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scomp@adccourse:~$</span> pwd</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/scomp</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="ex">scomp@adccourse:~$</span> whoami</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">scomp</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ex">scomp@adccourse:~$</span> exit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="add-a-python-venv" class="level3" data-number="15.6.3">
+<h3 data-number="15.6.3" class="anchored" data-anchor-id="add-a-python-venv"><span class="header-section-number">15.6.3</span> Add a python venv</h3>
+<p>Now that we have a working image with python installed, lets configure the image to create a standardized python virtual environment with the python packages that we’ll need in our application. Start by creating a <code>requirements.txt</code> file in the same directory as your <code>Dockerfile</code>, with the list of packages needed. We’ll start with just two, <code>xarray</code> and <code>matplotlib</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> cat requirements.txt</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="va">xarray</span><span class="op">=</span>=2024.2.0</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="va">matplotlib</span><span class="op">=</span>=3.8.3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To create the virtualenv, we will need to first configure virtualenvwrapper, and then <code>COPY</code> the requirements.txt file into the image, and then finally make the virtual environment inside the image using <code>mkvirtualenv</code>, <code>pip</code>, and <code>workon</code>. We’ll go through these in more detail after we build the image. Let’s build it, this time tagging it as version <code>1.0</code>.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dockerfile for ADC Scalable Computing Course</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Build with:</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     docker build -t adccourse:1.0 .</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ubuntu:22.04</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SHELL</span> [<span class="st">"/bin/bash"</span>, <span class="st">"-c"</span>]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WORKDIR</span> /home/scomp</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt</span> update <span class="kw">&amp;&amp;</span> <span class="ex">apt</span> <span class="at">-y</span> install python3 pip virtualenvwrapper vim nano iproute2 tree</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">groupadd</span> <span class="at">--gid</span> 1003 <span class="at">-r</span> scomp <span class="kw">&amp;&amp;</span> <span class="ex">useradd</span> <span class="at">--uid</span> 1003 <span class="at">-r</span> <span class="at">-g</span> scomp scomp</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="fu">mkdir</span> <span class="at">-p</span> /home/scomp <span class="kw">&amp;&amp;</span> <span class="fu">chown</span> scomp.scomp /home/scomp</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="kw">USER</span> scomp:scomp</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="bu">echo</span> <span class="st">"source /usr/share/virtualenvwrapper/virtualenvwrapper.sh"</span> <span class="op">&gt;&gt;</span> /home/scomp/.bashrc</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> ./requirements.txt .</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="bu">source</span> /usr/share/virtualenvwrapper/virtualenvwrapper.sh <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        <span class="ex">mkvirtualenv</span> scomp <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>        <span class="ex">pip</span> install <span class="at">--no-cache-dir</span> <span class="at">--upgrade</span> <span class="at">-r</span> requirements.txt <span class="kw">&amp;&amp;</span> <span class="dt">\</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">echo</span> <span class="st">"workon scomp"</span> <span class="op">&gt;&gt;</span> /home/scomp/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>COPY</code> directive is used to copy a file from the local machine into our image. In this case, we are copying the <code>requirements.txt</code> file that we created into the current directory (<code>.</code>), which in this case refers to the <code>WORKDIR</code> in the image (i.e., <code>/home/scomp</code>). We’ll use this in the next step.</p>
+<p>The final <code>RUN</code> directive sets up oour virtual environment by doing the following:</p>
+<ul>
+<li>runs <code>source</code> to load the virtualenvwrapper commands for use during this build</li>
+<li>runs <code>mkvirtualenv</code> to create a new virtual environment titled <code>scomp</code></li>
+<li>runs <code>pip</code> to install all of the packages from the requirements file</li>
+<li>appends <code>workon scomp</code> to our bash startup scripts so that the venv loads whenever the container is launched</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Layers</strong>. Each of the directives in the <code>Dockerfile</code> builds a single image layer, and they are run in order. Each layer is registered using the sha256 identifier for the layer, which enables layers to be cached. Thus, if you already have a layer with a given hash built or pulled into your local registry, then subsequent <code>docker build</code> commands can reuse that layer, rather than building them from scratch. As a result, its best practice to put the layers that change infrequently at the top of the Dockerfile, and layers that might change more frequently (such as application-specfiic commands) near the bottom. This will speed things up by maximizing the use of CACHED layers, which can be seen in the output of <code>docker build</code>.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> docker build <span class="at">-t</span> adccourse:1.0 .</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> Building 24.7s <span class="er">(</span><span class="ex">13/13</span><span class="kw">)</span> <span class="ex">FINISHED</span>                                                                                                                docker:default</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">internal</span><span class="pp">]</span> load build definition from Dockerfile                                                                                                         0.0s</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> transferring dockerfile: 787B                                                                                                                         0.0s</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">internal</span><span class="pp">]</span> load .dockerignore                                                                                                                            0.0s</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> transferring context: 2B                                                                                                                              0.0s</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">internal</span><span class="pp">]</span> load metadata for docker.io/library/ubuntu:22.04                                                                                              0.0s</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">1/8</span><span class="pp">]</span> FROM docker.io/library/ubuntu:22.04                                                                                                                0.0s</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">internal</span><span class="pp">]</span> load build context                                                                                                                            0.0s</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> transferring context: 115B                                                                                                                            0.0s</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> CACHED <span class="pp">[</span><span class="ss">2/8</span><span class="pp">]</span> WORKDIR /home/scomp                                                                                                                         0.0s</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> CACHED <span class="pp">[</span><span class="ss">3/8</span><span class="pp">]</span> RUN apt update <span class="kw">&amp;&amp;</span> <span class="ex">apt</span> <span class="at">-y</span> install python3 pip virtualenvwrapper vim nano iproute2 tree                                                       0.0s</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> CACHED <span class="pp">[</span><span class="ss">4/8</span><span class="pp">]</span> RUN groupadd <span class="at">-r</span> scomp <span class="kw">&amp;&amp;</span> <span class="ex">useradd</span> <span class="at">-r</span> <span class="at">-g</span> scomp scomp                                                                                          0.0s</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> CACHED <span class="pp">[</span><span class="ss">5/8</span><span class="pp">]</span> RUN mkdir <span class="at">-p</span> /home/scomp <span class="kw">&amp;&amp;</span> <span class="fu">chown</span> scomp.scomp /home/scomp                                                                                   0.0s</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> CACHED <span class="pp">[</span><span class="ss">6/8</span><span class="pp">]</span> RUN echo <span class="st">"source /usr/share/virtualenvwrapper/virtualenvwrapper.sh"</span> <span class="op">&gt;&gt;</span> /home/scomp/.bashrc                                                  0.0s</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">7/8</span><span class="pp">]</span> COPY ./requirements.txt .                                                                                                                          0.0s</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> <span class="pp">[</span><span class="ss">8/8</span><span class="pp">]</span> RUN source /usr/share/virtualenvwrapper/virtualenvwrapper.sh <span class="kw">&amp;&amp;</span>         <span class="ex">mkvirtualenv</span> scomp <span class="kw">&amp;&amp;</span>         <span class="ex">pip</span> install <span class="at">--no-cache-dir</span> <span class="at">--upgrade</span> <span class="at">-r</span> re  23.7s</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> exporting to image                                                                                                                                       0.9s</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> exporting layers                                                                                                                                      0.9s</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> writing image sha256:a45927dfe598cb5397195ada7168743f80417faf04f14745f6d66ac352614501                                                                 0.0s</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a> <span class="ex">=</span><span class="op">&gt;</span> =<span class="op">&gt;</span> naming to docker.io/library/adccourse:1.0                                                                                                             0.0s                                                                                           0.0s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>When we run this image, we’ll now see that the <code>scomp</code> virtualenvironment was activated, and that <code>xarray</code> can be imported in the <code>python3</code> environment. By being extremely explicit about the software being installed in the Dockerfile image, we can ensure that the environment we’ve built is highly <strong>portable</strong> and <strong>reproducible</strong>.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> <span class="at">--rm</span> <span class="at">-h</span> adccourse adccourse:1.0</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">scomp</span><span class="kw">)</span> <span class="ex">scomp@adccourse:~$</span> python3</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Python</span> 3.10.12 <span class="er">(</span><span class="ex">main,</span> Nov 20 2023, 15:14:05<span class="kw">)</span> <span class="ex">[GCC</span> 11.4.0] on linux</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">"help"</span>, <span class="st">"copyright"</span>, <span class="st">"credits"</span> or <span class="st">"license"</span> for more information.</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> import <span class="ex">xarray</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">scomp</span><span class="kw">)</span> <span class="ex">scomp@adccourse:~$</span> exit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In summary, a <code>Dockerfile</code> is a mechanism to declare a complete computing environment in a single text file. Using a <code>Dockerfile</code> makes it straightforward to reliably rebuild the specified environment, installing the precise software and data needed in a lightweight image. You can base images on a huge variety of existing software in the open source ecosystem. Docker images are immutable, and can be run in parallel in multiple containers. In the next section, we start to explore how to get data in and out of these immutable containers.</p>
+</section>
+</section>
+<section id="volume-mounts" class="level2" data-number="15.7">
+<h2 data-number="15.7" class="anchored" data-anchor-id="volume-mounts"><span class="header-section-number">15.7</span> Volume mounts</h2>
+<ul>
+<li>containers are ephemeral – any data they create is lost when the image finishes executing, unless you go to extra steps to preserve it</li>
+<li>you can get data into and out of images by mounting volumes</li>
+<li>think of a volume liek a thumbdrive – when I plug it into one machine, it gets mounted there at a path, but if I plug it into a different machine, it might get mounted in a different location – but it still contains the same content</li>
+<li>there are many types of volumes that can be mounted, but the simplest is a folder on the local machine</li>
+<li>docker makes it easy to mount a volume by specifying both which volume to mount and the path that you want it mounted at. For example, from our linux server I might take a folder from my local home directory (e.g., <code>/home/jones/project-data</code>) and mount it in another location in a docker container at (e.g., <code>/var/data</code>).</li>
+<li>You control the permissions on the files and folders that you mount, which determines whether the processes you run in a script can read from or write to the volume. Permission issues can easily arise when you first start using mounted volumes, but just a small amount of tweaking of your Dockerfile can set the permissions straight.</li>
+<li>Mount example (read-write)
+<ul>
+<li>create a directory <code>mkdir ~/adc-course</code></li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir ~/adc-course</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir ~/adc-course/input</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir ~/adc-course/output</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir ~/adc-course/scripts</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># $ curl -o ~/adc-course/input/discharge-data.csv https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A8a43b1f4-5b67-4e9a-973e-b864a1d254ff</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cp discharge-data.csv ~/adc-course/input/</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cp max-discharge.py ~/adc-course/scripts/</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tree ~/adc-course</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/jones/adc-course</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span><span class="ex">--</span> input</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span>   <span class="ex">└--</span> discharge-data.csv</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span><span class="ex">--</span> output</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="ex">└--</span> scripts</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└--</span> max-discharge.py</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> <span class="at">--rm</span> <span class="at">-h</span> adccourse <span class="at">-v</span> ~/adc-course:/var/data adccourse:1.0 python /var/data/scripts/max-discharge.py</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">scomp</span><span class="kw">)</span> <span class="ex">scomp@adccourse:~$</span> tree /var/data</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="ex">/var/data</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span><span class="ex">--</span> input</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span>   <span class="ex">└--</span> discharge-data.csv</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span><span class="ex">--</span> output</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="ex">└--</span> scripts</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└--</span> max-discharge.py</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="ex">3</span> directories, 2 files</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker run <span class="at">-it</span> <span class="at">--rm</span> <span class="at">-h</span> adccourse <span class="at">-v</span> ~/adc-course:/var/data adccourse:1.0</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">scomp</span><span class="kw">)</span> <span class="ex">scomp@adccourse:~$</span> python3 /var/data/scripts/max-discharge.py</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="ex">/var/data/scripts/max-discharge.py:6:</span> DtypeWarning: Columns <span class="er">(</span><span class="ex">2</span><span class="kw">)</span> <span class="ex">have</span> mixed types. Specify dtype option on import or set low_memory=False.</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>  <span class="ex">discharge</span> = pd.read_csv<span class="er">(</span><span class="st">"/var/data/input/discharge-data.csv"</span><span class="kw">)</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">scomp</span><span class="kw">)</span> <span class="ex">scomp@adccourse:~$</span> tree /var/data</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="ex">/var/data</span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span><span class="ex">--</span> input</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span>   <span class="kw">`</span><span class="ex">--</span> discharge-data.csv</span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span><span class="ex">--</span> output</span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a><span class="kw">|</span>   <span class="kw">`</span><span class="at">--</span> max-discharge.png</span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a><span class="kw">`</span><span class="ex">--</span> scripts</span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">`</span><span class="at">--</span> max-discharge.py</span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a><span class="ex">3</span> directories, 3 files</span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">scomp</span><span class="kw">)</span> <span class="ex">scomp@adccourse:~$</span> exit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="../images/max-discharge.png" class="img-fluid"></p>
+<pre><code>- create subdirectories for `input` and `output` and `scripts`
+- save some data into the input directory
+- create a script to open and plot the data and save it in the `scripts` directory
+    - the script should save the plot to the `output` directory
+- Using the python image we built before, run the script and exit
+- From the server, inspect the `~/docker-project` directory and note the output is now present</code></pre>
+</section>
+<section id="sharing-images-to-registries" class="level2" data-number="15.8">
+<h2 data-number="15.8" class="anchored" data-anchor-id="sharing-images-to-registries"><span class="header-section-number">15.8</span> Sharing images to registries</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><img src="../images/docker-pull-push.png" class="img-fluid"></p>
+</div><div class="column" style="width:5%;">
+
+</div><div class="column" style="width:65%;">
+<p>Container registries…</p>
+<ul>
+<li>GHCR</li>
+<li>Dockerhub</li>
+<li>ArtifactHub</li>
+<li>…</li>
+</ul>
+</div>
+</div>
+<section id="anatomy-of-an-image" class="level3" data-number="15.8.1">
+<h3 data-number="15.8.1" class="anchored" data-anchor-id="anatomy-of-an-image"><span class="header-section-number">15.8.1</span> Anatomy of an image</h3>
+<ul>
+<li>images and layers</li>
+<li>why layers are important</li>
+<li>Dockerfiles and layers</li>
+</ul>
+</section>
+<section id="oci" class="level3" data-number="15.8.2">
+<h3 data-number="15.8.2" class="anchored" data-anchor-id="oci"><span class="header-section-number">15.8.2</span> OCI</h3>
+<ul>
+<li>layers and sha checksums</li>
+<li>saving layers and images</li>
+</ul>
+</section>
+</section>
+<section id="container-lifecycle" class="level2" data-number="15.9">
+<h2 data-number="15.9" class="anchored" data-anchor-id="container-lifecycle"><span class="header-section-number">15.9</span> Container lifecycle</h2>
+<p>Putting it all together, you can use the docker client tool to build an image from a <code>Dockerfile</code>, then run it as a container, and you can push that image to an image registry, or pull one down that you want to run on a particular machine.</p>
+<p><img src="../images/docker-workflow.png" class="img-fluid"></p>
+<section id="spinning-up-ubuntu" class="level3" data-number="15.9.1">
+<h3 data-number="15.9.1" class="anchored" data-anchor-id="spinning-up-ubuntu"><span class="header-section-number">15.9.1</span> Spinning up ubuntu</h3>
+<ul>
+<li><code>docker run --name container1 -h myubuntu -it ubuntu:22.04</code></li>
+<li><code>docker rm container1</code></li>
+</ul>
+<p>Shell on running containers - <code>docker exec -it container1 -- bash</code></p>
+</section>
+</section>
+<section id="exercise" class="level2" data-number="15.10">
+<h2 data-number="15.10" class="anchored" data-anchor-id="exercise"><span class="header-section-number">15.10</span> Exercise</h2>
+<ul>
+<li>Optional?</li>
+</ul>
+</section>
+<section id="bonus-info-running-containers-locally" class="level2" data-number="15.11">
+<h2 data-number="15.11" class="anchored" data-anchor-id="bonus-info-running-containers-locally"><span class="header-section-number">15.11</span> Bonus info: Running containers locally</h2>
+<p>Working with docker or containers requires a container runtime. If you’re on a Mac or Windows machine, you can run containers through a variety of different runtime systems. One of the nicest lately is <a href="https://rancherdesktop.io/">Rancher Desktop</a>. Install the binary for you platform, and then after it starts, enter the configuration Preferences, and then deselect “Kubernetes” to disable the kubernetes distribution, which takes up a lot of resources if you’re not using it.</p>
+<p><img src="../images/rancher-k8s-config.png" class="img-fluid"></p>
+<p>There are many different tools you can use with docker, including the <code>docker</code> client tool, and the <code>containerd</code> ecosystem using <code>nerdctl</code> as a client tool. Both the <code>docker</code> command and the <code>nerdctl</code> command share the same commands. A few quick example commands one might use in the docker ecosystem:</p>
+<ul>
+<li><code>docker pull python:3.9</code>: to grab an existing python image from the DockerHub repository</li>
+<li><code>docker run -it python:3.9 -- python</code>: to start a standard python interpreter</li>
+<li><code>docker build</code>: to build a new image from a Dockerfile configuration file</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../sections/zarr.html" class="pagination-link" aria-label="Zarr for Cloud Data Storage">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Zarr for Cloud Data Storage</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../sections/software-design-2.html" class="pagination-link" aria-label="Software Design II: Modules, Packages, and Testing">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

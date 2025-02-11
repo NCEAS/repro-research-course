@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>16&nbsp; Software Design II: Modules, Packages, and Testing – Scalable and Computationally Reproducible Approaches to Arctic Research</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../sections/docker-hpc-cloud.html" rel="next">
+<link href="../sections/docker-containers.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2ce9fc9ac8b614e7ffef13962cc12eaf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/software-design-2.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Course Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://arcticdata.io" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/arcticdatactr" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/scalable-computing-course" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/adc-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome and Overview</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/remote-computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Remote and Cloud Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/python-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Programming on Clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parallel-programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pleasingly Parallel Programming</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/data-structures-netcdf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Structures and Formats for Large Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parallel-with-dask.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Group Project: Preprocessing and Rasterizing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/data-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Ethics for Scalable Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/geopandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/geoscience-and-ai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">AI in Arctic Science</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Visualization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/software-design-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Software Design I: Functions and Concurrency</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/adc-data-publishing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Documenting and Publishing Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/zarr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Zarr for Cloud Data Storage</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/docker-containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Docker Containers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/software-design-2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/docker-hpc-cloud.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Docker for HPC and Cloud</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/reproducibility-containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility and Containers</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">16.1</span> Learning objectives</a></li>
+  <li><a href="#python-modules-and-packages" id="toc-python-modules-and-packages" class="nav-link" data-scroll-target="#python-modules-and-packages"><span class="header-section-number">16.2</span> Python modules and packages</a></li>
+  <li><a href="#anatomy-of-modules-and-packages" id="toc-anatomy-of-modules-and-packages" class="nav-link" data-scroll-target="#anatomy-of-modules-and-packages"><span class="header-section-number">16.3</span> Anatomy of modules and packages</a></li>
+  <li><a href="#managing-packages-with-poetry" id="toc-managing-packages-with-poetry" class="nav-link" data-scroll-target="#managing-packages-with-poetry"><span class="header-section-number">16.4</span> Managing packages with <code>poetry</code></a>
+  <ul class="collapse">
+  <li><a href="#get-poetry-in-a-new-virtual-environment" id="toc-get-poetry-in-a-new-virtual-environment" class="nav-link" data-scroll-target="#get-poetry-in-a-new-virtual-environment"><span class="header-section-number">16.4.1</span> Get poetry in a new virtual environment</a></li>
+  </ul></li>
+  <li><a href="#setup-package-workspace" id="toc-setup-package-workspace" class="nav-link" data-scroll-target="#setup-package-workspace"><span class="header-section-number">16.5</span> Setup package workspace</a>
+  <ul class="collapse">
+  <li><a href="#open-vs-code-window" id="toc-open-vs-code-window" class="nav-link" data-scroll-target="#open-vs-code-window"><span class="header-section-number">16.5.1</span> Open VS Code window</a></li>
+  <li><a href="#create-a-new-package" id="toc-create-a-new-package" class="nav-link" data-scroll-target="#create-a-new-package"><span class="header-section-number">16.5.2</span> Create a new package</a></li>
+  <li><a href="#setup-the-workspace" id="toc-setup-the-workspace" class="nav-link" data-scroll-target="#setup-the-workspace"><span class="header-section-number">16.5.3</span> Setup the workspace</a></li>
+  </ul></li>
+  <li><a href="#the-adcmodel-example-package" id="toc-the-adcmodel-example-package" class="nav-link" data-scroll-target="#the-adcmodel-example-package"><span class="header-section-number">16.6</span> The <code>adcmodel</code> example package</a>
+  <ul class="collapse">
+  <li><a href="#load-software-dependencies" id="toc-load-software-dependencies" class="nav-link" data-scroll-target="#load-software-dependencies"><span class="header-section-number">16.6.1</span> Load software dependencies</a></li>
+  <li><a href="#adding-code-to-modules" id="toc-adding-code-to-modules" class="nav-link" data-scroll-target="#adding-code-to-modules"><span class="header-section-number">16.6.2</span> Adding code to modules</a></li>
+  <li><a href="#add-development-packages" id="toc-add-development-packages" class="nav-link" data-scroll-target="#add-development-packages"><span class="header-section-number">16.6.3</span> Add development packages</a></li>
+  </ul></li>
+  <li><a href="#testing" id="toc-testing" class="nav-link" data-scroll-target="#testing"><span class="header-section-number">16.7</span> Testing</a></li>
+  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">16.8</span> Summary and next steps</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">16.9</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-objectives" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">16.1</span> Learning objectives</h2>
+<ul>
+<li>Python modules and packages</li>
+<li>Managing packages with <code>poetry</code></li>
+<li>Testing: why, how, and when</li>
+</ul>
+</section>
+<section id="python-modules-and-packages" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="python-modules-and-packages"><span class="header-section-number">16.2</span> Python modules and packages</h2>
+<p>The <a href="https://pypi.org">Python Package Index</a> currently houses over 400,000 software projects that you can install, reuse, and extend to accelerate your work. If you’ve worked in python for long at all, you have certainly used the <code>import</code> statement to to load <strong>modules</strong> that you need in your code into a namespace for use.</p>
+<div id="d70cf615" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>np.pi<span class="op">*</span>np.power(<span class="dv">3</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>np.float64(28.274333882308138)</code></pre>
+</div>
+</div>
+<p>This lesson is a first primer on building your own modules and packages in python, and provides some core tools to get started building your own packages. For a deeper dive, check out the <a href="https://py-pkgs.org/">Python Packages</a> book, which is freely available online. First, a few definitions:</p>
+<dl>
+<dt><strong>Module</strong></dt>
+<dd>
+A <a href="https://docs.python.org/3/tutorial/modules.html">python <code>module</code></a> is a file containing commands that create functions, variables, and other definitions that can be reused in other code that you write. Each module in python creates names in its own <a href="https://freecontent.manning.com/namespacing-with-python/">namespace</a>. Using <code>import</code> in python allows you to take a name from one module and be able to use it in another namespace.
+</dd>
+<dt><strong>Package</strong></dt>
+<dd>
+A <a href="https://py-pkgs.org/01-introduction">python <code>package</code></a> represents a way to bundle python modules, documentation, and related resources as reusable and sharable code, both for your own use and to collaborate with others.
+</dd>
+</dl>
+<p>Building reusable code though modules and packages is key to the scientific reproducibility theme that weaves throughout this course. Creating your own modules and bundling them into packages will help you (and future you) in so many ways:</p>
+<ul>
+<li>to keep you organized, making it easier for you and others to understand and use your code</li>
+<li>to provide consistent approaches for documentation</li>
+<li>to easily import your code into your own projects in a portable way that promotes code reuse</li>
+<li>to formally document and manage software dependencies</li>
+<li>to share your software with colleagues aand the community</li>
+</ul>
+</section>
+<section id="anatomy-of-modules-and-packages" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="anatomy-of-modules-and-packages"><span class="header-section-number">16.3</span> Anatomy of modules and packages</h2>
+<p>Modules in python are loaded from the definitions stored in files of the same name with a <code>.py</code> file extension. Within each file are definitions of objects which can be accessed when the module is imported. For example, imagine you have a file named <em>hello.py</em> in your current directory that contains a function called <code>helloworld</code> with the following contents:</p>
+<div id="2b2eb7d1" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> helloworld():</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">"""</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">  Print a hello message</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">  """</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="st">"Hello world!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With that in place, you can then import and use that function in other code you write:</p>
+<div id="1e5c2d03" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> helloworld</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>helloworld()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Packages help organize these modules into a directory structure so that they can be predictably named and utilized. Packages can contain subpackages to keep modules organized into logical groups. Packages also provide structured metadata so that we can document the package and its dependencies so that it can be reliably installed and correctly used. The structure of a package is a simple directory tree containing the package modules and subpackages. Two common structures are supported. First, with modules in the root directory:</p>
+<pre><code>adcmodel
+  ├── README.md
+  ├── adcmodel
+  │   ├── __init__.py
+  │   ├── affine.py
+  │   ├── data.py
+  │   └── reports
+  │       ├── __init__.py
+  │       └── pdf.py
+  └── tests</code></pre>
+<p>Alternatively, the module code is often put in it’s own <code>src</code> directory, like:</p>
+<pre><code>adcmodel
+  ├── README.md
+  ├── src
+  │   └── adcmodel
+  │       ├── __init__.py
+  │       ├── affine.py
+  │       ├── data.py
+  │       └── reports
+  │           ├── __init__.py
+  │           └── pdf.py
+  └── tests</code></pre>
+<p>The presence of the file <code>__init__.py</code> in each module directory indicates that that directory is a module. We won’t get into the details of this special file, but it is often used to load code to initialize a package.</p>
+</section>
+<section id="managing-packages-with-poetry" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="managing-packages-with-poetry"><span class="header-section-number">16.4</span> Managing packages with <code>poetry</code></h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/poetry-banner-small.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>While this structure and organization can be created manually, tools like <a href="https://python-poetry.org/">Python Poetry</a> provide a simple way to create and manage packages and their dependencies. Poetry is but one of many tools for managing packages in the python ecosystem, but we think it is useful and straightforward to use, and it tames some of the complexity of the python packaging ecosystem.</p>
+<p>In the rest of this tutorial we will:</p>
+<ul>
+<li>Create a new virutal environment for our package</li>
+<li>Set up a new VS Code workspace to develop the package</li>
+<li>Get Poetry installed and create a skeleton package</li>
+<li>Add some code to the package and run it</li>
+<li>Talk through testing strategies for the package</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Sidebar on other package managers
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Poetry is a great packaging tool, especially for pure python packages that don’t include libraries in other languages or require more complex build configurations. In those situations, there are many other tools in the python ecosystem that are useful, including tools like Hatch and PDM. The <a href="https://www.pyopensci.org">pyOpenSci</a> initiative has created a great flow chart to help guide the choice of packaging tools, especially if you need to create more complex artifacts like wheels.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.pyopensci.org/python-package-guide/_images/python-package-tools-decision-tree.png" class="img-fluid figure-img"></p>
+<figcaption>Image credit: pyOpenSci</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<section id="get-poetry-in-a-new-virtual-environment" class="level3" data-number="16.4.1">
+<h3 data-number="16.4.1" class="anchored" data-anchor-id="get-poetry-in-a-new-virtual-environment"><span class="header-section-number">16.4.1</span> Get poetry in a new virtual environment</h3>
+<p>To get started, we’re using <code>virtualenvwrapper</code> to manage virtual environments in the course, so let’s be sure it is installed in your environment. We’re starting from the <code>scalable-computing-examples</code> workspace, so you should be in the <code>scomp</code> virtual environment in your terminal. So, make sure virtualenvwrapper is installed, and install it if it is not in <code>scomp</code>, using:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pip install virtualenvwrapper</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The example package we will create is called <code>adcmodel</code>, and we will create a virtual environment of the same name to manage its dependencies. We’ll also install poetry into that <code>adcmodel</code> virtual environment.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cd ~</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkvirtualenv <span class="at">-p</span> python3.9 adcmodel</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pip install poetry</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Once that is done, we’re going to return our current workspace to the <code>scomp</code> virtual environment (so that future lessons continue to work), and create a new workspace for our project work. To reset the venv, run the following from your terminal:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> workon scomp</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cd ~/scalable-computing-examples</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now we have a virtual environment. Next we’ll use it to create our new package.</p>
+</section>
+</section>
+<section id="setup-package-workspace" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="setup-package-workspace"><span class="header-section-number">16.5</span> Setup package workspace</h2>
+<section id="open-vs-code-window" class="level3" data-number="16.5.1">
+<h3 data-number="16.5.1" class="anchored" data-anchor-id="open-vs-code-window"><span class="header-section-number">16.5.1</span> Open VS Code window</h3>
+<p>Now that we havea virtual environment set up, let’s create a new VS Code window, connect to `included-crab, and get our workspace set up.</p>
+<ul>
+<li>Start by opening a new VS Code window by connecting to included-crab using <code>Command-Shift-P</code> and then select “Connect to Host…” and choose <code>included-crab.nceas.ucsb.edu</code></li>
+<li>Once the window opens, open a new Terminal if one doesn’t open, and switch to our new <code>adcmodel</code> venv using:</li>
+</ul>
+<p><code>workon adcmodel</code></p>
+<p>Finally, choose the Python version to use with <code>Command-Shift-P</code>, then choose <code>Python: Select Interpreter</code>, and choose the python version that lists your <code>adcmodel</code> virtual environment.</p>
+<p>When that is complete, your VS Code window should look like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/vscode-remote-with-venv.png" class="img-fluid figure-img"></p>
+<figcaption>VS Code remote with a virtual environment enabled.</figcaption>
+</figure>
+</div>
+</section>
+<section id="create-a-new-package" class="level3" data-number="16.5.2">
+<h3 data-number="16.5.2" class="anchored" data-anchor-id="create-a-new-package"><span class="header-section-number">16.5.2</span> Create a new package</h3>
+<p>Now we will create a skeleton for our package with <code>poetry new</code>, and take a look at what it produces:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">adcmodel</span><span class="kw">)</span> <span class="ex">jones@included-crab:~$</span> poetry new adcmodel</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Created</span> package adcmodel in adcmodel</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">adcmodel</span><span class="kw">)</span> <span class="ex">jones@included-crab:~$</span> cd adcmodel/</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">adcmodel</span><span class="kw">)</span> <span class="ex">jones@included-crab:~/adcmodel$</span> tree</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> README.md</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> adcmodel</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── __init__.py</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> pyproject.toml</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> tests</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> __init__.py</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ex">2</span> directories, 4 files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You’ll see it created a README, an <code>adcmodel</code> directory for our source code (with the accompanying <code>__init__.py</code> to indicate this is a module), a metadata file defining our project metadata and dependencies, and a <code>tests</code> directory that we’ll come back to later when we explore testing.</p>
+</section>
+<section id="setup-the-workspace" class="level3" data-number="16.5.3">
+<h3 data-number="16.5.3" class="anchored" data-anchor-id="setup-the-workspace"><span class="header-section-number">16.5.3</span> Setup the workspace</h3>
+<p>To make it easy to open up the project in VS Code, it is helpful to setup a workspace file, and configure VS Code to automatically activate our <code>adcmodel</code> virtual environment. First, let’s set up the workspace by opening the project folder and saving a workspace file:</p>
+<ul>
+<li>Click “Open Folder” to open the <code>adcmodel</code> folder and display it in the VS Code file exporer</li>
+<li>Select “File | Save Workspace As…” to save the workspace configuration file</li>
+<li>Next, open the Terminal window and type <code>workon adcmodel</code> if it hasn’t already been done</li>
+<li>Finally, save a new settings file for our virtual environment:
+<ul>
+<li>create a directory called <code>.vscode</code> using <code>mkdir .vscode</code></li>
+<li>Save a new settings file as <code>.vscode/settings.json</code> with the following content</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"python.terminal.activateEnvInCurrentTerminal"</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"python.defaultInterpreterPath"</span><span class="op">:</span> <span class="st">"~/.virtualenvs/adcmodel/bin/python"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Close the window, and open “New Window” under VS Code, then using <code>Ctrl-R</code> shortcut, open the recent <code>adcmodel</code> workspace on included-crab. If this all goes well, your session should be set to open up this <code>adcmodel</code> virtualenv each time that you open the workspace, and you should be able to see the contents of the skeleton package that you created.</li>
+</ul>
+<p>Let’s do some coding!</p>
+<p><img src="../images/vscode-pkg-skeleton.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="the-adcmodel-example-package" class="level2" data-number="16.6">
+<h2 data-number="16.6" class="anchored" data-anchor-id="the-adcmodel-example-package"><span class="header-section-number">16.6</span> The <code>adcmodel</code> example package</h2>
+<p>So, imagine this <code>adcmodel</code> package is intended to hold the code for one of our research projects in which we need to load data from a variety of sources, handle quality analysis and data cleaning, and then integrate, analyze and visualize those data. While there are many useful and general functions you might want to build into a package such as this, we’re going to keep it simple and show how to build a single function that consistenly loads and caches CSV-formatted data from the Arctic Data Center based on the identifier of the data object.</p>
+<p>For this, we’ll create a module called <code>adcmodel.data</code> that contains our data handling functions, one of which will be a <code>load_adc_csv()</code> function that takes an Arctic Data Center Identifier as input.</p>
+<section id="load-software-dependencies" class="level3" data-number="16.6.1">
+<h3 data-number="16.6.1" class="anchored" data-anchor-id="load-software-dependencies"><span class="header-section-number">16.6.1</span> Load software dependencies</h3>
+<p>To create this functionality, we’ll make use of existing data loading functions and data retrieval functions from the <code>pandas</code> package, and operating system utilities from the <code>os</code> package. Almost all packages and functions you write will make use of the existing ecosystem of python packages, and we need to keep track of those dependencies in our package.</p>
+<p>Luckily, Poetry provides simple command line utilities for adding, removing, and installing dependent packages into your virtual environment. For each package that you need, use <code>poetry add</code> to register that package in your dependencies list and install it in your <code>adcmodel</code> virtual environment. We’ll do this for <code>pandas</code>, but don’t need to register <code>urllib</code> or <code>os</code> because these base packages ship with python.</p>
+<p><img src="../images/vscode-poetry-pandas.png" class="img-fluid"></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The <code>pyproject.toml</code> configuration file
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dependency metadata that is added to the project and other information about the project is found in the <code>pyproject.toml</code> configuration file that is managed by poetry. In this file you’ll find key metadata about the project like it’s name and description and authors, as well as the list of specific dependencies that the package needs installed to work correctly. You should open this file and edit the key metadata, but <code>poetry add</code> and <code>poetry remove</code> are probably better for adding and removing dependencies.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="at">tool.poetry</span><span class="kw">]</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">name = "adcmodel"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">version = "0.1.0"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="at">description = "Arctic Data Center example package for scalable computing course"</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="at">authors = ["Matt Jones &lt;gitcode@magisa.org&gt;"]</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="at">readme = "README.md"</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="at">tool.poetry.dependencies</span><span class="kw">]</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="at">python = "^3.9"</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="at">pandas = "^1.5.0"</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="at">build-system</span><span class="kw">]</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="at">requires = ["poetry-core"]</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="at">build-backend = "poetry.core.masonry.api"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="adding-code-to-modules" class="level3" data-number="16.6.2">
+<h3 data-number="16.6.2" class="anchored" data-anchor-id="adding-code-to-modules"><span class="header-section-number">16.6.2</span> Adding code to modules</h3>
+<p>Let’s write some module code! In this case, we want to implement the <code>adcmodel.data.load_adc_csv(identifier)</code> function that we’ll use for data loading and caching. We do this by creating a new file called <code>data.py</code> in the <code>adcmodel</code> directory, and then implementing the function. Create a new python file called <code>data.py</code> and save it to the <code>adcmodel</code> module directory, with the following function implementation:</p>
+<div id="ef540b36" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hashlib</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_adc_csv(identifier<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Load and cache a CSV data file from the Arctic Data Center as a pandas.DataFrame</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    hashval <span class="op">=</span> hashlib.sha256(<span class="bu">bytes</span>(identifier, <span class="st">'utf-8'</span>)).hexdigest()</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"data/"</span> <span class="op">+</span> hashval</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.exists(<span class="st">"data/"</span>):</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        os.mkdir(<span class="st">"data/"</span>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.exists(path):</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        service <span class="op">=</span> <span class="st">"https://arcticdata.io/metacat/d1/mn/v2/object/"</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        url <span class="op">=</span> service <span class="op">+</span> identifier</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>        msg <span class="op">=</span> urllib.request.urlretrieve(url, path)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_csv(path)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once you save the file, we can use <code>poetry install</code> to install the package and try running the function in an interactive session. Check it out by opening a new Jupyter notebook and running the following in the first cell (after you install the needed jupyter packages):</p>
+<div id="dda1c944" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> adcmodel.data <span class="im">import</span> load_adc_csv</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> load_adc_csv(<span class="st">"urn:uuid:e248467d-e1f9-4a32-9e38-a9b4fb17cefb"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><span class="emoji" data-emoji="tada">🎉</span> Congratulations, you’ve created your first package! <span class="emoji" data-emoji="tada">🎉</span></p>
+</section>
+<section id="add-development-packages" class="level3" data-number="16.6.3">
+<h3 data-number="16.6.3" class="anchored" data-anchor-id="add-development-packages"><span class="header-section-number">16.6.3</span> Add development packages</h3>
+<p>Utilities like python linters and code formatters can make coding faster, more consistent, and more reliable. Poetry supports the use of development packages that are available in the virtual environment during the development cycle but are not required for runtime use of the package. Like regular dependencies, development packages can be added with <code>poetry add</code>, but we also pass in a qualifier to add it to <code>--group dev</code>, which marks it as only for use during development.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> add <span class="at">--group</span> dev pytest black</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can now use <code>black</code> to format your code (via <code>Command-Shift-P Format Document</code>) and <code>pytest</code> to run tests. Next, let’s get into testing.</p>
+</section>
+</section>
+<section id="testing" class="level2" data-number="16.7">
+<h2 data-number="16.7" class="anchored" data-anchor-id="testing"><span class="header-section-number">16.7</span> Testing</h2>
+<p>A major advantage of writing packages is that you can thoroughly test each of the functions that you write, thereby ensuring that they operate correctly both with good data and bad data. While it’s always helpful to confirm that a function returns the correct value within the bounds that it is normally meant to operate, it is also important to pass it data that it wouldn’t normally see. For example, does your linear model produce the correct results when it is passed a normal dataset? How about if it is passed a dataset with only one observation, or with all the same value, or with 0 or negative numbers? Does it produce an understandable error if some of the values are character values when they should be numeric? Does it continue operating in the face of bad data? Should it, or should it not produce an exception? These and others are the questions you need to ask when testing your packages.</p>
+<p>Python provides a number of robust testing frameworks, but we will work with <code>pytest</code>, one of the common ones used for unit testing. The <code>poetry new</code> command already set up our package to be ready for testing, so now all we need to do is to add some test files in the <code>tests</code> directory.</p>
+<p>In pytest and other frameworks, the common pattern is to use the python <code>assert</code> function to determine whether a value produced from your code matches expectations. For example, given a function that produces a product of two numbers, we could assert that <code>product(5, 6) == 30</code> and that <code>product(-3, -2) == 6</code>.</p>
+<p>Generally, it is good practice to produce at least one test file for each of your package source files, and their names are prefixed with <code>test_</code>. So, for our <code>data.py</code> source file, we might expect to build tests in a file called <code>test_data.py</code>. Let’s create that file in the <code>tests</code> directory and walk through populating it with some simple tests. The functions in the test file are also named with <code>test_</code> as the prefix on the function name, and generally each test function atomically tests one aspect of the code. That way, when a test function fails, it should be quickly clear what type of an error would produce that kind of failure, and how to locate it in the code.</p>
+<p>To get started, create <code>tests/test_data.py</code> and populate it with our first test function:</p>
+<div id="f0366c81" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> adcmodel.data <span class="im">import</span> load_adc_csv</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_load_adc_csv():</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> load_adc_csv(<span class="st">"urn:uuid:e248467d-e1f9-4a32-9e38-a9b4fb17cefb"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> df <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can run the tests after saving the file by running <code>pytest</code> on the commandline, which will produce output indicating which tests passed and failed.</p>
+<p>We can add other tests that test multiple conditions, and we can use any of the features of python to creatively test that our code will produce correct results. Here’s another test to check that the data file we loaded has the right number of rows and columns:</p>
+<div id="25fdd1f4" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_load_adc_csv_shape():</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> load_adc_csv(<span class="st">"urn:uuid:e248467d-e1f9-4a32-9e38-a9b4fb17cefb"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> df <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> (df.shape[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">17856</span>) <span class="op">&amp;</span> (df.shape[<span class="dv">1</span>] <span class="op">==</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="../images/vscode-pytest-results.png" class="img-fluid"></p>
+<p>Finally, what happens when tests are run that fail? Try adding the following test, and determine if the failure is due to the code, the test, or the data? What would you change to make this test reliably pass, or fail more gracefully?</p>
+<div id="3f1c28d7" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_load_adc_csv_inputs():</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> load_adc_csv()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> df <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The answer to this and other more detailed questions on testing are covered in the excellent overview of testing provided by the <a href="https://py-pkgs.org/05-testing">“Chapter 5: Testing” of “Python Packages”</a>.</p>
+</section>
+<section id="summary-and-next-steps" class="level2" data-number="16.8">
+<h2 data-number="16.8" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">16.8</span> Summary and next steps</h2>
+<p>Python packages are an excellent mechanism to organize your modules for reuse both within your local code projects and with your colleagues and the broader science community. Adopting a structured approach to organizing, documenting, and testing your code can ultimately save you a lot of time and also increase the quality of your work. Scientific software is also a first-class product of the research enterprise, and is critical for fully understanding the lineage of derived data and research results. The emerging consensus is that publishing open source software packages to GitHub or other source code control systems, and then archiving them in repositories like <a href="https://www.softwareheritage.org/">Software Heritage</a>, the <a href="https://arcticdata.io">Arctic Data Center</a>, <a href="https://zenodo.org/">Zenodo</a>, or the <a href="https://pypi.org">Python Package Index</a> increases the robustness, transparency, and reproducibility of research results. And it also provides a robust starting point for research teams to build upon and amplify each other’s work. Using tools like Poetry and pytest to organize and build packages makes the process quick and efficient.</p>
+</section>
+<section id="further-reading" class="level2" data-number="16.9">
+<h2 data-number="16.9" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">16.9</span> Further reading</h2>
+<ul>
+<li><a href="https://freecontent.manning.com/namespacing-with-python/">Namespacing with Python</a></li>
+<li>pyOpenSci <a href="https://www.pyopensci.org/python-package-guide">Python Package Guide</a></li>
+<li><a href="https://py-pkgs.org">Python Packages</a> by Tomas Beuzen &amp; Tiffany Timbers</li>
+<li><a href="https://python-poetry.org/">Python Poetry</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../sections/docker-containers.html" class="pagination-link" aria-label="Docker Containers">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Docker Containers</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../sections/docker-hpc-cloud.html" class="pagination-link" aria-label="Docker for HPC and Cloud">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Docker for HPC and Cloud</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
