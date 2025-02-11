@@ -16,6 +16,7 @@ env:
   BRANCH: ${{ github.event.client_payload.branch }}
   REPO: ${{ github.event.client_payload.repo }}
   GH_USER: 'RRC_GHA' # must be set
+  
 
 jobs:
   quarto:
@@ -32,6 +33,14 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+    
+    - name: Set environment variables
+        run: |
+          echo "BRANCH=${{ github.event.client_payload.branch }}" >> $GITHUB_ENV
+          echo "REPO=${{ github.event.client_payload.repo }}" >> $GITHUB_ENV
+          echo "GH_USER=RRC_GHA" >> $GITHUB_ENV
+
+    
       - name: Check name of branch from nceas-training
         run: |
           echo $BRANCH
