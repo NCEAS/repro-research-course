@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>17&nbsp; Container orchestration – Scalable and Computationally Reproducible Approaches to Arctic Research</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../sections/reproducibility-containers.html" rel="next">
+<link href="../sections/software-design-2.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-a34d670291f06f286357e447776a572a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/docker-hpc-cloud.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Container orchestration</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Course Materials</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://arcticdata.io" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-house-door-fill"></i></a>
+    <a href="https://twitter.com/arcticdatactr" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-twitter"></i></a>
+    <a href="https://github.com/NCEAS/scalable-computing-course" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/adc-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Welcome and Overview</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/remote-computing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Remote and Cloud Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/python-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python Programming on Clusters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parallel-programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pleasingly Parallel Programming</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/data-structures-netcdf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Structures and Formats for Large Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/parallel-with-dask.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Parallelization with Dask</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Group Project: Preprocessing and Rasterizing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/data-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Ethics for Scalable Computing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/geopandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spatial and Image Data Using GeoPandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/geoscience-and-ai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">AI in Arctic Science</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/group-project-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Group Project: Visualization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/software-design-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Software Design I: Functions and Concurrency</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/adc-data-publishing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Documenting and Publishing Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/zarr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Zarr for Cloud Data Storage</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/docker-containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Docker Containers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/software-design-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/docker-hpc-cloud.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Container orchestration</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sections/reproducibility-containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility and Traceability</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">17.1</span> Learning Objectives</a></li>
+  <li><a href="#container-orchestration-systems" id="toc-container-orchestration-systems" class="nav-link" data-scroll-target="#container-orchestration-systems"><span class="header-section-number">17.2</span> Container orchestration systems</a>
+  <ul class="collapse">
+  <li><a href="#docker-compose" id="toc-docker-compose" class="nav-link" data-scroll-target="#docker-compose"><span class="header-section-number">17.2.1</span> docker compose</a></li>
+  <li><a href="#kubernetes" id="toc-kubernetes" class="nav-link" data-scroll-target="#kubernetes"><span class="header-section-number">17.2.2</span> Kubernetes</a></li>
+  <li><a href="#parsl-on-kubernetes" id="toc-parsl-on-kubernetes" class="nav-link" data-scroll-target="#parsl-on-kubernetes"><span class="header-section-number">17.2.3</span> Parsl on Kubernetes</a></li>
+  <li><a href="#ray.io" id="toc-ray.io" class="nav-link" data-scroll-target="#ray.io"><span class="header-section-number">17.2.4</span> Ray.io</a></li>
+  <li><a href="#kubeflow" id="toc-kubeflow" class="nav-link" data-scroll-target="#kubeflow"><span class="header-section-number">17.2.5</span> Kubeflow</a></li>
+  </ul></li>
+  <li><a href="#how-weird-is-the-weather" id="toc-how-weird-is-the-weather" class="nav-link" data-scroll-target="#how-weird-is-the-weather"><span class="header-section-number">17.3</span> How weird is the weather?</a>
+  <ul class="collapse">
+  <li><a href="#kubernetes-deployment" id="toc-kubernetes-deployment" class="nav-link" data-scroll-target="#kubernetes-deployment"><span class="header-section-number">17.3.1</span> Kubernetes deployment</a></li>
+  </ul></li>
+  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="header-section-number">17.4</span> Resources</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Container orchestration</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-objectives" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">17.1</span> Learning Objectives</h2>
+<ul>
+<li>Discuss containers in high performace computing and cloud computing</li>
+<li>Explore orchestration approaches</li>
+<li>Learn how to use docker compose to build a workflow</li>
+<li>Explore a real world Kubernetes service</li>
+</ul>
+</section>
+<section id="container-orchestration-systems" class="level2 page-columns page-full" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="container-orchestration-systems"><span class="header-section-number">17.2</span> Container orchestration systems</h2>
+<p>Container orchestration is the process of linking multiple containers into an integrated application. These applications can represent a computational workflow, a backend service or data store, a frontend application, or some combination of these and others. For example, a simple application might consist of a backend database system in a container, which is accessed by containerized data processing code, and which is served by a containerized web application.</p>
+<p><img src="../images/docker-compose-workflow.png" class="img-fluid"></p>
+<p>All of these types of integrated systems can be built by orchestrating the deployment of multiple containers, whether creating scientific applications for running big data jobs on high performance computers or building and deploying scientific web applications and services.</p>
+<p>Let’s explore a few container orchestration systems.</p>
+<section id="docker-compose" class="level3 page-columns page-full" data-number="17.2.1">
+<h3 data-number="17.2.1" class="anchored" data-anchor-id="docker-compose"><span class="header-section-number">17.2.1</span> docker compose</h3>
+<p><a href="https://docs.docker.com/compose/">Docker Compose</a> is “a tool for defining and running multi-container applications”. This is the essence of orchestration. With just the <code>compose</code> application, you can link multiple containers into an integrated application to run it on demand. This is particularly useful to quickly bring up a backend and frontend application, say one that uses a database (like <code>postgresql</code>) or a caching server (like <code>redis</code>) and combine it with a web-based frontend.</p>
+<p>Creating a docker compose application is done by editing a <code>compose.yaml</code> configuration document that describes each of the containers to be run in the system, and how they are linked together. In the simplest “Hello world” case, you simply create the service you want to run by identifying the image to be executed. For example, given this <code>compose.yaml</code>, file:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hello_world</span><span class="kw">:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> hello-world</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Run it with <code>docker-compose up</code>, and it produces the familiar hello world output.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker-compose up</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> Running 2/0</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">✔</span> Network 15-containers_default          Created                                                                                                            0.0s</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a> <span class="ex">✔</span> Container 15-containers-hello_world-1  Created                                                                                                            0.0s</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Attaching</span> to hello_world-1</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span> <span class="ex">Hello</span> from Docker!</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span> <span class="ex">This</span> message shows that your installation appears to be working correctly.</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span> <span class="ex">To</span> generate this message, Docker took the following steps:</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>  <span class="ex">1.</span> The Docker client contacted the Docker daemon.</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>  <span class="ex">2.</span> The Docker daemon pulled the <span class="st">"hello-world"</span> image from the Docker Hub.</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>     <span class="kw">(</span><span class="ex">arm64v8</span><span class="kw">)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>  <span class="ex">3.</span> The Docker daemon created a new container from that image which runs the</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>     <span class="ex">executable</span> that produces the output you are currently reading.</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>  <span class="ex">4.</span> The Docker daemon streamed that output to the Docker client, which sent it</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>     <span class="ex">to</span> your terminal.</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span> <span class="ex">To</span> try something more ambitious, you can run an Ubuntu container with:</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>  <span class="ex">$</span> docker run <span class="at">-it</span> ubuntu bash</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span> <span class="ex">Share</span> images, automate workflows, and more with a free Docker ID:</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>  <span class="ex">https://hub.docker.com/</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span> <span class="ex">For</span> more examples and ideas, visit:</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span>  <span class="ex">https://docs.docker.com/get-started/</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span>  <span class="kw">|</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="ex">hello_world-1</span> exited with code 0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The big difference is that you can add multiple services that run containers in a compose file, and they will be launched and can communicate with one another. compose also handles some housekeeping for you, in that it cleans up containers when the application shuts down.</p>
+<p>Let’s build a simple web application with docker compose. First, create a directory to hold our website files, and initialize it with a simple web page.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir <span class="at">-p</span> ~/adc-course/web</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> echo <span class="st">'&lt;h1&gt;Scalable Computing Course&lt;/h1&gt;'</span> <span class="op">&gt;</span> ~/adc-course/web/index.html</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Next, create the <code>compose.yaml</code>, and use the stock <code>nginx</code> image from DockerHub to serve the file. We’ll throw the <code>hello-world</code> container in as well just to show two services can be run from the same application:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">web</span><span class="kw">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> nginx</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> 8000:80</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ~/adc-course/web:/usr/share/nginx/html</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hello_world</span><span class="kw">:</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> hello-world</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Finally, run it with <code>docker-compose up --detach</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker-compose up <span class="at">--detach</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> Running 8/8</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">✔</span> web 7 layers <span class="pp">[</span><span class="ss">⣿⣿⣿⣿⣿⣿⣿</span><span class="pp">]</span>      0B/0B      Pulled                                                                                                           304.3s</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   <span class="ex">✔</span> 59f5764b1f6d Pull complete                                                                                                                            251.0s</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>   <span class="ex">✔</span> f7bd43626fa7 Pull complete                                                                                                                            288.1s</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>   <span class="ex">✔</span> 2df415630b2f Pull complete                                                                                                                              5.3s</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>   <span class="ex">✔</span> 059f9f6918db Pull complete                                                                                                                             10.5s</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>   <span class="ex">✔</span> df91ff398a83 Pull complete                                                                                                                             15.9s</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>   <span class="ex">✔</span> e75b854d63f1 Pull complete                                                                                                                             21.4s</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>   <span class="ex">✔</span> 4b88df8a13cd Pull complete                                                                                                                             26.5s</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> Running 2/2</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a> <span class="ex">✔</span> Container 15-containers-web-1          Started                                                                                                            0.1s</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a> <span class="ex">✔</span> Container 15-containers-hello_world-1  Started                                                                                                            0.0s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Your website should now be live on your local machine at <a href="https://localhost:8000/">https://localhost:8000</a>. And while it is running, you can now see the executing containers on your host. Port 8000 on the local host is mapped to port 80 in the nginx container.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker ps</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                                   NAMES</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">5d634a37ba09</span>   nginx     <span class="st">"/docker-entrypoint.…"</span>   5 seconds ago   Up 5 seconds   0.0.0.0:8000-<span class="op">&gt;</span>80/tcp, :::8000-<span class="op">&gt;</span>80/tcp   15-containers-web-1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that only the <code>nginx</code> container is running. The <code>hello-world</code> container started up, printed its content, and immediately exited. Whereas the <code>nginx</code> image was designed to run the web server continuously until told to shut down. You can shut down the containers with <code>docker-compose down</code>:</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> docker-compose down</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[+]</span> Running 3/3</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">✔</span> Container 15-containers-web-1          Removed                                                                                                            0.5s</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a> <span class="ex">✔</span> Container 15-containers-hello_world-1  Removed                                                                                                            0.0s</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> <span class="ex">✔</span> Network 15-containers_default          Removed                                                                                                            0.1s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Challenge exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using the <code>adccourse:1.0</code> image that we created earlier, write a docker-compose application that:</p>
+<ul>
+<li>runs the <code>max-discharge.py</code> script to generate the <code>max-discharge.png</code> image showing discharge data</li>
+<li>copies the png file to the <code>web</code> directory that you just set up</li>
+<li>modifies the <code>index.html</code> file to display the plot on the web page</li>
+<li>starts up your web application with <code>docker-compose up --detach</code></li>
+</ul>
+<p>Hint: You will likely want to use the <a href="https://docs.docker.com/compose/compose-file/05-services/#depends_on"><code>depends_on</code></a> keyword and the <a href="https://docs.docker.com/compose/compose-file/05-services/#command"><code>command</code></a> keyword in your <code>compose.yaml</code> service description to modify the command that is run by the <code>adccourse:1.0</code> container.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>First, modify our base <code>index.html</code> to display the dynamically generated image:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'&lt;img src="max-discharge.png"&gt;'</span> <span class="op">&gt;&gt;</span> ~/adc-course/web/index.html</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Second, add <code>adccourse</code> to the <code>compose.yaml</code>, and change the <code>command</code> to also copy the produced png file into the web directory.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">web</span><span class="kw">:</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> nginx</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> 8000:80</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ~/adc-course/web:/usr/share/nginx/html</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">depends_on</span><span class="kw">:</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> adccourse</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">adccourse</span><span class="kw">:</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> adccourse:1.0</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ~/adc-course:/var/data</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">command</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at"> </span><span class="st">"bash"</span><span class="kw">,</span><span class="at"> </span><span class="st">"-i"</span><span class="kw">,</span><span class="at"> </span><span class="st">"-c"</span><span class="kw">,</span><span class="at"> </span><span class="st">"workon scomp &amp;&amp; python /var/data/scripts/max-discharge.py &amp;&amp; cp /var/data/output/max-discharge.png /var/data/web/max-discharge.png"</span><span class="at"> </span><span class="kw">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note how we used <code>depends_on</code> to ensure the <code>adccourse</code> service produces the png file before the <code>nginx</code> service is started. Our web page now inlcudes the dynamically generated plot:</p>
+<p><img src="../images/docker-compose-web-plot.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="kubernetes" class="level3" data-number="17.2.2">
+<h3 data-number="17.2.2" class="anchored" data-anchor-id="kubernetes"><span class="header-section-number">17.2.2</span> Kubernetes</h3>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[70,-10,20]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 70.0%;justify-content: flex-start;">
+<p><a href="https://kubernetes.io">Kubernetes</a> is fundamentally an orchestration system for executing containerized applications on the nodes of distributed computing clusters. Kubernetes creates fault tolerance, high availability, and scalability for applications deployed on a cluster.</p>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 10.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 20.0%;justify-content: center;">
+<p><img src="../images/k8s-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<p>It does so by creating a high availability control plane that manages all aspects of the definition, creation, and execution of containers on nodes of the cluster. Thus, if a container running on one node of a cluster fails, or loses network connectivity, the Kubernetes control plane brings the container back up on another node in the cluster.</p>
+<p>While the <a href="https://kubernetes.io/docs/concepts/">core concepts in Kubernetes</a> are extensive and have been reviewed in some <a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-kubernetes">more comprehensive tutorials</a>, a quick overview of the core concepts will show the parallels between Kubernetes and Docker Compose.</p>
+<p><img src="../images/k8s-arch.png" class="img-fluid"></p>
+<p>Similarly to compose, Kubernetes executes application containers based on OCI images, but these are bundled into Pods. A Pod in Kubernetes is the smallest unit of a workload that can be deployed on a node, and it consists of one or more containers that will be executed within the Pod. Containers within a Pod are tichtly linked and share network and other resources, making it easy for them to coordinate. Pods are deployed onto one or more Nodes in a Kubernetes cluster, where a Node corresponds to a physical or virtual server that is managed by Kubernetes. The Kubernetes control plane includes a scheduler that determines how to schedule the execution of Pods onto Nodes within a deployment, how to ensure that unhealthy Pods get terminated and restarted on other Nodes, and when the number of Pods needs to be increased or decreased to scale an application.</p>
+<p>Like other container systems, Kubernetes is configured through a set of YAML configuration files. While that is too complex for this bried introduction we can show how Kubernetes can be used by other orchestration frameworks.</p>
+</section>
+<section id="parsl-on-kubernetes" class="level3" data-number="17.2.3">
+<h3 data-number="17.2.3" class="anchored" data-anchor-id="parsl-on-kubernetes"><span class="header-section-number">17.2.3</span> Parsl on Kubernetes</h3>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[70,30]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 70.0%;justify-content: flex-start;">
+<p>Parsl provides a simple mechanism to decorate python functions to be executed concurrently on a variety of platforms and under different execution models, inlcuding the <code>ThreadPoolExecutor</code> and the <code>HighThroughputExecutor</code>, which we used previously.</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 30.0%;justify-content: center;">
+<p><img src="../images/parsl-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<p>Remember the basic layout of a parsl app, in which the <code>@python_app</code> decorator is used to wrap task functions that should be executed by parsl.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the square task.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> parsl</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="at">@python_app</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> square(x):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x <span class="op">*</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This works because parsl is configured ahead of time to use a particular type of execution environment on the nodes of a cluster. The <code>HighThroughPutExector</code> that we used previously with a <code>LocalProvider</code> can instead be easily configured to work using a <code>KubernetesProvider</code>. Here’s a modification to our previous Config to use Kubernetes:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>activate_env <span class="op">=</span> <span class="st">'workon scomp'</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>htex_kube <span class="op">=</span> Config(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    executors<span class="op">=</span>[</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        HighThroughputExecutor(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">'kube-htex'</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>            cores_per_worker<span class="op">=</span>cores_per_worker,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            max_workers<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>            worker_logdir_root<span class="op">=</span><span class="st">'/'</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Address for the pod worker to connect back</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>            address<span class="op">=</span>address_by_route(),</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>            provider<span class="op">=</span>KubernetesProvider(</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Namespace in K8S to use for the run</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                namespace<span class="op">=</span><span class="st">'adccourse'</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Docker image url to use for pods</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                image<span class="op">=</span><span class="st">'ghcr.io/mbjones/k8sparsl:0.3'</span>,</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Command to be run upon pod start</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                 worker_init<span class="op">=</span>activate_env,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Should follow the Kubernetes naming rules</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>                pod_name<span class="op">=</span><span class="st">'parsl-worker'</span>,</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>                nodes_per_block<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>                init_blocks<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>                min_blocks<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Maximum number of pods to scale up</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                max_blocks<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>                <span class="co"># persistent_volumes (list[(str, str)]) – List of tuples</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>                <span class="co"># describing persistent volumes to be mounted in the pod.</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>                <span class="co"># The tuples consist of (PVC Name, Mount Directory).</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>                <span class="co"># persistent_volumes=[('mypvc','/var/data')]</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With that change, Parsl will send tasks to Kubernetes worker pods. Otherwise, the remaining parsl code is the smae as previously.</p>
+</section>
+<section id="ray.io" class="level3" data-number="17.2.4">
+<h3 data-number="17.2.4" class="anchored" data-anchor-id="ray.io"><span class="header-section-number">17.2.4</span> Ray.io</h3>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[60,40]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 60.0%;justify-content: flex-start;">
+<p><a href="https://ray.io">Ray</a> is structured similarly to Parsl, and also uses decorators to wrap task functions that are to be executed. <a href="https://docs.ray.io/en/latest/ray-core/walkthrough.html">Ray Core</a> is the part that is fairly analogous to Parsl, and provides the core functionality for distributed execution for any kind of compute jobs.</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 40.0%;justify-content: center;">
+<p><img src="../images/ray-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the square task.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">@ray.remote</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> square(x):</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x <span class="op">*</span> x</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Launch four parallel square tasks.</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>futures <span class="op">=</span> [square.remote(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)]</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve results.</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ray.get(futures))</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># -&gt; [0, 1, 4, 9]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The execution model also returns a <code>Future</code>-like object that can be queried to get the function results when it is complete.</p>
+<p>Ray Core defines <code>Tasks</code>, <code>Actors</code>, and <code>Objects</code>, all of which can be used on ditributed clusters such as Kubernetes. And like Parsl, Ray can be configured to use a wide variety of execution backends such as Kubernetes. Ray also provides a mature framework for training, tuning, and serving machine learning models and the associated data.</p>
+<p><img src="../images/ray-components.png" class="img-fluid"></p>
+</section>
+<section id="kubeflow" class="level3" data-number="17.2.5">
+<h3 data-number="17.2.5" class="anchored" data-anchor-id="kubeflow"><span class="header-section-number">17.2.5</span> Kubeflow</h3>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[[85,15]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 85.0%;justify-content: flex-start;">
+<p><a href="https://www.kubeflow.org/">Kubeflow</a> is yet another orchestration package designed to asynchronously execute tasks from containers, but Kubeflow is specific to Kubernetes clusters.</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 15.0%;justify-content: center;">
+<p><img src="../images/kubeflow-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<p>Here’s the syntax for defining a Kubeflow component and pipeline to be executed on worker pods of a Kubernetes cluster. The similarities with the previous packages are striking. But unlike Parsl and Ray, a workflow built in Kubeflow can’t be run on the rich variety of high performace computing clusters supported by the other libraries.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kubeflow pipeline example</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> kfp <span class="im">import</span> dsl</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="at">@dsl.component</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> say_hello(name: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    hello_text <span class="op">=</span> <span class="ss">f'Hello, </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">!'</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(hello_text)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> hello_text</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="at">@dsl.pipeline</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hello_pipeline(recipient: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    hello_task <span class="op">=</span> say_hello(name<span class="op">=</span>recipient)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> hello_task.output</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="how-weird-is-the-weather" class="level2 page-columns page-full" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="how-weird-is-the-weather"><span class="header-section-number">17.3</span> How weird is the weather?</h2>
+<p>Big data are hard to visualize, and sometimes we need to come up with clever ways to pack a lot of data into a small space. This is exactly what the <strong>How weird is the weather?</strong> project did (<a href="https://github.com/howweirdistheweather/weather_app">hwitw github</a>), by summarizing the <a href="https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5">ERA5 climate reanalysis data</a> and providing a means to visualize over 70 years of climate data interactively. This project, developed by Brentwood Higman, John McInnes, and Katmai McKittrick, shows where climate extremes have occurred over the ERA5 dataset. First, pick any location on the globe via the work-in-progress <a href="https://sandcastle.cesium.com/#c=tVbbcts2EP0VVNNp6YlK2pn2RbLcxqodeyKPMpEvD2HGgcmViDEEcABQspPo37sASAq6uE0e+qIRsddzdrHYJCETMKQqiSmADEGzak4WDJag4lRkUmhTf5IBEbCsVeJbdxalncx9D6UwlAlQaadLvqaCEA0cMsOkuBQ5y6iRqkemlGvoWikTU3kqn9ZHq4N+E05nIACj1Vm4TxSmIknIKdVAbj6MyFQqciGX5A6YysmlJteY/h1QRLFOvFLcGQxI2imMKXUvSYolM8vfcljEVGF+WU4NjZlMtKH4lTCRw1NcmDn/M+00UYcKHUPI0FxW6BcWIAwpqMg5Iq+D1p+bdE0yBSAmJc3gzBpdeKXIgYszKhZUH+wJh6rMPONfasiScY60qgUQqp2U0wfgXpgzXXL63JybhEvR8uD1WkadUwY6pnkeuWI5hZ4vHJaukMuwWP7klGaPMyUrkfeIUVUjmmLle8jv0e/lE9IipLYgsQ28uJCKfbHNwceKzZjoNYxcbAni0dn5dW20AIW12DG53TiOr8fva/2SPQEfT6caMJWA9SFVBv9R8To6+qNLDg+c/qppN0+2FDYcoSRDbTlTtCxYRjIpsa+MxPMpes9JDhmbUyyAUUzMkNppJVx/21acUzMMrCNnzQRW8cCTqsBUSjR5XWGbxkb+DTPsCh1q4+m5DRe9tgmu6hzfMuyZuufWyrpLZnh1g4LbvqB1hkGCqDWiZiTFxEmirKGlTo5NSfRTcOiT7VuR758NZgYhu81pPFVy3tIdRAi8YIIzZqocfBroaB9zodPWYsMN3tMf81IbeCd1JT5uZdPd8vspoP/cBXiJaDeKrOzi7vL6zg6n3ebw9KMfpxNx9/lGKfpcl8BD+8+kEG1gG+L5jOeDn79u6q9+QYf2dNPt6vOPg3MT4l+Ajaz8fwGGIXpkB1maVoeHp4ddgjZOvAWxlodIb8q8Gat+IOJLUGwArzHjbCal1MzhZIbgr9WacfkAIQWVc+iR6xrX9t3yvLXeBmuF/lrsf+2QRQU7W3dkBp4MynyUANMFy2F/fQqU+NQ2MtkI5UZ84O0dAO4BCgc9kdParb9xAT0YhINxkvc1rPYqfvzUjNWJjWA9tNBrj36KhZSSZcE4ING/apQufIj6FY1xpF+KsjJvHKqohRehJszxJdvos5bc9WOX0TkoGpcsezzjnJVasjzyz0bjAh/EvIHSPHjuXfYVh8bMisJJhNA8co3hXh6y/XbGrg0Omrc2KFPfnwTTd+Xrtofotac+8ZfY8ZlxhOnXkjicmOi/MfVB0s5LyxOhJsUadsir/Vc8wOBqTTauQRAqvAu2x7ov7ULXzyXEV+Obydn91fj2rH2ZP0DOFO6Q9hX2s1W2j6DF+T1dEr5we4j89o3sOY45iJkp2hptV6Te8+wiufUI7cz5bddh++B2iobNjvoqdOi0lriLymUsSxARanWxaPcPnIrHtPMdhNp16n44uhy+s8qdbudYm2cOJx4SIX+xeSmVyyKK48TAHPdHLFfyUGWPYOJM66Yjj5PQ9DhnC8LywZ7VH+tCtUbJtOJ8wr7gGnhynKD+jimXFJeY2RhXL9xarVpxdDLyh3EcHyf4ud/SSMkfqNry/A8">sandcastle demo</a>:</p>
+<p><img src="../images/hwitw-globe.png" class="img-fluid"></p>
+<p>Next, configure the application to show the climate variables of interest. Here, I show the extremes of the average daily temperature where I live in Juneau, AK. The cold temperatures from the 1950s and 1960s haven’t been seen in decades, and now the hottest temperatures are constant throughout the summer.</p>
+<p><img src="../images/hwitw-jnu-temp.png" class="img-fluid"></p>
+<section id="kubernetes-deployment" class="level3 page-columns page-full" data-number="17.3.1">
+<h3 data-number="17.3.1" class="anchored" data-anchor-id="kubernetes-deployment"><span class="header-section-number">17.3.1</span> Kubernetes deployment</h3>
+<p>Let’s examine the Kubernetes deployment. There are three major working in concert. Two CronJobs are configured, one to download data from Copernicus, and the other to transform that data into weekly summaries in a compact HDF format.</p>
+<p><img src="../images/hwitw-arch.png" class="img-fluid"></p>
+<p>Each of these CronJobs spawns a series of Pods that run the containers with the <code>cdstool</code> and <code>tiletool</code> processes. Once the data has been output by tiletool, it can be accessed on the web. Web client sessions are handled by the Ingress, and dispatched to the HWITW Service, which in turn is implemented by a Pod running the <code>nginx</code> web server with the hwitw frontend HTML and Javascript code.</p>
+<p>We can inspect these components more carefully in Kubernetes using the <code>kubectl</code> commandline utility.</p>
+<div class="column-page-right">
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> kubectl get services</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">NAME</span>            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT<span class="er">(</span><span class="ex">S</span><span class="kw">)</span>    <span class="ex">AGE</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">service/hwitw</span>   ClusterIP   10.109.0.227   <span class="op">&lt;</span>none<span class="op">&gt;</span>        5000/TCP   407d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>That service is deployed in a pod running the <code>hwitw</code> container as a web service. In the pod listing below, you can also see that there are pods that have completed running for periodic cronjobs for <code>cdstool</code>, which downloads data from the Copernicus Data Service, and <code>tiletool</code>, which processes that data into weekly summaries and reorganizes it by time region in a large HDF5 file.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> kubectl get pods</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">NAME</span>                                   READY   STATUS      RESTARTS   AGE</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pod/hwitw-67ccd577-rltrp</span>               1/1     Running     0          160d</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pod/hwitw-cdstool-28478538--1-99m2n</span>    0/1     Completed   0          34d</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pod/hwitw-cdstool-28508778--1-l5twt</span>    0/1     Completed   0          13d</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ex">pod/hwitw-cdstool-28518858--1-xzpkn</span>    0/1     Completed   0          6d10h</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="ex">pod/hwitw-tiletool-28478543--1-28d2n</span>   0/1     Completed   0          34d</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pod/hwitw-tiletool-28508783--1-ldzdm</span>   0/1     Completed   0          13d</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="ex">pod/hwitw-tiletool-28518863--1-js8mj</span>   0/1     Completed   0          6d10h</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The CronJobs show the details of the schedule for these episodic processes, and the container implementation that was used for each run.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> kubectl get cronjobs</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">NAME</span>                           SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">cronjob.batch/hwitw-cdstool</span>    18 18 <span class="pp">*</span> <span class="pp">*</span> 5   False     0        6d10h           170d</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">cronjob.batch/hwitw-tiletool</span>   23 18 <span class="pp">*</span> <span class="pp">*</span> 5   False     0        6d10h           170d</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> kubectl get jobs <span class="at">-o</span> wide</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="ex">NAME</span>                      COMPLETIONS   DURATION   AGE     CONTAINERS          IMAGES</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="ex">hwitw-cdstool-28478538</span>    1/1           13s        34d     hwitw-cdstool-job   ghcr.io/nceas/hwitw:0.9.6</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="ex">hwitw-cdstool-28508778</span>    1/1           9s         13d     hwitw-cdstool-job   ghcr.io/nceas/hwitw:0.9.6</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="ex">hwitw-cdstool-28518858</span>    1/1           10s        6d11h   hwitw-cdstool-job   ghcr.io/nceas/hwitw:0.9.6</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="ex">hwitw-tiletool-28478543</span>   1/1           13s        34d     hwitw-cdstool-job   ghcr.io/nceas/hwitw:0.9.6</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="ex">hwitw-tiletool-28508783</span>   1/1           11s        13d     hwitw-cdstool-job   ghcr.io/nceas/hwitw:0.9.6</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="ex">hwitw-tiletool-28518863</span>   1/1           6s         6d10h   hwitw-cdstool-job   ghcr.io/nceas/hwitw:0.9.6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Together, these Kubernetes resources, and a few others including an Ingress Controller to glue the application together, constitue a complete data access, data processing, and web visualization service for scientific data. The entire application can be deployed with a single command.</p>
+</section>
+</section>
+<section id="resources" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="resources"><span class="header-section-number">17.4</span> Resources</h2>
+<ul>
+<li><a href="https://www.baeldung.com/ops/docker-compose">Docker compose tutorial</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/">Kubernetes documentation</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-kubernetes">Digital Ocean introduction to kubernetes</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../sections/software-design-2.html" class="pagination-link" aria-label="Software Design II: Modules, Packages, and Testing">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Software Design II: Modules, Packages, and Testing</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../sections/reproducibility-containers.html" class="pagination-link" aria-label="Reproducibility and Traceability">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Reproducibility and Traceability</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
