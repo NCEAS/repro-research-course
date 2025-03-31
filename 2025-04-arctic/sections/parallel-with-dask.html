@@ -388,16 +388,16 @@ In this lesson, we will see examples of how to use `dask.dataframes` and `dask.a
 <h2 data-number="6.4" class="anchored" data-anchor-id="connect-to-an-existing-cluster"><span class="header-section-number">6.4</span> Connect to an existing cluster</h2>
 <p>The instructor is going to start a local cluster on the server that everyone can connect to. This scenario is a realistic simulation of what it would look like for you to connect to a shared Dask resource. You can create your own local cluster running on your laptop using code at the end of this lesson.</p>
 <p>First, the instructor (and only the instructor!) will run:</p>
-<div id="94da3c6c" class="cell" data-execution_count="1">
+<div id="7e777820" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> LocalCluster</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>cluster <span class="op">=</span> LocalCluster(n_workers<span class="op">=</span><span class="dv">70</span>, memory_limit<span class="op">=</span><span class="st">'auto'</span>, processes<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To connect to it, we will use the address that the scheduler is listening on. The port is generated randomly, so first the instructor needs to get address for you to use in your code. In a ‘real world’ scenario, this address would be given to you by the administrator of the Dask cluster.</p>
-<div id="427b6fa7" class="cell" data-execution_count="2">
+<div id="c05985a4" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cluster.scheduler_address</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, you can pass the address to the <code>Client</code> function, which sets up your session as a client of the Dask cluster,</p>
-<div id="7bef2d9c" class="cell" data-execution_count="3">
+<div id="b7546845" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> LocalCluster, Client</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># if you are copy pasting this from the book, make sure </span></span>
@@ -439,19 +439,19 @@ In this lesson, we will see examples of how to use `dask.dataframes` and `dask.a
 <section id="reading-a-csv" class="level3" data-number="6.5.1">
 <h3 data-number="6.5.1" class="anchored" data-anchor-id="reading-a-csv"><span class="header-section-number">6.5.1</span> Reading a csv</h3>
 <p>To get familiar with <code>dask.dataframes</code>, we will use tabular data of soil moisture measurements at six forest stands in northeastern Siberia. The data has been collected since 2014 and is archived at the Arctic Data Center (<a href="https://arcticdata.io/catalog/view/doi%3A10.18739%2FA24B2X59C">Loranty &amp; Alexander, doi:10.18739/A24B2X59C</a>). Just as we did in the previous lesson, we will download the data using the <code>requests</code> package and the data’s URL obtained from the Arctic Data Center.</p>
-<div id="1ae36edf" class="cell" data-execution_count="4">
+<div id="7a6c64d4" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os              </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.dataframe <span class="im">as</span> dd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d2700687" class="cell" data-execution_count="5">
+<div id="5786ec00" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3A27e4043d-75eb-4c4f-9427-0d442526c154'</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>msg <span class="op">=</span> urllib.request.urlretrieve(url, <span class="st">"dg_soil_moisture.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the Arctic Data Center metadata we can see this file is 115 MB. To import this file as a <code>dask.dataframe</code> with more than one partition, we need to specify the size of each partition with the <code>blocksize</code> parameter. In this example, we will split the data frame into six partitions, meaning a block size of approximately 20 MB.</p>
-<div id="92e26863" class="cell" data-execution_count="6">
+<div id="99a147e3" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">'dg_soil_moisture.csv'</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> dd.read_csv(fp, blocksize <span class="op">=</span> <span class="st">'20MB'</span> , encoding<span class="op">=</span><span class="st">'ISO-8859-1'</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -469,7 +469,7 @@ Encoding?
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><em>About the encoding parameter:</em> If we try to import the file directly, we will receive an <code>UnicodeDecodeError</code>. We can run the following code to find the file’s encoding and add the appropriate encoding to <code>dask.dataframe.read_csv</code>.</p>
-<div id="e1c4739a" class="cell" data-execution_count="7">
+<div id="f262f520" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> chardet</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">'dg_soil_moisture.csv'</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(fp, <span class="st">'rb'</span>) <span class="im">as</span> rawdata:</span>
@@ -481,20 +481,20 @@ Encoding?
 </div>
 <p>Notice that we cannot see any values in the data frame. This is because Dask has not really loaded the data. It will wait until we explicitly ask it to print or compute something to do so.</p>
 <p>However, we can still do <code>df.head()</code>. It’s not costly for memory to access a few data frame rows.</p>
-<div id="c3f7eac2" class="cell" data-execution_count="8">
+<div id="8317c5d0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="lazy-computations" class="level3" data-number="6.5.2">
 <h3 data-number="6.5.2" class="anchored" data-anchor-id="lazy-computations"><span class="header-section-number">6.5.2</span> Lazy Computations</h3>
 <p>The application programming interface (API) of a <code>dask.dataframe</code> is a subset of the <code>pandas.DataFrame</code> API. So if you are familiar with pandas, many of the core <code>pandas.DataFrame</code> methods directly translate to <code>dask.dataframes</code>. For example:</p>
-<div id="1f43a335" class="cell" data-execution_count="9">
+<div id="f0c02cbb" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>averages <span class="op">=</span> df.groupby(<span class="st">'year'</span>).mean(numeric_only<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>averages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice that we cannot see any values in the resulting data frame. A major difference between <code>pandas.DataFrames</code> and <code>dask.dataframes</code> is that <code>dask.dataframes</code> are “lazy”. This means an object will queue transformations and calculations without executing them until we explicitly ask for the result of that chain of computations using the <code>compute</code> method. Once we run <code>compute,</code> the scheduler can allocate memory and workers to execute the computations in parallel. This kind of <strong>lazy evaluation</strong> (or <strong>delayed computation</strong>) is how most Dask workloads work. This varies from <strong>eager evaluation</strong> methods and functions, which start computing results right when they are executed.</p>
 <p>Before calling <code>compute</code> on an object, open the Dask dashboard to see how the parallel computation is happening.</p>
-<div id="3e94988a" class="cell" data-execution_count="10">
+<div id="89725b16" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>averages.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -509,20 +509,20 @@ Encoding?
 </figure>
 </div>
 <p>In this short example we will create a 200x500 <code>dask.array</code> by specifying chunk sizes of 100x100.</p>
-<div id="ef0f5d83" class="cell" data-execution_count="11">
+<div id="83a85deb" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> dask.array <span class="im">as</span> da</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="035a8332" class="cell" data-execution_count="12">
+<div id="cef1ed11" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.arange(<span class="dv">100_000</span>).reshape(<span class="dv">200</span>, <span class="dv">500</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> da.from_array(data, chunks<span class="op">=</span>(<span class="dv">100</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Computations for <code>dask.arrays</code> also work lazily. We need to call <code>compute</code> to trigger computations and bring the result to memory.</p>
-<div id="119571ab" class="cell" data-execution_count="13">
+<div id="3559ed6e" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>a.mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ce0b4ee3" class="cell" data-execution_count="14">
+<div id="0704aee1" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>a.mean().compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -536,7 +536,7 @@ Encoding?
 <p>The NDVI is calculated using the near-infrared and red bands of the satellite image. The formula is</p>
 <p><span class="math display">\[NDVI = \frac{NIR - Red}{NIR + Red}.\]</span></p>
 <p>First, we download the data for the near-infrared (NIR) and red bands from the Arctic Data Center:</p>
-<div id="7f7e4fee" class="cell" data-execution_count="15">
+<div id="34c93eee" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download red band</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://arcticdata.io/metacat/d1/mn/v2/object/urn%3Auuid%3Aac25a399-b174-41c1-b6d3-09974b161e5a'</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>msg <span class="op">=</span> urllib.request.urlretrieve(url, <span class="st">"RU_ANS_TR2_FL005M_red.tif"</span>)</span>
@@ -549,10 +549,10 @@ Encoding?
 </div>
 <p>Because these are .tif files and have geospatial metadata, we will use <code>rioxarray</code> to read them. You can find more information about <code>rioxarray</code> <a href="https://corteva.github.io/rioxarray/stable/getting_started/getting_started.html">here</a>.</p>
 <p>To indicate we will open these .tif files with <code>dask.arrays</code> as the underlying object to the <code>xarray.DataArray</code> (instead of a <code>numpy.array</code>), we need to specify either a shape or the size in bytes for each chunk. Both files are 76 MB, so let’s have chunks of 15 MB to have roughly six chunks.</p>
-<div id="ca64ccb9" class="cell" data-execution_count="16">
+<div id="61debc7c" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rioxarray <span class="im">as</span> rioxr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="735c8036" class="cell" data-execution_count="17">
+<div id="e2977781" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the file</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>fp_red <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_red.tif"</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> rioxr.open_rasterio(fp_red, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -563,12 +563,12 @@ Encoding?
 <li>There is geospatial information (transformation, CRS, resolution) and no-data values.</li>
 <li>There is an unnecessary dimension: a constant value for the band. So our next step is to squeeze the array to flatten it.</li>
 </ul>
-<div id="29c355dd" class="cell" data-execution_count="18">
+<div id="43c39913" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># getting rid of unnecessary dimension</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> red.squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we read in the NIR band and do the same pre-processing:</p>
-<div id="e210aad5" class="cell" data-execution_count="19">
+<div id="3856e222" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># open data</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>fp_nir <span class="op">=</span> os.path.join(os.getcwd(),<span class="st">"RU_ANS_TR2_FL005M_nir.tif"</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>nir <span class="op">=</span> rioxr.open_rasterio(fp_nir, chunks <span class="op">=</span> <span class="st">'15MB'</span>)</span>
@@ -580,15 +580,15 @@ Encoding?
 <section id="calculating-ndvi" class="level3" data-number="6.7.2">
 <h3 data-number="6.7.2" class="anchored" data-anchor-id="calculating-ndvi"><span class="header-section-number">6.7.2</span> Calculating NDVI</h3>
 <p>Now we set up the NDVI calculation. This step is easy because we can handle xarrays and Dask arrays as NumPy arrays for arithmetic operations. Also, both bands have values of type float32, so we won’t have trouble with the division.</p>
-<div id="f11ba3a7" class="cell" data-execution_count="20">
+<div id="9c4a7c3a" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ndvi <span class="op">=</span> (nir <span class="op">-</span> red) <span class="op">/</span> (nir <span class="op">+</span> red)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>When we look at the NDVI we can see the result is another <code>dask.array</code>, nothing has been computed yet. Remember, Dask computations are lazy, so we need to call <code>compute()</code> to bring the results to memory.</p>
-<div id="5936c8d1" class="cell" data-execution_count="21">
+<div id="9118405a" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ndvi_values <span class="op">=</span> ndvi.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And finally, we can see what these look like. Notice that <code>xarray</code> uses the value of the dimensions as labels along the x and y axes. We use <code>robust=True</code> to ignore the no-data values when plotting.</p>
-<div id="7fe536cf" class="cell" data-execution_count="22">
+<div id="5843424c" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ndvi_values.plot(robust<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -598,16 +598,16 @@ Encoding?
 <section id="setting-up-a-local-cluster" class="level3" data-number="6.8.1">
 <h3 data-number="6.8.1" class="anchored" data-anchor-id="setting-up-a-local-cluster"><span class="header-section-number">6.8.1</span> Setting up a Local Cluster</h3>
 <p>We can create a <strong>local cluster</strong> as follows:</p>
-<div id="a23490a7" class="cell" data-execution_count="23">
+<div id="4b9cc1ec" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dask.distributed <span class="im">import</span> LocalCluster, Client</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="288be720" class="cell" data-execution_count="24">
+<div id="98a13a80" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cluster <span class="op">=</span> LocalCluster(n_workers<span class="op">=</span><span class="dv">4</span>, memory_limit<span class="op">=</span><span class="fl">0.1</span>, processes<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>cluster</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="../images/dask_cluster_panel.png" class="img-fluid"></p>
 <p>And then we create a client to connect to our cluster, passing the <code>Client</code> function the cluster object.</p>
-<div id="3ca0c789" class="cell" data-execution_count="25">
+<div id="23515783" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> Client(cluster)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>client</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
