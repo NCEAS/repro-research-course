@@ -9,12 +9,11 @@ date: 2024-06-10
 ---
 
 __Dates__: June 10-13, 2024<br>
-__Location__: NCEAS <br>
+__Location__: California Natural Resource Agency (CNRA) <br>
 __Venue__: Sacramento, CA
 
+As part of a collaboration between NCEAS and the Delta Science Program, this course has been adapted from NCEAS coreR course, an in-person immersion in R programming for environmental data science. Researchers will gain experience with essential data science tools and best practices to increase their capacity as collaborators, reproducible coders, and open scientists.
 
-
-A five-day immersion in R programming for environmental data science. Researchers will gain experience with essential data science tools and best practices to increase their capacity as collaborators, reproducible coders, and open scientists. This course is taught both in-person and virtually.
 
 ## Materials
 
