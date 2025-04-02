@@ -389,7 +389,7 @@ div.csl-indent {
 <h2 data-number="14.4" class="anchored" data-anchor-id="retrieving-cmip6-data-from-google-cloud"><span class="header-section-number">14.4</span> Retrieving CMIP6 Data from Google Cloud</h2>
 <p>Here, we will show how to uze Zarr and <code>xarray</code> to read in the CMIP6 climate model data from the World Climate Research Program, hosted by <a href="https://console.cloud.google.com/marketplace/details/noaa-public/cmip6?pli=1">Googe Cloud</a>. CMIP6 is a huge set of climate models, with around 100 models produced across 49 different groups. There is an enormous amount of data produced by these models, and in this demonstration we will load a tiny fraction of it. This demonstration is based off of an example put together by <a href="https://github.com/pangeo-data/pangeo-cmip6-examples">Pangeo</a></p>
 <p>First we’ll load some libraries. <code>pandas</code>, <code>numpy</code>, and <code>xarray</code> should all be familiar by now. We’ll also load in <code>zarr</code>, of course, and <code>gcsfs</code>, the Google Cloud Storage File System library, which enables access to Google Cloud datasets, including our CMIP6 example.</p>
-<div id="a3594e81" class="cell" data-execution_count="1">
+<div id="24dbad39" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zarr</span>
@@ -397,7 +397,7 @@ div.csl-indent {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gcsfs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we’ll read a csv file that contains information about all of the CMIP6 stores available on Google Cloud. You can find this URL to this csv file by navigating to the <a href="https://console.cloud.google.com/marketplace/details/noaa-public/cmip6?pli=1">Google Cloud CMIP6 home page</a>, clicking on “View Dataset,” and pressing the copy link button for the file in the table.</p>
-<div id="3fc8b03f" class="cell" data-execution_count="2">
+<div id="e81c199d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://storage.googleapis.com/cmip6/cmip6-zarr-consolidated-stores.csv'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -500,7 +500,7 @@ div.csl-indent {
 </div>
 <p>CMIP6 is an extremely large collection of datasets, with their own terminology. We’ll be making a request based on the experiment id (scenario), table id (tables are organized roughly by themes), and variable id.</p>
 <p>For this example, we’ll select data from a simulation of the recent past (historical) from the ocean daily (Oday) table, and select the sea surface height (tos) variable. We’ll also only select results from NOAA Geophysical Fluid Dynamics Laboratory (NOAA-GFDL) runs. We’ll do this by passing a logical statment with these criteria to the <code>query</code> method of our <code>pandas</code> data.frame.</p>
-<div id="187f8750" class="cell" data-execution_count="3">
+<div id="5bb4a706" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_ta <span class="op">=</span> df.query(<span class="st">"activity_id=='CMIP' &amp; table_id == 'Oday' &amp; variable_id == 'tos' &amp; experiment_id == 'historical' &amp; institution_id == 'NOAA-GFDL'"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_ta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -589,52 +589,52 @@ div.csl-indent {
 </div>
 <p>Note in the table above there is a column <code>zstore</code>. This gives the URI for the store described in each row of the dataset. Note there is also a <code>version</code> column indicating the date of that particular version. We will use both of these columns to select a single store of data.</p>
 <p>First, though, we need to set up a connection to the Google Cloud Storage file system (GCSFS). We do this using the <code>gcsfs</code> library to call the <code>GCSFileSystem</code> method using an anonymous token. Because this dataset is completely open, we do not have to authenticate at all to access it.</p>
-<div id="45ecd0d5" class="cell" data-execution_count="4">
+<div id="65f14dcd" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gcs <span class="op">=</span> gcsfs.GCSFileSystem(token<span class="op">=</span><span class="st">'anon'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we’ll create a variable with the path to the most recent store from the table above (note the table is sorted by version, so we grab the store URL from the last row), and create a mapping interface to the store using the connection to the Google Cloud Storage system. This interface is what allows us to access the Zarr store with all of the data we are interested in.</p>
-<div id="6e9a19a2" class="cell" data-execution_count="5">
+<div id="192dead8" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>zstore <span class="op">=</span> df_ta.zstore.values[<span class="op">-</span><span class="dv">1</span>]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mapper <span class="op">=</span> gcs.get_mapper(zstore)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nex, we open the store using the <code>xarray</code> method <code>open_zarr</code> and examine its metadata. Note that the first argument to <code>open_zarr</code> can be a “MutableMapping where a Zarr Group has been stored” (what we are using here), or a path to a directory in file system (if a local Zarr store is being used).</p>
-<div id="a71f8319" class="cell" data-execution_count="6">
+<div id="7fb0bfa7" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> xr.open_zarr(mapper)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This piece of data is around 30 GB total, and we made it accessible to our environment nearly instantly. Consider also that the total volume of CMIP6 data available on Google Cloud is in the neighborhood of a few <strong>petabytes</strong>, and it is all available at your fingertips using Zarr.</p>
 <p>From here, using the <code>xarray</code> indexing, we can easily grab a time slice and make a plot of the data.</p>
-<div id="393dec82" class="cell" data-execution_count="7">
+<div id="b1af5b3d" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ds.tos.sel(time<span class="op">=</span><span class="st">'1999-01-01'</span>).squeeze().plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can also get a timeseries slice, here on the equator in the Eastern Pacific.</p>
-<div id="f803c292" class="cell" data-execution_count="8">
+<div id="60d134db" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ts <span class="op">=</span> ds.tos.sel(lat <span class="op">=</span> <span class="dv">0</span>, lon <span class="op">=</span> <span class="dv">272</span>, method <span class="op">=</span> <span class="st">"nearest"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>xarray</code> allows us to do some pretty cool things, like calculate a rolling annual mean on our daily data. Again, because none of the data are loaded into memory, it is nearly instant.</p>
-<div id="69243a19" class="cell" data-execution_count="9">
+<div id="c1845f81" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ts_ann <span class="op">=</span> ts.rolling(time <span class="op">=</span> <span class="dv">365</span>).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that if we explicitly want to load the data into memory, we can by using the <code>load</code> method.</p>
-<div id="5f215aec" class="cell" data-execution_count="10">
+<div id="9c572d6d" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ts.load()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3ab701cb" class="cell" data-execution_count="11">
+<div id="0de04958" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ts_ann.load()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, we can make a simple plot of the daily temperatures, along with the rolling annual mean.</p>
-<div id="b03ad180" class="cell" data-execution_count="12">
+<div id="cc8b0411" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ts.plot(label <span class="op">=</span> <span class="st">"daily"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ts_ann.plot(label <span class="op">=</span> <span class="st">"rolling annual mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As an additional example, let’s look at some ocean nitrate and phosphorous data. These tasks take a little longer since the data have an additional dimension - ocean depth.</p>
 <p>First, let’s get the nitrate data by looking at the <code>no3</code> variable.</p>
-<div id="a7d83c54" class="cell" data-execution_count="13">
+<div id="11e71326" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>no3 <span class="op">=</span> df.query(<span class="st">"activity_id=='CMIP' &amp; table_id == 'Omon' &amp; experiment_id == 'historical' &amp; institution_id == 'NOAA-GFDL' &amp; variable_id == 'no3'"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ds_no3 <span class="op">=</span> xr.open_zarr(gcs.get_mapper(no3.zstore.values[<span class="op">-</span><span class="dv">1</span>]), consolidated<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We’ll also get the <code>po4</code> variable.</p>
-<div id="11ab5a7b" class="cell" data-execution_count="14">
+<div id="17f25e0d" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>po4 <span class="op">=</span> df.query(<span class="st">"activity_id=='CMIP' &amp; table_id == 'Omon' &amp; experiment_id == 'historical' &amp; institution_id == 'NOAA-GFDL' &amp; variable_id == 'po4'"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ds_po4 <span class="op">=</span> xr.open_zarr(gcs.get_mapper(po4.zstore.values[<span class="op">-</span><span class="dv">1</span>]), consolidated<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -651,13 +651,13 @@ Answer
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="e4b78300" class="cell" data-execution_count="15">
+<div id="39ce399c" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>no3_mean <span class="op">=</span> ds_no3.no3.sel(lev <span class="op">=</span> <span class="fl">2.5</span>).mean(<span class="st">'time'</span>).squeeze().load()po4_mean <span class="op">=</span> ds_po4.po4.sel(lev <span class="op">=</span> <span class="fl">2.5</span>).mean(<span class="st">'time'</span>).squeeze().load()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
-<div id="17a80142" class="cell" data-execution_count="16">
+<div id="d24b6264" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(z_mean, t_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -671,7 +671,7 @@ Answer
 <h2 data-number="14.5" class="anchored" data-anchor-id="additional-reference-creating-a-zarr-dataset"><span class="header-section-number">14.5</span> Additional Reference: Creating a Zarr Dataset</h2>
 <p>This is a simplified version of the official <a href="https://zarr.readthedocs.io/en/stable/tutorial.html">Zarr tutorial</a>.</p>
 <p>First, create an array of 10,000 rows and 10,000 columns, filled with zeros, divided into chunks where each chunk is 1,000 x 1,000.</p>
-<div id="60c8497f" class="cell" data-execution_count="17">
+<div id="a94b37f7" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zarr</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> zarr.zeros((<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>), dtype<span class="op">=</span><span class="st">'i4'</span>)</span>
@@ -681,7 +681,7 @@ Answer
 </div>
 </div>
 <p>The array can be treated just like a numpy array, where you can assign values using indexing.</p>
-<div id="bbbeb79f" class="cell" data-execution_count="18">
+<div id="c0a3eb3f" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>z[<span class="dv">0</span>, :] <span class="op">=</span> np.arange(<span class="dv">10000</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>z[:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -696,11 +696,11 @@ Answer
 </div>
 </div>
 <p>To save the file, just use the <code>save</code> method.</p>
-<div id="234ddd2f" class="cell" data-execution_count="19">
+<div id="dd048d87" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>zarr.save(<span class="st">'data/example.zarr'</span>, z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And <code>open</code> to open it again.</p>
-<div id="2981f9e1" class="cell" data-execution_count="20">
+<div id="3c435698" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> zarr.<span class="bu">open</span>(<span class="st">'data/example.zarr'</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>arr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
@@ -708,13 +708,13 @@ Answer
 </div>
 </div>
 <p>To create groups in your store, use the <code>create_group</code> method after creating a root group. Here, we’ll create two groups, <code>temp</code> and <code>precip</code>.</p>
-<div id="9d675f96" class="cell" data-execution_count="21">
+<div id="6644359f" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>root <span class="op">=</span> zarr.group()</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> root.create_group(<span class="st">'temp'</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>precip <span class="op">=</span> root.create_group(<span class="st">'precip'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can then create a dataset (array) within the group, again specifying the shape and chunks.</p>
-<div id="abf9c196" class="cell" data-execution_count="22">
+<div id="8c84b49f" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>t100 <span class="op">=</span> temp.create_dataset(<span class="st">'t100'</span>, shape<span class="op">=</span>(<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>), dtype<span class="op">=</span><span class="st">'i4'</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>t100</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
@@ -722,7 +722,7 @@ Answer
 </div>
 </div>
 <p>Groups can easily be accessed by name and index.</p>
-<div id="ad7565b2" class="cell" data-execution_count="23">
+<div id="159d3e4a" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>root[<span class="st">'temp'</span>]</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>root[<span class="st">'temp/t100'</span>][:, <span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
@@ -730,7 +730,7 @@ Answer
 </div>
 </div>
 <p>To get a look at your overall dataset, the <code>tree</code> and <code>info</code> methods are helpful.</p>
-<div id="ce860525" class="cell" data-execution_count="24">
+<div id="d16d7836" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>root.tree()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -780,7 +780,7 @@ File <span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.10.16/x64/lib/pyt
      └── t100 (10000, 10000) int32</code></pre>
 </div>
 </div>
-<div id="9b7be256" class="cell" data-execution_count="25">
+<div id="d1f330f6" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>root.info</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <table class="zarr-info caption-top table table-sm table-striped small" data-quarto-postprocess="true">
