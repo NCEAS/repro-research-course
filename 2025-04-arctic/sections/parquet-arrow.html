@@ -393,19 +393,19 @@ Age: 40, 21, 57</code></pre>
 <h2 data-number="10.6" class="anchored" data-anchor-id="example"><span class="header-section-number">10.6</span> Example</h2>
 <p>In this example, we’ll read in a dataset of fish abundance in the San Francisco Estuary, which is published in csv format on the <a href="https://portal.edirepository.org/nis/mapbrowse?scope=edi&amp;identifier=1075&amp;revision=1">Environmental Data Initiative</a>. This dataset isn’t huge, but it is big enough (3 GB) that working with it locally can be fairly taxing on memory. Motivated by user difficulties in actually working with the data, the <a href="https://github.com/Delta-Stewardship-Council/deltafish"><code>deltafish</code> R</a> package was written using the R implementation of <code>arrow</code>. It works by downloading the EDI repository data, writing it to a local cache in parquet format, and using <code>arrow</code> to query it. In this example, I’ve put the Parquet files in a sharable location so we can explore them using <code>pyarrow</code>.</p>
 <p>First, we’ll load the modules we need.</p>
-<div id="9bb73bdc" class="cell" data-execution_count="1">
+<div id="d1ef17a0" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.dataset <span class="im">as</span> ds</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next we can read in the data using <code>ds.dataset()</code>, passing it the path to the parquet directory and how the data are partitioned.</p>
-<div id="62053e04" class="cell" data-execution_count="2">
+<div id="8cc23b23" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>deltafish <span class="op">=</span> ds.dataset(<span class="st">"/home/shares/deltafish/fish"</span>,</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                       <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                       partitioning<span class="op">=</span><span class="st">'hive'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can check out a file listing using the <code>files</code> method. Another great feature of parquet files is that they allow you to partition the data accross variables of the dataset. These partitions mean that, in this case, data from each species of fish is written to it’s own file. This allows for even faster operations down the road, since we know that users will commonly need to filter on the species variable. Even though the data are partitioned into different files, <code>pyarrow</code> knows that this is a single dataset, and you still work with it by referencing just the directory in which all of the partitioned files live.</p>
-<div id="b6ff242f" class="cell" data-execution_count="3">
+<div id="f0391aa2" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>deltafish.files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>['/home/shares/deltafish/fish/Taxa=Acanthogobius flavimanus/part-0.parquet',
@@ -413,7 +413,7 @@ Age: 40, 21, 57</code></pre>
  '/home/shares/deltafish/fish/Taxa=Acipenser transmontanus/part-0.parquet',
  '/home/shares/deltafish/fish/Taxa=Acipenser/part-0.parquet'...</code></pre>
 <p>You can view the columns of a dataset using <code>schema.to_string()</code></p>
-<div id="09d77c58" class="cell" data-execution_count="4">
+<div id="05259920" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>deltafish.schema.to_string()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>SampleID: string
@@ -422,7 +422,7 @@ Count: double
 Notes_catch: string
 Species: string</code></pre>
 <p>If we are only interested in a few species, we can do a filter:</p>
-<div id="1bc5c94b" class="cell" data-execution_count="5">
+<div id="917ee536" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>expr <span class="op">=</span> ((ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span><span class="st">"Dorosoma petenense"</span>)<span class="op">|</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span><span class="st">"Morone saxatilis"</span>) <span class="op">|</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span> <span class="st">"Spirinchus thaleichthys"</span>))</span>
@@ -432,21 +432,21 @@ Species: string</code></pre>
 </div>
 <p>There is another dataset included, the survey information. To do a join, we can just use the <code>join</code> method on the <code>arrow</code> dataset.</p>
 <p>First read in the survey dataset.</p>
-<div id="0b6bbeaf" class="cell" data-execution_count="6">
+<div id="31ce2a2c" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>survey <span class="op">=</span> ds.dataset(<span class="st">"/home/jclark/deltafish/survey"</span>,</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                    partitioning<span class="op">=</span><span class="st">'hive'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Take a look at the columns again:</p>
-<div id="5aa083dd" class="cell" data-execution_count="7">
+<div id="45d7db91" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>survey.schema.to_string()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s pick out only the ones we are interested in.</p>
-<div id="f95fc4f8" class="cell" data-execution_count="8">
+<div id="c7412b65" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>survey_s <span class="op">=</span> survey.to_table(columns<span class="op">=</span>[<span class="st">'SampleID'</span>,<span class="st">'Datetime'</span>, <span class="st">'Station'</span>, <span class="st">'Longitude'</span>, <span class="st">'Latitude'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then do the join, and convert to a pandas <code>data.frame</code>.</p>
-<div id="7ee03102" class="cell" data-execution_count="9">
+<div id="5587a1e6" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fish_j <span class="op">=</span> fishf.join(survey_s, <span class="st">"SampleID"</span>).to_pandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that when we did our first manipulation of this dataset, we went from working with a <code>FileSystemDataset</code>, which is a representation of a dataset on disk without reading it into memory, to a <code>Table</code>, which is read into memory. <code>pyarrow</code> has a <a href="https://arrow.apache.org/docs/python/compute.html">number of functions</a> that do computations on datasets without reading them into memory. However these are evaluated “eagerly,” as opposed to “lazily.” These are useful in some cases, like above, where we want to take a larger than memory dataset and generate a smaller dataset (via filter, or group by/summarize), but are not as useful if we need to do a join before our summarization/filter.</p>
