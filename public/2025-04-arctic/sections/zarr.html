@@ -390,7 +390,7 @@ div.csl-indent {
 <h2 data-number="14.4" class="anchored" data-anchor-id="retrieving-cmip6-data-from-google-cloud"><span class="header-section-number">14.4</span> Retrieving CMIP6 Data from Google Cloud</h2>
 <p>Here, we will show how to uze Zarr and <code>xarray</code> to read in the CMIP6 climate model data from the World Climate Research Program, hosted by <a href="https://console.cloud.google.com/marketplace/details/noaa-public/cmip6?pli=1">Googe Cloud</a>. CMIP6 is a huge set of climate models, with around 100 models produced across 49 different groups. There is an enormous amount of data produced by these models, and in this demonstration we will load a tiny fraction of it. This demonstration is based off of an example put together by <a href="https://github.com/pangeo-data/pangeo-cmip6-examples">Pangeo</a></p>
 <p>First we’ll load some libraries. <code>pandas</code>, <code>numpy</code>, and <code>xarray</code> should all be familiar by now. We’ll also load in <code>zarr</code>, of course, and <code>gcsfs</code>, the Google Cloud Storage File System library, which enables access to Google Cloud datasets, including our CMIP6 example.</p>
-<div id="61ef875b" class="cell" data-execution_count="1">
+<div id="84b03e6a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zarr</span>
@@ -398,7 +398,7 @@ div.csl-indent {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gcsfs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we’ll read a csv file that contains information about all of the CMIP6 stores available on Google Cloud. You can find this URL to this csv file by navigating to the <a href="https://console.cloud.google.com/marketplace/details/noaa-public/cmip6?pli=1">Google Cloud CMIP6 home page</a>, clicking on “View Dataset,” and pressing the copy link button for the file in the table.</p>
-<div id="61bdbc73" class="cell" data-execution_count="2">
+<div id="1807c941" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://storage.googleapis.com/cmip6/cmip6-zarr-consolidated-stores.csv'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -501,7 +501,7 @@ div.csl-indent {
 </div>
 <p>CMIP6 is an extremely large collection of datasets, with their own terminology. We’ll be making a request based on the experiment id (scenario), table id (tables are organized roughly by themes), and variable id.</p>
 <p>For this example, we’ll select data from a simulation of the recent past (historical) from the ocean daily (Oday) table, and select the sea surface height (tos) variable. We’ll also only select results from NOAA Geophysical Fluid Dynamics Laboratory (NOAA-GFDL) runs. We’ll do this by passing a logical statment with these criteria to the <code>query</code> method of our <code>pandas</code> data.frame.</p>
-<div id="fe16a72b" class="cell" data-execution_count="3">
+<div id="ca52e92b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_ta <span class="op">=</span> df.query(<span class="st">"activity_id=='CMIP' &amp; table_id == 'Oday' &amp; variable_id == 'tos' &amp; experiment_id == 'historical' &amp; institution_id == 'NOAA-GFDL'"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_ta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -590,52 +590,52 @@ div.csl-indent {
 </div>
 <p>Note in the table above there is a column <code>zstore</code>. This gives the URI for the store described in each row of the dataset. Note there is also a <code>version</code> column indicating the date of that particular version. We will use both of these columns to select a single store of data.</p>
 <p>First, though, we need to set up a connection to the Google Cloud Storage file system (GCSFS). We do this using the <code>gcsfs</code> library to call the <code>GCSFileSystem</code> method using an anonymous token. Because this dataset is completely open, we do not have to authenticate at all to access it.</p>
-<div id="3060098b" class="cell" data-execution_count="4">
+<div id="1e07686b" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gcs <span class="op">=</span> gcsfs.GCSFileSystem(token<span class="op">=</span><span class="st">'anon'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we’ll create a variable with the path to the most recent store from the table above (note the table is sorted by version, so we grab the store URL from the last row), and create a mapping interface to the store using the connection to the Google Cloud Storage system. This interface is what allows us to access the Zarr store with all of the data we are interested in.</p>
-<div id="caf17e70" class="cell" data-execution_count="5">
+<div id="dcff49fc" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>zstore <span class="op">=</span> df_ta.zstore.values[<span class="op">-</span><span class="dv">1</span>]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mapper <span class="op">=</span> gcs.get_mapper(zstore)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nex, we open the store using the <code>xarray</code> method <code>open_zarr</code> and examine its metadata. Note that the first argument to <code>open_zarr</code> can be a “MutableMapping where a Zarr Group has been stored” (what we are using here), or a path to a directory in file system (if a local Zarr store is being used).</p>
-<div id="f353dc44" class="cell" data-execution_count="6">
+<div id="8bae4e62" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> xr.open_zarr(mapper)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This piece of data is around 30 GB total, and we made it accessible to our environment nearly instantly. Consider also that the total volume of CMIP6 data available on Google Cloud is in the neighborhood of a few <strong>petabytes</strong>, and it is all available at your fingertips using Zarr.</p>
 <p>From here, using the <code>xarray</code> indexing, we can easily grab a time slice and make a plot of the data.</p>
-<div id="5cd22d45" class="cell" data-execution_count="7">
+<div id="d729c85f" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ds.tos.sel(time<span class="op">=</span><span class="st">'1999-01-01'</span>).squeeze().plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can also get a timeseries slice, here on the equator in the Eastern Pacific.</p>
-<div id="94a10ae8" class="cell" data-execution_count="8">
+<div id="0a7ba6c8" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ts <span class="op">=</span> ds.tos.sel(lat <span class="op">=</span> <span class="dv">0</span>, lon <span class="op">=</span> <span class="dv">272</span>, method <span class="op">=</span> <span class="st">"nearest"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>xarray</code> allows us to do some pretty cool things, like calculate a rolling annual mean on our daily data. Again, because none of the data are loaded into memory, it is nearly instant.</p>
-<div id="de0779af" class="cell" data-execution_count="9">
+<div id="bc62b301" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ts_ann <span class="op">=</span> ts.rolling(time <span class="op">=</span> <span class="dv">365</span>).mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that if we explicitly want to load the data into memory, we can by using the <code>load</code> method.</p>
-<div id="fb75f157" class="cell" data-execution_count="10">
+<div id="28adc7a0" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ts.load()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="28d45467" class="cell" data-execution_count="11">
+<div id="92512f66" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ts_ann.load()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, we can make a simple plot of the daily temperatures, along with the rolling annual mean.</p>
-<div id="725e21f0" class="cell" data-execution_count="12">
+<div id="098135f4" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ts.plot(label <span class="op">=</span> <span class="st">"daily"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ts_ann.plot(label <span class="op">=</span> <span class="st">"rolling annual mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As an additional example, let’s look at some ocean nitrate and phosphorous data. These tasks take a little longer since the data have an additional dimension - ocean depth.</p>
 <p>First, let’s get the nitrate data by looking at the <code>no3</code> variable.</p>
-<div id="b1344e32" class="cell" data-execution_count="13">
+<div id="bcbe67e3" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>no3 <span class="op">=</span> df.query(<span class="st">"activity_id=='CMIP' &amp; table_id == 'Omon' &amp; experiment_id == 'historical' &amp; institution_id == 'NOAA-GFDL' &amp; variable_id == 'no3'"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ds_no3 <span class="op">=</span> xr.open_zarr(gcs.get_mapper(no3.zstore.values[<span class="op">-</span><span class="dv">1</span>]), consolidated<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We’ll also get the <code>po4</code> variable.</p>
-<div id="32afb1c1" class="cell" data-execution_count="14">
+<div id="ba5e2944" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>po4 <span class="op">=</span> df.query(<span class="st">"activity_id=='CMIP' &amp; table_id == 'Omon' &amp; experiment_id == 'historical' &amp; institution_id == 'NOAA-GFDL' &amp; variable_id == 'po4'"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ds_po4 <span class="op">=</span> xr.open_zarr(gcs.get_mapper(po4.zstore.values[<span class="op">-</span><span class="dv">1</span>]), consolidated<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -652,13 +652,13 @@ Answer
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div id="a5f79dc8" class="cell" data-execution_count="15">
+<div id="a0f6836f" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>no3_mean <span class="op">=</span> ds_no3.no3.sel(lev <span class="op">=</span> <span class="fl">2.5</span>).mean(<span class="st">'time'</span>).squeeze().load()po4_mean <span class="op">=</span> ds_po4.po4.sel(lev <span class="op">=</span> <span class="fl">2.5</span>).mean(<span class="st">'time'</span>).squeeze().load()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
-<div id="233702cc" class="cell" data-execution_count="16">
+<div id="ad51a8bd" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(z_mean, t_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -672,7 +672,7 @@ Answer
 <h2 data-number="14.5" class="anchored" data-anchor-id="additional-reference-creating-a-zarr-dataset"><span class="header-section-number">14.5</span> Additional Reference: Creating a Zarr Dataset</h2>
 <p>This is a simplified version of the official <a href="https://zarr.readthedocs.io/en/stable/tutorial.html">Zarr tutorial</a>.</p>
 <p>First, create an array of 10,000 rows and 10,000 columns, filled with zeros, divided into chunks where each chunk is 1,000 x 1,000.</p>
-<div id="7cc5fc3d" class="cell" data-execution_count="17">
+<div id="28d50972" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zarr</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> zarr.zeros((<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>), dtype<span class="op">=</span><span class="st">'i4'</span>)</span>
@@ -682,7 +682,7 @@ Answer
 </div>
 </div>
 <p>The array can be treated just like a numpy array, where you can assign values using indexing.</p>
-<div id="fde80cda" class="cell" data-execution_count="18">
+<div id="896c6049" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>z[<span class="dv">0</span>, :] <span class="op">=</span> np.arange(<span class="dv">10000</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>z[:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -697,11 +697,11 @@ Answer
 </div>
 </div>
 <p>To save the file, just use the <code>save</code> method.</p>
-<div id="cc444602" class="cell" data-execution_count="19">
+<div id="80b9311c" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>zarr.save(<span class="st">'data/example.zarr'</span>, z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And <code>open</code> to open it again.</p>
-<div id="235ce7a4" class="cell" data-execution_count="20">
+<div id="52a54d84" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> zarr.<span class="bu">open</span>(<span class="st">'data/example.zarr'</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>arr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
@@ -709,13 +709,13 @@ Answer
 </div>
 </div>
 <p>To create groups in your store, use the <code>create_group</code> method after creating a root group. Here, we’ll create two groups, <code>temp</code> and <code>precip</code>.</p>
-<div id="74fa0242" class="cell" data-execution_count="21">
+<div id="0a065f6f" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>root <span class="op">=</span> zarr.group()</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> root.create_group(<span class="st">'temp'</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>precip <span class="op">=</span> root.create_group(<span class="st">'precip'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can then create a dataset (array) within the group, again specifying the shape and chunks.</p>
-<div id="f6fa2978" class="cell" data-execution_count="22">
+<div id="0b592a89" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>t100 <span class="op">=</span> temp.create_dataset(<span class="st">'t100'</span>, shape<span class="op">=</span>(<span class="dv">10000</span>, <span class="dv">10000</span>), chunks<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">1000</span>), dtype<span class="op">=</span><span class="st">'i4'</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>t100</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
@@ -723,7 +723,7 @@ Answer
 </div>
 </div>
 <p>Groups can easily be accessed by name and index.</p>
-<div id="7acf4b7b" class="cell" data-execution_count="23">
+<div id="8a868d1c" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>root[<span class="st">'temp'</span>]</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>root[<span class="st">'temp/t100'</span>][:, <span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
@@ -731,15 +731,15 @@ Answer
 </div>
 </div>
 <p>To get a look at your overall dataset, the <code>tree</code> and <code>info</code> methods are helpful.</p>
-<div id="3bc0f3f6" class="cell" data-execution_count="24">
+<div id="53346c0b" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>root.tree()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f024496906884cdba252a8c861844d70","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"e5c39ca6884c472da3b154605ac3a4ff","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
-<div id="684e25c9" class="cell" data-execution_count="25">
+<div id="6c04e45f" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>root.info</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <table class="zarr-info caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -791,7 +791,7 @@ Henderson, N., and R. Abernathey. 2020. <span>“<span class="nocase">CMIP6 in t
 
 </main> <!-- /main -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state":{"119101d07ecb4d5483626052cf98d26d":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"49b6cf5b0f9b4f44bd1dff2f15dd99fd":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"NodeModel","state":{"_id":"a9324ab9-cea9-4887-894d-9e887fb71a38","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"NodeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"NodeView","close_icon":"minus","close_icon_style":"default","disabled":true,"icon":"folder","icon_image":"","icon_style":"default","name":"temp","nodes":["IPY_MODEL_b0251e610c6c48d6a23da3f58cb97062"],"open_icon":"plus","open_icon_style":"default","opened":false,"selected":false,"show_icon":true}},"56576a0a81e44de1bb9045b1c057905f":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"NodeModel","state":{"_id":"9249c764-0b1e-485a-aded-c50d1729fb4c","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"NodeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"NodeView","close_icon":"minus","close_icon_style":"default","disabled":true,"icon":"folder","icon_image":"","icon_style":"default","name":"precip","nodes":[],"open_icon":"plus","open_icon_style":"default","opened":false,"selected":false,"show_icon":true}},"b0251e610c6c48d6a23da3f58cb97062":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"NodeModel","state":{"_id":"6a0106f3-9e07-4deb-9896-3869ad5acd76","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"NodeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"NodeView","close_icon":"minus","close_icon_style":"default","disabled":true,"icon":"table","icon_image":"","icon_style":"default","name":"t100 (10000, 10000) int32","nodes":[],"open_icon":"plus","open_icon_style":"default","opened":false,"selected":false,"show_icon":true}},"b3bc69f263c54345b572c4778786e80a":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"NodeModel","state":{"_id":"586ffbbf-d5cc-4287-8222-90653b1af9de","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"NodeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"NodeView","close_icon":"minus","close_icon_style":"default","disabled":true,"icon":"folder","icon_image":"","icon_style":"default","name":"/","nodes":["IPY_MODEL_56576a0a81e44de1bb9045b1c057905f","IPY_MODEL_49b6cf5b0f9b4f44bd1dff2f15dd99fd"],"open_icon":"plus","open_icon_style":"default","opened":true,"selected":false,"show_icon":true}},"f024496906884cdba252a8c861844d70":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"TreeModel","state":{"_dom_classes":[],"_id":"#","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"TreeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"TreeView","animation":200,"layout":"IPY_MODEL_119101d07ecb4d5483626052cf98d26d","multiple_selection":true,"nodes":["IPY_MODEL_b3bc69f263c54345b572c4778786e80a"],"selected_nodes":[],"tabbable":null,"tooltip":null}}},"version_major":2,"version_minor":0}
+{"state":{"6c2a66ef2ed446899400d9260452bb79":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"NodeModel","state":{"_id":"a6170619-d0c4-47ae-b3df-315fb52df1ea","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"NodeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"NodeView","close_icon":"minus","close_icon_style":"default","disabled":true,"icon":"table","icon_image":"","icon_style":"default","name":"t100 (10000, 10000) int32","nodes":[],"open_icon":"plus","open_icon_style":"default","opened":false,"selected":false,"show_icon":true}},"7b0b65e9f5f4452a9c2d1dd84bef4eb8":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"NodeModel","state":{"_id":"f2c3148a-e70b-4402-94dd-012a50d4b594","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"NodeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"NodeView","close_icon":"minus","close_icon_style":"default","disabled":true,"icon":"folder","icon_image":"","icon_style":"default","name":"temp","nodes":["IPY_MODEL_6c2a66ef2ed446899400d9260452bb79"],"open_icon":"plus","open_icon_style":"default","opened":false,"selected":false,"show_icon":true}},"a66c402c1bb24b449bc890e6d5535711":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"NodeModel","state":{"_id":"cda02e50-69b6-4f6b-a91c-4e8719f64b21","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"NodeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"NodeView","close_icon":"minus","close_icon_style":"default","disabled":true,"icon":"folder","icon_image":"","icon_style":"default","name":"/","nodes":["IPY_MODEL_d9e2d82ba4094326b6537e9611e31f93","IPY_MODEL_7b0b65e9f5f4452a9c2d1dd84bef4eb8"],"open_icon":"plus","open_icon_style":"default","opened":true,"selected":false,"show_icon":true}},"d9e2d82ba4094326b6537e9611e31f93":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"NodeModel","state":{"_id":"b3b16af3-21c8-4b97-9d25-d37980fdc003","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"NodeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"NodeView","close_icon":"minus","close_icon_style":"default","disabled":true,"icon":"folder","icon_image":"","icon_style":"default","name":"precip","nodes":[],"open_icon":"plus","open_icon_style":"default","opened":false,"selected":false,"show_icon":true}},"e1a3e5cb75f84fc4b40f088effb63189":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"e5c39ca6884c472da3b154605ac3a4ff":{"model_module":"ipytree","model_module_version":"^0.2","model_name":"TreeModel","state":{"_dom_classes":[],"_id":"#","_model_module":"ipytree","_model_module_version":"^0.2","_model_name":"TreeModel","_view_count":null,"_view_module":"ipytree","_view_module_version":"^0.2","_view_name":"TreeView","animation":200,"layout":"IPY_MODEL_e1a3e5cb75f84fc4b40f088effb63189","multiple_selection":true,"nodes":["IPY_MODEL_a66c402c1bb24b449bc890e6d5535711"],"selected_nodes":[],"tabbable":null,"tooltip":null}}},"version_major":2,"version_minor":0}
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
