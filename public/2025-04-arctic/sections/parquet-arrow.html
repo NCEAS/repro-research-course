@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; Parquet and Arrow – Scalable and Computationally Reproducible Approaches to Arctic Research</title>
+<title>10&nbsp; Parquet, DuckDB, and Arrow – Scalable and Computationally Reproducible Approaches to Arctic Research</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-a34d670291f06f286357e447776a572a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -107,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -116,7 +119,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/parquet-arrow.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/parquet-arrow.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Parquet, DuckDB, and Arrow</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -201,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../sections/parquet-arrow.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Parquet, DuckDB, and Arrow</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -275,18 +278,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#row-major-versus-column-major-files" id="toc-row-major-versus-column-major-files" class="nav-link" data-scroll-target="#row-major-versus-column-major-files"><span class="header-section-number">10.3.1</span> Row major versus column major files</a></li>
   </ul></li>
   <li><a href="#parquet" id="toc-parquet" class="nav-link" data-scroll-target="#parquet"><span class="header-section-number">10.4</span> Parquet</a></li>
-  <li><a href="#arrow" id="toc-arrow" class="nav-link" data-scroll-target="#arrow"><span class="header-section-number">10.5</span> Arrow</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="header-section-number">10.6</span> Example</a></li>
-  <li><a href="#synopsis" id="toc-synopsis" class="nav-link" data-scroll-target="#synopsis"><span class="header-section-number">10.7</span> Synopsis</a></li>
+  <li><a href="#fast-access-with-duckdb" id="toc-fast-access-with-duckdb" class="nav-link" data-scroll-target="#fast-access-with-duckdb"><span class="header-section-number">10.5</span> Fast access with DuckDB</a></li>
+  <li><a href="#arrow" id="toc-arrow" class="nav-link" data-scroll-target="#arrow"><span class="header-section-number">10.6</span> Arrow</a></li>
+  <li><a href="#delta-fisheries-using-arrow" id="toc-delta-fisheries-using-arrow" class="nav-link" data-scroll-target="#delta-fisheries-using-arrow"><span class="header-section-number">10.7</span> Delta Fisheries using Arrow</a></li>
+  <li><a href="#parquet-performance-hints" id="toc-parquet-performance-hints" class="nav-link" data-scroll-target="#parquet-performance-hints"><span class="header-section-number">10.8</span> Parquet Performance hints</a></li>
+  <li><a href="#synopsis" id="toc-synopsis" class="nav-link" data-scroll-target="#synopsis"><span class="header-section-number">10.9</span> Synopsis</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Parquet and Arrow</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Parquet, DuckDB, and Arrow</span></h1>
 </div>
 
 
@@ -308,32 +313,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>The difference between column major and row major data</li>
 <li>Speed advantages to columnnar data storage</li>
+<li>Parquet is a highly efficient columnar data store</li>
+<li>Using DuckDB as an in-memory query engine</li>
 <li>How <code>arrow</code> enables faster processing</li>
 </ul>
 </section>
 <section id="introduction" class="level2" data-number="10.2">
 <h2 data-number="10.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">10.2</span> Introduction</h2>
-<p>Paralleization is great, and can greatly help you in working with large data. However, it might not help you with every processing problem. Like we talked about with Dask, sometimes your data are too large to be read into memory, or you have I/O limitations. Parquet and <code>pyarrow</code> are newer, powerful tools that are designed to help overcome some of these problems. <code>pyarrow</code> and Parquet are newer technologies, and are a bit on the ‘bleeding edge’, but there is a lot of excitement about the possibility these tools provide.</p>
+<p>Parallelization is great, and can greatly help you in working with large data. However, it might not help you with every processing problem. Like we talked about with Dask, sometimes your data are too large to be read into memory, or you have I/O limitations. For multidimensional arrary data, <code>xarray</code> and <code>Dask</code> are pretty amazing. But what about tabular data? Some types of data are not well represented as arrays, and some arrays would not be efficiently represented as tables (see <a href="https://earthmover.io/blog/tensors-vs-tables">Abernathy’s 2025 article on tensors versus tables</a> for a well-thought perspective on this).</p>
+<p>Parquet, DuckDB, and Arrow are powerful tools that are designed to help overcome some of these scaling problems with tabular data. They are newer technologies and are advancing quickly, but there is a lot of excitement about the possibility these tools provide.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+POSIX file handling
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>Before jumping into those tools, however, first let’s discuss system calls. These are calls that are run by the operating system within their own process. There are several that are relevant to reading and writing data: open, read, write, seek, and close. Open establishes a connection with a file for reading, writing, or both. On open, a file offset points to the beginning of the file. After reading or writing <code>n</code> bytes, the offset will move <code>n</code> bytes forward to prepare for the next opration. Read will read data from the file into a memory buffer, and write will write data from a memory buffer to a file. Seek is used to change the location of the offset pointer, for either reading or writing purposes. Finally, close closes the connection to the file.</p>
+</div>
+</div>
 <p>If you’ve worked with even moderately sized datasets, you may have encounted an “out of memory” error. Memory is where a computer stores the information needed immediately for processes. This is in contrast to storage, which is typically slower to access than memory, but has a much larger capacity. When you <code>open</code> a file, you are establishing a connection between your processor and the information in storage. On <code>read</code>, the data is read into memory that is then available to your python process, for example.</p>
-<p>So what happens if the data you need to read in are larger than your memory? My brand new M1 MacBook Pro has 16 GB of memory, but this would be considered a modestly sized dataset by this courses’s standards. There are a number of solutions to this problem, which don’t involve just buying a computer with more memory. In this lesson we’ll discuss the difference between row major and column major file formats, and how leveraging column major formats can increase memory efficiency. We’ll also learn about another python library called <code>pyarrow</code>, which has a memory format that allows for “zero copy” read.</p>
+<p>So what happens if the data you need to read in are larger than your memory? My brand new M1 MacBook Pro has 16 GB of memory, but this would be considered a modestly sized dataset by this courses’s standards. There are a number of solutions to this problem, which don’t involve just buying a computer with more memory. In this lesson we’ll discuss the difference between row major and column major file formats, and how leveraging column major formats can increase memory efficiency. We’ll also learn about other python packages like <code>duckdb</code> and <code>pyarrow</code>, which has a memory format that allows for “zero copy” read.</p>
 </section>
-<section id="row-major-vs-column-major" class="level2" data-number="10.3">
+<section id="row-major-vs-column-major" class="level2 page-columns page-full" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="row-major-vs-column-major"><span class="header-section-number">10.3</span> Row major vs column major</h2>
-<p>The difference between row major and column major is in the ordering of items in the array when they are read into memory.</p>
-<p>Take the array:</p>
-<pre><code>a11 a12 a13
+<p>The difference between row major and column major is in the ordering of items in the data when they are read into memory.</p>
 
-a21 a22 a23</code></pre>
-<p>This array in a row-major order would be read in as:</p>
-<p><code>a11, a12, a13, a21, a22, a23</code></p>
-<p>You could also read it in column-major order as:</p>
-<p><code>a11, a21, a12, a22, a13, a33</code></p>
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Row_and_column_major_order.svg/500px-Row_and_column_major_order.svg.png" class="img-fluid figure-img"></p>
+<figcaption>Image credit: Wikipedia</figcaption>
+</figure>
+</div>
+</div></div><p>Take the array:</p>
+<pre><code>[[11, 12, 13], 
+ [21, 22, 23]]</code></pre>
+<p>In <strong>row-major order</strong>, we would save the order of items in memory with the first row elements in series followed by the second row elements:</p>
+<p><code>11, 12, 13, 21, 22, 23</code></p>
+<p>The same data stored in <strong>column-major order</strong> would place elements from the same column close together:</p>
+<p><code>11, 21, 12, 22, 13, 33</code></p>
+<p>Because of this difference in ordering of the saved data bytes, accessing the data from e.g., the second column is more efficient if the data are in column-major order. This is because the sequence of bytes storing the values in the second column would be continuous, and could be read without reading any data in columns 1 and 3. But reading many complete rows of data would be inefficient in column-major order, so your expected access patterns will determine which performs better.</p>
+<p>It turns out that, for many analytical purposes, we often only need access to a small subset of data from one or two columns to perform a computation, and so column-major is often efficient.</p>
 <p>By default, C and SAS use row major order for arrays, and column major is used by Fortran, MATLAB, R, and Julia.</p>
-<p>Python uses neither, instead representing arrays as lists of lists, though <code>numpy</code> uses row-major order.</p>
+<p>Python’s <code>numpy</code> package uses row-major order by default and can be configured to use column-major.</p>
 <section id="row-major-versus-column-major-files" class="level3" data-number="10.3.1">
 <h3 data-number="10.3.1" class="anchored" data-anchor-id="row-major-versus-column-major-files"><span class="header-section-number">10.3.1</span> Row major versus column major files</h3>
-<p>The same concept can be applied to file formats as the example with arrays above. In row-major file formats, the values (bytes) of each record are read sequentially.</p>
+<p>The same concept can be applied to file formats as the example with in-memory arrays above. In row-major file formats, the values (bytes) of each record are stored sequentially.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -360,7 +389,7 @@ a21 a22 a23</code></pre>
 </tr>
 </tbody>
 </table>
-<p>In the above row major example, data are read in the order: <code>John, Washingon, 40 \n Mariah, Texas, 21</code>.</p>
+<p>In the above row major example, data are read in the order: <code>John, Washingon, 40\nMariah, Texas, 21\n</code>.</p>
 <p>This means that getting a subset of rows with all the columns would be easy; you can specify to read in only the first X rows (utilizing the seek system call). However, if we are only interested in Name and Location, we would still have to read in all of the rows before discarding the Age column.</p>
 <p>If these data were organized in a column major format, they might look like this:</p>
 <pre><code>Name: John, Mariah, Allison
@@ -371,50 +400,132 @@ Age: 40, 21, 57</code></pre>
 </section>
 <section id="parquet" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="parquet"><span class="header-section-number">10.4</span> Parquet</h2>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <p>Parquet is an open-source binary file format that stores data in a column-major format. The format contains several key components:</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../images/parquet-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
 <ul>
 <li>row group</li>
 <li>column</li>
 <li>page</li>
 <li>footer</li>
 </ul>
-<p><img src="../images/parquet-schematic.png" class="img-fluid"></p>
-<p>Row groups are blocks of data over a set number of rows that contain data from the same columns. Within each row group, data are organized in column-major format, and within each column are pages that are typically 1MB. The footer of the file contains metadata like the schema, encodings, unique values in each column, etc.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="../images/parquet-schematic.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../images/parquet-schematic.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></a></p>
+</figure>
+</div>
+<p>Row groups are blocks of data containin a set number of rows with data from the same columns. Within each row group, data are organized in column-major format, and within each column are pages that are typically a fixed size. The footer of the file contains metadata like the schema, encodings, unique values in each column, etc., which makes scanning metadata very efficient.</p>
 <p>The parquet format has many tricks to to increase storage efficiency, and is increasingly being used to handle large datasets.</p>
 </section>
-<section id="arrow" class="level2" data-number="10.5">
-<h2 data-number="10.5" class="anchored" data-anchor-id="arrow"><span class="header-section-number">10.5</span> Arrow</h2>
+<section id="fast-access-with-duckdb" class="level2 page-columns page-full" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="fast-access-with-duckdb"><span class="header-section-number">10.5</span> Fast access with DuckDB</h2>
+<p>For the Witharana et al.&nbsp;ice wedge polygon (IWP) dataset (<a href="https://doi.org/10.18739/A24F1MK7Q">doi:10.18739/A24F1MK7Q</a>), we created a tabular data file of statistics which is 4.6GB in text CSV format, but can be reduced down to 1.6GB by a straight conversion to Parquet:</p>
+<pre><code>jones@arcticdata.io:iwp_geotiff_low_medium$ du -sh raster_summary.*
+4.6G    raster_summary.csv
+1.6G    raster_summary.parquet</code></pre>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/duckdb-logo.png" class="img-fluid figure-img"></p>
+<figcaption>DuckDB</figcaption>
+</figure>
+</div>
+</div></div><p>But even at 1.6GB, that will take a while to download – how might we know whether we want to? Easy, use <a href="https://duckdb.org/">DuckDB</a>, an in-memory database that can efficiently read and query columnar data formats like Parquet, and much more!</p>
+<p>Because DuckDB can access the metadata in a parquet file, and efficiently make use of parquet’s efficient data layouts, we can quickly query even a large, remote dataset without downloading the whole thing. First, let’s take a look at the columns in the dataset (a metadata-only query):</p>
+<div id="5e64fac0" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>iwp_path <span class="op">=</span> <span class="st">'https://arcticdata.io/data/10.18739/A24F1MK7Q/iwp_geotiff_low_medium/raster_summary.parquet'</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>iwp <span class="op">=</span> duckdb.read_parquet(iwp_path)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(iwp.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>['stat', 'bounds', 'min', 'max', 'mean', 'median', 'std', 'var', 'sum', 'path', 'tile', 'z']</code></pre>
+<p>While that dataset is quite large, our metadata query returned in less than a second. Other types of summary queries that can be constructed with just metadata can be exceedingly fast as well. For example, let’s count all of the rows, which we can do using SQL syntax:</p>
+<div id="4353347c" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"SELECT count(*) as n FROM iwp;"</span>).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>┌──────────┐
+│    n     │
+│  int64   │
+├──────────┤
+│ 18150329 │
+└──────────┘</code></pre>
+<p>So we quickly learn that this table has 18 million rows!</p>
+<p>A common operation that can be expensive is to look at the number of distinct values in a column, which, in a row-major data source, would often require reading the entire table. Let’s try with DuckDB:</p>
+<div id="1130ea68" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"select distinct stat from iwp order by stat;"</span>).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>┌──────────────┐
+│     stat     │
+│   varchar    │
+├──────────────┤
+│ iwp_coverage │
+└──────────────┘</code></pre>
+<p>We get an almost immediate return because DuckDB can 1) look only at the <code>stat</code> column, ignoring the rest of the data and 2) take advantage of metadata and indexes on those columns, to avoid having to read the whole column anyways.</p>
+<p>Finally, let’s look at a query of the actual data. If we select just two of the columns, and filter the rows, we can do an ad-hoc query that returns a slice of the massive table very quickly.</p>
+<div id="cb493120" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>low_coverage <span class="op">=</span> iwp.project(<span class="st">"bounds, sum"</span>).<span class="bu">filter</span>(<span class="st">"sum &lt; 10"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>low_coverage.count(<span class="st">'*'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>┌──────────────┐
+│ count_star() │
+│    int64     │
+├──────────────┤
+│        37169 │
+└──────────────┘</code></pre>
+<p>And we can easily save our small 1.4 MB slice of the much larger table locally as a parquet file as well using <code>write_parquet</code>.</p>
+<div id="bbfbf1da" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>low_coverage.write_parquet(<span class="st">"low_coverage.parquet"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>os.stat(<span class="st">"low_coverage.parquet"</span>).st_size <span class="op">/</span> (<span class="dv">1024</span> <span class="op">*</span> <span class="dv">1024</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>1.4038171768188477</code></pre>
+<p>Amazingly, DuckDB and parquet handle all of this high-performance access without any server-side services running. Typically, remote data access would be provided through a server side service like a postgres database or some other heavyweight process. But in this case, all we have is a file on disk be served up by a standard web server, and all of the querying is done completely client-side, and quickly because of the beauty of the parquet file format.</p>
+<p>Of course, you can also download the whole parquet file and access it locally through duckdb as well!</p>
+<p>Connecting back to our earlier discussions of parallel processing, one could see how you could drop a large parquet dataset on a server, and then spin up a distributed, parallel processing model where each of the distributed processes use DuckDB to reach out and grab just the small chunk of data it needs to process and compute. Fast, lightweight, and scalable computing, with almost zero infrastructure!</p>
+</section>
+<section id="arrow" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="arrow"><span class="header-section-number">10.6</span> Arrow</h2>
 <p>So far, we have discussed the difference between organizing information in row-major and column-major format, how that applies to arrays, and how it applies to data storage on disk using Parquet.</p>
 <p>Arrow is a language-agnostic specification that enables representation of column-major information in memory without having to serialize data from disk. The Arrow project provides implementation of this specification in a number of languages, including Python.</p>
 <p>Let’s say that you have utilized the Parquet data format for more efficient storage of your data on disk. At some point, you’ll need to read that data into memory in order to do analysis on it. Arrow enables data transfer between the on disk Parquet files and in-memory Python computations, via the <code>pyarrow</code> library.</p>
 <p><code>pyarrow</code> is great, but relatively low level. It supports basic group by and aggregate functions, as well as table and dataset joins, but it does not support the full operations that <code>pandas</code> does.</p>
 </section>
-<section id="example" class="level2" data-number="10.6">
-<h2 data-number="10.6" class="anchored" data-anchor-id="example"><span class="header-section-number">10.6</span> Example</h2>
+<section id="delta-fisheries-using-arrow" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="delta-fisheries-using-arrow"><span class="header-section-number">10.7</span> Delta Fisheries using Arrow</h2>
 <p>In this example, we’ll read in a dataset of fish abundance in the San Francisco Estuary, which is published in csv format on the <a href="https://portal.edirepository.org/nis/mapbrowse?scope=edi&amp;identifier=1075&amp;revision=1">Environmental Data Initiative</a>. This dataset isn’t huge, but it is big enough (3 GB) that working with it locally can be fairly taxing on memory. Motivated by user difficulties in actually working with the data, the <a href="https://github.com/Delta-Stewardship-Council/deltafish"><code>deltafish</code> R</a> package was written using the R implementation of <code>arrow</code>. It works by downloading the EDI repository data, writing it to a local cache in parquet format, and using <code>arrow</code> to query it. In this example, I’ve put the Parquet files in a sharable location so we can explore them using <code>pyarrow</code>.</p>
 <p>First, we’ll load the modules we need.</p>
-<div id="2706056d" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.dataset <span class="im">as</span> ds</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0e3bb562" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow.dataset <span class="im">as</span> ds</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next we can read in the data using <code>ds.dataset()</code>, passing it the path to the parquet directory and how the data are partitioned.</p>
-<div id="6968b6ef" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>deltafish <span class="op">=</span> ds.dataset(<span class="st">"/home/shares/deltafish/fish"</span>,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                       <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                       partitioning<span class="op">=</span><span class="st">'hive'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="59c56d38" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>deltafish <span class="op">=</span> ds.dataset(<span class="st">"/home/shares/deltafish/fish"</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                       <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                       partitioning<span class="op">=</span><span class="st">'hive'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can check out a file listing using the <code>files</code> method. Another great feature of parquet files is that they allow you to partition the data accross variables of the dataset. These partitions mean that, in this case, data from each species of fish is written to it’s own file. This allows for even faster operations down the road, since we know that users will commonly need to filter on the species variable. Even though the data are partitioned into different files, <code>pyarrow</code> knows that this is a single dataset, and you still work with it by referencing just the directory in which all of the partitioned files live.</p>
-<div id="bad8d6b6" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>deltafish.files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a831c223" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>deltafish.files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>['/home/shares/deltafish/fish/Taxa=Acanthogobius flavimanus/part-0.parquet',
  '/home/shares/deltafish/fish/Taxa=Acipenser medirostris/part-0.parquet',
  '/home/shares/deltafish/fish/Taxa=Acipenser transmontanus/part-0.parquet',
- '/home/shares/deltafish/fish/Taxa=Acipenser/part-0.parquet'...</code></pre>
+ '/home/shares/deltafish/fish/Taxa=Acipenser/part-0.parquet'...]</code></pre>
 <p>You can view the columns of a dataset using <code>schema.to_string()</code></p>
-<div id="6557d42f" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>deltafish.schema.to_string()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8e2b7f62" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>deltafish.schema</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>SampleID: string
 Length: double
@@ -422,43 +533,60 @@ Count: double
 Notes_catch: string
 Species: string</code></pre>
 <p>If we are only interested in a few species, we can do a filter:</p>
-<div id="84c049a3" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>expr <span class="op">=</span> ((ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span><span class="st">"Dorosoma petenense"</span>)<span class="op">|</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span><span class="st">"Morone saxatilis"</span>) <span class="op">|</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span> <span class="st">"Spirinchus thaleichthys"</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>fishf <span class="op">=</span> deltafish.to_table(<span class="bu">filter</span> <span class="op">=</span> expr,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                           columns <span class="op">=</span>[<span class="st">'SampleID'</span>, <span class="st">'Length'</span>, <span class="st">'Count'</span>, <span class="st">'Taxa'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e857fd25" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>expr <span class="op">=</span> ((ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span><span class="st">"Dorosoma petenense"</span>)<span class="op">|</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span><span class="st">"Morone saxatilis"</span>) <span class="op">|</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>        (ds.field(<span class="st">"Taxa"</span>)<span class="op">==</span> <span class="st">"Spirinchus thaleichthys"</span>))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>fishf <span class="op">=</span> deltafish.to_table(<span class="bu">filter</span> <span class="op">=</span> expr,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                           columns <span class="op">=</span>[<span class="st">'SampleID'</span>, <span class="st">'Length'</span>, <span class="st">'Count'</span>, <span class="st">'Taxa'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>There is another dataset included, the survey information. To do a join, we can just use the <code>join</code> method on the <code>arrow</code> dataset.</p>
 <p>First read in the survey dataset.</p>
-<div id="e6aea8d7" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>survey <span class="op">=</span> ds.dataset(<span class="st">"/home/jclark/deltafish/survey"</span>,</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                    partitioning<span class="op">=</span><span class="st">'hive'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="018e7932" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>survey <span class="op">=</span> ds.dataset(<span class="st">"/home/shares/deltafish/survey"</span>,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">format</span><span class="op">=</span><span class="st">"parquet"</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                    partitioning<span class="op">=</span><span class="st">'hive'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Take a look at the columns again:</p>
-<div id="8692a3f2" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>survey.schema.to_string()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e78da20b" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>survey.schema</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s pick out only the ones we are interested in.</p>
-<div id="2667aac2" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>survey_s <span class="op">=</span> survey.to_table(columns<span class="op">=</span>[<span class="st">'SampleID'</span>,<span class="st">'Datetime'</span>, <span class="st">'Station'</span>, <span class="st">'Longitude'</span>, <span class="st">'Latitude'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="82f78ad2" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>survey_s <span class="op">=</span> survey.to_table(columns<span class="op">=</span>[<span class="st">'SampleID'</span>,<span class="st">'Datetime'</span>, <span class="st">'Station'</span>, <span class="st">'Longitude'</span>, <span class="st">'Latitude'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then do the join, and convert to a pandas <code>data.frame</code>.</p>
-<div id="47681817" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fish_j <span class="op">=</span> fishf.join(survey_s, <span class="st">"SampleID"</span>).to_pandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f65b4bf5" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fish_j <span class="op">=</span> fishf.join(survey_s, <span class="st">"SampleID"</span>).to_pandas()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>fish_j.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that when we did our first manipulation of this dataset, we went from working with a <code>FileSystemDataset</code>, which is a representation of a dataset on disk without reading it into memory, to a <code>Table</code>, which is read into memory. <code>pyarrow</code> has a <a href="https://arrow.apache.org/docs/python/compute.html">number of functions</a> that do computations on datasets without reading them into memory. However these are evaluated “eagerly,” as opposed to “lazily.” These are useful in some cases, like above, where we want to take a larger than memory dataset and generate a smaller dataset (via filter, or group by/summarize), but are not as useful if we need to do a join before our summarization/filter.</p>
 <p>More functionality for lazy evaluation is on the horizon for <code>pyarrow</code> though, by leveraging <a href="https://ibis-project.org/docs/3.0.2/tutorial/01-Introduction-to-Ibis/">Ibis</a>.</p>
 </section>
-<section id="synopsis" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="synopsis"><span class="header-section-number">10.7</span> Synopsis</h2>
-<p>In this lesson we learned:</p>
+<section id="parquet-performance-hints" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="parquet-performance-hints"><span class="header-section-number">10.8</span> Parquet Performance hints</h2>
+<p>While the specifics of your data structures, organization, and access patterns will ultimately drive the best approach to representing tabular data, a few good practices have emerged that may help you. But even without these, just moving from text formats like CSV to the open binary format of parquet may net you some huge gains. A few things you might consider:</p>
+<ul>
+<li>Avoid Lots of Small Files</li>
+</ul>
+<p>A lot of small files generally means a lot of metadata handling, and a lot of read and write operations that can add up. Modern filesystems can handle directories with millions of file entries, but that doesn’t mean it is convenient to use them that way. While at times there are good reasons to break a file into multiple partitioned files, accumulating too many small files can bog down your system. For larger datasets, individual files of up to a Gigabyte will generally work well.</p>
+<ul>
+<li>Partition your Data</li>
+</ul>
+<p>Partitioning your data into multiple parquet files, each containing one cluster of the data, can really speed things up when people only need to access a few of those partitions. If your partitioning scheme matches your data aceess patterns, then you can significantly lower the amount of data people need to access to get at what they want. A good rule of thumb is to create partitions that correspond to your access filters if there aren’t too many values for that variable. For example, if people query by month, then a partition over month will allow access to just the subset of data that meets particular filter queries.</p>
+<ul>
+<li>Tune Row Groups</li>
+</ul>
+<p>Row groups contain pages of column data and are the main storage area for parquet. By picking a good row group size, you can optimize your performance. Larger row groups will result in fewer I/O operations to read each chunk of column data, which means reads will likely be faster. But those reads will be larger, and so will require more memory. Also, if you want to do fine-grained parallel processing, it is helpful if the size of the row groups and chunks corresponds to the size of your processing jobs – you don’t want workers reading more data than needed because it is reading in a big row group. Row group size and your paritioning scheme work hand in hand to optimize the size of data chunks that are accessed.</p>
+</section>
+<section id="synopsis" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="synopsis"><span class="header-section-number">10.9</span> Synopsis</h2>
+<p>In this lesson we focused on:</p>
 <ul>
 <li>the difference between row major and column major formats</li>
 <li>under what circumstances a column major data format can improve memory efficiency</li>
-<li>how <code>pyarrow</code> can interact with Parquet files to analyze data</li>
+<li>how to use DuckDB and Arrow interact with Parquet files to scalably analyze data</li>
 </ul>
 
 
@@ -895,6 +1023,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
