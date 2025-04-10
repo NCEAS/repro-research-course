@@ -343,16 +343,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="functions-as-objects" class="level2" data-number="12.3">
 <h2 data-number="12.3" class="anchored" data-anchor-id="functions-as-objects"><span class="header-section-number">12.3</span> Functions as objects</h2>
 <p>Functions are first-class objects in Python (and many other languages). This has some real benefits for and implications for parallel programming. Because a function is an object, it means that it can be 1) stored in a variable, and 2) passed as an argument to another function. We saw that in the module on pleasingly parallel codes when we used <code>ThreadPoolExecutor.map()</code>, which takes a function and an iterable object as arguments. Let’s check out how you can use and manipulate functions as objects. First, let’s define a simple function, assign it to another variable, and then use both:</p>
-<div id="f1d12b34" class="cell" data-execution_count="1">
+<div id="74e48d8b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> double(x):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>x</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(double)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;function double at 0x7f507c261d80&gt;</code></pre>
+<pre><code>&lt;function double at 0x7f53c4965d80&gt;</code></pre>
 </div>
 </div>
-<div id="10ba0881" class="cell" data-execution_count="2">
+<div id="cba054bd" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># also assign the function to the `twotimes` variable</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>twotimes <span class="op">=</span> double</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(twotimes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -361,14 +361,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>When we print the type, we see that <code>twotimes</code> is of type <code>function</code>. We can see from the object address that it is the same object as <code>double</code>. It is the same object, with two different symbolic names:</p>
-<div id="7f4cb57b" class="cell" data-execution_count="3">
+<div id="1497a728" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(twotimes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;function double at 0x7f507c261d80&gt;</code></pre>
+<pre><code>&lt;function double at 0x7f53c4965d80&gt;</code></pre>
 </div>
 </div>
 <p>and when we use the two instances, we get identical results:</p>
-<div id="da6135db" class="cell" data-execution_count="4">
+<div id="8f0712d1" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(double(<span class="dv">7</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(twotimes(<span class="dv">7</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(double(<span class="dv">5</span>) <span class="op">==</span> twotimes(<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -379,14 +379,14 @@ True</code></pre>
 </div>
 </div>
 <p>This representation of a function as an object comes in handy when we want to invoke a function in multiple different contexts, such as in a parallel execution environment via a <code>map()</code> function.</p>
-<div id="216b7210" class="cell" data-execution_count="5">
+<div id="7c9f1da4" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(<span class="bu">map</span>(twotimes, [<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>[4, 6, 8]</code></pre>
 </div>
 </div>
 <p>This works because the function <code>twotimes</code> can be passed to <code>map</code> and executed from within <code>map</code>. When you execute a function that is passed in via an argument, it is called <strong>function composition</strong>. We can easily illustrate this by creating some function and passing it to a wrapper function to be executed:</p>
-<div id="2f6235cd" class="cell" data-execution_count="6">
+<div id="1a4fe35e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> some_function():</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Ran some_function"</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -426,7 +426,7 @@ Decorators
 </div>
 <div class="callout-body-container callout-body">
 <p>This approach to function composition is exactly what is used by <a href="https://docs.python.org/3/glossary.html#term-decorator">Python decorator</a> functions. A <code>decorator</code> in python is a function that returns a function, thereby making it easy to wrap the one function inside another. To modify our above example into a decorator, we can simply return the <code>wrapper</code> function:</p>
-<div id="d0a37f0c" class="cell" data-execution_count="7">
+<div id="e40f50a7" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> my_decorator(func_to_run):</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> wrapper():</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Ran wrapper"</span>)</span>
@@ -444,7 +444,7 @@ Finished wrapper</code></pre>
 </div>
 </div>
 <p>Finally, once you have a decorator function defined, you can easily apply it to your functions when you define them using some special syntactic sugar, the <code>@</code> annotation.</p>
-<div id="a66f44eb" class="cell" data-execution_count="8">
+<div id="8855dede" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="at">@my_decorator</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hello():</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Hello"</span>)</span>
@@ -462,7 +462,7 @@ Finished wrapper</code></pre>
 <section id="global-variables" class="level2" data-number="12.4">
 <h2 data-number="12.4" class="anchored" data-anchor-id="global-variables"><span class="header-section-number">12.4</span> Global variables</h2>
 <p>When executing a function, the variables that are in scope to that function are local, meaning that the presence of another variable with the same name in another scope will not affect a calculation. For example:</p>
-<div id="a2c07758" class="cell" data-execution_count="9">
+<div id="d08d3cf7" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> do_task():</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -474,7 +474,7 @@ Finished wrapper</code></pre>
 </div>
 </div>
 <p>However, if that same variable is declared as global inside the function, then the assignment will have global impact on the value of the parent scope:</p>
-<div id="3daf3264" class="cell" data-execution_count="10">
+<div id="d9debc54" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> do_task():</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> x</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">10</span></span>
@@ -488,7 +488,7 @@ Finished wrapper</code></pre>
 </div>
 <p>So, you can see that writing a function that uses global variables can have effects outside of the scope of the function call. This can have drastic consequences on concurrent code, as the order in which function calls are made when operating concurrently are not deterministic, and so the impact of global variables will also not be deterministic.</p>
 <p>A related issue arises when code in a function depends on its enclosing namespace, such as when a function is defined inside of another function. <strong>When resolving a variable, python first looks in the Local namespace, and then in the Enclosing namespace, Global namespace, and Built-in namespace.</strong> So, even if a variable is not defined locally, it might still be resolved by one of the other namespaces in surprising ways.</p>
-<div id="90a403d2" class="cell" data-execution_count="11">
+<div id="041bb6c9" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> do_stuff(b):</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> a<span class="op">*</span>b</span>
@@ -525,7 +525,7 @@ Important
 <section id="locks" class="level2" data-number="12.7">
 <h2 data-number="12.7" class="anchored" data-anchor-id="locks"><span class="header-section-number">12.7</span> Locks</h2>
 <p>Locks are a mechanism to manage access to a resource so that multiple threads can access the resource. By adding locks to an otherwise parallel process, we introduce a degree of serial execution to the locked portion of the process. Basically, each thread can only access the resource when it has the lock, and only one lock is given out at a time. Take this example of what happens without locking:</p>
-<div id="74716f3c" class="cell" data-execution_count="12">
+<div id="65c32fc5" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ProcessPoolExecutor</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -539,7 +539,7 @@ Important
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    future.result()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can see that the results come back in a semi-random order, and the call to <code>sleep</code> creates a delay between printing the two words, which means that the three messages get jumbled when printed. To fix this, we can introduce a lock from the <code>multiprocessing</code> package.</p>
-<div id="a4f6637b" class="cell" data-execution_count="13">
+<div id="194642dc" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> concurrent.futures <span class="im">import</span> ProcessPoolExecutor</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> multiprocessing</span>
