@@ -28,7 +28,7 @@ This 5-day in-person workshop will provide researchers with an overview of repro
 |Name         | Email              |
 |-------------|--------------------|
 |Matt Jones | jones@nceas.ucsb.edu |
-|Angie Garcia | agarcia@nceas.ucab.edu |
+|Angie Garcia | agarcia@nceas.ucab.edu|
 |Justin Kadi | jeakadi@nceas.ucsb.edu|
 |Nicole Greco | greco@nceas.ucsb.edu|
 |Jim Regetz | regetz@nceas.ucsb.edu|
