@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -40,7 +74,10 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a34d670291f06f286357e447776a572a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-292c0866b2e53f8190c286d1fd533ef9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -68,6 +105,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -236,7 +276,17 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">17.1</span> Learning Objectives</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">17.2</span> Introduction</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">17.3</span> Summary</a></li>
+  <li><a href="#cloud-optimized-data" id="toc-cloud-optimized-data" class="nav-link" data-scroll-target="#cloud-optimized-data"><span class="header-section-number">17.3</span> Cloud optimized data</a>
+  <ul class="collapse">
+  <li><a href="#cloud-optimized-geotiffs-cogs" id="toc-cloud-optimized-geotiffs-cogs" class="nav-link" data-scroll-target="#cloud-optimized-geotiffs-cogs"><span class="header-section-number">17.3.1</span> Cloud Optimized GeoTIFFs (COGs)</a></li>
+  <li><a href="#cloud-optimized-data-principles" id="toc-cloud-optimized-data-principles" class="nav-link" data-scroll-target="#cloud-optimized-data-principles"><span class="header-section-number">17.3.2</span> Cloud-optimized data principles</a></li>
+  <li><a href="#zarr-revisited" id="toc-zarr-revisited" class="nav-link" data-scroll-target="#zarr-revisited"><span class="header-section-number">17.3.3</span> Zarr, revisited</a></li>
+  <li><a href="#cloud-optimized-netcdf-files" id="toc-cloud-optimized-netcdf-files" class="nav-link" data-scroll-target="#cloud-optimized-netcdf-files"><span class="header-section-number">17.3.4</span> Cloud-optimized netCDF files?</a></li>
+  </ul></li>
+  <li><a href="#spatiotemporal-asset-catalogs-stac" id="toc-spatiotemporal-asset-catalogs-stac" class="nav-link" data-scroll-target="#spatiotemporal-asset-catalogs-stac"><span class="header-section-number">17.4</span> SpatioTemporal Asset Catalogs (STAC)</a></li>
+  <li><a href="#making-sense-of-the-menagerie" id="toc-making-sense-of-the-menagerie" class="nav-link" data-scroll-target="#making-sense-of-the-menagerie"><span class="header-section-number">17.5</span> Making sense of the menagerie</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">17.6</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">17.7</span> Further Reading</a></li>
   </ul>
 </nav>
     </div>
@@ -265,18 +315,418 @@ ul.task-list li input[type="checkbox"] {
 <section id="learning-objectives" class="level2" data-number="17.1">
 <h2 data-number="17.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">17.1</span> Learning Objectives</h2>
 <ul>
-<li>Review the big picture of processing bottlenecks in large-scale data analysis</li>
+<li>Review the big picture of computational challenges in large-scale data analysis</li>
 <li>Recap various workshop technologies and how they all fit together</li>
-<li>Learn about cloud-optimized data formats and access patterns</li>
-<li>Consider the present and future of cloud-native geospatial</li>
+<li>Learn about cloud optimized data formats and access patterns</li>
+<li>Consider the present and future of cloud-native geospatial data</li>
 </ul>
 </section>
 <section id="introduction" class="level2" data-number="17.2">
 <h2 data-number="17.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">17.2</span> Introduction</h2>
+<p>This course has focused on <strong>scalable computing</strong> in the Arctic domain. In a nutshell, that means <em>going big</em> with our computing and data processing, and being equipped to deal with the challenges that arise when scaling up. But what exactly is it that can <em>be</em> big, what problems arise as a consequence, and what are the corresponding solutions? We’ve talked about how we can run into bottlenecks in CPU, memory, I/O, and network, but let’s step back and consider two major and distinct types of scaling challenges:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Processing Intensity Challenges
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>What can be big?</strong></p>
+<p>The <em><strong>number</strong></em> of tasks we need to complete, especially factoring in the amount of time it takes to complete each task, and our overall time constraints. Too much work to do!</p>
+<p><strong>What tends to limit us?</strong></p>
+<ul>
+<li>CPU/GPU speed</li>
+<li>Maybe I/O or network speed</li>
+</ul>
+<p><strong>What can we do about it?</strong></p>
+<ul>
+<li>Faster processors</li>
+<li>Algorithmic optimization</li>
+<li>Parallel computation</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Data Volume Challenges
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>What can be big?</strong></p>
+<p>The <em><strong>amount of data</strong></em> we have to process, especially factoring the amount of data we have to handle all at once, relative to our space constraints. Too much stuff to hold at once!</p>
+<p><strong>What tends to limit us?</strong></p>
+<ul>
+<li>Memory capacity</li>
+<li>Storage capacity</li>
+</ul>
+<p><strong>What can we do about it?</strong></p>
+<ul>
+<li>Chunked processing</li>
+<li>Distributed storage</li>
+<li>Data simplification</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>If your fundamental challenge is task volume, then aside from speeding up computation by using faster processors and/or faster algorithms, the natural solution (when permitted by the structure of the problem) is to transition to parallel processing, spreading tasks out across multiple cores, processors, and/or nodes. We’ve covered approaches to this using Python’s multithreading and multiprocessing capabilities, along with Parsl as a full-fledged parallel programming library.</p>
+<p>If your fundamental challenge is data volume, then barring budget and means to sufficiently scale up your memory and storage capacity, the solution in one form or another is to split the data into pieces, working with each piece in turn. Interestingly, by decomposing a dataset into many small parts to act on independently, we often end up with a task architecture amenable to parallelization, allowing us to not only overcome the data volume problem but also reduce our task duration! This is one of the benefits we get from working with data-centric parallelization frameworks like Dask, with its distributed dataframes and arrays.</p>
+<p>In the remainder of this chapter, we will primarily focus on the data volume challenge, in particular exploring how different decisions about data storage formats and layouts enable (or constrain) us as we attempt to work with data at large scale. We’ll formalize a couple of concepts we’ve alluded at throughout the course, introduce a few new technologies, and characterize the current state of best practice – with caveat that this is an evolving area!</p>
 </section>
-<section id="summary" class="level2" data-number="17.3">
-<h2 data-number="17.3" class="anchored" data-anchor-id="summary"><span class="header-section-number">17.3</span> Summary</h2>
-<p>Lorem Ipsum…</p>
+<section id="cloud-optimized-data" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="cloud-optimized-data"><span class="header-section-number">17.3</span> Cloud optimized data</h2>
+<p>As we’ve seen, when it comes global and even regional environmental phenomena observed using some form of remote-sensing technology, much of our data is now <em>cloud-scale</em>. In the most basic sense, this means many datasets – and certainly relevant collections of datasets that you might want to analyze together – no longer fit in local storage. So instead we put it in the massive, “infinitely” scalable cloud, where it is distributed across potentially many networked storage backends.</p>
+<div class="callout callout-style-default callout-caution no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Moving to the cloud
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The migration of data into the cloud also frees us up (and may compel us, for better or worse) to move our compute to the cloud as well, for example by running our data analysis on cloud-hosted virtual machines. It frees us up in the sense that because the data is no longer local, and we need to learn tools and techniques for efficiently accessing remote data from arbitrary locations over the network, it becomes less of a lift for us to transition to remote computing as well. And this can be beneficial when the compute platform is “near” the data, reducing network and perhaps even I/O latency. However, to the extent that realizing these benefits may require committing to some particular commercial cloud provider (with its associated cost structure), this may or may not be desirable change.</p>
+</div>
+</div>
+<p>Practically speaking, accessing data in the cloud means using HTTP to request and receive data. Compared with traditional local storage, each read operation is much, much slower using HTTP over the internet than when reading a file on a local storage device, and the throughput (i.e., the number of bytes you can move per second) is much lower. Although we can’t change these basic differences, we can <em>optimize</em> our data to reduce their impact. We’ll talk about <em>how</em> in a moment. But first consider two other cloud-centric developments over the past handful of years:</p>
+<ol type="1">
+<li><em>Video over the web</em>. Millions (if not billions) of users consume multidimensional array data every day over the web, streaming video from services like YouTube, Netflix, Twitch, TikTok, and many other providers. Data access is fast, and at any given moment, our phones, TVs, and other devices are requesting and receiving just the small chunks of data they need.</li>
+<li><em>Web-scale, web-enabled databases</em>. In the Zarr section, we marveled at our ability to quickly pull a tiny bit of data from a multi-terabyte data store in the cloud. But consider that we do this kind of thing all the time every day when we browse the web and use all manner of web services (either directly or indirectly): we request and receive small bits of data from what are often large, distributed data stores, powered by fast, modern database and database-like systems sitting behind web APIs.</li>
+</ol>
+<p>Accessing and manipulating data from massive satellite product collections and other large environmental data arrays isn’t exactly the same problem, but it has some common attributes. Indeed, the cloud-native geospatial vision is to be able to provision and process big environmental geospatial data in similarly convenient and performant ways, using a combination of optimized storage architecture and matching optimized client-side technologies for working with that data. .</p>
+<section id="cloud-optimized-geotiffs-cogs" class="level3" data-number="17.3.1">
+<h3 data-number="17.3.1" class="anchored" data-anchor-id="cloud-optimized-geotiffs-cogs"><span class="header-section-number">17.3.1</span> Cloud Optimized GeoTIFFs (COGs)</h3>
+<p>As we’ve discussed elsewhere in this course, geospatial rasters are a specialization of multi-dimensional arrays. First of all, they are inherently 2-dimensional, with dimensions corresponding to a geospatial coordinate system. Conceptually, we may have additional dimensions insofar as a “complete” raster data set may involve a set of rasters at different dates and times (temporal dimension), or corresponding to different spectral bands. Nevertheless, the standard paradigm is to treat these as a collection of 2D arrays (potentially stored within a single file), and leave it up to users to combine them as needed.</p>
+<p>Today, best practice is to store geospatial rasters as <a href="https://cogeo.org/">Cloud Optimized GeoTIFFs</a>, known as COGs. COGs are a relative newcomer among raster file formats. They first emerged in the mid-2010s, and were approved as an <a href="https://www.ogc.org/announcement/cloud-optimized-geotiff-cog-published-as-official-ogc-standard/">official standard of the Open Geospatial Consortium (OGC)</a> in 2023. However, COGs <em>are</em> GeoTIFFs, which have been around since the 1990s, and GeoTIFFs are TIFFs, which date back to the 1980s. Let’s work our way through this linage.</p>
+<p>First we have the original <strong>TIFF</strong> format, which stands for Tagged Image File Format. Although we often think of TIFFs as image files, they’re actually <em>file containers</em> for images, insofar as a single TIFF file can store multiple raster images. In brief, TIFF have a file header - i.e., metadata - encoded in the bytes at the beginning of the file. Among other things, this header points to another batch of metadata (called an <em>image file directory</em>, or IFD) for a first image. This IFD contains information about where the image bytes themselves are located in the file, and also points to the IFD of a second image (if there is one), and so on. True to its name, TIFFs internally rely on so-called <em>tags</em> - simple data structures that store various attributes and properties - to capture information clients need to properly interpret and render the contained images. TIFFs also rely heavily on internal compression of the image data, using one of a few well-known lossless compression algorithms.</p>
+<p>Next we have <strong>GeoTIFFs</strong>. GeoTIFFs are simply TIFFs with special tags that store geospatial information: how the image bounds relate to locations on the earth, coordinate reference system, datum, ellipsoid, projection. That’s about all there is to it.</p>
+<p>Finally we have <strong>COGs</strong>. COGs are GeoTIFFs that following some specific conventions, none of which are required by the GeoTIFF standard itself, but all of which are compliant with it:</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[1,1,1]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Metadata up front
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>All IFD bytes (i.e., the metadata for all contained images) are laid out sequentially at the beginning of the file, after the standard TIFF header. Readers don’t need to follow a chain of offsets to discover what the TIFF contains or where images are located in the file; they simply need to read a sufficiently large number of initial bytes.</p>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tiled data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The main raster data is broken into tiles (i.e., rectangular chunks) which are each individually compressed, and all stored in a particular sequential order. Tiling means individual raster values from nearby pixels tend to be close to each other in the file, indeed usually within the same compressed tile.</p>
+</div>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Overviews
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A set of overviews (lower resolution tile pyramids) are computed from the main full resolution data and stored in the file, again following a tiling scheme and and arranged in order. This allows clients to load a lower resolution version of the data when appropriate, without needing to read the full resolution data itself.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>To reiterate, all of these are just restrictions on the GeoTIFF format, so a COG <em>is</em> a GeoTIFF. However, because of its deliberate design, clients can access relevant spatial subsets of a (potentially very large) raster by making just a few reads of discrete portions of the file. This is hugely important when accessing the data over HTTP – hence the “cloud optimized” moniker - because each HTTP read operation is far more time-consuming than the same corresponding read would be for a local disk read. Provided the data is hosted on a web server that accepts <a href="https://en.wikipedia.org/wiki/Byte_serving">range requests</a> for specific sections of a file rather than returning the entire file, we can access relevant chunks of data in a targeted and efficient manner.</p>
+<p>Here is a rough sketch of what happens when a user wants data from a COG for some specific geographic area at 100m resolution, which we’ll assume is coarser than the full resolution in a COG. First the client makes an initial HTTP range request large enough to capture all metadata in most cases, e.g.&nbsp;the first 16 kilobytes of the file. This provides enough information to understand the file structure, georeferencing information, internal tile structure including overviews, and byte offsets to all overview and tile indexes. The client is then able to make precise HTTP range requests for the specific bytes needed for any particular desired subset of the image at a particular resolution (either full or reduced), by converting the geographic coordinates of the desired bounding box into pixel coordinates, then identifying which tile(s) in the COG intersect with the area of interest, then determining the associated byte ranges of the tile(s) based on the metadata read in teh first step. And the best part is that “client” here refers to the underlying software, which takes care of all of the details. As a user, typically all you need to do is specify the file location, area of interest, and desired overview level (if relevant)!</p>
+</section>
+<section id="cloud-optimized-data-principles" class="level3" data-number="17.3.2">
+<h3 data-number="17.3.2" class="anchored" data-anchor-id="cloud-optimized-data-principles"><span class="header-section-number">17.3.2</span> Cloud-optimized data principles</h3>
+<p>How do we generalize the cloud-friendly features of COGs? It really comes down to two things:</p>
+<p>The first is <strong><em>consolidating metadata and making it available “up front”</em></strong>. A consumer should be able to start by reading metadata only, ideally getting all of the essential metadata in one single read operation, without knowing anything else. This metadata should be sufficient for the client to determine not only what the dataset contains, but also exactly where to go to get any specific subset(s) of the overall available data.</p>
+<p>The second is <strong><em>storing data in chunks, each of which can be accessed independently</em></strong>. Equal parts art and science, chunks should be reasonably sized – not too big, not too small – with chunk configuration (shape) optimized for expected usage patterns. This enables a client interested in a subset of data to retrieve the relevant data without receiving too much additional unwanted data. In addition, chunk layout should be such that, under expected common usage patterns, proximal chunks are morely likely to be requested together. On average, this will reduce the number of separate read requests a client must issue to retrieve and piece together any particular desired data subset. In addition, chunks should almost certainly be compressed with a suitable compression algorithm. Compression incurs some additional compute time for decompression, but with a net benefit because it reduces the total number of bytes transferred over the relatively slow network connections we experience in the cloud setting.</p>
+<p>Together, these characteristics enable clients to efficiently (i.e., with a small number of read operations transferring minimal unwanted data) execute <em>partial reads</em> of data, and furthermore to speed things up by doing <em>parallel reads</em> of distinct sections of data.</p>
+<p>To reiterate what we discussed in the COGs section, this is all deliberately designed to work well with HTTP range requests, a mechanism whereby clients can request specific byte ranges of a web-accessible resource. Through the combination of a smart chunk layout on one hand, with metadata up front on other hand, clients can quickly determine where to get data of interest, and then retrieve efficiently via HTTP range requests.</p>
+</section>
+<section id="zarr-revisited" class="level3" data-number="17.3.3">
+<h3 data-number="17.3.3" class="anchored" data-anchor-id="zarr-revisited"><span class="header-section-number">17.3.3</span> Zarr, revisited</h3>
+<p>Now that we understand what cloud optimized data formats are all about, let’s go back and revisit Zarr. Is it cloud friendly?</p>
+<ul>
+<li><strong><em>Metadata up front</em></strong>. In Zarr stores, we expose metadata through external JSON files. Clients start by reading the metadata to determine where relevant data chunks live. Moreover, Zarr supports creation of <a href="https://github.com/zarr-developers/zarr-specs/pull/309">consolidated metadata</a>, whereby the metadata for all groups and arrays in a given Zarr store is packaged into a single metadata file in the root of the store, so that clients can access all of this information in a single read.</li>
+<li><strong><em>Chunked data</em></strong>. Indeed, this is foundational to Zarr. Recall that Zarr is a storage specification for chunked, compressed N-dimensional arrays. Moreover, these chunks can be store in various ways – not only in memory and in conventional disk-based file systems, but also in cloud-based object storage such as Google Cloud Storage, Amazon S3, and Azure Blob Storage.</li>
+</ul>
+<p>So by these criteria, yes, Zarr is certainly a cloud-friendly format!</p>
+<p>But wait, there’s more! As of early 2025 with its V3 release, Zarr has introduced an important new cabilility around <em>sharding</em>, which controls how chunks are allocated to files. Previously, each chunk was compressed and stored as a separate file, but now multiple compressed chunks can be stored in the same file (referred to as a “shard”). In other words, the choice of how to break the data into separately compressed and addressable subsets is now decoupled from the choice of how to break the data into separate files; a massive dataset can be segmented into a very large number of small chunks without necessarily creating a correspondingingly large number of small individual files, which can cause problems in certain contexts. In some sense, this allows a Zarr store to behave a little more like a COG, with its many small, addressable tiles contained in a single file.</p>
+</section>
+<section id="cloud-optimized-netcdf-files" class="level3" data-number="17.3.4">
+<h3 data-number="17.3.4" class="anchored" data-anchor-id="cloud-optimized-netcdf-files"><span class="header-section-number">17.3.4</span> Cloud-optimized netCDF files?</h3>
+<p>What about all those netCDF files out in the wild? Although one option would be to convert these into a cloud optimized format like Zarr, it turns out there’s another approach that can work well. Especially in cases where the netCDF file already has well-designed internal chunking and sensible compression – both features already supported by the specification – the only other thing we really need is relevant metadata up front. We can achieve this by creating Zarr-like metadata that fully describes the data in an external JSON file, pointing at byte-addressed segments of the relevant netCDF file(s) rather than independent data files/objects stored in native Zarr format. Sometimes referred to as virtual Zarr stores, these can be created using libraries such as <a href="https://fsspec.github.io/kerchunk/">kerchunk</a> and <a href="https://virtualizarr.readthedocs.io/en/latest/">VirtualiZarr</a>.</p>
+<p>If the original source netCDF files are not effectively chunked (internally) for your relevant analysis use cases, virtual Zarr stores aren’t going to help much. In that case, it may be better to convert the data (or the desired subset of data) into a proper Zarr store with better chunking. However, in other cases, the virtual Zarr approach can work quite well, typically yielding more or less equivalent read performance between the two approaches.</p>
+</section>
+</section>
+<section id="spatiotemporal-asset-catalogs-stac" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="spatiotemporal-asset-catalogs-stac"><span class="header-section-number">17.4</span> SpatioTemporal Asset Catalogs (STAC)</h2>
+<p>Today we have data, data, everywhere, made available by many providers in multiple formats. Across this landscape, how can we effectively find data of interest for a particular place and time, and quickly understand how to access, ingest, and use each individual data resource? Historically, organizations publishing data over the web have each used their own ad hoc methods for documenting and cataloging available files. For example, recall in the Zarr chapter when we downloaded and searched through a large CSV file to find paths to relevant CMIP6 datasets. Wouldn’t it be nice if all providers agreed to a common cataloging approach, so we didn’t have to figure out the idiosyncrasies of each scheme? This is exactly the problem that <a href="https://stacspec.org/en">STAC</a> is designed to solve.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>STAC is a specification for describing spatiotemporal data assets, intended to facilitate the search and discovery of relevant data collected at some place and time on Earth, especially based on spatial and/or temporal queries of interest.</p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../images/stac-logo.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<p>To work with STAC, you need to be comfortable with the following terms:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 77%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>STAC term</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Asset</strong></td>
+<td>A file representing information about the Earth, captured at some place and time</td>
+</tr>
+<tr class="even">
+<td><strong>Item</strong></td>
+<td>A document describing one or more assets associated with a given place and time, with metadata describing that place (as a GeoJSON feature), time, and various other properties</td>
+</tr>
+<tr class="odd">
+<td><strong>Collection</strong></td>
+<td>A document describing a <em>set</em> of items and/or child collections, with metadata describing their collective spatiotemporal extent, and other various properties</td>
+</tr>
+<tr class="even">
+<td><strong>Catalog</strong></td>
+<td>A grouping of items, collections, and/or other child catalogs</td>
+</tr>
+<tr class="odd">
+<td><strong>Link</strong></td>
+<td>A reference to a related resource either in the catalog (e.g., related items) or outside the catalog (e.g.&nbsp;documentation)</td>
+</tr>
+</tbody>
+</table>
+<p>STAC catalogs come in two variants. The simpler form is a <em>static catalog</em>, achieved by simply publishing STAC-compliant JSON files on the web. Clients can read these files, walk through the linked information to identify and explore component collections and items, and ultimately get to the associated data via asset links.</p>
+<p>The second form is a <em>dynamic API</em>. This requires more setup by the catalog publisher, including provisioning of an API server, but it enables more powerful catalog interactions such as dynamic search.</p>
+<p>Let’s take a quick peek at how we can use Python, including the <a href="https://github.com/stac-utils/pystac-client">pystac-client</a> library, to navigate a STAC catalog and ultimately retrieve some data, borrowing from <a href="https://www.geodose.com/2024/02/pystac-decoded-step-by-step-tutorial.html">this online tutorial</a>. We’ll use Earth Search by Element 84, a STAC catalog implemented as a dynamic API. Before we dive into the code, you may want to have a look at the <a href="https://stacindex.org/catalogs/earth-search#/">web-based catalog browser</a>, which can be useful for interactive exploration.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>In this book we’ve simply included static screenshots of the output, but in a Jupyter notebook or similar interactive environment, you would be able to expand various sections and drill into the hierarchical depths of the returned information.</p>
+</div>
+</div>
+</div>
+<p>First let’s connect to the top-level catalog.</p>
+<div id="b104998a" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pystac_client <span class="im">import</span> Client</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">'https://earth-search.aws.element84.com/v1'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>catalog <span class="op">=</span> Client.<span class="bu">open</span>(uri)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>catalog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="../images/stac-catalog.png" class="img-fluid" style="width:60.0%"></p>
+<p>Now we’ll see what collections are stored at the Catalog level.</p>
+<div id="9cce091f" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>collection_list <span class="op">=</span> <span class="bu">list</span>(catalog.get_collections())</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Catalog contains </span><span class="sc">{</span><span class="bu">len</span>(collection_list)<span class="sc">}</span><span class="ss"> collections"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> collection <span class="kw">in</span> collection_list:</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'- [</span><span class="sc">{</span>collection<span class="sc">.</span><span class="bu">id</span><span class="sc">}</span><span class="ss">] </span><span class="sc">{</span>collection<span class="sc">.</span>title<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>Catalog contains 9 collections
+- [sentinel-2-pre-c1-l2a] Sentinel-2 Pre-Collection 1 Level-2A
+- [cop-dem-glo-30] Copernicus DEM GLO-30
+- [naip] NAIP: National Agriculture Imagery Program
+- [cop-dem-glo-90] Copernicus DEM GLO-90
+- [landsat-c2-l2] Landsat Collection 2 Level-2
+- [sentinel-2-l2a] Sentinel-2 Level-2A
+- [sentinel-2-l1c] Sentinel-2 Level-1C
+- [sentinel-2-c1-l2a] Sentinel-2 Collection 1 Level-2A
+- [sentinel-1-grd] Sentinel-1 Level-1C Ground Range Detected (GRD)</code></pre>
+<p>Let’s dive into the <code>sentinel-2-l2a</code> collection.</p>
+<p>In the returned widget, look at some of the details. Especially take note of the <strong>extent</strong> field, which contains information about the <em>spatial</em> and <em>temporal</em> coverage of this collection. This is central to STAC! In this case, the collection has global bounds, with a time period beginning in June 2015 and continuing today.</p>
+<div id="b7f28cc6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sentinel_collection_id <span class="op">=</span> <span class="st">'sentinel-2-l2a'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>catalog.get_collection(sentinel_collection_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="../images/stac-collection.png" class="img-fluid" style="width:100.0%"></p>
+<p>What does this collection contain? For starters, how big is the collection, in terms of the number of items?</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Here’s a trick to get a total item count: We’ll do a search on the catalog, specifically referencing the collection of interest, but otherwise not providing any query constraints. Importantly, we’ll also tell this method not to return any items. Then we’ll invoke the returned object’s <code>matched()</code> method, helpfully reporting the total count of “matched” items – which in this case is the total count of items in the collection.</p>
+</div>
+</div>
+<div id="d45cd265" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> catalog.search(collections<span class="op">=</span>[sentinel_collection_id], max_items<span class="op">=</span><span class="dv">0</span>).matched()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Found </span><span class="sc">{</span>n<span class="sc">:,}</span><span class="ss"> items in the </span><span class="sc">{</span>sentinel_collection_id<span class="sc">}</span><span class="ss"> collection'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>Found 39,950,465 items in the sentinel-2-l2a collection</code></pre>
+<p>Wow, that’s a lot! We certainly don’t want to pull down metadata for all of these items. To retrieve only a subset of interest, we’ll go back to the <code>catalog.search()</code> method, but this time providing some significant restrictions on what we want. In particular, we’ll limit by <strong>temporal extent</strong> using a date range spanning a few months, and by <strong>geographic extent</strong> using a (manually created) bounding box corresponding to a small <a href="https://linestrings.com/bbox/#-156.8,71.25,-156.7,71.3">area near Utqiagvik</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/stac-utqiagvik-bbox.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div id="a7e653eb" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>east, west, north, south <span class="op">=</span> <span class="op">-</span><span class="fl">156.7</span>, <span class="op">-</span><span class="fl">156.8</span>, <span class="fl">71.3</span>, <span class="fl">71.25</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>bbox_utqiagvik <span class="op">=</span> [west, south, east, north]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>item_collection <span class="op">=</span> catalog.search(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    collections<span class="op">=</span>[sentinel_collection_id],</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    bbox<span class="op">=</span>bbox_utqiagvik,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    datetime<span class="op">=</span><span class="st">"2020-03-01/2020-06-01"</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>).item_collection()</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Returned </span><span class="sc">{</span><span class="bu">len</span>(item_collection)<span class="sc">}</span><span class="ss"> items'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>item_collection.items[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>Returned 148 items</code></pre>
+<p><img src="../images/stac-item.png" class="img-fluid" style="width:40.0%"></p>
+<p>The specific geographic extent of each associated item is recorded in the <strong>geometry</strong> and <strong>bbox</strong> fields, and the temporal information is stored in a <strong>datetime</strong> field under <strong>properties</strong> (not shown above).</p>
+<p>Remember, a STAC item is still just a <em>catalog entry</em>, not the underlying data or other artifact itself. STAC doesn’t actually store data, but like any useful catalog, it tells you where to find it. In STAC parlance, the “things” it refers to are called <strong>assets</strong>, which “belong” to an item. An item can refer to many assets. You can see them under the <strong>assets</strong> entry in the catalog visualizer above, or access them in a dictionary-like way using the <code>assets</code> accessor on the item.</p>
+<p>In this case, each item references multiple assets. Let’s look at one particular asset called <code>nir</code>, which contains the near infrared reflectance band associated with this Sentinel scene.</p>
+<div id="b46471c5" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>item_collection.items[<span class="dv">0</span>].assets[<span class="st">'nir'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="../images/stac-asset.png" class="img-fluid" style="width:80.0%"></p>
+<p>From the information above, we can see that the <em>nir</em> reflectance data artifact corresponding to this asset is stored as a cloud optimized GeoTIFF in AWS S3 storage. We can take the individual COG URL and throw it in <a href="https://cholmes.github.io/cog-map/#/url/https%3A%2F%2Fsentinel-cogs.s3.us-west-2.amazonaws.com%2Fsentinel-s2-l2a-cogs%2F4%2FW%2FEE%2F2020%2F6%2FS2B_4WEE_20200601_1_L2A%2FB08.tif/center/-155.658,70.152/zoom/6.2">this cool interactive COG web mapper site</a>, and of course we could load this data into Python as a distributed <code>dask</code> array using <code>rasterio</code> or <code>rioxarray</code>, depending on our preference.</p>
+<div id="1527200f" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use rioxarray, which implicitly uses rasterio + xarray</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rioxarray</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>href <span class="op">=</span> <span class="st">"https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/4/W/EE/2020/6/S2B_4WEE_20200601_1_L2A/B08.tif"</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>rx_nir <span class="op">=</span> rioxarray.open_rasterio(href, chunks<span class="op">=</span>{})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Lastly, what if we wanted to assemble a bunch of spatially aligned COGs for multiple different dates? We could do it manually by looping over all of the items … or we could save time and use <code>stackstac</code>! The <a href="https://github.com/gjoseph92/stackstac">stackstac</a> library provides a convenient way to wrangle a set of STAC items into a single <code>xarray</code> array, using lazy loading and <code>dask</code> under the hood. Here let’s just take the first 10 items by date, focus on the same <code>nir</code> asset as above, again provide the bounding box – which in this case will be used to subset (i.e., clip) the data rather than simply retrieving overlapping items, which is what our earlier STAC search did – and even transform the data on the fly to WGS84.</p>
+<div id="6c485609" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> stackstac</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>east, west, north, south <span class="op">=</span> <span class="op">-</span><span class="fl">156.7</span>, <span class="op">-</span><span class="fl">156.8</span>, <span class="fl">71.3</span>, <span class="fl">71.25</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>stack <span class="op">=</span> stackstac.stack(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    item_collection[:<span class="dv">10</span>],</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    assets<span class="op">=</span>[<span class="st">'nir'</span>],</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    bounds_latlon<span class="op">=</span>[west, south, east, north],</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    epsg<span class="op">=</span><span class="dv">4326</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>stack</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="../images/stac-stack-array.png" class="img-fluid" style="width:100.0%"></p>
+<p>Finally, let’s do a quick plot faceted by time, showing the 6 clipped rasters with data from among the set of items we pulled.</p>
+<div id="a79aa81d" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>stack <span class="op">\</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    .isel(time<span class="op">=</span><span class="bu">slice</span>(<span class="dv">0</span>, <span class="dv">6</span>)) <span class="op">\</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    .squeeze() <span class="op">\</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    .plot.imshow(col<span class="op">=</span><span class="st">"time"</span>, col_wrap<span class="op">=</span><span class="dv">3</span>, robust<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="../images/stac-stack-plot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../images/stac-stack-plot.png" class="img-fluid" style="width:100.0%"></a></p>
+<p>There we have it! With the help of the STAC specification and associated libraries for enabling us to seamlessly assemble a local dataset from <em>across</em> many files, and the COG specification and associated libraries for enabling us to seamlessly pull out small portions of the data from <em>within</em> each file, we can very rapidly and efficiently piece together our own custom multidimensional data array from a large collection of data resources that themselves be arbitrarily organized with respect to our specific use case.</p>
+<p>Interested in learning more about STAC? If so, head over the <a href="https://stacindex.org/">STAC Index</a>, and online resource listing many published STAC catalogs, along with various related software and tooling.</p>
+</section>
+<section id="making-sense-of-the-menagerie" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="making-sense-of-the-menagerie"><span class="header-section-number">17.5</span> Making sense of the menagerie</h2>
+<p>Consider this diagram showing data laid out in various ways, all available for you to find, access, retrieve, and ultimately manipulate from your chosen compute platform, whether it’s a single (physical or virtual) machine running some number of CPUs each with some number of cores, or a distributed cluster of many such machines.</p>
+<p><a href="../images/data-organizational-patterns.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="../images/data-organizational-patterns.png" class="img-fluid" style="width:100.0%"></a></p>
+<p>Moving left to right across the five generalized data architectures depicted above, the first reflects our legacy world of irregularly structured netCDF and GeoTIFF files – historically successful and efficiently used in local storage, but often suboptimal at cloud scale. The second represents simple, ad hoc approaches to splitting larger data into smaller files, thrown somewhere on a network-accessible server, but without efficiently readable overaching metadata and without any optimal structure. The next two represent cloud optimized approaches, with data split into addressable units described by up-front metadata that clients can use to efficiently access the data. The first of these resembles a COG (one file containing many addressable pieces), while the second resembles a traditional Zarr store (many addressable pieces as separate files). This highlights two different approaches that you’ve encountered in this courses:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A["Keep data in one file, but make
+       it so that clients can efficiently
+       extract subsets of interest"]
+    &lt;--&gt;
+    B["Separate data into many
+       independent files, with metadata
+       binding them together"];
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Which is better? The likely answer is … both! Indeed, the community seems to be converging on a hybrid model whereby we use a combination of chunking (splitting the data into sections) and sharding (storing multiple chunks together) to achieve the right balance between not having too many individual files/objects (which would be the case if we chunked without sharding), and not having individual files/objects that are too big (which would be the case if we put all chunks into one shard). This decision can be made separately for any given data collection, and its complexity can be shielded from users through the use of external metadata – whether as Zarr metadata or STAC catalogs – that allows clients to issue data requests that “just work” regardless of the underlying implementation details.</p>
+<p>As a final takeway, insofar as there’s a community consensus around the best approaches for managing data today, it probably looks something like this:</p>
+<ul>
+<li><strong>COG</strong> and <strong>STAC</strong>, working together, as the go-to approach for storing and provisioning related geospatial raster datasets in the cloud</li>
+<li><strong>Zarr stores</strong> (with intelligent chunking and sharding), potentially referenced by STAC catalogs, as the go-to approach for storing and provisioing multidimensional Earth array data in the cloud</li>
+<li><strong>Virtual Zarr stores</strong>, again potentially in conjunction with STAC catalogs, as a cost-effective approach for cloud-enabling many legacy data holdings in netCDF format</li>
+</ul>
+<p>If you’re making large scale data available yourself, this is probably the way to go. If you’re purely a data consumer, you’re not likely to have much influence over how the data you need is organized and provisioned, but being comfortable with the above technologies will likely set you up well for the future.</p>
+</section>
+<section id="summary" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="summary"><span class="header-section-number">17.6</span> Summary</h2>
+<p>We’ve covered a diverse set of topics in this chapter and in this course. The goal was not to impart deep expertise in any one area, but rather to survey a handful of useful tools and illustrate some general principles that will ease your adoption of cloud-scale compute and data analysis technologies – especially as a consumer, and maybe even occasional provider, of large, multidimensional environmental datasets.</p>
+<p>You should now have a better appreciation for the following questions, why they are important to ask, and how you might go about answering them:</p>
+<ul>
+<li>What kind of data do I have? If array data, am I dealing with geospatial rasters or generalized n-dimensional arrays?</li>
+<li>What is the (existing) file format, and what tradeoffs does that create for me when working with the data? Could I benefit from converting to a different format, if feasible?</li>
+<li>Is the data local or remote? If remote, where exactly is it located? Can I practically retrieve and store it locally?</li>
+<li>In either case, can I fit the data in memory when working with it?</li>
+<li>If not, is the data set up to allow efficient access to (or splitting into) individual subsets?</li>
+<li>If so, is the subsetting scheme well-suited to my expected access patterns?</li>
+<li>Assuming I can get (subsets of) the data, can I process separate pieces in parallel?</li>
+<li>If so, what are my options for distributing the processing of these subsets across workers, and how can I determine whether it’s helping me get work done faster?</li>
+</ul>
+<p>If you want to check your understanding further and get inspired to think more about the challenges of and solutions to cloud-scale processing and analysis, have a look at this list of <a href="https://esipfed.github.io/cloud-computing-cluster/antipatterns.html">cloud-data antipatterns</a> published by the <a href="Earth Science Information Partners">Earth Science Information Partners</a> (ESIP) Cloud Computing Cluster (CCC). Armed with the information presented in this chapter and in earlier parts of this course, most of the items on this list should make sense to you now, at least at a high level: why these are considered antipatterns (i.e., suboptimal approaches), and how the various tools, technologies, and approaches we’ve covered seek to avoid this problems.</p>
+</section>
+<section id="further-reading" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">17.7</span> Further Reading</h2>
+<ul>
+<li><a href="https://guide.cloudnativegeo.org/">Cloud-Optimized Geospatial Formats Guide</a></li>
+<li><a href="https://cloudnativegeo.org/about/">Cloud-Native Geospatial Forum (CNG)</a></li>
+</ul>
 
 
 </section>
@@ -712,6 +1162,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
