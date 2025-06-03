@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.43">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -21,8 +21,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -66,15 +67,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <link href="../sections/reproducibility-containers.html" rel="next">
 <link href="../sections/software-design-2.html" rel="prev">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-292c0866b2e53f8190c286d1fd533ef9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-f8cb7fe94b71c4ea6759b609738bfe9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -113,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -324,9 +326,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2" data-number="17.2">
 <h2 data-number="17.2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">17.2</span> Introduction</h2>
 <p>This course has focused on <strong>scalable computing</strong> in the Arctic domain. In a nutshell, that means <em>going big</em> with our computing and data processing, and being equipped to deal with the challenges that arise when scaling up. But what exactly is it that can <em>be</em> big, what problems arise as a consequence, and what are the corresponding solutions? We’ve talked about how we can run into bottlenecks in CPU, memory, I/O, and network, but let’s step back and consider two major and distinct types of scaling challenges:</p>
-<div>
-
-</div>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -387,11 +386,11 @@ Data Volume Challenges
 </div>
 <p>If your fundamental challenge is task volume, then aside from speeding up computation by using faster processors and/or faster algorithms, the natural solution (when permitted by the structure of the problem) is to transition to parallel processing, spreading tasks out across multiple cores, processors, and/or nodes. We’ve covered approaches to this using Python’s multithreading and multiprocessing capabilities, along with Parsl as a full-fledged parallel programming library.</p>
 <p>If your fundamental challenge is data volume, then barring budget and means to sufficiently scale up your memory and storage capacity, the solution in one form or another is to split the data into pieces, working with each piece in turn. Interestingly, by decomposing a dataset into many small parts to act on independently, we often end up with a task architecture amenable to parallelization, allowing us to not only overcome the data volume problem but also reduce our task duration! This is one of the benefits we get from working with data-centric parallelization frameworks like Dask, with its distributed dataframes and arrays.</p>
-<p>In the remainder of this chapter, we will primarily focus on the data volume challenge, in particular exploring how different decisions about data storage formats and layouts enable (or constrain) us as we attempt to work with data at large scale. We’ll formalize a couple of concepts we’ve alluded at throughout the course, introduce a few new technologies, and characterize the current state of best practice – with caveat that this is an evolving area!</p>
+<p>In the remainder of this chapter, we will primarily focus on the data volume challenge, in particular exploring how different decisions about data storage formats and layouts enable (or constrain) us as we attempt to work with data at large scale. We’ll formalize a couple of concepts we’ve alluded to throughout the course, introduce a few new technologies, and characterize the current state of best practice – with caveat that this is an evolving area!</p>
 </section>
 <section id="cloud-optimized-data" class="level2" data-number="17.3">
 <h2 data-number="17.3" class="anchored" data-anchor-id="cloud-optimized-data"><span class="header-section-number">17.3</span> Cloud optimized data</h2>
-<p>As we’ve seen, when it comes global and even regional environmental phenomena observed using some form of remote-sensing technology, much of our data is now <em>cloud-scale</em>. In the most basic sense, this means many datasets – and certainly relevant collections of datasets that you might want to analyze together – no longer fit in local storage. So instead we put it in the massive, “infinitely” scalable cloud, where it is distributed across potentially many networked storage backends.</p>
+<p>As we’ve seen, when it comes to global and even regional environmental phenomena observed using some form of remote-sensing technology, much of our data is now <em>cloud-scale</em>. In the most basic sense, this means many datasets – and certainly relevant collections of datasets that you might want to analyze together – no longer fit in local storage. So instead we put it in the massive, “infinitely” scalable cloud, where it is distributed across potentially many networked storage backends.</p>
 <div class="callout callout-style-default callout-caution no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -402,7 +401,7 @@ Moving to the cloud
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The migration of data into the cloud also frees us up (and may compel us, for better or worse) to move our compute to the cloud as well, for example by running our data analysis on cloud-hosted virtual machines. It frees us up in the sense that because the data is no longer local, and we need to learn tools and techniques for efficiently accessing remote data from arbitrary locations over the network, it becomes less of a lift for us to transition to remote computing as well. And this can be beneficial when the compute platform is “near” the data, reducing network and perhaps even I/O latency. However, to the extent that realizing these benefits may require committing to some particular commercial cloud provider (with its associated cost structure), this may or may not be desirable change.</p>
+<p>The migration of data into the cloud also frees us up (and may compel us, for better or worse) to move our compute to the cloud as well, for example by running our data analysis on cloud-hosted virtual machines. It frees us up in the sense that because the data is no longer local, and we need to learn tools and techniques for efficiently accessing remote data from arbitrary locations over the network, it becomes less of a lift for us to transition to remote computing as well. And this can be beneficial when the compute platform is “near” the data, reducing network and perhaps even I/O latency. However, to the extent that realizing these benefits may require committing to some particular commercial cloud provider (with its associated cost structure), this may or may not be a desirable change.</p>
 </div>
 </div>
 <p>Practically speaking, accessing data in the cloud means using HTTP to request and receive data. Compared with traditional local storage, each read operation is much, much slower using HTTP over the internet than when reading a file on a local storage device, and the throughput (i.e., the number of bytes you can move per second) is much lower. Although we can’t change these basic differences, we can <em>optimize</em> our data to reduce their impact. We’ll talk about <em>how</em> in a moment. But first consider two other cloud-centric developments over the past handful of years:</p>
@@ -414,13 +413,10 @@ Moving to the cloud
 <section id="cloud-optimized-geotiffs-cogs" class="level3" data-number="17.3.1">
 <h3 data-number="17.3.1" class="anchored" data-anchor-id="cloud-optimized-geotiffs-cogs"><span class="header-section-number">17.3.1</span> Cloud Optimized GeoTIFFs (COGs)</h3>
 <p>As we’ve discussed elsewhere in this course, geospatial rasters are a specialization of multi-dimensional arrays. First of all, they are inherently 2-dimensional, with dimensions corresponding to a geospatial coordinate system. Conceptually, we may have additional dimensions insofar as a “complete” raster data set may involve a set of rasters at different dates and times (temporal dimension), or corresponding to different spectral bands. Nevertheless, the standard paradigm is to treat these as a collection of 2D arrays (potentially stored within a single file), and leave it up to users to combine them as needed.</p>
-<p>Today, best practice is to store geospatial rasters as <a href="https://cogeo.org/">Cloud Optimized GeoTIFFs</a>, known as COGs. COGs are a relative newcomer among raster file formats. They first emerged in the mid-2010s, and were approved as an <a href="https://www.ogc.org/announcement/cloud-optimized-geotiff-cog-published-as-official-ogc-standard/">official standard of the Open Geospatial Consortium (OGC)</a> in 2023. However, COGs <em>are</em> GeoTIFFs, which have been around since the 1990s, and GeoTIFFs are TIFFs, which date back to the 1980s. Let’s work our way through this linage.</p>
+<p>Today, best practice is to store geospatial rasters as <a href="https://cogeo.org/">Cloud Optimized GeoTIFFs</a>, known as COGs. COGs are a relative newcomer among raster file formats. They first emerged in the mid-2010s, and were approved as an <a href="https://www.ogc.org/announcement/cloud-optimized-geotiff-cog-published-as-official-ogc-standard/">official standard of the Open Geospatial Consortium (OGC)</a> in 2023. However, COGs <em>are</em> GeoTIFFs, which have been around since the 1990s, and GeoTIFFs are TIFFs, which date back to the 1980s. Let’s work our way through this lineage.</p>
 <p>First we have the original <strong>TIFF</strong> format, which stands for Tagged Image File Format. Although we often think of TIFFs as image files, they’re actually <em>file containers</em> for images, insofar as a single TIFF file can store multiple raster images. In brief, TIFF have a file header - i.e., metadata - encoded in the bytes at the beginning of the file. Among other things, this header points to another batch of metadata (called an <em>image file directory</em>, or IFD) for a first image. This IFD contains information about where the image bytes themselves are located in the file, and also points to the IFD of a second image (if there is one), and so on. True to its name, TIFFs internally rely on so-called <em>tags</em> - simple data structures that store various attributes and properties - to capture information clients need to properly interpret and render the contained images. TIFFs also rely heavily on internal compression of the image data, using one of a few well-known lossless compression algorithms.</p>
 <p>Next we have <strong>GeoTIFFs</strong>. GeoTIFFs are simply TIFFs with special tags that store geospatial information: how the image bounds relate to locations on the earth, coordinate reference system, datum, ellipsoid, projection. That’s about all there is to it.</p>
 <p>Finally we have <strong>COGs</strong>. COGs are GeoTIFFs that following some specific conventions, none of which are required by the GeoTIFF standard itself, but all of which are compliant with it:</p>
-<div>
-
-</div>
 <div class="quarto-layout-panel" data-layout="[1,1,1]">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
@@ -464,20 +460,20 @@ Overviews
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A set of overviews (lower resolution tile pyramids) are computed from the main full resolution data and stored in the file, again following a tiling scheme and and arranged in order. This allows clients to load a lower resolution version of the data when appropriate, without needing to read the full resolution data itself.</p>
+<p>A set of overviews (lower resolution tile pyramids) are computed from the main full resolution data and stored in the file, again following a tiling scheme and arranged in order. This allows clients to load a lower resolution version of the data when appropriate, without needing to read the full resolution data itself.</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 <p>To reiterate, all of these are just restrictions on the GeoTIFF format, so a COG <em>is</em> a GeoTIFF. However, because of its deliberate design, clients can access relevant spatial subsets of a (potentially very large) raster by making just a few reads of discrete portions of the file. This is hugely important when accessing the data over HTTP – hence the “cloud optimized” moniker - because each HTTP read operation is far more time-consuming than the same corresponding read would be for a local disk read. Provided the data is hosted on a web server that accepts <a href="https://en.wikipedia.org/wiki/Byte_serving">range requests</a> for specific sections of a file rather than returning the entire file, we can access relevant chunks of data in a targeted and efficient manner.</p>
-<p>Here is a rough sketch of what happens when a user wants data from a COG for some specific geographic area at 100m resolution, which we’ll assume is coarser than the full resolution in a COG. First the client makes an initial HTTP range request large enough to capture all metadata in most cases, e.g.&nbsp;the first 16 kilobytes of the file. This provides enough information to understand the file structure, georeferencing information, internal tile structure including overviews, and byte offsets to all overview and tile indexes. The client is then able to make precise HTTP range requests for the specific bytes needed for any particular desired subset of the image at a particular resolution (either full or reduced), by converting the geographic coordinates of the desired bounding box into pixel coordinates, then identifying which tile(s) in the COG intersect with the area of interest, then determining the associated byte ranges of the tile(s) based on the metadata read in teh first step. And the best part is that “client” here refers to the underlying software, which takes care of all of the details. As a user, typically all you need to do is specify the file location, area of interest, and desired overview level (if relevant)!</p>
+<p>Here is a rough sketch of what happens when a user wants data from a COG for some specific geographic area at 100m resolution, which we’ll assume is coarser than the full resolution in a COG. First the client makes an initial HTTP range request large enough to capture all metadata in most cases, e.g.&nbsp;the first 16 kilobytes of the file. This provides enough information to understand the file structure, georeferencing information, internal tile structure including overviews, and byte offsets to all overview and tile indexes. The client is then able to make precise HTTP range requests for the specific bytes needed for any particular desired subset of the image at a particular resolution (either full or reduced), by converting the geographic coordinates of the desired bounding box into pixel coordinates, then identifying which tile(s) in the COG intersect with the area of interest, then determining the associated byte ranges of the tile(s) based on the metadata read in the first step. And the best part is that “client” here refers to the underlying software, which takes care of all of the details. As a user, typically all you need to do is specify the file location, area of interest, and desired overview level (if relevant)!</p>
 </section>
 <section id="cloud-optimized-data-principles" class="level3" data-number="17.3.2">
 <h3 data-number="17.3.2" class="anchored" data-anchor-id="cloud-optimized-data-principles"><span class="header-section-number">17.3.2</span> Cloud-optimized data principles</h3>
 <p>How do we generalize the cloud-friendly features of COGs? It really comes down to two things:</p>
 <p>The first is <strong><em>consolidating metadata and making it available “up front”</em></strong>. A consumer should be able to start by reading metadata only, ideally getting all of the essential metadata in one single read operation, without knowing anything else. This metadata should be sufficient for the client to determine not only what the dataset contains, but also exactly where to go to get any specific subset(s) of the overall available data.</p>
-<p>The second is <strong><em>storing data in chunks, each of which can be accessed independently</em></strong>. Equal parts art and science, chunks should be reasonably sized – not too big, not too small – with chunk configuration (shape) optimized for expected usage patterns. This enables a client interested in a subset of data to retrieve the relevant data without receiving too much additional unwanted data. In addition, chunk layout should be such that, under expected common usage patterns, proximal chunks are morely likely to be requested together. On average, this will reduce the number of separate read requests a client must issue to retrieve and piece together any particular desired data subset. In addition, chunks should almost certainly be compressed with a suitable compression algorithm. Compression incurs some additional compute time for decompression, but with a net benefit because it reduces the total number of bytes transferred over the relatively slow network connections we experience in the cloud setting.</p>
+<p>The second is <strong><em>storing data in chunks, each of which can be accessed independently</em></strong>. Equal parts art and science, chunks should be reasonably sized – not too big, not too small – with chunk configuration (shape) optimized for expected usage patterns. This enables a client interested in a subset of data to retrieve the relevant data without receiving too much additional unwanted data. In addition, chunk layout should be such that, under expected common usage patterns, proximal chunks are more likely to be requested together. On average, this will reduce the number of separate read requests a client must issue to retrieve and piece together any particular desired data subset. In addition, chunks should almost certainly be compressed with a suitable compression algorithm. Compression incurs some additional compute time for decompression, but with a net benefit because it reduces the total number of bytes transferred over the relatively slow network connections we experience in the cloud setting.</p>
 <p>Together, these characteristics enable clients to efficiently (i.e., with a small number of read operations transferring minimal unwanted data) execute <em>partial reads</em> of data, and furthermore to speed things up by doing <em>parallel reads</em> of distinct sections of data.</p>
 <p>To reiterate what we discussed in the COGs section, this is all deliberately designed to work well with HTTP range requests, a mechanism whereby clients can request specific byte ranges of a web-accessible resource. Through the combination of a smart chunk layout on one hand, with metadata up front on other hand, clients can quickly determine where to get data of interest, and then retrieve efficiently via HTTP range requests.</p>
 </section>
@@ -489,7 +485,7 @@ Overviews
 <li><strong><em>Chunked data</em></strong>. Indeed, this is foundational to Zarr. Recall that Zarr is a storage specification for chunked, compressed N-dimensional arrays. Moreover, these chunks can be store in various ways – not only in memory and in conventional disk-based file systems, but also in cloud-based object storage such as Google Cloud Storage, Amazon S3, and Azure Blob Storage.</li>
 </ul>
 <p>So by these criteria, yes, Zarr is certainly a cloud-friendly format!</p>
-<p>But wait, there’s more! As of early 2025 with its V3 release, Zarr has introduced an important new cabilility around <em>sharding</em>, which controls how chunks are allocated to files. Previously, each chunk was compressed and stored as a separate file, but now multiple compressed chunks can be stored in the same file (referred to as a “shard”). In other words, the choice of how to break the data into separately compressed and addressable subsets is now decoupled from the choice of how to break the data into separate files; a massive dataset can be segmented into a very large number of small chunks without necessarily creating a correspondingingly large number of small individual files, which can cause problems in certain contexts. In some sense, this allows a Zarr store to behave a little more like a COG, with its many small, addressable tiles contained in a single file.</p>
+<p>But wait, there’s more! As of early 2025 with its V3 release, Zarr has introduced an important new cabilility around <em>sharding</em>, which controls how chunks are allocated to files. Previously, each chunk was compressed and stored as a separate file, but now multiple compressed chunks can be stored in the same file (referred to as a “shard”). In other words, the choice of how to break the data into separately compressed and addressable subsets is now decoupled from the choice of how to break the data into separate files; a massive dataset can be segmented into a very large number of small chunks without necessarily creating a correspondingly large number of small individual files, which can cause problems in certain contexts. In some sense, this allows a Zarr store to behave a little more like a COG, with its many small, addressable tiles contained in a single file.</p>
 </section>
 <section id="cloud-optimized-netcdf-files" class="level3" data-number="17.3.4">
 <h3 data-number="17.3.4" class="anchored" data-anchor-id="cloud-optimized-netcdf-files"><span class="header-section-number">17.3.4</span> Cloud-optimized netCDF files?</h3>
@@ -500,9 +496,6 @@ Overviews
 <section id="spatiotemporal-asset-catalogs-stac" class="level2" data-number="17.4">
 <h2 data-number="17.4" class="anchored" data-anchor-id="spatiotemporal-asset-catalogs-stac"><span class="header-section-number">17.4</span> SpatioTemporal Asset Catalogs (STAC)</h2>
 <p>Today we have data, data, everywhere, made available by many providers in multiple formats. Across this landscape, how can we effectively find data of interest for a particular place and time, and quickly understand how to access, ingest, and use each individual data resource? Historically, organizations publishing data over the web have each used their own ad hoc methods for documenting and cataloging available files. For example, recall in the Zarr chapter when we downloaded and searched through a large CSV file to find paths to relevant CMIP6 datasets. Wouldn’t it be nice if all providers agreed to a common cataloging approach, so we didn’t have to figure out the idiosyncrasies of each scheme? This is exactly the problem that <a href="https://stacspec.org/en">STAC</a> is designed to solve.</p>
-<div>
-
-</div>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -562,7 +555,7 @@ Overviews
 </div>
 </div>
 <p>First let’s connect to the top-level catalog.</p>
-<div id="43592bc1" class="cell" data-execution_count="1">
+<div id="bf407df5" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pystac_client <span class="im">import</span> Client</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">'https://earth-search.aws.element84.com/v1'</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>catalog <span class="op">=</span> Client.<span class="bu">open</span>(uri)</span>
@@ -570,7 +563,7 @@ Overviews
 </div>
 <p><img src="../images/stac-catalog.png" class="img-fluid" style="width:60.0%"></p>
 <p>Now we’ll see what collections are stored at the Catalog level.</p>
-<div id="ec84d18a" class="cell" data-execution_count="2">
+<div id="7138305c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>collection_list <span class="op">=</span> <span class="bu">list</span>(catalog.get_collections())</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Catalog contains </span><span class="sc">{</span><span class="bu">len</span>(collection_list)<span class="sc">}</span><span class="ss"> collections"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> collection <span class="kw">in</span> collection_list:</span>
@@ -588,7 +581,7 @@ Overviews
 - [sentinel-1-grd] Sentinel-1 Level-1C Ground Range Detected (GRD)</code></pre>
 <p>Let’s dive into the <code>sentinel-2-l2a</code> collection.</p>
 <p>In the returned widget, look at some of the details. Especially take note of the <strong>extent</strong> field, which contains information about the <em>spatial</em> and <em>temporal</em> coverage of this collection. This is central to STAC! In this case, the collection has global bounds, with a time period beginning in June 2015 and continuing today.</p>
-<div id="dc0daef0" class="cell" data-execution_count="3">
+<div id="d697a931" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sentinel_collection_id <span class="op">=</span> <span class="st">'sentinel-2-l2a'</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>catalog.get_collection(sentinel_collection_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -607,7 +600,7 @@ Tip
 <p>Here’s a trick to get a total item count: We’ll do a search on the catalog, specifically referencing the collection of interest, but otherwise not providing any query constraints. Importantly, we’ll also tell this method not to return any items. Then we’ll invoke the returned object’s <code>matched()</code> method, helpfully reporting the total count of “matched” items – which in this case is the total count of items in the collection.</p>
 </div>
 </div>
-<div id="46759582" class="cell" data-execution_count="4">
+<div id="b2d9da74" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> catalog.search(collections<span class="op">=</span>[sentinel_collection_id], max_items<span class="op">=</span><span class="dv">0</span>).matched()</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Found </span><span class="sc">{</span>n<span class="sc">:,}</span><span class="ss"> items in the </span><span class="sc">{</span>sentinel_collection_id<span class="sc">}</span><span class="ss"> collection'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -618,7 +611,7 @@ Tip
 <p><img src="../images/stac-utqiagvik-bbox.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
-<div id="8ec04a39" class="cell" data-execution_count="5">
+<div id="a797cab9" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>east, west, north, south <span class="op">=</span> <span class="op">-</span><span class="fl">156.7</span>, <span class="op">-</span><span class="fl">156.8</span>, <span class="fl">71.3</span>, <span class="fl">71.25</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>bbox_utqiagvik <span class="op">=</span> [west, south, east, north]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -636,19 +629,19 @@ Tip
 <p>The specific geographic extent of each associated item is recorded in the <strong>geometry</strong> and <strong>bbox</strong> fields, and the temporal information is stored in a <strong>datetime</strong> field under <strong>properties</strong> (not shown above).</p>
 <p>Remember, a STAC item is still just a <em>catalog entry</em>, not the underlying data or other artifact itself. STAC doesn’t actually store data, but like any useful catalog, it tells you where to find it. In STAC parlance, the “things” it refers to are called <strong>assets</strong>, which “belong” to an item. An item can refer to many assets. You can see them under the <strong>assets</strong> entry in the catalog visualizer above, or access them in a dictionary-like way using the <code>assets</code> accessor on the item.</p>
 <p>In this case, each item references multiple assets. Let’s look at one particular asset called <code>nir</code>, which contains the near infrared reflectance band associated with this Sentinel scene.</p>
-<div id="9b67af64" class="cell" data-execution_count="6">
+<div id="251c9bed" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>item_collection.items[<span class="dv">0</span>].assets[<span class="st">'nir'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="../images/stac-asset.png" class="img-fluid" style="width:80.0%"></p>
 <p>From the information above, we can see that the <em>nir</em> reflectance data artifact corresponding to this asset is stored as a cloud optimized GeoTIFF in AWS S3 storage. We can take the individual COG URL and throw it in <a href="https://cholmes.github.io/cog-map/#/url/https%3A%2F%2Fsentinel-cogs.s3.us-west-2.amazonaws.com%2Fsentinel-s2-l2a-cogs%2F4%2FW%2FEE%2F2020%2F6%2FS2B_4WEE_20200601_1_L2A%2FB08.tif/center/-155.658,70.152/zoom/6.2">this cool interactive COG web mapper site</a>, and of course we could load this data into Python as a distributed <code>dask</code> array using <code>rasterio</code> or <code>rioxarray</code>, depending on our preference.</p>
-<div id="239656b0" class="cell" data-execution_count="7">
+<div id="df9c8f39" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use rioxarray, which implicitly uses rasterio + xarray</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rioxarray</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>href <span class="op">=</span> <span class="st">"https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/4/W/EE/2020/6/S2B_4WEE_20200601_1_L2A/B08.tif"</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>rx_nir <span class="op">=</span> rioxarray.open_rasterio(href, chunks<span class="op">=</span>{})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lastly, what if we wanted to assemble a bunch of spatially aligned COGs for multiple different dates? We could do it manually by looping over all of the items … or we could save time and use <code>stackstac</code>! The <a href="https://github.com/gjoseph92/stackstac">stackstac</a> library provides a convenient way to wrangle a set of STAC items into a single <code>xarray</code> array, using lazy loading and <code>dask</code> under the hood. Here let’s just take the first 10 items by date, focus on the same <code>nir</code> asset as above, again provide the bounding box – which in this case will be used to subset (i.e., clip) the data rather than simply retrieving overlapping items, which is what our earlier STAC search did – and even transform the data on the fly to WGS84.</p>
-<div id="3cb3c1d2" class="cell" data-execution_count="8">
+<div id="f34e88e4" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> stackstac</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>east, west, north, south <span class="op">=</span> <span class="op">-</span><span class="fl">156.7</span>, <span class="op">-</span><span class="fl">156.8</span>, <span class="fl">71.3</span>, <span class="fl">71.25</span></span>
@@ -662,7 +655,7 @@ Tip
 </div>
 <p><img src="../images/stac-stack-array.png" class="img-fluid" style="width:100.0%"></p>
 <p>Finally, let’s do a quick plot faceted by time, showing the 6 clipped rasters with data from among the set of items we pulled.</p>
-<div id="b2d92417" class="cell" data-execution_count="9">
+<div id="f78e240e" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>stack <span class="op">\</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    .isel(time<span class="op">=</span><span class="bu">slice</span>(<span class="dv">0</span>, <span class="dv">6</span>)) <span class="op">\</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    .squeeze() <span class="op">\</span></span>
@@ -670,13 +663,13 @@ Tip
 </div>
 <p><a href="../images/stac-stack-plot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../images/stac-stack-plot.png" class="img-fluid" style="width:100.0%"></a></p>
 <p>There we have it! With the help of the STAC specification and associated libraries for enabling us to seamlessly assemble a local dataset from <em>across</em> many files, and the COG specification and associated libraries for enabling us to seamlessly pull out small portions of the data from <em>within</em> each file, we can very rapidly and efficiently piece together our own custom multidimensional data array from a large collection of data resources that themselves be arbitrarily organized with respect to our specific use case.</p>
-<p>Interested in learning more about STAC? If so, head over the <a href="https://stacindex.org/">STAC Index</a>, and online resource listing many published STAC catalogs, along with various related software and tooling.</p>
+<p>Interested in learning more about STAC? If so, head over to the <a href="https://stacindex.org/">STAC Index</a>, an online resource listing many published STAC catalogs, along with various related software and tooling.</p>
 </section>
 <section id="making-sense-of-the-menagerie" class="level2" data-number="17.5">
 <h2 data-number="17.5" class="anchored" data-anchor-id="making-sense-of-the-menagerie"><span class="header-section-number">17.5</span> Making sense of the menagerie</h2>
 <p>Consider this diagram showing data laid out in various ways, all available for you to find, access, retrieve, and ultimately manipulate from your chosen compute platform, whether it’s a single (physical or virtual) machine running some number of CPUs each with some number of cores, or a distributed cluster of many such machines.</p>
 <p><a href="../images/data-organizational-patterns.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="../images/data-organizational-patterns.png" class="img-fluid" style="width:100.0%"></a></p>
-<p>Moving left to right across the five generalized data architectures depicted above, the first reflects our legacy world of irregularly structured netCDF and GeoTIFF files – historically successful and efficiently used in local storage, but often suboptimal at cloud scale. The second represents simple, ad hoc approaches to splitting larger data into smaller files, thrown somewhere on a network-accessible server, but without efficiently readable overaching metadata and without any optimal structure. The next two represent cloud optimized approaches, with data split into addressable units described by up-front metadata that clients can use to efficiently access the data. The first of these resembles a COG (one file containing many addressable pieces), while the second resembles a traditional Zarr store (many addressable pieces as separate files). This highlights two different approaches that you’ve encountered in this courses:</p>
+<p>Moving left to right across the five generalized data architectures depicted above, the first reflects our legacy world of irregularly structured netCDF and GeoTIFF files – historically successful and efficiently used in local storage, but often suboptimal at cloud scale. The second represents simple, ad hoc approaches to splitting larger data into smaller files, thrown somewhere on a network-accessible server, but without efficiently readable overarching metadata and without any optimal structure. The next two represent cloud optimized approaches, with data split into addressable units described by up-front metadata that clients can use to efficiently access the data. The first of these resembles a COG (one file containing many addressable pieces), while the second resembles a traditional Zarr store (many addressable pieces as separate files). This highlights two different approaches that you’ve encountered in this courses:</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -697,10 +690,10 @@ Tip
 </div>
 </div>
 <p>Which is better? The likely answer is … both! Indeed, the community seems to be converging on a hybrid model whereby we use a combination of chunking (splitting the data into sections) and sharding (storing multiple chunks together) to achieve the right balance between not having too many individual files/objects (which would be the case if we chunked without sharding), and not having individual files/objects that are too big (which would be the case if we put all chunks into one shard). This decision can be made separately for any given data collection, and its complexity can be shielded from users through the use of external metadata – whether as Zarr metadata or STAC catalogs – that allows clients to issue data requests that “just work” regardless of the underlying implementation details.</p>
-<p>As a final takeway, insofar as there’s a community consensus around the best approaches for managing data today, it probably looks something like this:</p>
+<p>As a final takeaway, insofar as there’s a community consensus around the best approaches for managing data today, it probably looks something like this:</p>
 <ul>
 <li><strong>COG</strong> and <strong>STAC</strong>, working together, as the go-to approach for storing and provisioning related geospatial raster datasets in the cloud</li>
-<li><strong>Zarr stores</strong> (with intelligent chunking and sharding), potentially referenced by STAC catalogs, as the go-to approach for storing and provisioing multidimensional Earth array data in the cloud</li>
+<li><strong>Zarr stores</strong> (with intelligent chunking and sharding), potentially referenced by STAC catalogs, as the go-to approach for storing and provisioning multidimensional Earth array data in the cloud</li>
 <li><strong>Virtual Zarr stores</strong>, again potentially in conjunction with STAC catalogs, as a cost-effective approach for cloud-enabling many legacy data holdings in netCDF format</li>
 </ul>
 <p>If you’re making large scale data available yourself, this is probably the way to go. If you’re purely a data consumer, you’re not likely to have much influence over how the data you need is organized and provisioned, but being comfortable with the above technologies will likely set you up well for the future.</p>
@@ -733,236 +726,242 @@ Tip
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
       }
+      return false;
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
         }
-        return container.innerHTML
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -970,185 +969,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../sections/software-design-2.html" class="pagination-link" aria-label="Software Design II: Modules, Packages, and Testing">
