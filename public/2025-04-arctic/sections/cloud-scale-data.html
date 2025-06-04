@@ -107,9 +107,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -555,7 +552,7 @@ Overviews
 </div>
 </div>
 <p>First let’s connect to the top-level catalog.</p>
-<div id="bf407df5" class="cell" data-execution_count="1">
+<div id="a97737b9" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pystac_client <span class="im">import</span> Client</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">'https://earth-search.aws.element84.com/v1'</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>catalog <span class="op">=</span> Client.<span class="bu">open</span>(uri)</span>
@@ -563,7 +560,7 @@ Overviews
 </div>
 <p><img src="../images/stac-catalog.png" class="img-fluid" style="width:60.0%"></p>
 <p>Now we’ll see what collections are stored at the Catalog level.</p>
-<div id="7138305c" class="cell" data-execution_count="2">
+<div id="5c22262e" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>collection_list <span class="op">=</span> <span class="bu">list</span>(catalog.get_collections())</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Catalog contains </span><span class="sc">{</span><span class="bu">len</span>(collection_list)<span class="sc">}</span><span class="ss"> collections"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> collection <span class="kw">in</span> collection_list:</span>
@@ -581,7 +578,7 @@ Overviews
 - [sentinel-1-grd] Sentinel-1 Level-1C Ground Range Detected (GRD)</code></pre>
 <p>Let’s dive into the <code>sentinel-2-l2a</code> collection.</p>
 <p>In the returned widget, look at some of the details. Especially take note of the <strong>extent</strong> field, which contains information about the <em>spatial</em> and <em>temporal</em> coverage of this collection. This is central to STAC! In this case, the collection has global bounds, with a time period beginning in June 2015 and continuing today.</p>
-<div id="d697a931" class="cell" data-execution_count="3">
+<div id="0a78dca2" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sentinel_collection_id <span class="op">=</span> <span class="st">'sentinel-2-l2a'</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>catalog.get_collection(sentinel_collection_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -600,7 +597,7 @@ Tip
 <p>Here’s a trick to get a total item count: We’ll do a search on the catalog, specifically referencing the collection of interest, but otherwise not providing any query constraints. Importantly, we’ll also tell this method not to return any items. Then we’ll invoke the returned object’s <code>matched()</code> method, helpfully reporting the total count of “matched” items – which in this case is the total count of items in the collection.</p>
 </div>
 </div>
-<div id="b2d9da74" class="cell" data-execution_count="4">
+<div id="f9b480f3" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> catalog.search(collections<span class="op">=</span>[sentinel_collection_id], max_items<span class="op">=</span><span class="dv">0</span>).matched()</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Found </span><span class="sc">{</span>n<span class="sc">:,}</span><span class="ss"> items in the </span><span class="sc">{</span>sentinel_collection_id<span class="sc">}</span><span class="ss"> collection'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -611,7 +608,7 @@ Tip
 <p><img src="../images/stac-utqiagvik-bbox.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
-<div id="a797cab9" class="cell" data-execution_count="5">
+<div id="106b0d95" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>east, west, north, south <span class="op">=</span> <span class="op">-</span><span class="fl">156.7</span>, <span class="op">-</span><span class="fl">156.8</span>, <span class="fl">71.3</span>, <span class="fl">71.25</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>bbox_utqiagvik <span class="op">=</span> [west, south, east, north]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -629,19 +626,19 @@ Tip
 <p>The specific geographic extent of each associated item is recorded in the <strong>geometry</strong> and <strong>bbox</strong> fields, and the temporal information is stored in a <strong>datetime</strong> field under <strong>properties</strong> (not shown above).</p>
 <p>Remember, a STAC item is still just a <em>catalog entry</em>, not the underlying data or other artifact itself. STAC doesn’t actually store data, but like any useful catalog, it tells you where to find it. In STAC parlance, the “things” it refers to are called <strong>assets</strong>, which “belong” to an item. An item can refer to many assets. You can see them under the <strong>assets</strong> entry in the catalog visualizer above, or access them in a dictionary-like way using the <code>assets</code> accessor on the item.</p>
 <p>In this case, each item references multiple assets. Let’s look at one particular asset called <code>nir</code>, which contains the near infrared reflectance band associated with this Sentinel scene.</p>
-<div id="251c9bed" class="cell" data-execution_count="6">
+<div id="e3b9b5d8" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>item_collection.items[<span class="dv">0</span>].assets[<span class="st">'nir'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="../images/stac-asset.png" class="img-fluid" style="width:80.0%"></p>
 <p>From the information above, we can see that the <em>nir</em> reflectance data artifact corresponding to this asset is stored as a cloud optimized GeoTIFF in AWS S3 storage. We can take the individual COG URL and throw it in <a href="https://cholmes.github.io/cog-map/#/url/https%3A%2F%2Fsentinel-cogs.s3.us-west-2.amazonaws.com%2Fsentinel-s2-l2a-cogs%2F4%2FW%2FEE%2F2020%2F6%2FS2B_4WEE_20200601_1_L2A%2FB08.tif/center/-155.658,70.152/zoom/6.2">this cool interactive COG web mapper site</a>, and of course we could load this data into Python as a distributed <code>dask</code> array using <code>rasterio</code> or <code>rioxarray</code>, depending on our preference.</p>
-<div id="df9c8f39" class="cell" data-execution_count="7">
+<div id="dd41c6ad" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use rioxarray, which implicitly uses rasterio + xarray</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rioxarray</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>href <span class="op">=</span> <span class="st">"https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/4/W/EE/2020/6/S2B_4WEE_20200601_1_L2A/B08.tif"</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>rx_nir <span class="op">=</span> rioxarray.open_rasterio(href, chunks<span class="op">=</span>{})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lastly, what if we wanted to assemble a bunch of spatially aligned COGs for multiple different dates? We could do it manually by looping over all of the items … or we could save time and use <code>stackstac</code>! The <a href="https://github.com/gjoseph92/stackstac">stackstac</a> library provides a convenient way to wrangle a set of STAC items into a single <code>xarray</code> array, using lazy loading and <code>dask</code> under the hood. Here let’s just take the first 10 items by date, focus on the same <code>nir</code> asset as above, again provide the bounding box – which in this case will be used to subset (i.e., clip) the data rather than simply retrieving overlapping items, which is what our earlier STAC search did – and even transform the data on the fly to WGS84.</p>
-<div id="f34e88e4" class="cell" data-execution_count="8">
+<div id="7b66230d" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> stackstac</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>east, west, north, south <span class="op">=</span> <span class="op">-</span><span class="fl">156.7</span>, <span class="op">-</span><span class="fl">156.8</span>, <span class="fl">71.3</span>, <span class="fl">71.25</span></span>
@@ -655,7 +652,7 @@ Tip
 </div>
 <p><img src="../images/stac-stack-array.png" class="img-fluid" style="width:100.0%"></p>
 <p>Finally, let’s do a quick plot faceted by time, showing the 6 clipped rasters with data from among the set of items we pulled.</p>
-<div id="f78e240e" class="cell" data-execution_count="9">
+<div id="0ef707f4" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>stack <span class="op">\</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    .isel(time<span class="op">=</span><span class="bu">slice</span>(<span class="dv">0</span>, <span class="dv">6</span>)) <span class="op">\</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    .squeeze() <span class="op">\</span></span>
@@ -670,24 +667,10 @@ Tip
 <p>Consider this diagram showing data laid out in various ways, all available for you to find, access, retrieve, and ultimately manipulate from your chosen compute platform, whether it’s a single (physical or virtual) machine running some number of CPUs each with some number of cores, or a distributed cluster of many such machines.</p>
 <p><a href="../images/data-organizational-patterns.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="../images/data-organizational-patterns.png" class="img-fluid" style="width:100.0%"></a></p>
 <p>Moving left to right across the five generalized data architectures depicted above, the first reflects our legacy world of irregularly structured netCDF and GeoTIFF files – historically successful and efficiently used in local storage, but often suboptimal at cloud scale. The second represents simple, ad hoc approaches to splitting larger data into smaller files, thrown somewhere on a network-accessible server, but without efficiently readable overarching metadata and without any optimal structure. The next two represent cloud optimized approaches, with data split into addressable units described by up-front metadata that clients can use to efficiently access the data. The first of these resembles a COG (one file containing many addressable pieces), while the second resembles a traditional Zarr store (many addressable pieces as separate files). This highlights two different approaches that you’ve encountered in this courses:</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-    A["Keep data in one file, but make
-       it so that clients can efficiently
-       extract subsets of interest"]
-    &lt;--&gt;
-    B["Separate data into many
-       independent files, with metadata
-       binding them together"];
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/one-vs-many-files.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
 </div>
 <p>Which is better? The likely answer is … both! Indeed, the community seems to be converging on a hybrid model whereby we use a combination of chunking (splitting the data into sections) and sharding (storing multiple chunks together) to achieve the right balance between not having too many individual files/objects (which would be the case if we chunked without sharding), and not having individual files/objects that are too big (which would be the case if we put all chunks into one shard). This decision can be made separately for any given data collection, and its complexity can be shielded from users through the use of external metadata – whether as Zarr metadata or STAC catalogs – that allows clients to issue data requests that “just work” regardless of the underlying implementation details.</p>
 <p>As a final takeaway, insofar as there’s a community consensus around the best approaches for managing data today, it probably looks something like this:</p>
