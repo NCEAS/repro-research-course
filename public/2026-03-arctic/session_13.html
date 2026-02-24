@@ -71,6 +71,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -243,8 +272,18 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#data-quality" id="toc-data-quality" class="nav-link active" data-scroll-target="#data-quality"><span class="header-section-number">13.1</span> Data Quality</a>
+  <ul class="collapse">
+  <li><a href="#automated-data-quality-assessment-at-the-arctic-data-center" id="toc-automated-data-quality-assessment-at-the-arctic-data-center" class="nav-link" data-scroll-target="#automated-data-quality-assessment-at-the-arctic-data-center"><span class="header-section-number">13.1.1</span> Automated Data Quality Assessment at the Arctic Data Center</a></li>
+  <li><a href="#data-quality-and-you" id="toc-data-quality-and-you" class="nav-link" data-scroll-target="#data-quality-and-you"><span class="header-section-number">13.1.2</span> Data Quality and You</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -253,9 +292,165 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<!-- {{< include /sections/r-creating-packages.qmd >}} -->
+<section id="data-quality" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="data-quality"><span class="header-section-number">13.1</span> Data Quality</h2>
+<p>Learning objectives:</p>
+<ul>
+<li>How the Arctic Data Center evaluates data quality</li>
+<li>How to use R to evaluate data quality</li>
+</ul>
+<section id="automated-data-quality-assessment-at-the-arctic-data-center" class="level3" data-number="13.1.1">
+<h3 data-number="13.1.1" class="anchored" data-anchor-id="automated-data-quality-assessment-at-the-arctic-data-center"><span class="header-section-number">13.1.1</span> Automated Data Quality Assessment at the Arctic Data Center</h3>
+<p>The Arctic Data Center performs automated metadata and data quality assessments of every dataset shortly after it is submitted. Each assessment consists of a series of checks that are performed on either the metadata or data (or both!) contained within the dataset. Within what is called a “suite” of checks, the checks are classified into either required, optional, or informational checks. Additionally, they are classified into FAIR categories, where FAIR represents Findable, Accessible, Interoperable, Reusable.</p>
+<p>An overall score is then calculated for each dataset, according to the following formula:</p>
+<p><span class="math display">\[score = \frac{R_{pass} + O_{pass}}{R_{pass} + R_{fail} + O_{pass}}\]</span> where R is the number of Required checks that pass or fail, and O is the number of Optional checks that pass or fail. This ensures that datasets are not penalized for failing optional checks. This system allows the Arctic Data Center to evaluate FAIR-ness of its datasets over time. The figure below shows the quality scores of the repository through time for metadata FAIRness.</p>
+<p><img src="images/adc-fair-timeseries.png" class="img-fluid quarto-figure quarto-figure-center" style="width:80.0%"> To evaluate data quality over a wide range of data types and disciplines, the Arctic Data Center first conceptualized four categories of data quality checks. These categories are: congruency, accessibility, validity, and accuracy.</p>
+<section id="congruency" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="congruency">Congruency</h4>
+<p><strong>Is the file what it says it is?</strong></p>
+<p>Examples:<br>
+- data format matches format listed - checksum of file matches documentation - variable names in file match documentation</p>
+</section>
+<section id="accessibility" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="accessibility">Accessibility</h4>
+<p><strong>Can the file be accessed and read correctly?</strong></p>
+<p>Examples: - text formatted files valid according to subtype (eg: csv files match format) - binary files validate against declared type (eg: hdf5 is valid against HDF5 standard) - characters in text files are valid against declared encoding</p>
+</section>
+<section id="validity" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="validity">Validity</h4>
+<p><strong>Are values valid within reasonable bounds?</strong></p>
+<ul>
+<li>air temperatures within -100 and 100 degrees C</li>
+<li>ocean depth does not exceed 10,935m</li>
+<li>tree diameters do not get smaller through time</li>
+</ul>
+</section>
+<section id="accuracy" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="accuracy">Accuracy</h4>
+<p><strong>Does this value make sense given the other values?</strong></p>
+<ul>
+<li>statistical outliers in measured variables</li>
+<li>anomalous NDVI values caused by cloud interference</li>
+</ul>
+<p>At the Arctic Data Center, we have chosen to tackle the first two types of data checks, since they are domain agnostic and do not require specialized knowledge to implement the checks. So far, the data suite we have developed has implemented the following checks:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Check ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>All files</td>
+<td>Content malware-free</td>
+</tr>
+<tr class="even">
+<td>All files</td>
+<td>Data format congruent with metadata</td>
+</tr>
+<tr class="odd">
+<td>All files</td>
+<td>Data content not zipped unless it is a shapefile set</td>
+</tr>
+<tr class="even">
+<td>Text files</td>
+<td>Text encoding valid according to guessed format</td>
+</tr>
+<tr class="odd">
+<td>Text delimited tables</td>
+<td>Table variables congruent with metadata</td>
+</tr>
+<tr class="even">
+<td>Text delimited tables</td>
+<td>Table well-formed</td>
+</tr>
+<tr class="odd">
+<td>Text delimited tables</td>
+<td>Column names printable</td>
+</tr>
+<tr class="even">
+<td>Text delimited tables</td>
+<td>Columns and rows contain data</td>
+</tr>
+<tr class="odd">
+<td>Text delimited tables</td>
+<td>Dates parse correctly according to metadata</td>
+</tr>
+<tr class="even">
+<td>Text delimited tables</td>
+<td>Latitude/longitude data congruent with metadata</td>
+</tr>
+<tr class="odd">
+<td>Text delimited tables</td>
+<td>Missing values documented</td>
+</tr>
+<tr class="even">
+<td>Text delimited tables</td>
+<td>Shows a glimpse of a table</td>
+</tr>
+<tr class="odd">
+<td>Shapefiles</td>
+<td>Shapefile sets complete</td>
+</tr>
+<tr class="even">
+<td>Shapefiles</td>
+<td>Shapefile coordinates within CRS bounds</td>
+</tr>
+<tr class="odd">
+<td>Shapefiles</td>
+<td>Shapefile geometry congruent with metadata</td>
+</tr>
+<tr class="even">
+<td>NetCDF files</td>
+<td>NetCDF global attributes complete</td>
+</tr>
+<tr class="odd">
+<td>NetCDF files</td>
+<td>NetCDF variable attributes complete</td>
+</tr>
+<tr class="even">
+<td>NetCDF files</td>
+<td>NetCDF coordinate attributes complete</td>
+</tr>
+<tr class="odd">
+<td>Raster files</td>
+<td>Raster well-formed</td>
+</tr>
+</tbody>
+</table>
+<p>When these checks are run, each dataset recieves a report like the below:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/adc-data-quality-overview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>Warnings are issued for checks that failed, but are optional. Within each row, output describes the result of the check. For example: Column names in Riverbank_Sediment_ADC.csv are well formed. No non-printable characters detected.</p>
+<p>Some output is collapsed for readability:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/adc-data-quality-warning-detail.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>At the Arctic Data Center we can use these checks to gain insights about our data holdings. TODO: maybe insert figures here?</p>
+</section>
+</section>
+<section id="data-quality-and-you" class="level3" data-number="13.1.2">
+<h3 data-number="13.1.2" class="anchored" data-anchor-id="data-quality-and-you"><span class="header-section-number">13.1.2</span> Data Quality and You</h3>
+<p>Poll:</p>
+<ul>
+<li>What are the most common quality issues you see? (free text)</li>
+<li>What kind of data quality checks do you use on your own data? (free text)</li>
+<li>Do you have ideas for checks you think we should add to the ADC quality suite?</li>
+</ul>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
