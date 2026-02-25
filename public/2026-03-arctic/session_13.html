@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -280,7 +315,7 @@ window.Quarto = {
   <li><a href="#data-quality" id="toc-data-quality" class="nav-link active" data-scroll-target="#data-quality"><span class="header-section-number">13.1</span> Data Quality</a>
   <ul class="collapse">
   <li><a href="#automated-data-quality-assessment-at-the-arctic-data-center" id="toc-automated-data-quality-assessment-at-the-arctic-data-center" class="nav-link" data-scroll-target="#automated-data-quality-assessment-at-the-arctic-data-center"><span class="header-section-number">13.1.1</span> Automated Data Quality Assessment at the Arctic Data Center</a></li>
-  <li><a href="#data-quality-and-you" id="toc-data-quality-and-you" class="nav-link" data-scroll-target="#data-quality-and-you"><span class="header-section-number">13.1.2</span> Data Quality and You</a></li>
+  <li><a href="#checking-data-quality-in-r" id="toc-checking-data-quality-in-r" class="nav-link" data-scroll-target="#checking-data-quality-in-r"><span class="header-section-number">13.1.2</span> Checking Data Quality in R</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -426,29 +461,815 @@ window.Quarto = {
 <p>When these checks are run, each dataset recieves a report like the below:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/adc-data-quality-overview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+<p><img src="images/adc-data-quality-overview.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 <p>Warnings are issued for checks that failed, but are optional. Within each row, output describes the result of the check. For example: Column names in Riverbank_Sediment_ADC.csv are well formed. No non-printable characters detected.</p>
 <p>Some output is collapsed for readability:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/adc-data-quality-warning-detail.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+<p><img src="images/adc-data-quality-warning-detail.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 <p>At the Arctic Data Center we can use these checks to gain insights about our data holdings. TODO: maybe insert figures here?</p>
 </section>
 </section>
-<section id="data-quality-and-you" class="level3" data-number="13.1.2">
-<h3 data-number="13.1.2" class="anchored" data-anchor-id="data-quality-and-you"><span class="header-section-number">13.1.2</span> Data Quality and You</h3>
+<section id="checking-data-quality-in-r" class="level3" data-number="13.1.2">
+<h3 data-number="13.1.2" class="anchored" data-anchor-id="checking-data-quality-in-r"><span class="header-section-number">13.1.2</span> Checking Data Quality in R</h3>
 <p>Poll:</p>
 <ul>
 <li>What are the most common quality issues you see? (free text)</li>
 <li>What kind of data quality checks do you use on your own data? (free text)</li>
 <li>Do you have ideas for checks you think we should add to the ADC quality suite?</li>
 </ul>
+<p>Although the Arctic Data Center has implemented data quality checks that are automated, the vast majority of data quality work still falls on researchers doing analysis. In this section we will discuss a few tools that researchers can use in R to do general data quality work.</p>
+<section id="resolving-mysteries-with-file" class="level4" data-number="13.1.2.1">
+<h4 data-number="13.1.2.1" class="anchored" data-anchor-id="resolving-mysteries-with-file"><span class="header-section-number">13.1.2.1</span> Resolving mysteries with <code>file</code></h4>
+<p>When a researcher receives a new file to incorporate into an analysis, the first step is to examine the file. One tool already used in the Arctic Data Center data quality suite is the <code>file</code> utility in linux/unix systems. This is a command run using the terminal that performs tests on the <strong>content</strong> of a file to determine its type. This is useful for files where the type is unknown, or for files that cannot be read into R for unknown reasons.</p>
+<p>In the terminal, run the following:</p>
+<pre><code>file data/BGchem2008data.csv</code></pre>
+<p>You should see an output like: <code>data/BGchem2008data.csv: CSV text</code>. Which makes sense!</p>
+<p>The file command is very helpful at catching things like this, where we have an excel file masquerading as a csv file. You might wind up using this if you try to read in the example file below using <code>read.csv</code>, and get output that looks completely garbled.</p>
+<pre><code>file example-data/my-data.csv 
+example-data/my-data.csv: Microsoft Excel 2007+</code></pre>
+<p>Another great use of the file command is for mystery extensions:</p>
+<pre><code>file example-data/JUSTIN_400__001.DZG 
+example-data/JUSTIN_400__001.DZG: ASCII text, with CRLF, LF line terminators</code></pre>
+</section>
+<section id="quick-summaries-with-skimr." class="level4" data-number="13.1.2.2">
+<h4 data-number="13.1.2.2" class="anchored" data-anchor-id="quick-summaries-with-skimr."><span class="header-section-number">13.1.2.2</span> Quick Summaries with <code>skimr</code>.</h4>
+<p>First, we need to install the <code>skimr</code> package.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"skimr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And load it into our environment, along with <code>readr</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now we’ll read in a familar file, the <code>BGChem2008data.csv</code> from <a href="https://doi.org/doi:10.18739/A25T3FZ8X">Craig Tweedie. (2009). North Pole Environmental Observatory Bottle Chemistry. Arctic Data Center. doi:10.18739/A25T3FZ8X.</a></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bg_chem <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/BGchem2008data.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 70 Columns: 19
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (1): Station
+dbl  (16): Latitude, Longitude, Target_Depth, CTD_Depth, CTD_Salinity, CTD_T...
+dttm  (1): Time
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Notice that the <code>read_csv</code> call already gives us some information about the dataset here. It tells us what the columns are, and what the column types are. <code>skimr</code> can give us even more information that will be helpful.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(bg_chem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">bg_chem</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">70</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">POSIXct</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Station</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: Date</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">min</th>
+<th style="text-align: left;">max</th>
+<th style="text-align: left;">median</th>
+<th style="text-align: right;">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Date</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2008-03-21</td>
+<td style="text-align: left;">2008-03-30</td>
+<td style="text-align: left;">2008-03-26</td>
+<td style="text-align: right;">9</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Latitude</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">74.04</td>
+<td style="text-align: right;">1.37</td>
+<td style="text-align: right;">72.05</td>
+<td style="text-align: right;">72.97</td>
+<td style="text-align: right;">74.05</td>
+<td style="text-align: right;">75.26</td>
+<td style="text-align: right;">76.32</td>
+<td style="text-align: left;">▇▇▆▇▆</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Longitude</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-148.11</td>
+<td style="text-align: right;">7.98</td>
+<td style="text-align: right;">-163.70</td>
+<td style="text-align: right;">-153.27</td>
+<td style="text-align: right;">-149.81</td>
+<td style="text-align: right;">-140.31</td>
+<td style="text-align: right;">-136.54</td>
+<td style="text-align: left;">▃▃▇▅▇</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Target_Depth</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">123.79</td>
+<td style="text-align: right;">106.04</td>
+<td style="text-align: right;">20.00</td>
+<td style="text-align: right;">60.00</td>
+<td style="text-align: right;">85.00</td>
+<td style="text-align: right;">190.00</td>
+<td style="text-align: right;">430.00</td>
+<td style="text-align: left;">▇▁▂▂▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CTD_Depth</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">125.42</td>
+<td style="text-align: right;">107.70</td>
+<td style="text-align: right;">15.13</td>
+<td style="text-align: right;">60.34</td>
+<td style="text-align: right;">85.78</td>
+<td style="text-align: right;">192.66</td>
+<td style="text-align: right;">442.17</td>
+<td style="text-align: left;">▇▁▂▂▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CTD_Salinity</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">31.45</td>
+<td style="text-align: right;">2.31</td>
+<td style="text-align: right;">25.50</td>
+<td style="text-align: right;">30.17</td>
+<td style="text-align: right;">31.65</td>
+<td style="text-align: right;">33.08</td>
+<td style="text-align: right;">34.82</td>
+<td style="text-align: left;">▂▂▆▇▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CTD_Temperature</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-0.96</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">-1.68</td>
+<td style="text-align: right;">-1.49</td>
+<td style="text-align: right;">-1.26</td>
+<td style="text-align: right;">-0.48</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: left;">▇▂▂▁▂</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bottle_Salinity</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">31.45</td>
+<td style="text-align: right;">2.31</td>
+<td style="text-align: right;">25.50</td>
+<td style="text-align: right;">30.17</td>
+<td style="text-align: right;">31.65</td>
+<td style="text-align: right;">33.08</td>
+<td style="text-align: right;">34.82</td>
+<td style="text-align: left;">▂▂▆▇▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">d18O</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-2.02</td>
+<td style="text-align: right;">1.12</td>
+<td style="text-align: right;">-3.73</td>
+<td style="text-align: right;">-2.96</td>
+<td style="text-align: right;">-2.04</td>
+<td style="text-align: right;">-1.49</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: left;">▆▃▇▁▃</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ba</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">60.95</td>
+<td style="text-align: right;">35.20</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">64.08</td>
+<td style="text-align: right;">69.68</td>
+<td style="text-align: right;">72.25</td>
+<td style="text-align: right;">86.09</td>
+<td style="text-align: left;">▁▁▁▁▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Si</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">13.29</td>
+<td style="text-align: right;">11.32</td>
+<td style="text-align: right;">2.46</td>
+<td style="text-align: right;">3.92</td>
+<td style="text-align: right;">8.42</td>
+<td style="text-align: right;">20.98</td>
+<td style="text-align: right;">36.58</td>
+<td style="text-align: left;">▇▃▁▁▂</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NO3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6.86</td>
+<td style="text-align: right;">6.12</td>
+<td style="text-align: right;">-0.05</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">4.75</td>
+<td style="text-align: right;">13.04</td>
+<td style="text-align: right;">15.85</td>
+<td style="text-align: left;">▇▂▁▂▅</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NO2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NH4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.12</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">0.80</td>
+<td style="text-align: right;">0.97</td>
+<td style="text-align: right;">1.50</td>
+<td style="text-align: right;">1.87</td>
+<td style="text-align: left;">▇▇▂▁▅</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2089.08</td>
+<td style="text-align: right;">478.16</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">2135.50</td>
+<td style="text-align: right;">2203.10</td>
+<td style="text-align: right;">2270.99</td>
+<td style="text-align: right;">2312.30</td>
+<td style="text-align: left;">▁▁▁▁▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">O2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-73.06</td>
+<td style="text-align: right;">46.14</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">9.25</td>
+<td style="text-align: left;">▇▁▁▁▂</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: POSIXct</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">min</th>
+<th style="text-align: left;">max</th>
+<th style="text-align: left;">median</th>
+<th style="text-align: right;">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Time</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">1899-12-31 00:19:50</td>
+<td style="text-align: left;">1899-12-31 23:50:29</td>
+<td style="text-align: left;">1899-12-31 20:52:24</td>
+<td style="text-align: right;">15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><code>skim</code> gives us information about the data frame including basic statistics on the numeric values, missing values, and number of unique values in the character variables.</p>
+<p>Helpfully, <code>skim</code> can also handle grouped output, if we wanted to look more closely at summaries of oxygen concentaration by <code>station</code>, for example, we can run:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bg_chem <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Station, O2) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Station) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">skim</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">Piped data</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">70</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">Station</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 3%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: left;">Station</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">72N,140W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-27.59</td>
+<td style="text-align: right;">55.32</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-72.64</td>
+<td style="text-align: right;">7.18</td>
+<td style="text-align: right;">8.65</td>
+<td style="text-align: right;">9.19</td>
+<td style="text-align: left;">▃▁▁▁▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">72N,150W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">72_40N,145W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-56.25</td>
+<td style="text-align: right;">58.55</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">6.54</td>
+<td style="text-align: right;">9.23</td>
+<td style="text-align: left;">▇▁▁▁▅</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">73N,140W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-56.22</td>
+<td style="text-align: right;">58.59</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">6.66</td>
+<td style="text-align: right;">9.25</td>
+<td style="text-align: left;">▇▁▁▁▅</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">73N,150W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">73_40N,136W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-63.36</td>
+<td style="text-align: right;">55.22</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-19.65</td>
+<td style="text-align: right;">9.06</td>
+<td style="text-align: left;">▇▁▁▁▃</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">74N,140W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-45.58</td>
+<td style="text-align: right;">61.69</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-46.24</td>
+<td style="text-align: right;">7.18</td>
+<td style="text-align: right;">9.15</td>
+<td style="text-align: left;">▇▁▁▁▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">74N,150W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">74_20N,143W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-45.57</td>
+<td style="text-align: right;">61.71</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-46.23</td>
+<td style="text-align: right;">7.20</td>
+<td style="text-align: right;">9.20</td>
+<td style="text-align: left;">▇▁▁▁▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">74_40N,146W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-45.78</td>
+<td style="text-align: right;">61.46</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-46.20</td>
+<td style="text-align: right;">7.03</td>
+<td style="text-align: right;">8.29</td>
+<td style="text-align: left;">▇▁▁▁▇</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">75N,150W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-77.88</td>
+<td style="text-align: right;">47.23</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">6.61</td>
+<td style="text-align: left;">▇▁▁▁▂</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">75_20N,154W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">75_40N,158W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">76N,161W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">O2</td>
+<td style="text-align: left;">76_20N,164W</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-99</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: right;">-99.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Skim is a great way to get a big picture overview of your data to spot major issues. Does anything stand out here?</p>
+<p>-99 (or some repetition of those digits) is a very common missing value code that isn’t automatically recognized by R. Let’s go back to the <code>read_csv</code> call to add it in as an argument.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bg_chem <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/BGchem2008data.csv"</span>, <span class="at">na =</span> <span class="st">"-99"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 70 Columns: 19
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (1): Station
+dbl  (16): Latitude, Longitude, Target_Depth, CTD_Depth, CTD_Salinity, CTD_T...
+dttm  (1): Time
+date  (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Another similar package is called <code>visdat</code>. It lets you visualize a data frame with its column types, variable names, and missing values.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"visdat"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(visdat)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_dat</span>(bg_chem) <span class="sc">+</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">0</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Similar to <code>skimr</code>, you can also group (in this case facet) the output by a variable.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_dat</span>(bg_chem, <span class="at">facet =</span> Station) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">0</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session_13_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is helpful because it shows us where the missing values are and in which variable.</p>
 
 
+</section>
 </section>
 </section>
 
