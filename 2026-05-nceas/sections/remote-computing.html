@@ -109,6 +109,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -854,6 +857,32 @@ Tip
 <p><img src="../images/htop.png" class="img-fluid"></p>
 <p>An alternative to <code>htop</code> is <code>glances</code>, which provides a more comprehensive view of the server’s performance, including CPU usage, memory usage, disk I/O, network activity, and more. When you run <code>glances</code>, you’ll see a dashboard that shows you the current state of the server’s resources, along with a list of processes sorted by CPU usage. You can use the arrow keys to navigate through the list of processes and see more information about each process.</p>
 <p><img src="../images/glances.png" class="img-fluid"></p>
+<p>When looking for performance issues, it’s important to keep in mind that the processes that are using the most CPU or memory may not necessarily be the ones that are causing the performance issues. For example, a process that is using a lot of CPU may be doing so because it’s waiting for input or output, rather than because it’s actually doing a lot of work. Similarly, a process that is using a lot of memory may be doing so because it’s caching data, rather than because it’s actually using a lot of memory. Therefore, it’s important to look at the overall performance of the server and consider other factors (e.g.&nbsp;disk I/O, network activity, etc.) when diagnosing performance issues. At any given point in time, your process performance will always be limited by one of the major resources (CPU, memory, disk I/O, network activity), so it’s important to look at all of these factors when diagnosing performance issues.</p>
+<div class="{center}">
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    CPU([CPU usage])
+    MEM[/Memory usage/]
+    DISK[(Disk I/O)]
+    NET{{Network activity}}
+
+    CPU --&gt; MEM
+    CPU --&gt; DISK
+    CPU --&gt; NET
+
+    classDef perf fill:#e8f3ff,stroke:#2f6aa3,stroke-width:1.5px,color:#123b5f;
+    class CPU,MEM,DISK,NET perf;
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="shell-tips-and-tricks" class="level2" data-number="1.10">
 <h2 data-number="1.10" class="anchored" data-anchor-id="shell-tips-and-tricks"><span class="header-section-number">1.10</span> Shell tips and tricks</h2>
@@ -918,7 +947,36 @@ Tip
 </section>
 <section id="persistent-sessions-with-tmux-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206c6170746f70203e7d7d" class="level3" data-number="1.11.2">
 <h3 data-number="1.11.2" class="anchored" data-anchor-id="persistent-sessions-with-tmux-b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c206661206c6170746f70203e7d7d"><span class="header-section-number">1.11.2</span> Persistent sessions with tmux <i class="fa-solid fa-laptop" aria-label="laptop"></i></h3>
-<p><code>tmux</code> Tutorial: https://hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/</p>
+<p>If you run models and simulations, or even dat awrangling jobs that take a long time to run, you may want to be able to let those processes run without having to keep your terminal open the whole time, and to be able to check in on the progress of your processes from work, home, and on the road. <code>tmux</code> is a workhorse tool that allows you to create multiple terminal sessions within a single terminal window, and to detach and reattach to those sessions as needed. This means that you can start a process in a <code>tmux</code> session, detach from the session, and then reattach later to check on the progress of the process or to interact with it. The process will continue to run in the background even if you disconnect from the server or close your terminal window.</p>
+<p><code>tmux</code> is a deep lake to explore, but here we’ll cover some of the basics to get you started. Here’s a nice <a href="https://www.hamvocke.com/blog/a-guide-to-getting-started-with-tmux/">tutorial</a> to fill in a few of the gaps, and there are a lot more of those out there if you want to dive deeper.</p>
+<p>To start a new <code>tmux</code> session, simply run the <code>tmux</code> command in your terminal:</p>
+<p><img src="../images/tmux-1-created.png" class="img-fluid"></p>
+<p>That creates a new <code>tmux</code> session and opens a new terminal window within that session. You can then run any commands you want within that terminal window, and they will continue to run even if you detach from the session or disconnect from the server. When you <code>exit</code> the shell within the <code>tmux</code> session, it will end the session and all processes running within it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@aurora:~$</span> tmux</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[exited]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Let’s start a new session, but this time give it a name. We’ll call it “monitor” since we’ll be using it to monitor the progress of a long-running process. To do that, use <code>tmux new -s monitor</code> with the name of the session when you start <code>tmux</code>, and then launch <code>htop</code> in the tmux session.</p>
+<p><img src="../images/tmux-2-htop.png" class="img-fluid"></p>
+<p>Now, if you detach from the session instead of exiting it, the session will continue to run in the background, and you can reattach to it later to check on the progress of your processes or to interact with them. To detach from a <code>tmux</code> session, use the keyboard shortcut <code>Ctrl</code> + <code>b</code> followed by <code>d</code> (for “detach”). To see a list of the sessions you have running, use <code>tmux ls</code>. To reattach to a <code>tmux</code> session, use the <code>tmux attach</code> command (optionally with the <code>-t session_name</code>).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@aurora:~$</span> tmux ls</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">monitor:</span> 1 windows <span class="er">(</span><span class="ex">created</span> Fri May  8 07:19:34 2026<span class="kw">)</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="ex">jones@aurora:~$</span> tmux attach <span class="at">-t</span> monitor</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To explain that <code>Ctrl</code> + <code>b</code> + <code>d</code> keyboard shortcut a bit more: <code>Ctrl</code> + <code>b</code> is the default “prefix” for <code>tmux</code> commands, which means that you need to press that combination before any other key to send a command to <code>tmux</code>. So, to detach from the session, you first press <code>Ctrl</code> + <code>b</code> to tell <code>tmux</code> that you’re about to send it a command, and then you press <code>d</code> to tell it to detach from the session. There are many other commands you can use with <code>tmux</code> to manage your sessions, such as creating new windows within a session, splitting windows into panes, resizing panes, and more.</p>
+<p>The core concepts that you’ll use most often with <code>tmux</code> are sessions, windows, and panes.</p>
+<ul>
+<li><strong>session</strong>: A session is a collection of windows from which you can attach and detach</li>
+<li><strong>window</strong>: a window is a single terminal interface that typically runs a shell on the remote server. A session can contain multiple windows, making it super easy to switch between them.</li>
+<li><strong>pane</strong>: a pane is a rectangular area within a window that can display a separate terminal session. Windows can be split into multiple panes, either vertically or horizontally, allowing you to view and interact with multiple terminal sessions within a single window. This is especially useful for monitoring multiple processes at the same time, or for running multiple commands in parallel, such as running a model in one pane while watching its output in another pane.</li>
+</ul>
+<p>If you reattach to your session (e.g.&nbsp;<code>tmux attach -t monitor</code>), let’s take a look at the key features of the window. You’ll see that <code>htop</code> is running in the window, and you can interact with it as you normally would. In the lower left, you’ll see the tmux status bar, which shows you the name of the session (<code>monitor</code>) and the names of the windows and process running (<code>0:htop</code>). In the lower right, you’ll see the hostname “aurora” and the current time.</p>
+<p><img src="../images/tmux-3-status.png" class="img-fluid"></p>
+<p>Let’s <strong>create</strong> a new window. You can use the keyboard shortcut <code>Ctrl</code> + <code>b</code> followed by <code>c</code> to create a new window within the session. Once you do that a new terminal window will open within the session, and you can run any commands you want in that window. You can switch between windows using the keyboard shortcut <code>Ctrl</code> + <code>b</code> followed by the number of the window you want to switch to (e.g.&nbsp;<code>Ctrl</code> + <code>b</code> followed by <code>0</code> to switch to the first window, <code>Ctrl</code> + <code>b</code> followed by <code>1</code> to switch to the second window, etc.). The windows are listed in the status bar at the bottom of the screen, so you can see which windows you have open and which one you’re currently in.</p>
+<p><img src="../images/tmux-4-windows.png" class="img-fluid"></p>
+<p>Since we just created a new window, we should see two windows listed in the status bar: <code>0:htop</code> and <code>1:bash</code>. The <code>0:htop</code> window is the one that we started with, which has <code>htop</code> running in it, and the <code>1:bash</code> window is the new window that we just created, which has a bash shell running in it. Now let’s launch <code>glances</code> in the new window, and then create a third window (with <code>Ctrl-b c</code>). you should now have three windows open in your session, each with a different process running in it. You can switch between them using the keyboard shortcuts we just covered.</p>
+<p>Next, use <code>Ctrl</code> + <code>b</code> followed by <code>%</code> to split the window vertically into two panes (or <code>Ctrl</code> + <code>b</code> followed by <code>"</code> to split the window horizontally into two panes). You can then run different commands in each pane, and use the keyboard shortcuts <code>Ctrl</code> + <code>b</code> followed by the arrow keys to switch between panes. You can have multiple sessions running at the same time, each with its own set of windows and panes. This allows you to organize your work in a way that makes sense for you, and to easily switch between different tasks without having to open multiple terminal windows.</p>
+<p><img src="../images/tmux-5-split-panes.png" class="img-fluid"></p>
+<p>Last but not least, help is always available within <code>tmux</code> by using the keyboard shortcut <code>Ctrl</code> + <code>b</code> followed by <code>?</code>, which will bring up a list of all the keyboard shortcuts and commands that you can use with <code>tmux</code>. You can also customize the key bindings and other settings in <code>tmux</code> by editing the <code>.tmux.conf</code> configuration file in your home directory.</p>
+<p>Remeber to detach (<code>Ctrl-b d</code>)from your session (rather than <code>exit</code>) when you plan to come back to it later or if you habe something running, and to kill the session when you no longer need it (e.g., <code>tmux kill-session -t monitor</code>), which will stop all processes running within that session and free up resources on the server.</p>
+<p>So, <code>tmux</code> is a powerful tool that allows you to manage multiple terminal sessions within a single terminal window, and to detach and reattach to those sessions as needed. This can be especially useful when working on a remote server, as it allows you to keep your processes running even if your connection to the server is interrupted, and to easily check on the progress of your processes from different locations. You can go home, disconnect from the server, and then reattach to your <code>tmux</code> session later to check on the progress of your processes or to interact with them. All of your windows and panes will still be there, and your processes will still be running, so you can pick up right where you left off <span class="emoji" data-emoji="tada">🎉</span>.</p>
 </section>
 </section>
 <section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120636c6f7564203e7d7d-what-is-cloud-computing-anyways" class="level2" data-number="1.12">
